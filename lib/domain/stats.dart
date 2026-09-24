@@ -1,8 +1,8 @@
 import '../data/database.dart';
 
 /// Money the user used to spend per day on all products.
-double dailyCost(List<SmokingProduct> products) => products.fold(
-    0, (sum, p) => sum + p.amount / p.period.days / p.unitsPerPack * p.packPrice);
+double dailyCost(List<SmokingProduct> products) =>
+    products.fold(0, (sum, p) => sum + p.amount / p.period.days / p.unitsPerPack * p.packPrice);
 
 /// Money saved over a smoke-free [duration].
 double moneySaved(List<SmokingProduct> products, Duration duration) =>

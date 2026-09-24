@@ -258,6 +258,206 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
+  String durMinutes(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count минуты',
+      many: '$count минут',
+      few: '$count минуты',
+      one: '$count минута',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String durHours(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count часа',
+      many: '$count часов',
+      few: '$count часа',
+      one: '$count час',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String durDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count дня',
+      many: '$count дней',
+      few: '$count дня',
+      one: '$count день',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String durWeeks(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count недели',
+      many: '$count недель',
+      few: '$count недели',
+      one: '$count неделя',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String durMonths(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count месяца',
+      many: '$count месяцев',
+      few: '$count месяца',
+      one: '$count месяц',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String durYears(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count года',
+      many: '$count лет',
+      few: '$count года',
+      one: '$count год',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get healthTabRecovery => 'Восстановление';
+
+  @override
+  String get healthTabAchievements => 'Достижения';
+
+  @override
+  String get healthDisclaimer =>
+      'Сроки примерные и основаны на данных ACS, CDC и ВОЗ. Организм у каждого восстанавливается по-своему. Приложение не заменяет консультацию врача.';
+
+  @override
+  String get healthReached => 'Уже произошло';
+
+  @override
+  String healthRemaining(String time) {
+    return 'Осталось: $time';
+  }
+
+  @override
+  String get healthNoAttempt =>
+      'Начните новую попытку на главном экране — и отсчёт восстановления пойдёт заново.';
+
+  @override
+  String healthSource(String source) {
+    return 'Источник: $source';
+  }
+
+  @override
+  String achUnlockedCount(int unlocked, int total) {
+    return 'Открыто $unlocked из $total';
+  }
+
+  @override
+  String achUnlockedAt(String date) {
+    return 'Получено $date';
+  }
+
+  @override
+  String achHowTo(String condition) {
+    return 'Как получить: $condition';
+  }
+
+  @override
+  String achCondSmokeFree(String time) {
+    return 'продержаться без курения: $time';
+  }
+
+  @override
+  String achCondMoney(String amount) {
+    return 'сэкономить $amount ₽';
+  }
+
+  @override
+  String achCondCravings(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'справиться с тягой $count раза',
+      many: 'справиться с тягой $count раз',
+      few: 'справиться с тягой $count раза',
+      one: 'справиться с тягой $count раз',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String achCondArticles(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'прочитать $count статьи',
+      many: 'прочитать $count статей',
+      few: 'прочитать $count статьи',
+      one: 'прочитать $count статью',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String achCondAttempts(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'начать $count попытки',
+      many: 'начать $count попыток',
+      few: 'начать $count попытки',
+      one: 'начать первую попытку',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String achCondComeback(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'вернуться после срыва $count раза',
+      many: 'вернуться после срыва $count раз',
+      few: 'вернуться после срыва $count раза',
+      one: 'вернуться после срыва',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String achNew(String title, int xp) {
+    return 'Новое достижение: «$title» +$xp XP';
+  }
+
+  @override
+  String achNewMany(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Открыто $count достижения',
+      many: 'Открыто $count достижений',
+      few: 'Открыто $count достижения',
+      one: 'Открыто $count достижение',
+    );
+    return '$_temp0 — загляните во вкладку «Здоровье»';
+  }
+
+  @override
   String get settingsAppearance => 'Оформление';
 
   @override

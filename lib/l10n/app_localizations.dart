@@ -424,6 +424,150 @@ abstract class AppLocalizations {
   /// **'Вы сильнее тяги! +{xp} XP'**
   String sosResistedToast(int xp);
 
+  /// No description provided for @durMinutes.
+  ///
+  /// In ru, this message translates to:
+  /// **'{count, plural, one{{count} минута} few{{count} минуты} many{{count} минут} other{{count} минуты}}'**
+  String durMinutes(int count);
+
+  /// No description provided for @durHours.
+  ///
+  /// In ru, this message translates to:
+  /// **'{count, plural, one{{count} час} few{{count} часа} many{{count} часов} other{{count} часа}}'**
+  String durHours(int count);
+
+  /// No description provided for @durDays.
+  ///
+  /// In ru, this message translates to:
+  /// **'{count, plural, one{{count} день} few{{count} дня} many{{count} дней} other{{count} дня}}'**
+  String durDays(int count);
+
+  /// No description provided for @durWeeks.
+  ///
+  /// In ru, this message translates to:
+  /// **'{count, plural, one{{count} неделя} few{{count} недели} many{{count} недель} other{{count} недели}}'**
+  String durWeeks(int count);
+
+  /// No description provided for @durMonths.
+  ///
+  /// In ru, this message translates to:
+  /// **'{count, plural, one{{count} месяц} few{{count} месяца} many{{count} месяцев} other{{count} месяца}}'**
+  String durMonths(int count);
+
+  /// No description provided for @durYears.
+  ///
+  /// In ru, this message translates to:
+  /// **'{count, plural, one{{count} год} few{{count} года} many{{count} лет} other{{count} года}}'**
+  String durYears(int count);
+
+  /// No description provided for @healthTabRecovery.
+  ///
+  /// In ru, this message translates to:
+  /// **'Восстановление'**
+  String get healthTabRecovery;
+
+  /// No description provided for @healthTabAchievements.
+  ///
+  /// In ru, this message translates to:
+  /// **'Достижения'**
+  String get healthTabAchievements;
+
+  /// No description provided for @healthDisclaimer.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сроки примерные и основаны на данных ACS, CDC и ВОЗ. Организм у каждого восстанавливается по-своему. Приложение не заменяет консультацию врача.'**
+  String get healthDisclaimer;
+
+  /// No description provided for @healthReached.
+  ///
+  /// In ru, this message translates to:
+  /// **'Уже произошло'**
+  String get healthReached;
+
+  /// No description provided for @healthRemaining.
+  ///
+  /// In ru, this message translates to:
+  /// **'Осталось: {time}'**
+  String healthRemaining(String time);
+
+  /// No description provided for @healthNoAttempt.
+  ///
+  /// In ru, this message translates to:
+  /// **'Начните новую попытку на главном экране — и отсчёт восстановления пойдёт заново.'**
+  String get healthNoAttempt;
+
+  /// No description provided for @healthSource.
+  ///
+  /// In ru, this message translates to:
+  /// **'Источник: {source}'**
+  String healthSource(String source);
+
+  /// No description provided for @achUnlockedCount.
+  ///
+  /// In ru, this message translates to:
+  /// **'Открыто {unlocked} из {total}'**
+  String achUnlockedCount(int unlocked, int total);
+
+  /// No description provided for @achUnlockedAt.
+  ///
+  /// In ru, this message translates to:
+  /// **'Получено {date}'**
+  String achUnlockedAt(String date);
+
+  /// No description provided for @achHowTo.
+  ///
+  /// In ru, this message translates to:
+  /// **'Как получить: {condition}'**
+  String achHowTo(String condition);
+
+  /// No description provided for @achCondSmokeFree.
+  ///
+  /// In ru, this message translates to:
+  /// **'продержаться без курения: {time}'**
+  String achCondSmokeFree(String time);
+
+  /// No description provided for @achCondMoney.
+  ///
+  /// In ru, this message translates to:
+  /// **'сэкономить {amount} ₽'**
+  String achCondMoney(String amount);
+
+  /// No description provided for @achCondCravings.
+  ///
+  /// In ru, this message translates to:
+  /// **'{count, plural, one{справиться с тягой {count} раз} few{справиться с тягой {count} раза} many{справиться с тягой {count} раз} other{справиться с тягой {count} раза}}'**
+  String achCondCravings(int count);
+
+  /// No description provided for @achCondArticles.
+  ///
+  /// In ru, this message translates to:
+  /// **'{count, plural, one{прочитать {count} статью} few{прочитать {count} статьи} many{прочитать {count} статей} other{прочитать {count} статьи}}'**
+  String achCondArticles(int count);
+
+  /// No description provided for @achCondAttempts.
+  ///
+  /// In ru, this message translates to:
+  /// **'{count, plural, one{начать первую попытку} few{начать {count} попытки} many{начать {count} попыток} other{начать {count} попытки}}'**
+  String achCondAttempts(int count);
+
+  /// No description provided for @achCondComeback.
+  ///
+  /// In ru, this message translates to:
+  /// **'{count, plural, one{вернуться после срыва} few{вернуться после срыва {count} раза} many{вернуться после срыва {count} раз} other{вернуться после срыва {count} раза}}'**
+  String achCondComeback(int count);
+
+  /// No description provided for @achNew.
+  ///
+  /// In ru, this message translates to:
+  /// **'Новое достижение: «{title}» +{xp} XP'**
+  String achNew(String title, int xp);
+
+  /// No description provided for @achNewMany.
+  ///
+  /// In ru, this message translates to:
+  /// **'{count, plural, one{Открыто {count} достижение} few{Открыто {count} достижения} many{Открыто {count} достижений} other{Открыто {count} достижения}} — загляните во вкладку «Здоровье»'**
+  String achNewMany(int count);
+
   /// No description provided for @settingsAppearance.
   ///
   /// In ru, this message translates to:

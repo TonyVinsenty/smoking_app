@@ -18,8 +18,6 @@ ThemeData buildTheme(Brightness brightness) {
       margin: EdgeInsets.zero,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
     ),
-    navigationBarTheme: NavigationBarThemeData(
-      indicatorColor: scheme.primaryContainer,
-    ),
+    navigationBarTheme: NavigationBarThemeData(indicatorColor: scheme.primaryContainer),
   );
 }

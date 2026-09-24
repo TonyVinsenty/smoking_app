@@ -11,10 +11,10 @@ enum ConsumptionPeriod { day, week, month }
 
 extension ConsumptionPeriodDays on ConsumptionPeriod {
   double get days => switch (this) {
-        ConsumptionPeriod.day => 1,
-        ConsumptionPeriod.week => 7,
-        ConsumptionPeriod.month => 30.44,
-      };
+    ConsumptionPeriod.day => 1,
+    ConsumptionPeriod.week => 7,
+    ConsumptionPeriod.month => 30.44,
+  };
 }
 
 /// What provoked a craving (SOS) or a relapse («Я закурил»).
@@ -78,28 +78,32 @@ class AppDatabase extends _$AppDatabase {
   int get schemaVersion => 1;
 
   /// Saves onboarding answers and starts the first attempt.
-  Future<void> completeOnboarding(List<SmokingProductsCompanion> products, DateTime startedAt) =>
-      transaction(() async {
-        await delete(smokingProducts).go();
-        await batch((b) => b.insertAll(smokingProducts, products));
-        await startAttempt(startedAt);
-      });
+  Future<void> completeOnboarding(List<SmokingProductsCompanion> products, DateTime startedAt) => transaction(() async {
+    await delete(smokingProducts).go();
+    await batch((b) => b.insertAll(smokingProducts, products));
+    await startAttempt(startedAt);
+  });
 
-  Future<int> startAttempt(DateTime startedAt) =>
-      into(attempts).insert(AttemptsCompanion.insert(startedAt: startedAt));
+  Future<int> startAttempt(DateTime startedAt) => into(attempts).insert(AttemptsCompanion.insert(startedAt: startedAt));
 
-  Future<void> logCraving({required int attemptId, required bool resisted, Trigger? trigger}) =>
-      into(cravings).insert(CravingsCompanion.insert(
-        attemptId: attemptId,
-        at: DateTime.now(),
-        resisted: resisted,
-        trigger: Value(trigger),
-      ));
+  Future<void> logCraving({required int attemptId, required bool resisted, Trigger? trigger}) => into(cravings).insert(
+    CravingsCompanion.insert(attemptId: attemptId, at: DateTime.now(), resisted: resisted, trigger: Value(trigger)),
+  );
+
+  Future<void> unlockAchievements(Iterable<String> ids, int attemptId) {
+    final at = DateTime.now();
+    return batch(
+      (b) => b.insertAll(unlockedAchievements, [
+        for (final id in ids)
+          UnlockedAchievementsCompanion.insert(achievementId: id, attemptId: attemptId, unlockedAt: at),
+      ], mode: InsertMode.insertOrIgnore),
+    );
+  }
 
   /// Wipes all user data («Полный сброс»).
   Future<void> resetAll() => transaction(() async {
-        for (final table in allTables.toList().reversed) {
-          await delete(table).go();
-        }
-      });
+    for (final table in allTables.toList().reversed) {
+      await delete(table).go();
+    }
+  });
 }
