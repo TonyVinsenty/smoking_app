@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/providers.dart';
 import '../../data/settings.dart';
 import '../../l10n/app_localizations.dart';
+import '../sos/sos_screen.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -27,7 +28,8 @@ class SettingsScreen extends ConsumerWidget {
             child: SegmentedButton<ThemeMode>(
               showSelectedIcon: false,
               segments: [
-                for (final m in const [ThemeMode.system, ThemeMode.dark, ThemeMode.light]) ButtonSegment(value: m, label: Text(l.themeModeName(m.name))),
+                for (final m in const [ThemeMode.system, ThemeMode.dark, ThemeMode.light])
+                  ButtonSegment(value: m, label: Text(l.themeModeName(m.name))),
               ],
               selected: {ref.watch(themeModeProvider)},
               onSelectionChanged: (s) => ref.read(themeModeProvider.notifier).set(s.first),
@@ -40,6 +42,13 @@ class SettingsScreen extends ConsumerWidget {
             subtitle: Text(l.settingsLargeTextHint),
             value: ref.watch(largeTextProvider),
             onChanged: (on) => ref.read(largeTextProvider.notifier).set(on),
+          ),
+          header(l.settingsSos),
+          ListTile(
+            leading: const Icon(Icons.air),
+            title: Text(l.settingsSosExercise),
+            subtitle: Text(l.sosExerciseName(ref.watch(sosExerciseProvider).name)),
+            onTap: () => showSosExercisePicker(context, ref),
           ),
           header(l.settingsData),
           ListTile(

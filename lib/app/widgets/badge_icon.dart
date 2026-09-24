@@ -79,9 +79,6 @@ class _BadgeIconState extends State<BadgeIcon> with SingleTickerProviderStateMix
     );
     final glow = _glow;
     if (glow == null) return medal(0);
-    return AnimatedBuilder(
-      animation: glow,
-      builder: (context, _) => medal(Curves.easeInOut.transform(glow.value)),
-    );
+    return AnimatedBuilder(animation: glow, builder: (context, _) => medal(Curves.easeInOut.transform(glow.value)));
   }
 }

@@ -38,3 +38,23 @@ class LargeTextNotifier extends Notifier<bool> {
 final largeTextProvider = NotifierProvider<LargeTextNotifier, bool>(LargeTextNotifier.new);
 
 const largeTextScale = 1.25;
+
+/// Calming exercise shown in SOS. No breath-holding anywhere: it makes anxious users panic.
+enum SosExercise { breathing, countdown, grounding }
+
+class SosExerciseNotifier extends Notifier<SosExercise> {
+  static const _key = 'sosExercise';
+
+  @override
+  SosExercise build() {
+    final saved = ref.watch(prefsProvider).getString(_key);
+    return SosExercise.values.where((e) => e.name == saved).firstOrNull ?? SosExercise.breathing;
+  }
+
+  void set(SosExercise exercise) {
+    ref.read(prefsProvider).setString(_key, exercise.name);
+    state = exercise;
+  }
+}
+
+final sosExerciseProvider = NotifierProvider<SosExerciseNotifier, SosExercise>(SosExerciseNotifier.new);

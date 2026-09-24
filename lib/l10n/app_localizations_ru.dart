@@ -295,10 +295,67 @@ class AppLocalizationsRu extends AppLocalizations {
   String get sosBreatheIn => 'Вдох';
 
   @override
-  String get sosHold => 'Задержка';
+  String get sosBreatheOut => 'Выдох';
 
   @override
-  String get sosBreatheOut => 'Выдох';
+  String get sosChangeExercise => 'Упражнение можно сменить';
+
+  @override
+  String get sosPickExercise => 'Выберите упражнение';
+
+  @override
+  String sosExerciseName(String exercise) {
+    String _temp0 = intl.Intl.selectLogic(exercise, {
+      'breathing': 'Спокойное дыхание',
+      'countdown': 'Отсчёт 10 → 0',
+      'grounding': 'Заземление 5-4-3-2-1',
+      'other': '',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String sosExerciseDesc(String exercise) {
+    String _temp0 = intl.Intl.selectLogic(exercise, {
+      'breathing': 'Вдох на 4 счёта, выдох на 6. Без задержек — просто следите за кругом.',
+      'countdown':
+          'Крупные числа от 10 до 0. Ничего делать не нужно — просто смотрите.',
+      'grounding': 'Пять простых шагов, чтобы вернуться в «здесь и сейчас».',
+      'other': '',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String get sosCountdownHint => 'Просто смотрите на числа';
+
+  @override
+  String get sosCountdownDone => 'Вот и всё. Можно ещё раз.';
+
+  @override
+  String get sosAgain => 'Ещё раз';
+
+  @override
+  String sosGroundStep(String step) {
+    String _temp0 = intl.Intl.selectLogic(step, {
+      'see': 'Найдите глазами 5 вещей вокруг',
+      'hear': 'Прислушайтесь: 4 звука, которые вы слышите',
+      'touch': 'Коснитесь 3 предметов и почувствуйте их',
+      'smell': 'Уловите 2 запаха',
+      'taste': 'Заметьте 1 вкус',
+      'other': '',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String get sosGroundHint => 'Не спешите. Можно назвать про себя.';
+
+  @override
+  String get sosNext => 'Дальше';
+
+  @override
+  String get sosGroundDone => 'Вы здесь и сейчас. Вы справляетесь.';
 
   @override
   String get sosWaveHint =>
@@ -308,7 +365,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get sosAnotherTip => 'Другой совет';
 
   @override
-  String get sosResisted => 'Справился!';
+  String get sosResisted => 'Тяга прошла!';
 
   @override
   String sosResistedToast(int xp) {
@@ -551,6 +608,12 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get settingsLargeTextHint => 'Увеличивает текст во всём приложении';
+
+  @override
+  String get settingsSos => 'SOS';
+
+  @override
+  String get settingsSosExercise => 'Упражнение по умолчанию';
 
   @override
   String get settingsData => 'Мои данные';

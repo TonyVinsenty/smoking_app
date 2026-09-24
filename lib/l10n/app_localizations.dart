@@ -436,17 +436,77 @@ abstract class AppLocalizations {
   /// **'Вдох'**
   String get sosBreatheIn;
 
-  /// No description provided for @sosHold.
-  ///
-  /// In ru, this message translates to:
-  /// **'Задержка'**
-  String get sosHold;
-
   /// No description provided for @sosBreatheOut.
   ///
   /// In ru, this message translates to:
   /// **'Выдох'**
   String get sosBreatheOut;
+
+  /// No description provided for @sosChangeExercise.
+  ///
+  /// In ru, this message translates to:
+  /// **'Упражнение можно сменить'**
+  String get sosChangeExercise;
+
+  /// No description provided for @sosPickExercise.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выберите упражнение'**
+  String get sosPickExercise;
+
+  /// No description provided for @sosExerciseName.
+  ///
+  /// In ru, this message translates to:
+  /// **'{exercise, select, breathing{Спокойное дыхание} countdown{Отсчёт 10 → 0} grounding{Заземление 5-4-3-2-1} other{}}'**
+  String sosExerciseName(String exercise);
+
+  /// No description provided for @sosExerciseDesc.
+  ///
+  /// In ru, this message translates to:
+  /// **'{exercise, select, breathing{Вдох на 4 счёта, выдох на 6. Без задержек — просто следите за кругом.} countdown{Крупные числа от 10 до 0. Ничего делать не нужно — просто смотрите.} grounding{Пять простых шагов, чтобы вернуться в «здесь и сейчас».} other{}}'**
+  String sosExerciseDesc(String exercise);
+
+  /// No description provided for @sosCountdownHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Просто смотрите на числа'**
+  String get sosCountdownHint;
+
+  /// No description provided for @sosCountdownDone.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вот и всё. Можно ещё раз.'**
+  String get sosCountdownDone;
+
+  /// No description provided for @sosAgain.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ещё раз'**
+  String get sosAgain;
+
+  /// No description provided for @sosGroundStep.
+  ///
+  /// In ru, this message translates to:
+  /// **'{step, select, see{Найдите глазами 5 вещей вокруг} hear{Прислушайтесь: 4 звука, которые вы слышите} touch{Коснитесь 3 предметов и почувствуйте их} smell{Уловите 2 запаха} taste{Заметьте 1 вкус} other{}}'**
+  String sosGroundStep(String step);
+
+  /// No description provided for @sosGroundHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Не спешите. Можно назвать про себя.'**
+  String get sosGroundHint;
+
+  /// No description provided for @sosNext.
+  ///
+  /// In ru, this message translates to:
+  /// **'Дальше'**
+  String get sosNext;
+
+  /// No description provided for @sosGroundDone.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вы здесь и сейчас. Вы справляетесь.'**
+  String get sosGroundDone;
 
   /// No description provided for @sosWaveHint.
   ///
@@ -463,7 +523,7 @@ abstract class AppLocalizations {
   /// No description provided for @sosResisted.
   ///
   /// In ru, this message translates to:
-  /// **'Справился!'**
+  /// **'Тяга прошла!'**
   String get sosResisted;
 
   /// No description provided for @sosResistedToast.
@@ -657,6 +717,18 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Увеличивает текст во всём приложении'**
   String get settingsLargeTextHint;
+
+  /// No description provided for @settingsSos.
+  ///
+  /// In ru, this message translates to:
+  /// **'SOS'**
+  String get settingsSos;
+
+  /// No description provided for @settingsSosExercise.
+  ///
+  /// In ru, this message translates to:
+  /// **'Упражнение по умолчанию'**
+  String get settingsSosExercise;
 
   /// No description provided for @settingsData.
   ///

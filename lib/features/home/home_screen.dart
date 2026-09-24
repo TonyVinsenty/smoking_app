@@ -115,7 +115,13 @@ class _TimerCard extends StatelessWidget {
                     children: [
                       for (final (i, u) in shown.indexed) ...[
                         if (i > 0)
-                          VerticalDivider(width: 12, thickness: 1.5, indent: 8, endIndent: 8, color: color.withValues(alpha: 0.35)),
+                          VerticalDivider(
+                            width: 12,
+                            thickness: 1.5,
+                            indent: 8,
+                            endIndent: 8,
+                            color: color.withValues(alpha: 0.35),
+                          ),
                         tile(u),
                       ],
                     ],
