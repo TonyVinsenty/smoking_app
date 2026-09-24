@@ -131,7 +131,7 @@ class _CelebrationState extends State<_Celebration> with TickerProviderStateMixi
                       ),
                       ScaleTransition(
                         scale: _badgeScale,
-                        child: BadgeIcon(achievement: a, unlocked: true, size: 112),
+                        child: BadgeIcon(achievement: a, unlocked: true, size: 112, pulse: true),
                       ),
                     ],
                   ),

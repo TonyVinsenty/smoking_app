@@ -48,15 +48,17 @@ class _HomeShellState extends ConsumerState<HomeShell> {
     }
     final current = attempts.where((a) => a.endedAt == null).firstOrNull;
     if (current == null) return;
-    final due = dueAchievements(
+    List<Achievement> dueAt(DateTime at) => dueAchievements(
       achievements: content.achievements,
       attempts: attempts,
       products: products,
       cravings: cravings,
-      articlesRead: articles.length,
+      articlesReadAt: [for (final a in articles) a.readAt],
       unlocked: unlocked,
-      now: DateTime.now(),
-    ).where((a) => !_reported.contains('${a.id}@${current.id}')).toList();
+      now: at,
+    );
+    final now = DateTime.now();
+    final due = dueAt(now).where((a) => !_reported.contains('${a.id}@${current.id}')).toList();
     if (due.isEmpty) return;
 
     _unlocking = true;
@@ -67,15 +69,19 @@ class _HomeShellState extends ConsumerState<HomeShell> {
       _unlocking = false;
     }
     if (!mounted) return;
-    // A batch means badges earned retroactively (quit date in the past): just a short note.
-    if (due.length > 3) {
+    // Celebrate only badges earned just now; ones earned retroactively (quit date in the past,
+    // app was closed) get a short note instead.
+    final earlier = dueAt(now.subtract(const Duration(minutes: 5))).map((a) => a.id).toSet();
+    var fresh = due.where((a) => !earlier.contains(a.id)).toList();
+    if (fresh.length > 3) fresh = [];
+    final retro = due.length - fresh.length;
+    if (retro > 0) {
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(AppLocalizations.of(context).achNewMany(due.length))));
-      return;
+          .showSnackBar(SnackBar(content: Text(AppLocalizations.of(context).achNewMany(retro))));
     }
     _unlocking = true; // no new checks while celebrating
     try {
-      for (final a in due) {
+      for (final a in fresh) {
         if (!mounted) return;
         await showAchievementCelebration(context, a);
       }

@@ -199,19 +199,19 @@ abstract class AppLocalizations {
   /// No description provided for @productName.
   ///
   /// In ru, this message translates to:
-  /// **'{type, select, cigarettes{Сигареты} sticks{Стики (IQOS, glo и др.)} disposable{Одноразовые вейпы} liquid{Жидкость для вейпа} other{}}'**
+  /// **'{type, select, cigarettes{Сигареты} sticks{Стики (IQOS, glo и др.)} disposable{Одноразовые вейпы} liquid{Вейп} other{}}'**
   String productName(String type);
 
   /// No description provided for @productUnits.
   ///
   /// In ru, this message translates to:
-  /// **'{type, select, cigarettes{Сколько сигарет} sticks{Сколько стиков} disposable{Сколько одноразок} liquid{Сколько флаконов} other{}}'**
+  /// **'{type, select, cigarettes{Сколько сигарет} sticks{Сколько стиков} disposable{Сколько одноразок} liquid{Сколько флаконов жидкости} other{}}'**
   String productUnits(String type);
 
   /// No description provided for @productPackPrice.
   ///
   /// In ru, this message translates to:
-  /// **'{type, select, cigarettes{Цена пачки, ₽} sticks{Цена пачки стиков, ₽} disposable{Цена одноразки, ₽} liquid{Цена флакона, ₽} other{}}'**
+  /// **'{type, select, cigarettes{Цена пачки, ₽} sticks{Цена пачки стиков, ₽} disposable{Цена одноразки, ₽} liquid{Цена флакона жидкости, ₽} other{}}'**
   String productPackPrice(String type);
 
   /// No description provided for @productUnitsPerPack.
@@ -291,6 +291,42 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'{count, plural, one{день} few{дня} many{дней} other{дня}}'**
   String homeDays(int count);
+
+  /// No description provided for @unitYears.
+  ///
+  /// In ru, this message translates to:
+  /// **'{count, plural, one{год} few{года} many{лет} other{года}}'**
+  String unitYears(int count);
+
+  /// No description provided for @unitMonths.
+  ///
+  /// In ru, this message translates to:
+  /// **'{count, plural, one{месяц} few{месяца} many{месяцев} other{месяца}}'**
+  String unitMonths(int count);
+
+  /// No description provided for @unitWeeks.
+  ///
+  /// In ru, this message translates to:
+  /// **'{count, plural, one{неделя} few{недели} many{недель} other{недели}}'**
+  String unitWeeks(int count);
+
+  /// No description provided for @homeTotal.
+  ///
+  /// In ru, this message translates to:
+  /// **'всего {value}'**
+  String homeTotal(String value);
+
+  /// No description provided for @homeSavingsInfoTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Как считаем'**
+  String get homeSavingsInfoTitle;
+
+  /// No description provided for @homeSavingsInfo.
+  ///
+  /// In ru, this message translates to:
+  /// **'По вашим ответам вы тратили примерно {perDay} ₽ в день — это около {perHour} ₽ в час. Каждая минута без курения добавляет деньги в копилку.'**
+  String homeSavingsInfo(String perDay, String perHour);
 
   /// No description provided for @homeSmokeFreeSince.
   ///
@@ -607,7 +643,7 @@ abstract class AppLocalizations {
   /// No description provided for @themeModeName.
   ///
   /// In ru, this message translates to:
-  /// **'{mode, select, system{Как в системе} light{Светлая} dark{Тёмная} other{}}'**
+  /// **'{mode, select, system{Системная} light{Светлая} dark{Тёмная} other{}}'**
   String themeModeName(String mode);
 
   /// No description provided for @settingsLargeText.

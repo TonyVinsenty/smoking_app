@@ -53,6 +53,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   int _step = 0;
   final Map<ProductType, _ProductForm> _forms = {};
   DateTime? _quitAt; // null = right now
+  bool _quitTimeUnknown = false; // «Не помню»: show only the date
   bool _saving = false;
 
   @override
@@ -95,7 +96,10 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     if (!mounted) return;
     var picked = DateTime(date.year, date.month, date.day, time?.hour ?? 10, time?.minute ?? 0);
     if (picked.isAfter(now)) picked = now;
-    setState(() => _quitAt = picked);
+    setState(() {
+      _quitAt = picked;
+      _quitTimeUnknown = time == null;
+    });
   }
 
   @override
@@ -246,7 +250,11 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
               title: Text(l.onbQuitEarlier),
               subtitle: _quitAt == null
                   ? null
-                  : Text(l.onbQuitChosen(DateFormat('d MMMM yyyy, HH:mm', 'ru').format(_quitAt!))),
+                  : Text(
+                      l.onbQuitChosen(
+                        DateFormat(_quitTimeUnknown ? 'd MMMM yyyy' : 'd MMMM yyyy, HH:mm', 'ru').format(_quitAt!),
+                      ),
+                    ),
               secondary: _quitAt == null
                   ? null
                   : IconButton(icon: const Icon(Icons.edit_calendar), onPressed: _pickQuitDate),

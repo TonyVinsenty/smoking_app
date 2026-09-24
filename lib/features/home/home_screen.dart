@@ -66,37 +66,59 @@ class _TimerCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final theme = Theme.of(context);
+    final color = theme.colorScheme.onPrimaryContainer;
     final d = attemptDuration(attempt, now);
+    final p = calendarParts(attempt.startedAt, now);
     String two(int n) => n.toString().padLeft(2, '0');
+    final clock = '${two(p.clock.inHours)}:${two(p.clock.inMinutes % 60)}:${two(p.clock.inSeconds % 60)}';
+    final clockStyle = TextStyle(color: color, fontFeatures: const [FontFeature.tabularFigures()]);
+
+    // Largest non-zero unit first, then everything down to days: "2 мес · 0 нед · 3 дня".
+    final units = [
+      (p.years, l.unitYears(p.years)),
+      (p.months, l.unitMonths(p.months)),
+      (p.weeks, l.unitWeeks(p.weeks)),
+      (p.days, l.homeDays(p.days)),
+    ];
+    final first = units.indexWhere((u) => u.$1 > 0);
+    final shown = first < 0 ? const <(int, String)>[] : units.sublist(first);
+
+    Widget tile((int, String) u) => Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: Column(
+        children: [
+          Text(
+            '${u.$1}',
+            style: theme.textTheme.displayMedium?.copyWith(color: color, fontWeight: FontWeight.bold, height: 1.1),
+          ),
+          Text(u.$2, style: theme.textTheme.titleMedium?.copyWith(color: color)),
+        ],
+      ),
+    );
+
     return Card(
       color: theme.colorScheme.primaryContainer,
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 28, horizontal: 20),
+        padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
         child: Column(
           children: [
-            Text.rich(
-              TextSpan(
-                children: [
-                  TextSpan(
-                    text: '${d.inDays} ',
-                    style: theme.textTheme.displayLarge?.copyWith(fontWeight: FontWeight.bold),
-                  ),
-                  TextSpan(text: l.homeDays(d.inDays), style: theme.textTheme.headlineSmall),
-                ],
+            if (shown.isEmpty)
+              // Less than a day: the clock is the hero.
+              Text(clock, style: theme.textTheme.displayMedium?.merge(clockStyle).copyWith(fontWeight: FontWeight.bold))
+            else ...[
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Row(mainAxisSize: MainAxisSize.min, children: [for (final u in shown) tile(u)]),
               ),
-              style: TextStyle(color: theme.colorScheme.onPrimaryContainer),
-            ),
-            Text(
-              '${two(d.inHours % 24)}:${two(d.inMinutes % 60)}:${two(d.inSeconds % 60)}',
-              style: theme.textTheme.headlineMedium?.copyWith(
-                color: theme.colorScheme.onPrimaryContainer,
-                fontFeatures: const [FontFeature.tabularFigures()],
-              ),
-            ),
+              const SizedBox(height: 8),
+              Text(clock, style: theme.textTheme.headlineMedium?.merge(clockStyle)),
+              if (d.inDays >= 7)
+                Text(l.homeTotal(l.durDays(d.inDays)), style: theme.textTheme.titleMedium?.merge(clockStyle)),
+            ],
             const SizedBox(height: 8),
             Text(
               l.homeSmokeFreeSince(DateFormat('d MMMM yyyy', 'ru').format(attempt.startedAt)),
-              style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onPrimaryContainer),
+              style: theme.textTheme.bodyMedium?.copyWith(color: color),
             ),
           ],
         ),
@@ -117,13 +139,26 @@ class _SavingsCard extends StatelessWidget {
     final theme = Theme.of(context);
     final fmt = NumberFormat('#,##0', 'ru');
     final units = unitsAvoided(products, duration);
-    Widget cell(IconData icon, String title, List<String> values) => Expanded(
+    Widget cell(IconData icon, String title, List<String> values, {VoidCallback? onInfo}) => Expanded(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Icon(icon, color: theme.colorScheme.primary),
           const SizedBox(height: 8),
-          Text(title, style: theme.textTheme.labelLarge),
+          Row(
+            children: [
+              Flexible(child: Text(title, style: theme.textTheme.labelLarge)),
+              if (onInfo != null)
+                InkWell(
+                  customBorder: const CircleBorder(),
+                  onTap: onInfo,
+                  child: Padding(
+                    padding: const EdgeInsets.all(4),
+                    child: Icon(Icons.info_outline, size: 18, color: theme.colorScheme.primary),
+                  ),
+                ),
+            ],
+          ),
           for (final v in values) Text(v, style: theme.textTheme.titleLarge),
         ],
       ),
@@ -135,7 +170,24 @@ class _SavingsCard extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            cell(Icons.savings_outlined, l.homeMoneySaved, [l.money(fmt.format(moneySaved(products, duration)))]),
+            cell(
+              Icons.savings_outlined,
+              l.homeMoneySaved,
+              [l.money(fmt.format(moneySaved(products, duration)))],
+              onInfo: () => showDialog<void>(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: Text(l.homeSavingsInfoTitle),
+                  content: Text(
+                    l.homeSavingsInfo(
+                      fmt.format(dailyCost(products)),
+                      NumberFormat('#,##0.#', 'ru').format(dailyCost(products) / 24),
+                    ),
+                  ),
+                  actions: [TextButton(onPressed: () => Navigator.pop(context), child: Text(l.done))],
+                ),
+              ),
+            ),
             const SizedBox(width: 16),
             cell(Icons.smoke_free, l.homeNotSmoked, [
               for (final e in units.entries) l.unitsAvoided(e.key.name, fmt.format(e.value.floor())),

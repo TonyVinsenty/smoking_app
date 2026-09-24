@@ -253,7 +253,7 @@ class _BadgeTile extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              BadgeIcon(achievement: a, unlocked: at != null, size: 96),
+              BadgeIcon(achievement: a, unlocked: at != null, size: 96, pulse: true),
               const SizedBox(height: 16),
               Text(a.title, textAlign: TextAlign.center, style: theme.textTheme.headlineSmall),
               const SizedBox(height: 8),

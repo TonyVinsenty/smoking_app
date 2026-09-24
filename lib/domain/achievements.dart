@@ -2,19 +2,21 @@ import '../content/content.dart';
 import '../data/database.dart';
 import 'stats.dart';
 
-/// Achievements whose condition is met now but which are not unlocked yet.
+/// Achievements whose condition is met at [now] but which are not unlocked yet.
 ///
 /// Time-based badges belong to an attempt and are earned again in each new attempt
 /// (they stay in the attempt history); all other badges are cumulative and earned once.
+/// Only events up to [now] count, so the same data can be evaluated "a few minutes ago".
 List<Achievement> dueAchievements({
   required List<Achievement> achievements,
   required List<Attempt> attempts,
   required List<SmokingProduct> products,
   required List<Craving> cravings,
-  required int articlesRead,
+  required List<DateTime> articlesReadAt,
   required List<UnlockedAchievement> unlocked,
   required DateTime now,
 }) {
+  attempts = attempts.where((a) => !a.startedAt.isAfter(now)).toList();
   final current = attempts.where((a) => a.endedAt == null).firstOrNull;
   if (current == null) return [];
   final everUnlocked = unlocked.map((u) => u.achievementId).toSet();
@@ -29,8 +31,8 @@ List<Achievement> dueAchievements({
     'smokeFreeMinutes' => attemptDuration(current, now).inMinutes,
     'moneySavedRub' => money,
     'unitsAvoided' => units,
-    'cravingsResisted' => cravings.where((c) => c.resisted).length,
-    'articlesRead' => articlesRead,
+    'cravingsResisted' => cravings.where((c) => c.resisted && !c.at.isAfter(now)).length,
+    'articlesRead' => articlesReadAt.where((t) => !t.isAfter(now)).length,
     'attemptsStarted' => attempts.length,
     'comebackAfterRelapse' => attempts.length - 1,
     _ => null,

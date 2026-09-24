@@ -67,7 +67,7 @@ class AppLocalizationsRu extends AppLocalizations {
       'cigarettes': 'Сигареты',
       'sticks': 'Стики (IQOS, glo и др.)',
       'disposable': 'Одноразовые вейпы',
-      'liquid': 'Жидкость для вейпа',
+      'liquid': 'Вейп',
       'other': '',
     });
     return '$_temp0';
@@ -79,7 +79,7 @@ class AppLocalizationsRu extends AppLocalizations {
       'cigarettes': 'Сколько сигарет',
       'sticks': 'Сколько стиков',
       'disposable': 'Сколько одноразок',
-      'liquid': 'Сколько флаконов',
+      'liquid': 'Сколько флаконов жидкости',
       'other': '',
     });
     return '$_temp0';
@@ -91,7 +91,7 @@ class AppLocalizationsRu extends AppLocalizations {
       'cigarettes': 'Цена пачки, ₽',
       'sticks': 'Цена пачки стиков, ₽',
       'disposable': 'Цена одноразки, ₽',
-      'liquid': 'Цена флакона, ₽',
+      'liquid': 'Цена флакона жидкости, ₽',
       'other': '',
     });
     return '$_temp0';
@@ -155,6 +155,58 @@ class AppLocalizationsRu extends AppLocalizations {
       one: 'день',
     );
     return '$_temp0';
+  }
+
+  @override
+  String unitYears(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'года',
+      many: 'лет',
+      few: 'года',
+      one: 'год',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String unitMonths(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'месяца',
+      many: 'месяцев',
+      few: 'месяца',
+      one: 'месяц',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String unitWeeks(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'недели',
+      many: 'недель',
+      few: 'недели',
+      one: 'неделя',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String homeTotal(String value) {
+    return 'всего $value';
+  }
+
+  @override
+  String get homeSavingsInfoTitle => 'Как считаем';
+
+  @override
+  String homeSavingsInfo(String perDay, String perHour) {
+    return 'По вашим ответам вы тратили примерно $perDay ₽ в день — это около $perHour ₽ в час. Каждая минута без курения добавляет деньги в копилку.';
   }
 
   @override
@@ -486,7 +538,7 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String themeModeName(String mode) {
     String _temp0 = intl.Intl.selectLogic(mode, {
-      'system': 'Как в системе',
+      'system': 'Системная',
       'light': 'Светлая',
       'dark': 'Тёмная',
       'other': '',
