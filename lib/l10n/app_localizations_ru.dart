@@ -115,8 +115,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get onbConsumptionTitle => 'Сколько и почём';
 
   @override
-  String get onbConsumptionHint =>
-      'Это нужно, чтобы считать сэкономленные деньги. Примерно — тоже хорошо.';
+  String get onbConsumptionHint => 'Это нужно, чтобы считать сэкономленные деньги. Примерно — тоже хорошо.';
 
   @override
   String get onbQuitTitle => 'Когда вы бросили?';
@@ -246,8 +245,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get savingsTotal => 'Всего';
 
   @override
-  String get savingsPeriodsHint =>
-      'Неделя считается с понедельника, месяц — с 1-го числа.';
+  String get savingsPeriodsHint => 'Неделя считается с понедельника, месяц — с 1-го числа.';
 
   @override
   String savingsForecast(String perMonth, String perYear) {
@@ -278,8 +276,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get homeNoAttemptTitle => 'Новая попытка';
 
   @override
-  String get homeNoAttemptText =>
-      'Каждая попытка делает вас сильнее. Опыт и значки остаются с вами.';
+  String get homeNoAttemptText => 'Каждая попытка делает вас сильнее. Опыт и значки остаются с вами.';
 
   @override
   String get homeStartAttempt => 'Начать с этой минуты';
@@ -294,8 +291,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get sosTriggerTitle => 'Что сейчас происходит?';
 
   @override
-  String get sosTriggerHint =>
-      'Один тап — и я запомню, когда вас тянет сильнее всего';
+  String get sosTriggerHint => 'Один тап — и я запомню, когда вас тянет сильнее всего';
 
   @override
   String get sosSkip => 'Пропустить';
@@ -342,8 +338,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String sosExerciseDesc(String exercise) {
     String _temp0 = intl.Intl.selectLogic(exercise, {
       'breathing': 'Вдох на 4 счёта, выдох на 6. Без задержек — просто следите за кругом.',
-      'countdown':
-          'Крупные числа от 10 до 0. Ничего делать не нужно — просто смотрите.',
+      'countdown': 'Крупные числа от 10 до 0. Ничего делать не нужно — просто смотрите.',
       'grounding': 'Пять простых шагов, чтобы вернуться в «здесь и сейчас».',
       'other': '',
     });
@@ -382,8 +377,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get sosGroundDone => 'Вы здесь и сейчас. Вы справляетесь.';
 
   @override
-  String get sosWaveHint =>
-      'Тяга — как волна: она нарастает и спадает за 3–5 минут. Просто продержитесь.';
+  String get sosWaveHint => 'Тяга — как волна: она нарастает и спадает за 3–5 минут. Просто продержитесь.';
 
   @override
   String get sosAnotherTip => 'Другой совет';
@@ -493,8 +487,7 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get healthNoAttempt =>
-      'Начните новую попытку на главном экране — и отсчёт восстановления пойдёт заново.';
+  String get healthNoAttempt => 'Начните новую попытку на главном экране — и отсчёт восстановления пойдёт заново.';
 
   @override
   String healthSource(String source) {
@@ -640,14 +633,120 @@ class AppLocalizationsRu extends AppLocalizations {
   String get settingsSosExercise => 'Упражнение по умолчанию';
 
   @override
+  String get settingsAttempt => 'Моя попытка';
+
+  @override
+  String get relapseButton => 'Я закурил(а)';
+
+  @override
+  String get relapseButtonHint => 'Без упрёков: отметим и начнём заново';
+
+  @override
+  String get historyButton => 'История попыток';
+
+  @override
+  String historyButtonHint(String best) {
+    return 'Рекорд: $best';
+  }
+
+  @override
+  String get relapseConfirmTitle => 'Отметить срыв?';
+
+  @override
+  String get relapseConfirmText => 'Текущий отсчёт остановится. Опыт, уровень и награды останутся с вами.';
+
+  @override
+  String get relapseConfirm => 'Да, отметить';
+
+  @override
+  String get relapseTitle => 'Дневник без упрёков';
+
+  @override
+  String get relapseIntro =>
+      'Спасибо, что отметили честно. Срыв — не провал, а подсказка: он показывает, что именно сработало против вас.';
+
+  @override
+  String get relapseWhen => 'Когда это было?';
+
+  @override
+  String get relapseJustNow => 'Только что';
+
+  @override
+  String get relapsePickTime => 'Выбрать время';
+
+  @override
+  String get relapseTrigger => 'Что к этому привело?';
+
+  @override
+  String get relapseQ1 => 'Что произошло?';
+
+  @override
+  String get relapseQ2 => 'Что могло бы помочь?';
+
+  @override
+  String get relapseQ3 => 'Что попробую в следующий раз?';
+
+  @override
+  String get relapseOptional => 'Всё необязательно — можно просто сохранить.';
+
+  @override
+  String get relapseSave => 'Сохранить';
+
+  @override
+  String get relapseDoneTitle => 'Это часть пути';
+
+  @override
+  String relapseDoneText(String duration, String best) {
+    return 'Без курения вы продержались $duration. Ваш рекорд — $best. Опыт, уровень и награды остаются с вами, а следующая попытка начнётся уже с этим знанием.';
+  }
+
+  @override
+  String get relapseStartNow => 'Начать новую попытку сейчас';
+
+  @override
+  String get relapseLater => 'Начну позже';
+
+  @override
+  String get historyTitle => 'История попыток';
+
+  @override
+  String get historyBest => 'Рекорд';
+
+  @override
+  String get historyTotal => 'Всего без курения';
+
+  @override
+  String get historyCount => 'Попыток';
+
+  @override
+  String historyAttempt(int n) {
+    return 'Попытка $n';
+  }
+
+  @override
+  String get historyNow => 'идёт сейчас';
+
+  @override
+  String historyBadges(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count награды',
+      many: '$count наград',
+      few: '$count награды',
+      one: '$count награда',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get settingsData => 'Мои данные';
 
   @override
   String get settingsReset => 'Полный сброс';
 
   @override
-  String get settingsResetHint =>
-      'Удалить все данные и начать с первого экрана';
+  String get settingsResetHint => 'Удалить все данные и начать с первого экрана';
 
   @override
   String get settingsResetConfirmTitle => 'Удалить все данные?';

@@ -24,6 +24,13 @@ String formatRemaining(AppLocalizations l, Duration d) {
   return l.durMinutes(d.inMinutes < 1 ? 1 : up(1));
 }
 
+/// Time elapsed, rounded down to one unit: "301 день", "5 часов", "12 минут".
+String formatElapsed(AppLocalizations l, Duration d) {
+  if (d.inDays >= 1) return l.durDays(d.inDays);
+  if (d.inHours >= 1) return l.durHours(d.inHours);
+  return l.durMinutes(d.inMinutes);
+}
+
 /// Icon names used in content JSON (achievements.json).
 IconData contentIcon(String name) => switch (name) {
   'bolt' => Icons.bolt,

@@ -61,8 +61,7 @@ import 'app_localizations_ru.dart';
 /// be consistent with the languages listed in the AppLocalizations.supportedLocales
 /// property.
 abstract class AppLocalizations {
-  AppLocalizations(String locale)
-    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+  AppLocalizations(String locale) : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -70,8 +69,7 @@ abstract class AppLocalizations {
     return Localizations.of<AppLocalizations>(context, AppLocalizations)!;
   }
 
-  static const LocalizationsDelegate<AppLocalizations> delegate =
-      _AppLocalizationsDelegate();
+  static const LocalizationsDelegate<AppLocalizations> delegate = _AppLocalizationsDelegate();
 
   /// A list of this localizations delegate along with the default localizations
   /// delegates.
@@ -83,13 +81,12 @@ abstract class AppLocalizations {
   /// Additional delegates can be added by appending to this list in
   /// MaterialApp. This list does not have to be used at all if a custom list
   /// of delegates is preferred or required.
-  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
-      <LocalizationsDelegate<dynamic>>[
-        delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-      ];
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates = <LocalizationsDelegate<dynamic>>[
+    delegate,
+    GlobalMaterialLocalizations.delegate,
+    GlobalCupertinoLocalizations.delegate,
+    GlobalWidgetsLocalizations.delegate,
+  ];
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[Locale('ru')];
@@ -772,6 +769,186 @@ abstract class AppLocalizations {
   /// **'Упражнение по умолчанию'**
   String get settingsSosExercise;
 
+  /// No description provided for @settingsAttempt.
+  ///
+  /// In ru, this message translates to:
+  /// **'Моя попытка'**
+  String get settingsAttempt;
+
+  /// No description provided for @relapseButton.
+  ///
+  /// In ru, this message translates to:
+  /// **'Я закурил(а)'**
+  String get relapseButton;
+
+  /// No description provided for @relapseButtonHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Без упрёков: отметим и начнём заново'**
+  String get relapseButtonHint;
+
+  /// No description provided for @historyButton.
+  ///
+  /// In ru, this message translates to:
+  /// **'История попыток'**
+  String get historyButton;
+
+  /// No description provided for @historyButtonHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Рекорд: {best}'**
+  String historyButtonHint(String best);
+
+  /// No description provided for @relapseConfirmTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отметить срыв?'**
+  String get relapseConfirmTitle;
+
+  /// No description provided for @relapseConfirmText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Текущий отсчёт остановится. Опыт, уровень и награды останутся с вами.'**
+  String get relapseConfirmText;
+
+  /// No description provided for @relapseConfirm.
+  ///
+  /// In ru, this message translates to:
+  /// **'Да, отметить'**
+  String get relapseConfirm;
+
+  /// No description provided for @relapseTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Дневник без упрёков'**
+  String get relapseTitle;
+
+  /// No description provided for @relapseIntro.
+  ///
+  /// In ru, this message translates to:
+  /// **'Спасибо, что отметили честно. Срыв — не провал, а подсказка: он показывает, что именно сработало против вас.'**
+  String get relapseIntro;
+
+  /// No description provided for @relapseWhen.
+  ///
+  /// In ru, this message translates to:
+  /// **'Когда это было?'**
+  String get relapseWhen;
+
+  /// No description provided for @relapseJustNow.
+  ///
+  /// In ru, this message translates to:
+  /// **'Только что'**
+  String get relapseJustNow;
+
+  /// No description provided for @relapsePickTime.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выбрать время'**
+  String get relapsePickTime;
+
+  /// No description provided for @relapseTrigger.
+  ///
+  /// In ru, this message translates to:
+  /// **'Что к этому привело?'**
+  String get relapseTrigger;
+
+  /// No description provided for @relapseQ1.
+  ///
+  /// In ru, this message translates to:
+  /// **'Что произошло?'**
+  String get relapseQ1;
+
+  /// No description provided for @relapseQ2.
+  ///
+  /// In ru, this message translates to:
+  /// **'Что могло бы помочь?'**
+  String get relapseQ2;
+
+  /// No description provided for @relapseQ3.
+  ///
+  /// In ru, this message translates to:
+  /// **'Что попробую в следующий раз?'**
+  String get relapseQ3;
+
+  /// No description provided for @relapseOptional.
+  ///
+  /// In ru, this message translates to:
+  /// **'Всё необязательно — можно просто сохранить.'**
+  String get relapseOptional;
+
+  /// No description provided for @relapseSave.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сохранить'**
+  String get relapseSave;
+
+  /// No description provided for @relapseDoneTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Это часть пути'**
+  String get relapseDoneTitle;
+
+  /// No description provided for @relapseDoneText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Без курения вы продержались {duration}. Ваш рекорд — {best}. Опыт, уровень и награды остаются с вами, а следующая попытка начнётся уже с этим знанием.'**
+  String relapseDoneText(String duration, String best);
+
+  /// No description provided for @relapseStartNow.
+  ///
+  /// In ru, this message translates to:
+  /// **'Начать новую попытку сейчас'**
+  String get relapseStartNow;
+
+  /// No description provided for @relapseLater.
+  ///
+  /// In ru, this message translates to:
+  /// **'Начну позже'**
+  String get relapseLater;
+
+  /// No description provided for @historyTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'История попыток'**
+  String get historyTitle;
+
+  /// No description provided for @historyBest.
+  ///
+  /// In ru, this message translates to:
+  /// **'Рекорд'**
+  String get historyBest;
+
+  /// No description provided for @historyTotal.
+  ///
+  /// In ru, this message translates to:
+  /// **'Всего без курения'**
+  String get historyTotal;
+
+  /// No description provided for @historyCount.
+  ///
+  /// In ru, this message translates to:
+  /// **'Попыток'**
+  String get historyCount;
+
+  /// No description provided for @historyAttempt.
+  ///
+  /// In ru, this message translates to:
+  /// **'Попытка {n}'**
+  String historyAttempt(int n);
+
+  /// No description provided for @historyNow.
+  ///
+  /// In ru, this message translates to:
+  /// **'идёт сейчас'**
+  String get historyNow;
+
+  /// No description provided for @historyBadges.
+  ///
+  /// In ru, this message translates to:
+  /// **'{count, plural, one{{count} награда} few{{count} награды} many{{count} наград} other{{count} награды}}'**
+  String historyBadges(int count);
+
   /// No description provided for @settingsData.
   ///
   /// In ru, this message translates to:
@@ -809,8 +986,7 @@ abstract class AppLocalizations {
   String get settingsResetConfirm;
 }
 
-class _AppLocalizationsDelegate
-    extends LocalizationsDelegate<AppLocalizations> {
+class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
   const _AppLocalizationsDelegate();
 
   @override
@@ -819,8 +995,7 @@ class _AppLocalizationsDelegate
   }
 
   @override
-  bool isSupported(Locale locale) =>
-      <String>['ru'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => <String>['ru'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;

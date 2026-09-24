@@ -86,6 +86,29 @@ class AppDatabase extends _$AppDatabase {
 
   Future<int> startAttempt(DateTime startedAt) => into(attempts).insert(AttemptsCompanion.insert(startedAt: startedAt));
 
+  /// «Я закурил»: ends the attempt with the no-guilt diary. The relapse is also logged as a craving
+  /// that was not resisted, so it shows up in the craving map.
+  Future<void> endAttempt({
+    required int attemptId,
+    required DateTime at,
+    Trigger? trigger,
+    String? whatHappened,
+    String? whatWouldHelp,
+    String? nextTime,
+  }) => transaction(() async {
+    await (update(attempts)..where((a) => a.id.equals(attemptId))).write(
+      AttemptsCompanion(
+        endedAt: Value(at),
+        trigger: Value(trigger),
+        whatHappened: Value(whatHappened),
+        whatWouldHelp: Value(whatWouldHelp),
+        nextTime: Value(nextTime),
+      ),
+    );
+    await into(cravings)
+        .insert(CravingsCompanion.insert(attemptId: attemptId, at: at, resisted: false, trigger: Value(trigger)));
+  });
+
   Future<void> logCraving({required int attemptId, required bool resisted, Trigger? trigger}) => into(cravings).insert(
     CravingsCompanion.insert(attemptId: attemptId, at: DateTime.now(), resisted: resisted, trigger: Value(trigger)),
   );

@@ -105,7 +105,7 @@ class _HomeShellState extends ConsumerState<HomeShell> {
       body: IndexedStack(index: _index, children: _screens),
       // Slightly see-through so it does not hide the content it floats over.
       floatingActionButton: FloatingActionButton.extended(
-        backgroundColor: Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.8),
+        backgroundColor: Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.75),
         elevation: 2,
         highlightElevation: 4,
         onPressed: () => SosScreen.open(context),

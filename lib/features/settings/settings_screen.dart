@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../app/format.dart';
 import '../../data/providers.dart';
 import '../../data/settings.dart';
 import '../../l10n/app_localizations.dart';
+import '../../domain/stats.dart';
+import '../relapse/history_screen.dart';
+import '../relapse/relapse_screen.dart';
 import '../sos/sos_screen.dart';
 
 class SettingsScreen extends ConsumerWidget {
@@ -13,6 +17,8 @@ class SettingsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context);
     final theme = Theme.of(context);
+    final attempts = ref.watch(attemptsProvider).value ?? const [];
+    final current = attempts.where((a) => a.endedAt == null).firstOrNull;
     Widget header(String text) => Padding(
       padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
       child: Text(text, style: theme.textTheme.titleSmall?.copyWith(color: theme.colorScheme.primary)),
@@ -46,6 +52,20 @@ class SettingsScreen extends ConsumerWidget {
             subtitle: Text(l.settingsLargeTextHint),
             value: ref.watch(largeTextProvider),
             onChanged: (on) => ref.read(largeTextProvider.notifier).set(on),
+          ),
+          header(l.settingsAttempt),
+          if (current != null)
+            ListTile(
+              leading: const Icon(Icons.edit_note),
+              title: Text(l.relapseButton),
+              subtitle: Text(l.relapseButtonHint),
+              onTap: () => RelapseScreen.start(context, current),
+            ),
+          ListTile(
+            leading: const Icon(Icons.history),
+            title: Text(l.historyButton),
+            subtitle: Text(l.historyButtonHint(formatElapsed(l, bestAttempt(attempts, DateTime.now())))),
+            onTap: () => HistoryScreen.open(context),
           ),
           header(l.settingsSos),
           ListTile(

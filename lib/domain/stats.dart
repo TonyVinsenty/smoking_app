@@ -59,3 +59,7 @@ int totalXp({
     clock: rest - Duration(days: rest.inDays),
   );
 }
+
+/// Longest single attempt (the personal record), including the running one.
+Duration bestAttempt(List<Attempt> attempts, DateTime now) =>
+    attempts.fold(Duration.zero, (best, a) => attemptDuration(a, now) > best ? attemptDuration(a, now) : best);
