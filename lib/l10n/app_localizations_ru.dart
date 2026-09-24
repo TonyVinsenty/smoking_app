@@ -133,6 +133,12 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
+  String get onbQuitTimeHelp => 'Во сколько примерно?';
+
+  @override
+  String get onbQuitTimeUnknown => 'Не помню';
+
+  @override
   String get onbFinish => 'Поехали!';
 
   @override
@@ -440,9 +446,26 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String achNew(String title, int xp) {
-    return 'Новое достижение: «$title» +$xp XP';
+  String achCondUnits(String count) {
+    return 'не выкурить $count шт.';
   }
+
+  @override
+  String tierName(String tier) {
+    String _temp0 = intl.Intl.selectLogic(tier, {
+      'bronze': 'Бронза',
+      'silver': 'Серебро',
+      'gold': 'Золото',
+      'other': 'Платина',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String get achCelebrateTitle => 'Новое достижение!';
+
+  @override
+  String get achCelebrateOk => 'Ура!';
 
   @override
   String achNewMany(int count) {

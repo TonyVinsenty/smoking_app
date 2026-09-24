@@ -35,6 +35,8 @@
   "onbQuitEarlier": "Раньше — укажу дату",
   "onbQuitChosen": "Бросил(а): {date}",
   "@onbQuitChosen": {"placeholders": {"date": {"type": "String"}}},
+  "onbQuitTimeHelp": "Во сколько примерно?",
+  "onbQuitTimeUnknown": "Не помню",
   "onbFinish": "Поехали!",
   "invalidNumber": "Введите число больше нуля",
 
@@ -113,8 +115,12 @@
   "@achCondAttempts": {"placeholders": {"count": {"type": "int"}}},
   "achCondComeback": "{count, plural, one{вернуться после срыва} few{вернуться после срыва {count} раза} many{вернуться после срыва {count} раз} other{вернуться после срыва {count} раза}}",
   "@achCondComeback": {"placeholders": {"count": {"type": "int"}}},
-  "achNew": "Новое достижение: «{title}» +{xp} XP",
-  "@achNew": {"placeholders": {"title": {"type": "String"}, "xp": {"type": "int"}}},
+  "achCondUnits": "не выкурить {count} шт.",
+  "@achCondUnits": {"placeholders": {"count": {"type": "String"}}},
+  "tierName": "{tier, select, bronze{Бронза} silver{Серебро} gold{Золото} other{Платина}}",
+  "@tierName": {"placeholders": {"tier": {"type": "String"}}},
+  "achCelebrateTitle": "Новое достижение!",
+  "achCelebrateOk": "Ура!",
   "achNewMany": "{count, plural, one{Открыто {count} достижение} few{Открыто {count} достижения} many{Открыто {count} достижений} other{Открыто {count} достижения}} — загляните во вкладку «Здоровье»",
   "@achNewMany": {"placeholders": {"count": {"type": "int"}}},
 

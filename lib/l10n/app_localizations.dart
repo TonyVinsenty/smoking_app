@@ -262,6 +262,18 @@ abstract class AppLocalizations {
   /// **'Бросил(а): {date}'**
   String onbQuitChosen(String date);
 
+  /// No description provided for @onbQuitTimeHelp.
+  ///
+  /// In ru, this message translates to:
+  /// **'Во сколько примерно?'**
+  String get onbQuitTimeHelp;
+
+  /// No description provided for @onbQuitTimeUnknown.
+  ///
+  /// In ru, this message translates to:
+  /// **'Не помню'**
+  String get onbQuitTimeUnknown;
+
   /// No description provided for @onbFinish.
   ///
   /// In ru, this message translates to:
@@ -556,11 +568,29 @@ abstract class AppLocalizations {
   /// **'{count, plural, one{вернуться после срыва} few{вернуться после срыва {count} раза} many{вернуться после срыва {count} раз} other{вернуться после срыва {count} раза}}'**
   String achCondComeback(int count);
 
-  /// No description provided for @achNew.
+  /// No description provided for @achCondUnits.
   ///
   /// In ru, this message translates to:
-  /// **'Новое достижение: «{title}» +{xp} XP'**
-  String achNew(String title, int xp);
+  /// **'не выкурить {count} шт.'**
+  String achCondUnits(String count);
+
+  /// No description provided for @tierName.
+  ///
+  /// In ru, this message translates to:
+  /// **'{tier, select, bronze{Бронза} silver{Серебро} gold{Золото} other{Платина}}'**
+  String tierName(String tier);
+
+  /// No description provided for @achCelebrateTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Новое достижение!'**
+  String get achCelebrateTitle;
+
+  /// No description provided for @achCelebrateOk.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ура!'**
+  String get achCelebrateOk;
 
   /// No description provided for @achNewMany.
   ///

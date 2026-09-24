@@ -41,42 +41,40 @@ class _SosScreenState extends ConsumerState<SosScreen> {
     final l = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(title: Text(l.sosButton)),
-      body: SafeArea(
-        child: _askTrigger ? _triggerStep(l) : _BreathingStep(onResisted: _resisted),
-      ),
+      body: SafeArea(child: _askTrigger ? _triggerStep(l) : _BreathingStep(onResisted: _resisted)),
     );
   }
 
   Widget _triggerStep(AppLocalizations l) => Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    padding: const EdgeInsets.all(24),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(l.sosTriggerTitle, style: Theme.of(context).textTheme.headlineSmall),
+        const SizedBox(height: 8),
+        Text(l.sosTriggerHint),
+        const SizedBox(height: 24),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
           children: [
-            Text(l.sosTriggerTitle, style: Theme.of(context).textTheme.headlineSmall),
-            const SizedBox(height: 8),
-            Text(l.sosTriggerHint),
-            const SizedBox(height: 24),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: [
-                for (final t in Trigger.values)
-                  ActionChip(
-                    label: Text(l.triggerName(t.name)),
-                    onPressed: () => setState(() {
-                      _trigger = t;
-                      _askTrigger = false;
-                    }),
-                  ),
-              ],
-            ),
-            const Spacer(),
-            Center(
-              child: TextButton(onPressed: () => setState(() => _askTrigger = false), child: Text(l.sosSkip)),
-            ),
+            for (final t in Trigger.values)
+              ActionChip(
+                label: Text(l.triggerName(t.name)),
+                onPressed: () => setState(() {
+                  _trigger = t;
+                  _askTrigger = false;
+                }),
+              ),
           ],
         ),
-      );
+        const Spacer(),
+        Center(
+          child: TextButton(onPressed: () => setState(() => _askTrigger = false), child: Text(l.sosSkip)),
+        ),
+      ],
+    ),
+  );
 }
 
 class _BreathingStep extends ConsumerStatefulWidget {
@@ -93,7 +91,10 @@ class _BreathingStepState extends ConsumerState<_BreathingStep> with SingleTicke
   static const _inSec = 4, _holdSec = 4, _outSec = 6;
   static const _cycle = _inSec + _holdSec + _outSec;
 
-  late final _controller = AnimationController(vsync: this, duration: const Duration(seconds: _cycle))..repeat();
+  late final _controller = AnimationController(
+    vsync: this,
+    duration: const Duration(seconds: _cycle),
+  )..repeat();
   final _random = Random();
   int _tipIndex = -1;
 
@@ -124,14 +125,17 @@ class _BreathingStepState extends ConsumerState<_BreathingStep> with SingleTicke
                   final (label, scale) = t < _inSec
                       ? (l.sosBreatheIn, 0.55 + 0.45 * Curves.easeInOut.transform(t / _inSec))
                       : t < _inSec + _holdSec
-                          ? (l.sosHold, 1.0)
-                          : (l.sosBreatheOut, 1.0 - 0.45 * Curves.easeInOut.transform((t - _inSec - _holdSec) / _outSec));
+                      ? (l.sosHold, 1.0)
+                      : (l.sosBreatheOut, 1.0 - 0.45 * Curves.easeInOut.transform((t - _inSec - _holdSec) / _outSec));
                   return Container(
                     width: 240 * scale,
                     height: 240 * scale,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(shape: BoxShape.circle, color: theme.colorScheme.primaryContainer),
-                    child: Text(label, style: theme.textTheme.headlineSmall?.copyWith(color: theme.colorScheme.onPrimaryContainer)),
+                    child: Text(
+                      label,
+                      style: theme.textTheme.headlineSmall?.copyWith(color: theme.colorScheme.onPrimaryContainer),
+                    ),
                   );
                 },
               ),
@@ -151,7 +155,9 @@ class _BreathingStepState extends ConsumerState<_BreathingStep> with SingleTicke
                       child: TextButton.icon(
                         icon: const Icon(Icons.refresh),
                         label: Text(l.sosAnotherTip),
-                        onPressed: () => setState(() => _tipIndex = (_tipIndex + 1 + _random.nextInt(tips.length - 1)) % tips.length),
+                        onPressed: () => setState(
+                          () => _tipIndex = (_tipIndex + 1 + _random.nextInt(tips.length - 1)) % tips.length,
+                        ),
                       ),
                     ),
                   ],

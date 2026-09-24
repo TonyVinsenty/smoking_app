@@ -13,10 +13,10 @@ Future<List<Map<String, dynamic>>> _loadList(String file) async {
 
 class Level {
   Level.fromJson(Map<String, dynamic> j)
-      : level = j['level'],
-        xpRequired = j['xpRequired'],
-        title = j['title'],
-        description = j['description'];
+    : level = j['level'],
+      xpRequired = j['xpRequired'],
+      title = j['title'],
+      description = j['description'];
 
   final int level;
   final int xpRequired;
@@ -26,14 +26,14 @@ class Level {
 
 class Achievement {
   Achievement.fromJson(Map<String, dynamic> j)
-      : id = j['id'],
-        title = j['title'],
-        description = j['description'],
-        icon = j['icon'],
-        tier = j['tier'],
-        xp = j['xp'],
-        conditionType = j['condition']['type'],
-        conditionValue = j['condition']['value'];
+    : id = j['id'],
+      title = j['title'],
+      description = j['description'],
+      icon = j['icon'],
+      tier = j['tier'],
+      xp = j['xp'],
+      conditionType = j['condition']['type'],
+      conditionValue = j['condition']['value'];
 
   final String id;
   final String title;
@@ -49,12 +49,12 @@ class Achievement {
 
 class HealthMilestone {
   HealthMilestone.fromJson(Map<String, dynamic> j)
-      : id = j['id'],
-        afterMinutes = j['afterMinutes'],
-        title = j['title'],
-        description = j['description'],
-        category = j['category'],
-        source = j['source'];
+    : id = j['id'],
+      afterMinutes = j['afterMinutes'],
+      title = j['title'],
+      description = j['description'],
+      category = j['category'],
+      source = j['source'];
 
   final String id;
   final int afterMinutes;
@@ -65,9 +65,7 @@ class HealthMilestone {
 }
 
 class Quote {
-  Quote.fromJson(Map<String, dynamic> j)
-      : text = j['text'],
-        author = j['author'];
+  Quote.fromJson(Map<String, dynamic> j) : text = j['text'], author = j['author'];
 
   final String text;
   final String? author;

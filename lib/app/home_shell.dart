@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../content/content.dart';
 import '../data/providers.dart';
 import '../domain/achievements.dart';
+import '../features/health/achievement_celebration.dart';
 import '../features/health/health_screen.dart';
 import '../features/home/home_screen.dart';
 import '../features/knowledge/knowledge_screen.dart';
@@ -66,10 +67,21 @@ class _HomeShellState extends ConsumerState<HomeShell> {
       _unlocking = false;
     }
     if (!mounted) return;
-    final l = AppLocalizations.of(context);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(due.length == 1 ? l.achNew(due.first.title, due.first.xp) : l.achNewMany(due.length))),
-    );
+    // A batch means badges earned retroactively (quit date in the past): just a short note.
+    if (due.length > 3) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(AppLocalizations.of(context).achNewMany(due.length))));
+      return;
+    }
+    _unlocking = true; // no new checks while celebrating
+    try {
+      for (final a in due) {
+        if (!mounted) return;
+        await showAchievementCelebration(context, a);
+      }
+    } finally {
+      _unlocking = false;
+    }
   }
 
   @override

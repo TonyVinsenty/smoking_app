@@ -10,7 +10,8 @@ final databaseProvider = Provider<AppDatabase>((ref) {
 });
 
 final productsProvider = StreamProvider<List<SmokingProduct>>(
-    (ref) => ref.watch(databaseProvider).select(ref.watch(databaseProvider).smokingProducts).watch());
+  (ref) => ref.watch(databaseProvider).select(ref.watch(databaseProvider).smokingProducts).watch(),
+);
 
 final attemptsProvider = StreamProvider<List<Attempt>>((ref) {
   final db = ref.watch(databaseProvider);
@@ -18,18 +19,21 @@ final attemptsProvider = StreamProvider<List<Attempt>>((ref) {
 });
 
 /// The running attempt, or null if the user has not started (or just relapsed).
-final currentAttemptProvider = Provider<AsyncValue<Attempt?>>((ref) => ref
-    .watch(attemptsProvider)
-    .whenData((list) => list.where((a) => a.endedAt == null).firstOrNull));
+final currentAttemptProvider = Provider<AsyncValue<Attempt?>>(
+  (ref) => ref.watch(attemptsProvider).whenData((list) => list.where((a) => a.endedAt == null).firstOrNull),
+);
 
 final cravingsProvider = StreamProvider<List<Craving>>(
-    (ref) => ref.watch(databaseProvider).select(ref.watch(databaseProvider).cravings).watch());
+  (ref) => ref.watch(databaseProvider).select(ref.watch(databaseProvider).cravings).watch(),
+);
 
 final unlockedAchievementsProvider = StreamProvider<List<UnlockedAchievement>>(
-    (ref) => ref.watch(databaseProvider).select(ref.watch(databaseProvider).unlockedAchievements).watch());
+  (ref) => ref.watch(databaseProvider).select(ref.watch(databaseProvider).unlockedAchievements).watch(),
+);
 
 final articlesReadProvider = StreamProvider<List<ArticlesReadData>>(
-    (ref) => ref.watch(databaseProvider).select(ref.watch(databaseProvider).articlesRead).watch());
+  (ref) => ref.watch(databaseProvider).select(ref.watch(databaseProvider).articlesRead).watch(),
+);
 
 /// Current time, updated every second (drives timers).
 final nowProvider = StreamProvider<DateTime>((ref) async* {

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../app/format.dart';
+import '../../app/widgets/badge_icon.dart';
 import '../../content/content.dart';
 import '../../data/database.dart';
 import '../../data/providers.dart';
@@ -172,6 +173,7 @@ class _AchievementsTab extends ConsumerWidget {
     // First time each badge was earned.
     final firstUnlock = <String, UnlockedAchievement>{};
     for (final u in unlocked) {
+      if (!content.achievements.any((a) => a.id == u.achievementId)) continue; // removed from content
       final prev = firstUnlock[u.achievementId];
       if (prev == null || u.unlockedAt.isBefore(prev.unlockedAt)) firstUnlock[u.achievementId] = u;
     }
@@ -220,7 +222,7 @@ class _BadgeTile extends StatelessWidget {
         padding: const EdgeInsets.all(4),
         child: Column(
           children: [
-            _BadgeIcon(achievement: achievement, unlocked: unlocked != null, size: 64),
+            BadgeIcon(achievement: achievement, unlocked: unlocked != null, size: 64),
             const SizedBox(height: 8),
             Text(
               achievement.title,
@@ -251,7 +253,7 @@ class _BadgeTile extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              _BadgeIcon(achievement: a, unlocked: at != null, size: 96),
+              BadgeIcon(achievement: a, unlocked: at != null, size: 96),
               const SizedBox(height: 16),
               Text(a.title, textAlign: TextAlign.center, style: theme.textTheme.headlineSmall),
               const SizedBox(height: 8),
@@ -265,7 +267,14 @@ class _BadgeTile extends StatelessWidget {
                 style: theme.textTheme.bodyMedium,
               ),
               const SizedBox(height: 8),
-              Chip(label: Text('+${a.xp} XP')),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                spacing: 8,
+                children: [
+                  Chip(label: Text(l.tierName(a.tier))),
+                  Chip(label: Text('+${a.xp} XP')),
+                ],
+              ),
             ],
           ),
         ),
@@ -278,39 +287,12 @@ class _BadgeTile extends StatelessWidget {
     return switch (a.conditionType) {
       'smokeFreeMinutes' => l.achCondSmokeFree(formatPeriod(l, v)),
       'moneySavedRub' => l.achCondMoney(NumberFormat('#,##0', 'ru').format(v)),
+      'unitsAvoided' => l.achCondUnits(NumberFormat('#,##0', 'ru').format(v)),
       'cravingsResisted' => l.achCondCravings(v),
       'articlesRead' => l.achCondArticles(v),
       'attemptsStarted' => l.achCondAttempts(v),
       'comebackAfterRelapse' => l.achCondComeback(v),
       _ => '',
     };
-  }
-}
-
-class _BadgeIcon extends StatelessWidget {
-  const _BadgeIcon({required this.achievement, required this.unlocked, required this.size});
-
-  final Achievement achievement;
-  final bool unlocked;
-  final double size;
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    final color = tierColor(achievement.tier);
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: unlocked ? color.withValues(alpha: 0.18) : scheme.surfaceContainerHighest,
-        border: Border.all(color: unlocked ? color : scheme.outlineVariant, width: 3),
-      ),
-      child: Icon(
-        unlocked ? contentIcon(achievement.icon) : Icons.lock_outline,
-        size: size * 0.5,
-        color: unlocked ? color : scheme.outline,
-      ),
-    );
   }
 }

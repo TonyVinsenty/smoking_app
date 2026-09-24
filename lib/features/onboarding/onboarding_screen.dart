@@ -16,8 +16,7 @@ class OnboardingScreen extends ConsumerStatefulWidget {
 }
 
 class _ProductForm {
-  _ProductForm(this.type)
-      : unitsPerPack = TextEditingController(text: _hasPacks(type) ? '20' : '1');
+  _ProductForm(this.type) : unitsPerPack = TextEditingController(text: _hasPacks(type) ? '20' : '1');
 
   final ProductType type;
   final amount = TextEditingController();
@@ -36,12 +35,12 @@ class _ProductForm {
   bool get isValid => _parse(amount) != null && _parse(price) != null && _parse(unitsPerPack) != null;
 
   SmokingProductsCompanion toCompanion() => SmokingProductsCompanion.insert(
-        type: type,
-        amount: _parse(amount)!,
-        period: period,
-        unitsPerPack: _parse(unitsPerPack)!.round(),
-        packPrice: _parse(price)!,
-      );
+    type: type,
+    amount: _parse(amount)!,
+    period: period,
+    unitsPerPack: _parse(unitsPerPack)!.round(),
+    packPrice: _parse(price)!,
+  );
 
   void dispose() {
     amount.dispose();
@@ -65,17 +64,16 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   }
 
   bool get _canContinue => switch (_step) {
-        1 => _forms.isNotEmpty,
-        2 => _forms.values.every((f) => f.isValid),
-        _ => true,
-      };
+    1 => _forms.isNotEmpty,
+    2 => _forms.values.every((f) => f.isValid),
+    _ => true,
+  };
 
   Future<void> _finish() async {
     setState(() => _saving = true);
-    await ref.read(databaseProvider).completeOnboarding(
-          [for (final f in _forms.values) f.toCompanion()],
-          _quitAt ?? DateTime.now(),
-        );
+    await ref.read(databaseProvider).completeOnboarding([
+      for (final f in _forms.values) f.toCompanion(),
+    ], _quitAt ?? DateTime.now());
   }
 
   Future<void> _pickQuitDate() async {
@@ -87,9 +85,15 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       lastDate: now,
     );
     if (date == null || !mounted) return;
-    final time = await showTimePicker(context: context, initialTime: TimeOfDay.fromDateTime(_quitAt ?? now));
+    // «Не помню» (cancel) or dismissing the picker means 10:00.
+    final time = await showTimePicker(
+      context: context,
+      initialTime: _quitAt == null ? const TimeOfDay(hour: 10, minute: 0) : TimeOfDay.fromDateTime(_quitAt!),
+      helpText: AppLocalizations.of(context).onbQuitTimeHelp,
+      cancelText: AppLocalizations.of(context).onbQuitTimeUnknown,
+    );
     if (!mounted) return;
-    var picked = DateTime(date.year, date.month, date.day, time?.hour ?? 0, time?.minute ?? 0);
+    var picked = DateTime(date.year, date.month, date.day, time?.hour ?? 10, time?.minute ?? 0);
     if (picked.isAfter(now)) picked = now;
     setState(() => _quitAt = picked);
   }
@@ -126,16 +130,19 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
               padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
               child: Row(
                 children: [
-                  if (_step > 0)
-                    TextButton(onPressed: () => setState(() => _step--), child: Text(l.back)),
+                  if (_step > 0) TextButton(onPressed: () => setState(() => _step--), child: Text(l.back)),
                   const Spacer(),
                   FilledButton(
                     onPressed: !_canContinue || _saving
                         ? null
                         : isLast
-                            ? _finish
-                            : () => setState(() => _step++),
-                    child: Text(switch (_step) { 0 => l.onbStart, 3 => l.onbFinish, _ => l.next }),
+                        ? _finish
+                        : () => setState(() => _step++),
+                    child: Text(switch (_step) {
+                      0 => l.onbStart,
+                      3 => l.onbFinish,
+                      _ => l.next,
+                    }),
                   ),
                 ],
               ),
@@ -147,107 +154,106 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   }
 
   Widget _title(String text, [String? hint]) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(text, style: Theme.of(context).textTheme.headlineMedium),
-          if (hint != null) ...[
-            const SizedBox(height: 8),
-            Text(hint, style: Theme.of(context).textTheme.bodyLarge),
-          ],
-          const SizedBox(height: 24),
-        ],
-      );
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(text, style: Theme.of(context).textTheme.headlineMedium),
+      if (hint != null) ...[const SizedBox(height: 8), Text(hint, style: Theme.of(context).textTheme.bodyLarge)],
+      const SizedBox(height: 24),
+    ],
+  );
 
   Widget _welcome(AppLocalizations l) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 48),
-          Icon(Icons.spa, size: 88, color: Theme.of(context).colorScheme.primary),
-          const SizedBox(height: 24),
-          _title(l.onbWelcomeTitle, l.onbWelcomeText),
-        ],
-      );
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      const SizedBox(height: 48),
+      Icon(Icons.spa, size: 88, color: Theme.of(context).colorScheme.primary),
+      const SizedBox(height: 24),
+      _title(l.onbWelcomeTitle, l.onbWelcomeText),
+    ],
+  );
 
   Widget _products(AppLocalizations l) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _title(l.onbProductsTitle, l.onbProductsHint),
-          for (final type in ProductType.values)
-            CheckboxListTile(
-              value: _forms.containsKey(type),
-              title: Text(l.productName(type.name)),
-              onChanged: (on) => setState(() {
-                if (on!) {
-                  _forms[type] = _ProductForm(type);
-                } else {
-                  _forms.remove(type)?.dispose();
-                }
-              }),
-            ),
-        ],
-      );
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      _title(l.onbProductsTitle, l.onbProductsHint),
+      for (final type in ProductType.values)
+        CheckboxListTile(
+          value: _forms.containsKey(type),
+          title: Text(l.productName(type.name)),
+          onChanged: (on) => setState(() {
+            if (on!) {
+              _forms[type] = _ProductForm(type);
+            } else {
+              _forms.remove(type)?.dispose();
+            }
+          }),
+        ),
+    ],
+  );
 
   Widget _consumption(AppLocalizations l) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _title(l.onbConsumptionTitle, l.onbConsumptionHint),
-          for (final f in _forms.values) ...[
-            Text(l.productName(f.type.name), style: Theme.of(context).textTheme.titleLarge),
-            const SizedBox(height: 12),
-            _numberField(f.amount, l.productUnits(f.type.name)),
-            const SizedBox(height: 8),
-            SegmentedButton<ConsumptionPeriod>(
-              segments: [
-                for (final p in ConsumptionPeriod.values)
-                  ButtonSegment(value: p, label: Text(l.periodName(p.name))),
-              ],
-              selected: {f.period},
-              onSelectionChanged: (s) => setState(() => f.period = s.first),
-            ),
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                Expanded(child: _numberField(f.price, l.productPackPrice(f.type.name))),
-                if (f.hasPacks) ...[
-                  const SizedBox(width: 12),
-                  SizedBox(width: 120, child: _numberField(f.unitsPerPack, l.productUnitsPerPack, integer: true)),
-                ],
-              ],
-            ),
-            const SizedBox(height: 32),
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      _title(l.onbConsumptionTitle, l.onbConsumptionHint),
+      for (final f in _forms.values) ...[
+        Text(l.productName(f.type.name), style: Theme.of(context).textTheme.titleLarge),
+        const SizedBox(height: 12),
+        _numberField(f.amount, l.productUnits(f.type.name)),
+        const SizedBox(height: 8),
+        SegmentedButton<ConsumptionPeriod>(
+          showSelectedIcon: false, // the check mark made the buttons jump
+          segments: [
+            for (final p in ConsumptionPeriod.values) ButtonSegment(value: p, label: Text(l.periodName(p.name))),
           ],
-        ],
-      );
+          selected: {f.period},
+          onSelectionChanged: (s) => setState(() => f.period = s.first),
+        ),
+        const SizedBox(height: 12),
+        Row(
+          children: [
+            Expanded(child: _numberField(f.price, l.productPackPrice(f.type.name))),
+            if (f.hasPacks) ...[
+              const SizedBox(width: 12),
+              SizedBox(width: 120, child: _numberField(f.unitsPerPack, l.productUnitsPerPack, integer: true)),
+            ],
+          ],
+        ),
+        const SizedBox(height: 32),
+      ],
+    ],
+  );
 
   Widget _numberField(TextEditingController c, String label, {bool integer = false}) => TextField(
-        controller: c,
-        decoration: InputDecoration(labelText: label, border: const OutlineInputBorder()),
-        keyboardType: TextInputType.numberWithOptions(decimal: !integer),
-        inputFormatters: [FilteringTextInputFormatter.allow(RegExp(integer ? r'[0-9]' : r'[0-9.,]'))],
-        onChanged: (_) => setState(() {}),
-      );
+    controller: c,
+    decoration: InputDecoration(labelText: label, border: const OutlineInputBorder()),
+    keyboardType: TextInputType.numberWithOptions(decimal: !integer),
+    inputFormatters: [FilteringTextInputFormatter.allow(RegExp(integer ? r'[0-9]' : r'[0-9.,]'))],
+    onChanged: (_) => setState(() {}),
+  );
 
   Widget _quitDate(AppLocalizations l) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _title(l.onbQuitTitle),
-          RadioGroup<bool>(
-            groupValue: _quitAt == null,
-            onChanged: (now) => now! ? setState(() => _quitAt = null) : _pickQuitDate(),
-            child: Column(
-              children: [
-                RadioListTile(value: true, title: Text(l.onbQuitNow)),
-                RadioListTile(
-                  value: false,
-                  title: Text(l.onbQuitEarlier),
-                  subtitle: _quitAt == null
-                      ? null
-                      : Text(l.onbQuitChosen(DateFormat('d MMMM yyyy, HH:mm', 'ru').format(_quitAt!))),
-                  secondary: _quitAt == null ? null : IconButton(icon: const Icon(Icons.edit_calendar), onPressed: _pickQuitDate),
-                ),
-              ],
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      _title(l.onbQuitTitle),
+      RadioGroup<bool>(
+        groupValue: _quitAt == null,
+        onChanged: (now) => now! ? setState(() => _quitAt = null) : _pickQuitDate(),
+        child: Column(
+          children: [
+            RadioListTile(value: true, title: Text(l.onbQuitNow)),
+            RadioListTile(
+              value: false,
+              title: Text(l.onbQuitEarlier),
+              subtitle: _quitAt == null
+                  ? null
+                  : Text(l.onbQuitChosen(DateFormat('d MMMM yyyy, HH:mm', 'ru').format(_quitAt!))),
+              secondary: _quitAt == null
+                  ? null
+                  : IconButton(icon: const Icon(Icons.edit_calendar), onPressed: _pickQuitDate),
             ),
-          ),
-        ],
-      );
+          ],
+        ),
+      ),
+    ],
+  );
 }

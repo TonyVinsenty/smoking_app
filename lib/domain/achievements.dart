@@ -20,10 +20,15 @@ List<Achievement> dueAchievements({
   final everUnlocked = unlocked.map((u) => u.achievementId).toSet();
   final unlockedNow = unlocked.where((u) => u.attemptId == current.id).map((u) => u.achievementId).toSet();
   final money = attempts.fold<double>(0, (sum, a) => sum + moneySaved(products, attemptDuration(a, now)));
+  final units = attempts.fold<double>(
+    0,
+    (sum, a) => sum + unitsAvoided(products, attemptDuration(a, now)).values.fold(0.0, (s, v) => s + v),
+  );
 
   num? progress(Achievement a) => switch (a.conditionType) {
     'smokeFreeMinutes' => attemptDuration(current, now).inMinutes,
     'moneySavedRub' => money,
+    'unitsAvoided' => units,
     'cravingsResisted' => cravings.where((c) => c.resisted).length,
     'articlesRead' => articlesRead,
     'attemptsStarted' => attempts.length,

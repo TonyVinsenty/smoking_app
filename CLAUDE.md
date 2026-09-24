@@ -16,7 +16,9 @@ Russian only for now, but everything is translatable: UI strings in `lib/l10n/ap
 - Home: smoke-free timer, level + XP bar, money saved, units not consumed, motivational quote.
 - **SOS «Хочу курить»**: floating button on every screen (+ home-screen widget later). Flow: one tap "what's happening" (trigger → craving map) → breathing exercise + quick tips → "справился" (logged, gives XP). Craving map shows personal patterns (time of day / trigger).
 - Health: recovery milestones timeline with progress + achievements/badges. Medical disclaimer required.
-- Levels: XP = 1/smoke-free hour (cumulative across attempts, never lost) + 10/resisted craving + achievement xp.
+- Levels: XP = 1/smoke-free hour (cumulative across attempts, never lost) + 10/resisted craving + achievement xp. Owner wants progress to feel tangible, not stingy: 50 levels (level-ups ~daily in week 1, ~monthly after a year), 70 achievements with generous XP (thresholds modelled on a typical user).
+- Content voice: «вы», gender-neutral, never shaming.
+- New-badge celebration animation for 1–3 live unlocks; retroactive batches just get a snackbar. Owner wants more smoothness/animations overall — phase 2 polish.
 - «Я закурил» lives in Настройки only. One confirmation against accidental tap, then kind "no-guilt diary": trigger (stress, alcohol, company, coffee, after meal, boredom, ritual, other) + 3 short optional questions (what happened / what would have helped / what I'll try next time). Ends current attempt; badges stay in attempt history; best record kept. Never shaming.
 - Notifications in MVP: rare, only supportive, never annoying.
 - Accessibility: dark theme + large-font option.
@@ -30,7 +32,7 @@ Russian only for now, but everything is translatable: UI strings in `lib/l10n/ap
 Open question for later: a growing tree / pet as a progress metaphor (owner unsure — discuss).
 
 ## Progress (MVP)
-Done: skeleton, onboarding, home (timer, savings, level/XP, quote — tap for next), SOS (trigger → breathing → resisted, FAB on all tabs), app name Zero, larger text app-wide, Settings (theme mode, «Крупный текст», «Полный сброс»), achievement unlocking (HomeShell checks every second; time badges per attempt, others cumulative) + Health tab (recovery timeline, badge grid). Runs on emulator `Pixel_8` (`flutter emulators --launch Pixel_8`).
+Done: skeleton, onboarding, home (timer, savings, level/XP, quote — tap for next), SOS (trigger → breathing → resisted, FAB on all tabs), app name Zero, larger text app-wide, Settings (theme mode, «Крупный текст», «Полный сброс»), achievement unlocking (HomeShell checks every second; time badges per attempt, others cumulative) + Health tab (recovery timeline, badge grid), onboarding quit time «Не помню» = 10:00. Runs on emulator `Pixel_8` (`flutter emulators --launch Pixel_8`).
 Next: «Я закурил» flow (confirm + diary) + attempt history → Knowledge tab → Settings «Мои данные» (edit products) → notifications → craving-map stats.
 Dev notes: adb at D:/Android/Sdk/platform-tools/adb.exe (screenshots: `adb exec-out screencap -p`); run `flutter gen-l10n` after editing ARB, `dart run build_runner build` after DB changes; no Python on this machine; `kotlin.incremental=false` needed (C:/D: drives).
 

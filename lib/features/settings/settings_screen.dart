@@ -13,9 +13,9 @@ class SettingsScreen extends ConsumerWidget {
     final l = AppLocalizations.of(context);
     final theme = Theme.of(context);
     Widget header(String text) => Padding(
-          padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
-          child: Text(text, style: theme.textTheme.titleSmall?.copyWith(color: theme.colorScheme.primary)),
-        );
+      padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
+      child: Text(text, style: theme.textTheme.titleSmall?.copyWith(color: theme.colorScheme.primary)),
+    );
     return Scaffold(
       appBar: AppBar(title: Text(l.tabSettings)),
       body: ListView(
@@ -25,6 +25,7 @@ class SettingsScreen extends ConsumerWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: SegmentedButton<ThemeMode>(
+              showSelectedIcon: false,
               segments: [
                 for (final m in ThemeMode.values) ButtonSegment(value: m, label: Text(l.themeModeName(m.name))),
               ],
