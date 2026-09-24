@@ -1,0 +1,42 @@
+[
+  { "id": "ach_20min", "title": "Первая победа", "description": "Ты продержался 20 минут без сигареты — организм уже начал приходить в себя.", "icon": "bolt", "tier": "bronze", "xp": 10, "condition": { "type": "smokeFreeMinutes", "value": 20 } },
+  { "id": "ach_1h", "title": "Целый час!", "description": "Час без сигареты — маленький, но настоящий рекорд.", "icon": "bolt", "tier": "bronze", "xp": 10, "condition": { "type": "smokeFreeMinutes", "value": 60 } },
+  { "id": "ach_12h", "title": "Свежий воздух", "description": "12 часов без дыма — кровь уже получает больше кислорода.", "icon": "air", "tier": "bronze", "xp": 15, "condition": { "type": "smokeFreeMinutes", "value": 720 } },
+  { "id": "ach_1d", "title": "Сутки продержался", "description": "Целые сутки без сигареты — это уже не случайность, а решение.", "icon": "local_fire_department", "tier": "silver", "xp": 50, "condition": { "type": "smokeFreeMinutes", "value": 1440 } },
+  { "id": "ach_3d", "title": "Самое трудное позади", "description": "Никотин полностью покинул тело. Дальше будет легче.", "icon": "air", "tier": "silver", "xp": 75, "condition": { "type": "smokeFreeMinutes", "value": 4320 } },
+  { "id": "ach_1w", "title": "Неделя новой жизни", "description": "Семь дней без сигарет — серьёзная заявка на успех.", "icon": "local_fire_department", "tier": "silver", "xp": 100, "condition": { "type": "smokeFreeMinutes", "value": 10080 } },
+  { "id": "ach_2w", "title": "Две недели силы", "description": "Кровообращение налаживается, а ты становишься сильнее с каждым днём.", "icon": "favorite", "tier": "silver", "xp": 125, "condition": { "type": "smokeFreeMinutes", "value": 20160 } },
+  { "id": "ach_1m", "title": "Месяц без дыма", "description": "Целый месяц! Лёгкие уже говорят тебе спасибо.", "icon": "emoji_events", "tier": "gold", "xp": 200, "condition": { "type": "smokeFreeMinutes", "value": 43200 } },
+  { "id": "ach_2m", "title": "Два месяца свободы", "description": "Привычка курить слабеет с каждым днём — а ты крепнешь.", "icon": "self_improvement", "tier": "gold", "xp": 225, "condition": { "type": "smokeFreeMinutes", "value": 86400 } },
+  { "id": "ach_3m", "title": "Квартал без сигарет", "description": "Три месяца — дыхание и выносливость заметно улучшились.", "icon": "favorite", "tier": "gold", "xp": 250, "condition": { "type": "smokeFreeMinutes", "value": 129600 } },
+  { "id": "ach_6m", "title": "Полгода нового себя", "description": "Шесть месяцев без сигарет — привычка курить осталась в прошлом.", "icon": "spa", "tier": "gold", "xp": 300, "condition": { "type": "smokeFreeMinutes", "value": 259200 } },
+  { "id": "ach_9m", "title": "Девять месяцев", "description": "Лёгкие практически восстановились. Ты проделал огромную работу.", "icon": "air", "tier": "gold", "xp": 350, "condition": { "type": "smokeFreeMinutes", "value": 388800 } },
+  { "id": "ach_1y", "title": "Год без сигарет", "description": "Целый год свободы — риск для сердца снизился почти вдвое.", "icon": "military_tech", "tier": "platinum", "xp": 500, "condition": { "type": "smokeFreeMinutes", "value": 525600 } },
+  { "id": "ach_2y", "title": "Два года", "description": "Два года без сигарет — это уже образ жизни, а не эксперимент.", "icon": "military_tech", "tier": "platinum", "xp": 700, "condition": { "type": "smokeFreeMinutes", "value": 1051200 } },
+  { "id": "ach_5y", "title": "Пять лет свободы", "description": "Пять лет без дыма — риски для здоровья продолжают снижаться год от года.", "icon": "emoji_events", "tier": "platinum", "xp": 1000, "condition": { "type": "smokeFreeMinutes", "value": 2628000 } },
+  { "id": "ach_10y", "title": "Десять лет", "description": "Десятилетие без сигарет. Ты — живое доказательство того, что это возможно.", "icon": "star", "tier": "platinum", "xp": 1500, "condition": { "type": "smokeFreeMinutes", "value": 5256000 } },
+
+  { "id": "ach_money_500", "title": "Первые сбережения", "description": "Ты сэкономил 500 рублей, которые раньше уходили в дым.", "icon": "savings", "tier": "bronze", "xp": 20, "condition": { "type": "moneySavedRub", "value": 500 } },
+  { "id": "ach_money_1000", "title": "Тысяча в копилке", "description": "1000 рублей остались у тебя, а не у сигаретного ларька.", "icon": "savings", "tier": "bronze", "xp": 30, "condition": { "type": "moneySavedRub", "value": 1000 } },
+  { "id": "ach_money_5000", "title": "Приятная сумма", "description": "5000 рублей сэкономлено — уже похоже на подарок самому себе.", "icon": "savings", "tier": "silver", "xp": 75, "condition": { "type": "moneySavedRub", "value": 5000 } },
+  { "id": "ach_money_10000", "title": "Десять тысяч", "description": "10 000 рублей остались в кармане благодаря твоему решению.", "icon": "savings", "tier": "silver", "xp": 100, "condition": { "type": "moneySavedRub", "value": 10000 } },
+  { "id": "ach_money_50000", "title": "Полновесная копилка", "description": "50 000 рублей — это уже серьёзная сумма на что-то приятное.", "icon": "savings", "tier": "gold", "xp": 250, "condition": { "type": "moneySavedRub", "value": 50000 } },
+  { "id": "ach_money_100000", "title": "Сто тысяч", "description": "100 000 рублей сэкономлено. Сигареты обошлись бы дороже, чем ты думал.", "icon": "savings", "tier": "platinum", "xp": 500, "condition": { "type": "moneySavedRub", "value": 100000 } },
+
+  { "id": "ach_craving_1", "title": "Тяга не победила", "description": "Ты почувствовал тягу и справился с ней — это и есть сила.", "icon": "self_improvement", "tier": "bronze", "xp": 10, "condition": { "type": "cravingsResisted", "value": 1 } },
+  { "id": "ach_craving_5", "title": "Пять побед над тягой", "description": "Уже пять раз тяга отступала перед тобой.", "icon": "self_improvement", "tier": "bronze", "xp": 30, "condition": { "type": "cravingsResisted", "value": 5 } },
+  { "id": "ach_craving_25", "title": "Мастер дыхания", "description": "25 раз ты выбрал дыхание вместо сигареты.", "icon": "self_improvement", "tier": "silver", "xp": 100, "condition": { "type": "cravingsResisted", "value": 25 } },
+  { "id": "ach_craving_50", "title": "Тяга сдалась", "description": "50 побед над тягой — она уже почти не пытается с тобой спорить.", "icon": "bolt", "tier": "gold", "xp": 200, "condition": { "type": "cravingsResisted", "value": 50 } },
+  { "id": "ach_craving_100", "title": "Непробиваемый", "description": "100 раз тяга приходила — и 100 раз уходила ни с чем.", "icon": "military_tech", "tier": "platinum", "xp": 400, "condition": { "type": "cravingsResisted", "value": 100 } },
+
+  { "id": "ach_article_1", "title": "Первые знания", "description": "Ты прочитал первую статью — знание тоже помогает не курить.", "icon": "menu_book", "tier": "bronze", "xp": 10, "condition": { "type": "articlesRead", "value": 1 } },
+  { "id": "ach_article_5", "title": "Любопытный ум", "description": "Пять статей прочитано — ты начинаешь понимать зависимость изнутри.", "icon": "menu_book", "tier": "silver", "xp": 50, "condition": { "type": "articlesRead", "value": 5 } },
+  { "id": "ach_article_10", "title": "Почти эксперт", "description": "Десять статей — ты знаешь о курении и отказе от него больше, чем многие думают.", "icon": "menu_book", "tier": "gold", "xp": 100, "condition": { "type": "articlesRead", "value": 10 } },
+  { "id": "ach_article_15", "title": "Всезнающий", "description": "Ты прочитал все статьи в приложении. Теперь у тебя есть не только сила воли, но и знания.", "icon": "menu_book", "tier": "platinum", "xp": 200, "condition": { "type": "articlesRead", "value": 15 } },
+
+  { "id": "ach_attempt_1", "title": "Путь начат", "description": "Ты нажал кнопку и начал отсчёт. Это уже смелый шаг.", "icon": "star", "tier": "bronze", "xp": 10, "condition": { "type": "attemptsStarted", "value": 1 } },
+  { "id": "ach_attempt_3", "title": "Не сдаёшься", "description": "Ты пробуешь снова и снова — именно так рано или поздно получается у всех.", "icon": "star", "tier": "silver", "xp": 50, "condition": { "type": "attemptsStarted", "value": 3 } },
+
+  { "id": "ach_comeback_1", "title": "С возвращением", "description": "Ты сорвался и вернулся — это гораздо важнее, чем не срываться никогда.", "icon": "spa", "tier": "bronze", "xp": 30, "condition": { "type": "comebackAfterRelapse", "value": 1 } },
+  { "id": "ach_comeback_3", "title": "Стойкость", "description": "Три раза ты начинал заново после срыва. Это и есть настоящая сила характера.", "icon": "spa", "tier": "silver", "xp": 75, "condition": { "type": "comebackAfterRelapse", "value": 3 } }
+]

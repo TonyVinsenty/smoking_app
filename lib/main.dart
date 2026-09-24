@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'app/home_shell.dart';
 import 'app/theme.dart';
+import 'data/providers.dart';
+import 'features/onboarding/onboarding_screen.dart';
 import 'l10n/app_localizations.dart';
 
 void main() {
@@ -28,7 +30,21 @@ class SmokingApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      home: const HomeShell(),
+      home: const _Root(),
     );
+  }
+}
+
+/// Shows onboarding until the first attempt exists.
+class _Root extends ConsumerWidget {
+  const _Root();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return ref.watch(attemptsProvider).when(
+          data: (attempts) => attempts.isEmpty ? const OnboardingScreen() : const HomeShell(),
+          loading: () => const Scaffold(),
+          error: (e, _) => Scaffold(body: Center(child: Text('$e'))),
+        );
   }
 }

@@ -1,0 +1,122 @@
+[
+  {
+    "id": "why_cravings",
+    "title": "Почему возникает тяга и как работает никотиновая зависимость",
+    "summary": "Как никотин обманывает мозг и почему тяга всегда проходит.",
+    "category": "addiction",
+    "readMinutes": 4,
+    "file": "articles/why_cravings.md"
+  },
+  {
+    "id": "withdrawal_timeline",
+    "title": "Первые дни без сигарет: чего ожидать",
+    "summary": "Что происходит с телом и настроением по часам и дням после отказа от курения.",
+    "category": "health",
+    "readMinutes": 5,
+    "file": "articles/withdrawal_timeline.md"
+  },
+  {
+    "id": "weight_gain_myth",
+    "title": "Миф о наборе веса при отказе от курения",
+    "summary": "Правда о лишних килограммах и как их избежать без лишнего стресса.",
+    "category": "myths",
+    "readMinutes": 4,
+    "file": "articles/weight_gain_myth.md"
+  },
+  {
+    "id": "after_relapse",
+    "title": "Что делать, если сорвался",
+    "summary": "Честный разговор о срывах без чувства вины и с планом, что делать дальше.",
+    "category": "practice",
+    "readMinutes": 5,
+    "file": "articles/after_relapse.md"
+  },
+  {
+    "id": "vape_iqos_truth",
+    "title": "Вейпы и IQOS: правда без мифов",
+    "summary": "Чем электронные сигареты и системы нагревания табака отличаются от обычных — и почему это тоже никотиновая зависимость.",
+    "category": "vape",
+    "readMinutes": 5,
+    "file": null
+  },
+  {
+    "id": "triggers_and_rituals",
+    "title": "Триггеры и ритуалы: как разорвать привычные цепочки",
+    "summary": "Как находить и менять привычные ситуации, которые тянут за сигаретой.",
+    "category": "practice",
+    "readMinutes": 4,
+    "file": null
+  },
+  {
+    "id": "alcohol_and_coffee",
+    "title": "Алкоголь, кофе и курение: коварная связка",
+    "summary": "Почему кофе и алкоголь — частые провокаторы тяги и как быть с ними на старте.",
+    "category": "practice",
+    "readMinutes": 3,
+    "file": null
+  },
+  {
+    "id": "sleep_and_quitting",
+    "title": "Сон и отказ от курения",
+    "summary": "Почему в первые недели может нарушаться сон и как это исправить.",
+    "category": "health",
+    "readMinutes": 4,
+    "file": null
+  },
+  {
+    "id": "stress_without_cigarettes",
+    "title": "Как справляться со стрессом без сигарет",
+    "summary": "Рабочие способы снять напряжение, когда рука тянется за пачкой.",
+    "category": "practice",
+    "readMinutes": 5,
+    "file": null
+  },
+  {
+    "id": "money_math",
+    "title": "Сколько денег на самом деле съедает курение",
+    "summary": "Простые расчёты и идеи, на что потратить сэкономленное.",
+    "category": "money",
+    "readMinutes": 3,
+    "file": null
+  },
+  {
+    "id": "breathing_techniques",
+    "title": "Дыхательные техники против тяги",
+    "summary": "Несколько простых упражнений, которые помогают за 60 секунд.",
+    "category": "practice",
+    "readMinutes": 3,
+    "file": null
+  },
+  {
+    "id": "social_pressure",
+    "title": "Курящие друзья и компании: как не сорваться",
+    "summary": "Как вести себя в компании курящих и что отвечать на предложения «за компанию».",
+    "category": "practice",
+    "readMinutes": 4,
+    "file": null
+  },
+  {
+    "id": "exercise_helps",
+    "title": "Физическая активность как союзник",
+    "summary": "Почему даже короткая прогулка снижает тягу и ускоряет восстановление.",
+    "category": "health",
+    "readMinutes": 4,
+    "file": null
+  },
+  {
+    "id": "common_myths",
+    "title": "Частые мифы о курении и отказе от него",
+    "summary": "Разбираем популярные заблуждения — от «одна не считается» до «уже поздно бросать».",
+    "category": "myths",
+    "readMinutes": 5,
+    "file": null
+  },
+  {
+    "id": "vape_types_explained",
+    "title": "Одноразки, многоразки и IQOS: в чём разница",
+    "summary": "Чем отличаются разные форматы электронных сигарет и как это влияет на отказ.",
+    "category": "vape",
+    "readMinutes": 4,
+    "file": null
+  }
+]

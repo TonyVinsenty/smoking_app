@@ -135,6 +135,144 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Скоро здесь что-то появится'**
   String get comingSoon;
+
+  /// No description provided for @next.
+  ///
+  /// In ru, this message translates to:
+  /// **'Далее'**
+  String get next;
+
+  /// No description provided for @back.
+  ///
+  /// In ru, this message translates to:
+  /// **'Назад'**
+  String get back;
+
+  /// No description provided for @done.
+  ///
+  /// In ru, this message translates to:
+  /// **'Готово'**
+  String get done;
+
+  /// No description provided for @cancel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отмена'**
+  String get cancel;
+
+  /// No description provided for @save.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сохранить'**
+  String get save;
+
+  /// No description provided for @onbWelcomeTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Привет! Это начало свободы'**
+  String get onbWelcomeTitle;
+
+  /// No description provided for @onbWelcomeText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Я помогу пройти путь без сигарет маленькими шагами: покажу, как восстанавливается организм, сколько денег остаётся в кармане, и поддержу, когда будет тяжело.\n\nСначала пара вопросов — это займёт минуту.'**
+  String get onbWelcomeText;
+
+  /// No description provided for @onbStart.
+  ///
+  /// In ru, this message translates to:
+  /// **'Начнём'**
+  String get onbStart;
+
+  /// No description provided for @onbProductsTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Что вы курите?'**
+  String get onbProductsTitle;
+
+  /// No description provided for @onbProductsHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Можно выбрать несколько'**
+  String get onbProductsHint;
+
+  /// No description provided for @productName.
+  ///
+  /// In ru, this message translates to:
+  /// **'{type, select, cigarettes{Сигареты} sticks{Стики (IQOS, glo и др.)} disposable{Одноразовые вейпы} liquid{Жидкость для вейпа} other{}}'**
+  String productName(String type);
+
+  /// No description provided for @productUnits.
+  ///
+  /// In ru, this message translates to:
+  /// **'{type, select, cigarettes{Сколько сигарет} sticks{Сколько стиков} disposable{Сколько одноразок} liquid{Сколько флаконов} other{}}'**
+  String productUnits(String type);
+
+  /// No description provided for @productPackPrice.
+  ///
+  /// In ru, this message translates to:
+  /// **'{type, select, cigarettes{Цена пачки, ₽} sticks{Цена пачки стиков, ₽} disposable{Цена одноразки, ₽} liquid{Цена флакона, ₽} other{}}'**
+  String productPackPrice(String type);
+
+  /// No description provided for @productUnitsPerPack.
+  ///
+  /// In ru, this message translates to:
+  /// **'Штук в пачке'**
+  String get productUnitsPerPack;
+
+  /// No description provided for @periodName.
+  ///
+  /// In ru, this message translates to:
+  /// **'{period, select, day{в день} week{в неделю} month{в месяц} other{}}'**
+  String periodName(String period);
+
+  /// No description provided for @onbConsumptionTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сколько и почём'**
+  String get onbConsumptionTitle;
+
+  /// No description provided for @onbConsumptionHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Это нужно, чтобы считать сэкономленные деньги. Примерно — тоже хорошо.'**
+  String get onbConsumptionHint;
+
+  /// No description provided for @onbQuitTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Когда вы бросили?'**
+  String get onbQuitTitle;
+
+  /// No description provided for @onbQuitNow.
+  ///
+  /// In ru, this message translates to:
+  /// **'Прямо сейчас'**
+  String get onbQuitNow;
+
+  /// No description provided for @onbQuitEarlier.
+  ///
+  /// In ru, this message translates to:
+  /// **'Раньше — укажу дату'**
+  String get onbQuitEarlier;
+
+  /// No description provided for @onbQuitChosen.
+  ///
+  /// In ru, this message translates to:
+  /// **'Бросил(а): {date}'**
+  String onbQuitChosen(String date);
+
+  /// No description provided for @onbFinish.
+  ///
+  /// In ru, this message translates to:
+  /// **'Поехали!'**
+  String get onbFinish;
+
+  /// No description provided for @invalidNumber.
+  ///
+  /// In ru, this message translates to:
+  /// **'Введите число больше нуля'**
+  String get invalidNumber;
 }
 
 class _AppLocalizationsDelegate
