@@ -27,7 +27,7 @@ class SettingsScreen extends ConsumerWidget {
             child: SegmentedButton<ThemeMode>(
               showSelectedIcon: false,
               segments: [
-                for (final m in ThemeMode.values) ButtonSegment(value: m, label: Text(l.themeModeName(m.name))),
+                for (final m in const [ThemeMode.system, ThemeMode.dark, ThemeMode.light]) ButtonSegment(value: m, label: Text(l.themeModeName(m.name))),
               ],
               selected: {ref.watch(themeModeProvider)},
               onSelectionChanged: (s) => ref.read(themeModeProvider.notifier).set(s.first),

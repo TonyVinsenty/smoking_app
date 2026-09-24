@@ -637,13 +637,13 @@ abstract class AppLocalizations {
   /// No description provided for @settingsAppearance.
   ///
   /// In ru, this message translates to:
-  /// **'Оформление'**
+  /// **'Цветовой тон'**
   String get settingsAppearance;
 
   /// No description provided for @themeModeName.
   ///
   /// In ru, this message translates to:
-  /// **'{mode, select, system{Системная} light{Светлая} dark{Тёмная} other{}}'**
+  /// **'{mode, select, system{Системный} light{Светлый} dark{Тёмный} other{}}'**
   String themeModeName(String mode);
 
   /// No description provided for @settingsLargeText.

@@ -135,8 +135,8 @@
   "achNewMany": "{count, plural, one{Открыто {count} достижение} few{Открыто {count} достижения} many{Открыто {count} достижений} other{Открыто {count} достижения}} — загляните во вкладку «Здоровье»",
   "@achNewMany": {"placeholders": {"count": {"type": "int"}}},
 
-  "settingsAppearance": "Оформление",
-  "themeModeName": "{mode, select, system{Системная} light{Светлая} dark{Тёмная} other{}}",
+  "settingsAppearance": "Цветовой тон",
+  "themeModeName": "{mode, select, system{Системный} light{Светлый} dark{Тёмный} other{}}",
   "@themeModeName": {"placeholders": {"mode": {"type": "String"}}},
   "settingsLargeText": "Крупный текст",
   "settingsLargeTextHint": "Увеличивает текст во всём приложении",

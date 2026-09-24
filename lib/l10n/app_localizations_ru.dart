@@ -533,14 +533,14 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get settingsAppearance => 'Оформление';
+  String get settingsAppearance => 'Цветовой тон';
 
   @override
   String themeModeName(String mode) {
     String _temp0 = intl.Intl.selectLogic(mode, {
-      'system': 'Системная',
-      'light': 'Светлая',
-      'dark': 'Тёмная',
+      'system': 'Системный',
+      'light': 'Светлый',
+      'dark': 'Тёмный',
       'other': '',
     });
     return '$_temp0';

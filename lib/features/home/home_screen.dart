@@ -38,7 +38,8 @@ class HomeScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(title: Text(l.appTitle)),
       body: ListView(
-        padding: const EdgeInsets.fromLTRB(16, 8, 16, 96),
+        // Room below the last card so it can scroll clear of the SOS button.
+        padding: const EdgeInsets.fromLTRB(16, 8, 16, 120),
         children: [
           if (current != null) ...[
             _TimerCard(attempt: current, now: now),
@@ -108,7 +109,18 @@ class _TimerCard extends StatelessWidget {
             else ...[
               FittedBox(
                 fit: BoxFit.scaleDown,
-                child: Row(mainAxisSize: MainAxisSize.min, children: [for (final u in shown) tile(u)]),
+                child: IntrinsicHeight(
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      for (final (i, u) in shown.indexed) ...[
+                        if (i > 0)
+                          VerticalDivider(width: 12, thickness: 1.5, indent: 8, endIndent: 8, color: color.withValues(alpha: 0.35)),
+                        tile(u),
+                      ],
+                    ],
+                  ),
+                ),
               ),
               const SizedBox(height: 8),
               Text(clock, style: theme.textTheme.headlineMedium?.merge(clockStyle)),
