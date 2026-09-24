@@ -149,10 +149,10 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   Widget _title(String text, [String? hint]) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(text, style: Theme.of(context).textTheme.headlineSmall),
+          Text(text, style: Theme.of(context).textTheme.headlineMedium),
           if (hint != null) ...[
             const SizedBox(height: 8),
-            Text(hint, style: Theme.of(context).textTheme.bodyMedium),
+            Text(hint, style: Theme.of(context).textTheme.bodyLarge),
           ],
           const SizedBox(height: 24),
         ],
@@ -162,7 +162,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 48),
-          Icon(Icons.spa, size: 72, color: Theme.of(context).colorScheme.primary),
+          Icon(Icons.spa, size: 88, color: Theme.of(context).colorScheme.primary),
           const SizedBox(height: 24),
           _title(l.onbWelcomeTitle, l.onbWelcomeText),
         ],
@@ -192,7 +192,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         children: [
           _title(l.onbConsumptionTitle, l.onbConsumptionHint),
           for (final f in _forms.values) ...[
-            Text(l.productName(f.type.name), style: Theme.of(context).textTheme.titleMedium),
+            Text(l.productName(f.type.name), style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 12),
             _numberField(f.amount, l.productUnits(f.type.name)),
             const SizedBox(height: 8),

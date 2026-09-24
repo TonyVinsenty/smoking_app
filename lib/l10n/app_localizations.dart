@@ -417,6 +417,66 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Вы сильнее тяги! +{xp} XP'**
   String sosResistedToast(int xp);
+
+  /// No description provided for @settingsAppearance.
+  ///
+  /// In ru, this message translates to:
+  /// **'Оформление'**
+  String get settingsAppearance;
+
+  /// No description provided for @themeModeName.
+  ///
+  /// In ru, this message translates to:
+  /// **'{mode, select, system{Как в системе} light{Светлая} dark{Тёмная} other{}}'**
+  String themeModeName(String mode);
+
+  /// No description provided for @settingsLargeText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Крупный текст'**
+  String get settingsLargeText;
+
+  /// No description provided for @settingsLargeTextHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Увеличивает текст во всём приложении'**
+  String get settingsLargeTextHint;
+
+  /// No description provided for @settingsData.
+  ///
+  /// In ru, this message translates to:
+  /// **'Мои данные'**
+  String get settingsData;
+
+  /// No description provided for @settingsReset.
+  ///
+  /// In ru, this message translates to:
+  /// **'Полный сброс'**
+  String get settingsReset;
+
+  /// No description provided for @settingsResetHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Удалить все данные и начать с первого экрана'**
+  String get settingsResetHint;
+
+  /// No description provided for @settingsResetConfirmTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Удалить все данные?'**
+  String get settingsResetConfirmTitle;
+
+  /// No description provided for @settingsResetConfirmText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Попытки, достижения, дневник и ответы о курении будут удалены навсегда. Приложение начнётся заново с первого экрана.'**
+  String get settingsResetConfirmText;
+
+  /// No description provided for @settingsResetConfirm.
+  ///
+  /// In ru, this message translates to:
+  /// **'Удалить всё'**
+  String get settingsResetConfirm;
 }
 
 class _AppLocalizationsDelegate

@@ -186,7 +186,7 @@ class _LevelCard extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               next == null ? l.homeMaxLevel : l.homeXpToNext(next.xpRequired - xp),
-              style: theme.textTheme.bodySmall,
+              style: theme.textTheme.bodyMedium,
             ),
           ],
         ),
@@ -239,7 +239,7 @@ class _NoAttemptCard extends ConsumerWidget {
           children: [
             Text(l.homeNoAttemptTitle, style: theme.textTheme.headlineSmall),
             const SizedBox(height: 8),
-            Text(l.homeNoAttemptText),
+            Text(l.homeNoAttemptText, style: theme.textTheme.bodyLarge),
             const SizedBox(height: 16),
             FilledButton(
               onPressed: () => ref.read(databaseProvider).startAttempt(DateTime.now()),

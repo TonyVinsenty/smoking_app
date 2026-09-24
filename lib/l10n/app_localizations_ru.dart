@@ -253,4 +253,44 @@ class AppLocalizationsRu extends AppLocalizations {
   String sosResistedToast(int xp) {
     return 'Вы сильнее тяги! +$xp XP';
   }
+
+  @override
+  String get settingsAppearance => 'Оформление';
+
+  @override
+  String themeModeName(String mode) {
+    String _temp0 = intl.Intl.selectLogic(mode, {
+      'system': 'Как в системе',
+      'light': 'Светлая',
+      'dark': 'Тёмная',
+      'other': '',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String get settingsLargeText => 'Крупный текст';
+
+  @override
+  String get settingsLargeTextHint => 'Увеличивает текст во всём приложении';
+
+  @override
+  String get settingsData => 'Мои данные';
+
+  @override
+  String get settingsReset => 'Полный сброс';
+
+  @override
+  String get settingsResetHint =>
+      'Удалить все данные и начать с первого экрана';
+
+  @override
+  String get settingsResetConfirmTitle => 'Удалить все данные?';
+
+  @override
+  String get settingsResetConfirmText =>
+      'Попытки, достижения, дневник и ответы о курении будут удалены навсегда. Приложение начнётся заново с первого экрана.';
+
+  @override
+  String get settingsResetConfirm => 'Удалить всё';
 }

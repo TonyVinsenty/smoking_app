@@ -12,7 +12,7 @@ class ComingSoon extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(title)),
-      body: Center(child: Text(AppLocalizations.of(context).comingSoon)),
+      body: Center(child: Text(AppLocalizations.of(context).comingSoon, style: Theme.of(context).textTheme.bodyLarge)),
     );
   }
 }

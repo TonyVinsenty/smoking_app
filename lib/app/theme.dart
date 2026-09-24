@@ -3,11 +3,14 @@ import 'package:flutter/material.dart';
 /// Calm, "healthy" teal-green palette.
 const _seed = Color(0xFF2E9E8F);
 
+/// All text is a bit larger than Material defaults (owner feedback: easier to read).
+const _textScale = 1.12;
+
 ThemeData buildTheme(Brightness brightness) {
   final scheme = ColorScheme.fromSeed(seedColor: _seed, brightness: brightness);
-  return ThemeData(
-    colorScheme: scheme,
-    useMaterial3: true,
+  final base = ThemeData(colorScheme: scheme, useMaterial3: true);
+  return base.copyWith(
+    textTheme: base.textTheme.apply(fontSizeFactor: _textScale),
     cardTheme: const CardThemeData(
       elevation: 0,
       margin: EdgeInsets.zero,

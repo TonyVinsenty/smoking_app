@@ -70,5 +70,17 @@
   "sosAnotherTip": "Другой совет",
   "sosResisted": "Справился!",
   "sosResistedToast": "Вы сильнее тяги! +{xp} XP",
-  "@sosResistedToast": {"placeholders": {"xp": {"type": "int"}}}
+  "@sosResistedToast": {"placeholders": {"xp": {"type": "int"}}},
+
+  "settingsAppearance": "Оформление",
+  "themeModeName": "{mode, select, system{Как в системе} light{Светлая} dark{Тёмная} other{}}",
+  "@themeModeName": {"placeholders": {"mode": {"type": "String"}}},
+  "settingsLargeText": "Крупный текст",
+  "settingsLargeTextHint": "Увеличивает текст во всём приложении",
+  "settingsData": "Мои данные",
+  "settingsReset": "Полный сброс",
+  "settingsResetHint": "Удалить все данные и начать с первого экрана",
+  "settingsResetConfirmTitle": "Удалить все данные?",
+  "settingsResetConfirmText": "Попытки, достижения, дневник и ответы о курении будут удалены навсегда. Приложение начнётся заново с первого экрана.",
+  "settingsResetConfirm": "Удалить всё"
 }
