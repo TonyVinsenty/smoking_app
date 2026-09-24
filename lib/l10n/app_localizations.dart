@@ -987,6 +987,47 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Удалить всё'**
   String get settingsResetConfirm;
+
+  /// No description provided for @productsEditTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Что вы курите'**
+  String get productsEditTitle;
+
+  /// No description provided for @newAttemptTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Настройки курения'**
+  String get newAttemptTitle;
+
+  /// No description provided for @newAttemptText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Оставить прошлые настройки? По ним считаются сэкономленные деньги. Если за это время вы перешли на другое — измените.'**
+  String get newAttemptText;
+
+  /// No description provided for @newAttemptKeep.
+  ///
+  /// In ru, this message translates to:
+  /// **'Оставить'**
+  String get newAttemptKeep;
+
+  /// No description provided for @newAttemptChange.
+  ///
+  /// In ru, this message translates to:
+  /// **'Изменить'**
+  String get newAttemptChange;
+
+  /// No description provided for @productSummary.
+  ///
+  /// In ru, this message translates to:
+  /// **'{amount} {period} · {price} ₽ {type, select, cigarettes{за пачку} sticks{за пачку} disposable{за штуку} liquid{за флакон} other{}}'**
+  String productSummary(
+    String amount,
+    String period,
+    String price,
+    String type,
+  );
 }
 
 class _AppLocalizationsDelegate

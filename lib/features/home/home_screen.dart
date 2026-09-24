@@ -7,6 +7,7 @@ import '../../data/database.dart';
 import '../../data/providers.dart';
 import '../../domain/stats.dart';
 import '../../l10n/app_localizations.dart';
+import '../relapse/new_attempt.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -44,7 +45,7 @@ class HomeScreen extends ConsumerWidget {
           if (current != null) ...[
             _TimerCard(attempt: current, now: now),
             const SizedBox(height: 12),
-            _SavingsCard(products: products, attempt: current, now: now),
+            _SavingsCard(products: productsOf(products, current.id), attempt: current, now: now),
           ] else
             const _NoAttemptCard(),
           const SizedBox(height: 12),
@@ -245,10 +246,10 @@ class _SavingsDetails extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context);
     final theme = Theme.of(context);
-    final products = ref.watch(productsProvider).value ?? const [];
     final attempt = ref.watch(currentAttemptProvider).value;
     final now = ref.watch(nowProvider).value ?? DateTime.now();
     if (attempt == null) return const SizedBox.shrink();
+    final products = productsOf(ref.watch(productsProvider).value ?? const [], attempt.id);
     final fmt = NumberFormat('#,##0', 'ru');
     String money(double v) => l.money(fmt.format(v));
     final today = DateTime(now.year, now.month, now.day);
@@ -429,7 +430,7 @@ class _NoAttemptCard extends ConsumerWidget {
             Text(l.homeNoAttemptText, style: theme.textTheme.bodyLarge),
             const SizedBox(height: 16),
             FilledButton(
-              onPressed: () => ref.read(databaseProvider).startAttempt(DateTime.now()),
+              onPressed: () => startNewAttempt(context, ref),
               child: Text(l.homeStartAttempt),
             ),
           ],

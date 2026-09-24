@@ -7,6 +7,7 @@ import '../../data/database.dart';
 import '../../data/providers.dart';
 import '../../domain/stats.dart';
 import '../../l10n/app_localizations.dart';
+import 'new_attempt.dart';
 
 /// «Я закурил»: one confirmation, then a kind "no-guilt diary" that ends the current attempt.
 class RelapseScreen extends ConsumerStatefulWidget {
@@ -187,8 +188,7 @@ class _RelapseScreenState extends ConsumerState<RelapseScreen> {
           const Spacer(),
           FilledButton(
             onPressed: () async {
-              await ref.read(databaseProvider).startAttempt(DateTime.now());
-              if (mounted) Navigator.of(context).pop();
+              if (await startNewAttempt(context, ref) && mounted) Navigator.of(context).pop();
             },
             child: Text(l.relapseStartNow),
           ),

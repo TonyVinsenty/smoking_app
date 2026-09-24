@@ -766,4 +766,37 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get settingsResetConfirm => 'Удалить всё';
+
+  @override
+  String get productsEditTitle => 'Что вы курите';
+
+  @override
+  String get newAttemptTitle => 'Настройки курения';
+
+  @override
+  String get newAttemptText =>
+      'Оставить прошлые настройки? По ним считаются сэкономленные деньги. Если за это время вы перешли на другое — измените.';
+
+  @override
+  String get newAttemptKeep => 'Оставить';
+
+  @override
+  String get newAttemptChange => 'Изменить';
+
+  @override
+  String productSummary(
+    String amount,
+    String period,
+    String price,
+    String type,
+  ) {
+    String _temp0 = intl.Intl.selectLogic(type, {
+      'cigarettes': 'за пачку',
+      'sticks': 'за пачку',
+      'disposable': 'за штуку',
+      'liquid': 'за флакон',
+      'other': '',
+    });
+    return '$amount $period · $price ₽ $_temp0';
+  }
 }

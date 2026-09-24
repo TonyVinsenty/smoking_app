@@ -3,352 +3,6 @@
 part of 'database.dart';
 
 // ignore_for_file: type=lint
-class $SmokingProductsTable extends SmokingProducts with TableInfo<$SmokingProductsTable, SmokingProduct> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $SmokingProductsTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
-    'id',
-    aliasedName,
-    false,
-    hasAutoIncrement: true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'),
-  );
-  @override
-  late final GeneratedColumnWithTypeConverter<ProductType, String> type = GeneratedColumn<String>(
-    'type',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  ).withConverter<ProductType>($SmokingProductsTable.$convertertype);
-  static const VerificationMeta _amountMeta = const VerificationMeta('amount');
-  @override
-  late final GeneratedColumn<double> amount = GeneratedColumn<double>(
-    'amount',
-    aliasedName,
-    false,
-    type: DriftSqlType.double,
-    requiredDuringInsert: true,
-  );
-  @override
-  late final GeneratedColumnWithTypeConverter<ConsumptionPeriod, String> period = GeneratedColumn<String>(
-    'period',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  ).withConverter<ConsumptionPeriod>($SmokingProductsTable.$converterperiod);
-  static const VerificationMeta _unitsPerPackMeta = const VerificationMeta('unitsPerPack');
-  @override
-  late final GeneratedColumn<int> unitsPerPack = GeneratedColumn<int>(
-    'units_per_pack',
-    aliasedName,
-    false,
-    type: DriftSqlType.int,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _packPriceMeta = const VerificationMeta('packPrice');
-  @override
-  late final GeneratedColumn<double> packPrice = GeneratedColumn<double>(
-    'pack_price',
-    aliasedName,
-    false,
-    type: DriftSqlType.double,
-    requiredDuringInsert: true,
-  );
-  @override
-  List<GeneratedColumn> get $columns => [id, type, amount, period, unitsPerPack, packPrice];
-  @override
-  String get aliasedName => _alias ?? actualTableName;
-  @override
-  String get actualTableName => $name;
-  static const String $name = 'smoking_products';
-  @override
-  VerificationContext validateIntegrity(Insertable<SmokingProduct> instance, {bool isInserting = false}) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    }
-    if (data.containsKey('amount')) {
-      context.handle(_amountMeta, amount.isAcceptableOrUnknown(data['amount']!, _amountMeta));
-    } else if (isInserting) {
-      context.missing(_amountMeta);
-    }
-    if (data.containsKey('units_per_pack')) {
-      context.handle(_unitsPerPackMeta, unitsPerPack.isAcceptableOrUnknown(data['units_per_pack']!, _unitsPerPackMeta));
-    } else if (isInserting) {
-      context.missing(_unitsPerPackMeta);
-    }
-    if (data.containsKey('pack_price')) {
-      context.handle(_packPriceMeta, packPrice.isAcceptableOrUnknown(data['pack_price']!, _packPriceMeta));
-    } else if (isInserting) {
-      context.missing(_packPriceMeta);
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  SmokingProduct map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return SmokingProduct(
-      id: attachedDatabase.typeMapping.read(DriftSqlType.int, data['${effectivePrefix}id'])!,
-      type: $SmokingProductsTable.$convertertype.fromSql(
-        attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}type'])!,
-      ),
-      amount: attachedDatabase.typeMapping.read(DriftSqlType.double, data['${effectivePrefix}amount'])!,
-      period: $SmokingProductsTable.$converterperiod.fromSql(
-        attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}period'])!,
-      ),
-      unitsPerPack: attachedDatabase.typeMapping.read(DriftSqlType.int, data['${effectivePrefix}units_per_pack'])!,
-      packPrice: attachedDatabase.typeMapping.read(DriftSqlType.double, data['${effectivePrefix}pack_price'])!,
-    );
-  }
-
-  @override
-  $SmokingProductsTable createAlias(String alias) {
-    return $SmokingProductsTable(attachedDatabase, alias);
-  }
-
-  static JsonTypeConverter2<ProductType, String, String> $convertertype = const EnumNameConverter<ProductType>(
-    ProductType.values,
-  );
-  static JsonTypeConverter2<ConsumptionPeriod, String, String> $converterperiod =
-      const EnumNameConverter<ConsumptionPeriod>(ConsumptionPeriod.values);
-}
-
-class SmokingProduct extends DataClass implements Insertable<SmokingProduct> {
-  final int id;
-  final ProductType type;
-
-  /// Units consumed per [period]: cigarettes/sticks, devices, or bottles.
-  final double amount;
-  final ConsumptionPeriod period;
-
-  /// Units in one purchased pack (20 cigarettes; 1 for a disposable or a bottle).
-  final int unitsPerPack;
-  final double packPrice;
-  const SmokingProduct({
-    required this.id,
-    required this.type,
-    required this.amount,
-    required this.period,
-    required this.unitsPerPack,
-    required this.packPrice,
-  });
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
-    {
-      map['type'] = Variable<String>($SmokingProductsTable.$convertertype.toSql(type));
-    }
-    map['amount'] = Variable<double>(amount);
-    {
-      map['period'] = Variable<String>($SmokingProductsTable.$converterperiod.toSql(period));
-    }
-    map['units_per_pack'] = Variable<int>(unitsPerPack);
-    map['pack_price'] = Variable<double>(packPrice);
-    return map;
-  }
-
-  SmokingProductsCompanion toCompanion(bool nullToAbsent) {
-    return SmokingProductsCompanion(
-      id: Value(id),
-      type: Value(type),
-      amount: Value(amount),
-      period: Value(period),
-      unitsPerPack: Value(unitsPerPack),
-      packPrice: Value(packPrice),
-    );
-  }
-
-  factory SmokingProduct.fromJson(Map<String, dynamic> json, {ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return SmokingProduct(
-      id: serializer.fromJson<int>(json['id']),
-      type: $SmokingProductsTable.$convertertype.fromJson(serializer.fromJson<String>(json['type'])),
-      amount: serializer.fromJson<double>(json['amount']),
-      period: $SmokingProductsTable.$converterperiod.fromJson(serializer.fromJson<String>(json['period'])),
-      unitsPerPack: serializer.fromJson<int>(json['unitsPerPack']),
-      packPrice: serializer.fromJson<double>(json['packPrice']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
-      'type': serializer.toJson<String>($SmokingProductsTable.$convertertype.toJson(type)),
-      'amount': serializer.toJson<double>(amount),
-      'period': serializer.toJson<String>($SmokingProductsTable.$converterperiod.toJson(period)),
-      'unitsPerPack': serializer.toJson<int>(unitsPerPack),
-      'packPrice': serializer.toJson<double>(packPrice),
-    };
-  }
-
-  SmokingProduct copyWith({
-    int? id,
-    ProductType? type,
-    double? amount,
-    ConsumptionPeriod? period,
-    int? unitsPerPack,
-    double? packPrice,
-  }) => SmokingProduct(
-    id: id ?? this.id,
-    type: type ?? this.type,
-    amount: amount ?? this.amount,
-    period: period ?? this.period,
-    unitsPerPack: unitsPerPack ?? this.unitsPerPack,
-    packPrice: packPrice ?? this.packPrice,
-  );
-  SmokingProduct copyWithCompanion(SmokingProductsCompanion data) {
-    return SmokingProduct(
-      id: data.id.present ? data.id.value : this.id,
-      type: data.type.present ? data.type.value : this.type,
-      amount: data.amount.present ? data.amount.value : this.amount,
-      period: data.period.present ? data.period.value : this.period,
-      unitsPerPack: data.unitsPerPack.present ? data.unitsPerPack.value : this.unitsPerPack,
-      packPrice: data.packPrice.present ? data.packPrice.value : this.packPrice,
-    );
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('SmokingProduct(')
-          ..write('id: $id, ')
-          ..write('type: $type, ')
-          ..write('amount: $amount, ')
-          ..write('period: $period, ')
-          ..write('unitsPerPack: $unitsPerPack, ')
-          ..write('packPrice: $packPrice')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hash(id, type, amount, period, unitsPerPack, packPrice);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is SmokingProduct &&
-          other.id == this.id &&
-          other.type == this.type &&
-          other.amount == this.amount &&
-          other.period == this.period &&
-          other.unitsPerPack == this.unitsPerPack &&
-          other.packPrice == this.packPrice);
-}
-
-class SmokingProductsCompanion extends UpdateCompanion<SmokingProduct> {
-  final Value<int> id;
-  final Value<ProductType> type;
-  final Value<double> amount;
-  final Value<ConsumptionPeriod> period;
-  final Value<int> unitsPerPack;
-  final Value<double> packPrice;
-  const SmokingProductsCompanion({
-    this.id = const Value.absent(),
-    this.type = const Value.absent(),
-    this.amount = const Value.absent(),
-    this.period = const Value.absent(),
-    this.unitsPerPack = const Value.absent(),
-    this.packPrice = const Value.absent(),
-  });
-  SmokingProductsCompanion.insert({
-    this.id = const Value.absent(),
-    required ProductType type,
-    required double amount,
-    required ConsumptionPeriod period,
-    required int unitsPerPack,
-    required double packPrice,
-  }) : type = Value(type),
-       amount = Value(amount),
-       period = Value(period),
-       unitsPerPack = Value(unitsPerPack),
-       packPrice = Value(packPrice);
-  static Insertable<SmokingProduct> custom({
-    Expression<int>? id,
-    Expression<String>? type,
-    Expression<double>? amount,
-    Expression<String>? period,
-    Expression<int>? unitsPerPack,
-    Expression<double>? packPrice,
-  }) {
-    return RawValuesInsertable({
-      if (id != null) 'id': id,
-      if (type != null) 'type': type,
-      if (amount != null) 'amount': amount,
-      if (period != null) 'period': period,
-      if (unitsPerPack != null) 'units_per_pack': unitsPerPack,
-      if (packPrice != null) 'pack_price': packPrice,
-    });
-  }
-
-  SmokingProductsCompanion copyWith({
-    Value<int>? id,
-    Value<ProductType>? type,
-    Value<double>? amount,
-    Value<ConsumptionPeriod>? period,
-    Value<int>? unitsPerPack,
-    Value<double>? packPrice,
-  }) {
-    return SmokingProductsCompanion(
-      id: id ?? this.id,
-      type: type ?? this.type,
-      amount: amount ?? this.amount,
-      period: period ?? this.period,
-      unitsPerPack: unitsPerPack ?? this.unitsPerPack,
-      packPrice: packPrice ?? this.packPrice,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<int>(id.value);
-    }
-    if (type.present) {
-      map['type'] = Variable<String>($SmokingProductsTable.$convertertype.toSql(type.value));
-    }
-    if (amount.present) {
-      map['amount'] = Variable<double>(amount.value);
-    }
-    if (period.present) {
-      map['period'] = Variable<String>($SmokingProductsTable.$converterperiod.toSql(period.value));
-    }
-    if (unitsPerPack.present) {
-      map['units_per_pack'] = Variable<int>(unitsPerPack.value);
-    }
-    if (packPrice.present) {
-      map['pack_price'] = Variable<double>(packPrice.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('SmokingProductsCompanion(')
-          ..write('id: $id, ')
-          ..write('type: $type, ')
-          ..write('amount: $amount, ')
-          ..write('period: $period, ')
-          ..write('unitsPerPack: $unitsPerPack, ')
-          ..write('packPrice: $packPrice')
-          ..write(')'))
-        .toString();
-  }
-}
-
 class $AttemptsTable extends Attempts with TableInfo<$AttemptsTable, Attempt> {
   @override
   final GeneratedDatabase attachedDatabase;
@@ -363,9 +17,13 @@ class $AttemptsTable extends Attempts with TableInfo<$AttemptsTable, Attempt> {
     hasAutoIncrement: true,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'),
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
   );
-  static const VerificationMeta _startedAtMeta = const VerificationMeta('startedAt');
+  static const VerificationMeta _startedAtMeta = const VerificationMeta(
+    'startedAt',
+  );
   @override
   late final GeneratedColumn<DateTime> startedAt = GeneratedColumn<DateTime>(
     'started_at',
@@ -374,7 +32,9 @@ class $AttemptsTable extends Attempts with TableInfo<$AttemptsTable, Attempt> {
     type: DriftSqlType.dateTime,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _endedAtMeta = const VerificationMeta('endedAt');
+  static const VerificationMeta _endedAtMeta = const VerificationMeta(
+    'endedAt',
+  );
   @override
   late final GeneratedColumn<DateTime> endedAt = GeneratedColumn<DateTime>(
     'ended_at',
@@ -384,14 +44,17 @@ class $AttemptsTable extends Attempts with TableInfo<$AttemptsTable, Attempt> {
     requiredDuringInsert: false,
   );
   @override
-  late final GeneratedColumnWithTypeConverter<Trigger?, String> trigger = GeneratedColumn<String>(
-    'trigger',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  ).withConverter<Trigger?>($AttemptsTable.$convertertriggern);
-  static const VerificationMeta _whatHappenedMeta = const VerificationMeta('whatHappened');
+  late final GeneratedColumnWithTypeConverter<Trigger?, String> trigger =
+      GeneratedColumn<String>(
+        'trigger',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      ).withConverter<Trigger?>($AttemptsTable.$convertertriggern);
+  static const VerificationMeta _whatHappenedMeta = const VerificationMeta(
+    'whatHappened',
+  );
   @override
   late final GeneratedColumn<String> whatHappened = GeneratedColumn<String>(
     'what_happened',
@@ -400,7 +63,9 @@ class $AttemptsTable extends Attempts with TableInfo<$AttemptsTable, Attempt> {
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _whatWouldHelpMeta = const VerificationMeta('whatWouldHelp');
+  static const VerificationMeta _whatWouldHelpMeta = const VerificationMeta(
+    'whatWouldHelp',
+  );
   @override
   late final GeneratedColumn<String> whatWouldHelp = GeneratedColumn<String>(
     'what_would_help',
@@ -409,7 +74,9 @@ class $AttemptsTable extends Attempts with TableInfo<$AttemptsTable, Attempt> {
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _nextTimeMeta = const VerificationMeta('nextTime');
+  static const VerificationMeta _nextTimeMeta = const VerificationMeta(
+    'nextTime',
+  );
   @override
   late final GeneratedColumn<String> nextTime = GeneratedColumn<String>(
     'next_time',
@@ -419,38 +86,67 @@ class $AttemptsTable extends Attempts with TableInfo<$AttemptsTable, Attempt> {
     requiredDuringInsert: false,
   );
   @override
-  List<GeneratedColumn> get $columns => [id, startedAt, endedAt, trigger, whatHappened, whatWouldHelp, nextTime];
+  List<GeneratedColumn> get $columns => [
+    id,
+    startedAt,
+    endedAt,
+    trigger,
+    whatHappened,
+    whatWouldHelp,
+    nextTime,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
   static const String $name = 'attempts';
   @override
-  VerificationContext validateIntegrity(Insertable<Attempt> instance, {bool isInserting = false}) {
+  VerificationContext validateIntegrity(
+    Insertable<Attempt> instance, {
+    bool isInserting = false,
+  }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     }
     if (data.containsKey('started_at')) {
-      context.handle(_startedAtMeta, startedAt.isAcceptableOrUnknown(data['started_at']!, _startedAtMeta));
+      context.handle(
+        _startedAtMeta,
+        startedAt.isAcceptableOrUnknown(data['started_at']!, _startedAtMeta),
+      );
     } else if (isInserting) {
       context.missing(_startedAtMeta);
     }
     if (data.containsKey('ended_at')) {
-      context.handle(_endedAtMeta, endedAt.isAcceptableOrUnknown(data['ended_at']!, _endedAtMeta));
+      context.handle(
+        _endedAtMeta,
+        endedAt.isAcceptableOrUnknown(data['ended_at']!, _endedAtMeta),
+      );
     }
     if (data.containsKey('what_happened')) {
-      context.handle(_whatHappenedMeta, whatHappened.isAcceptableOrUnknown(data['what_happened']!, _whatHappenedMeta));
+      context.handle(
+        _whatHappenedMeta,
+        whatHappened.isAcceptableOrUnknown(
+          data['what_happened']!,
+          _whatHappenedMeta,
+        ),
+      );
     }
     if (data.containsKey('what_would_help')) {
       context.handle(
         _whatWouldHelpMeta,
-        whatWouldHelp.isAcceptableOrUnknown(data['what_would_help']!, _whatWouldHelpMeta),
+        whatWouldHelp.isAcceptableOrUnknown(
+          data['what_would_help']!,
+          _whatWouldHelpMeta,
+        ),
       );
     }
     if (data.containsKey('next_time')) {
-      context.handle(_nextTimeMeta, nextTime.isAcceptableOrUnknown(data['next_time']!, _nextTimeMeta));
+      context.handle(
+        _nextTimeMeta,
+        nextTime.isAcceptableOrUnknown(data['next_time']!, _nextTimeMeta),
+      );
     }
     return context;
   }
@@ -461,15 +157,36 @@ class $AttemptsTable extends Attempts with TableInfo<$AttemptsTable, Attempt> {
   Attempt map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return Attempt(
-      id: attachedDatabase.typeMapping.read(DriftSqlType.int, data['${effectivePrefix}id'])!,
-      startedAt: attachedDatabase.typeMapping.read(DriftSqlType.dateTime, data['${effectivePrefix}started_at'])!,
-      endedAt: attachedDatabase.typeMapping.read(DriftSqlType.dateTime, data['${effectivePrefix}ended_at']),
-      trigger: $AttemptsTable.$convertertriggern.fromSql(
-        attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}trigger']),
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      startedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}started_at'],
+      )!,
+      endedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}ended_at'],
       ),
-      whatHappened: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}what_happened']),
-      whatWouldHelp: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}what_would_help']),
-      nextTime: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}next_time']),
+      trigger: $AttemptsTable.$convertertriggern.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}trigger'],
+        ),
+      ),
+      whatHappened: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}what_happened'],
+      ),
+      whatWouldHelp: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}what_would_help'],
+      ),
+      nextTime: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}next_time'],
+      ),
     );
   }
 
@@ -478,12 +195,10 @@ class $AttemptsTable extends Attempts with TableInfo<$AttemptsTable, Attempt> {
     return $AttemptsTable(attachedDatabase, alias);
   }
 
-  static JsonTypeConverter2<Trigger, String, String> $convertertrigger = const EnumNameConverter<Trigger>(
-    Trigger.values,
-  );
-  static JsonTypeConverter2<Trigger?, String?, String?> $convertertriggern = JsonTypeConverter2.asNullable(
-    $convertertrigger,
-  );
+  static JsonTypeConverter2<Trigger, String, String> $convertertrigger =
+      const EnumNameConverter<Trigger>(Trigger.values);
+  static JsonTypeConverter2<Trigger?, String?, String?> $convertertriggern =
+      JsonTypeConverter2.asNullable($convertertrigger);
 }
 
 class Attempt extends DataClass implements Insertable<Attempt> {
@@ -512,7 +227,9 @@ class Attempt extends DataClass implements Insertable<Attempt> {
       map['ended_at'] = Variable<DateTime>(endedAt);
     }
     if (!nullToAbsent || trigger != null) {
-      map['trigger'] = Variable<String>($AttemptsTable.$convertertriggern.toSql(trigger));
+      map['trigger'] = Variable<String>(
+        $AttemptsTable.$convertertriggern.toSql(trigger),
+      );
     }
     if (!nullToAbsent || whatHappened != null) {
       map['what_happened'] = Variable<String>(whatHappened);
@@ -530,21 +247,36 @@ class Attempt extends DataClass implements Insertable<Attempt> {
     return AttemptsCompanion(
       id: Value(id),
       startedAt: Value(startedAt),
-      endedAt: endedAt == null && nullToAbsent ? const Value.absent() : Value(endedAt),
-      trigger: trigger == null && nullToAbsent ? const Value.absent() : Value(trigger),
-      whatHappened: whatHappened == null && nullToAbsent ? const Value.absent() : Value(whatHappened),
-      whatWouldHelp: whatWouldHelp == null && nullToAbsent ? const Value.absent() : Value(whatWouldHelp),
-      nextTime: nextTime == null && nullToAbsent ? const Value.absent() : Value(nextTime),
+      endedAt: endedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(endedAt),
+      trigger: trigger == null && nullToAbsent
+          ? const Value.absent()
+          : Value(trigger),
+      whatHappened: whatHappened == null && nullToAbsent
+          ? const Value.absent()
+          : Value(whatHappened),
+      whatWouldHelp: whatWouldHelp == null && nullToAbsent
+          ? const Value.absent()
+          : Value(whatWouldHelp),
+      nextTime: nextTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(nextTime),
     );
   }
 
-  factory Attempt.fromJson(Map<String, dynamic> json, {ValueSerializer? serializer}) {
+  factory Attempt.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return Attempt(
       id: serializer.fromJson<int>(json['id']),
       startedAt: serializer.fromJson<DateTime>(json['startedAt']),
       endedAt: serializer.fromJson<DateTime?>(json['endedAt']),
-      trigger: $AttemptsTable.$convertertriggern.fromJson(serializer.fromJson<String?>(json['trigger'])),
+      trigger: $AttemptsTable.$convertertriggern.fromJson(
+        serializer.fromJson<String?>(json['trigger']),
+      ),
       whatHappened: serializer.fromJson<String?>(json['whatHappened']),
       whatWouldHelp: serializer.fromJson<String?>(json['whatWouldHelp']),
       nextTime: serializer.fromJson<String?>(json['nextTime']),
@@ -557,7 +289,9 @@ class Attempt extends DataClass implements Insertable<Attempt> {
       'id': serializer.toJson<int>(id),
       'startedAt': serializer.toJson<DateTime>(startedAt),
       'endedAt': serializer.toJson<DateTime?>(endedAt),
-      'trigger': serializer.toJson<String?>($AttemptsTable.$convertertriggern.toJson(trigger)),
+      'trigger': serializer.toJson<String?>(
+        $AttemptsTable.$convertertriggern.toJson(trigger),
+      ),
       'whatHappened': serializer.toJson<String?>(whatHappened),
       'whatWouldHelp': serializer.toJson<String?>(whatWouldHelp),
       'nextTime': serializer.toJson<String?>(nextTime),
@@ -578,7 +312,9 @@ class Attempt extends DataClass implements Insertable<Attempt> {
     endedAt: endedAt.present ? endedAt.value : this.endedAt,
     trigger: trigger.present ? trigger.value : this.trigger,
     whatHappened: whatHappened.present ? whatHappened.value : this.whatHappened,
-    whatWouldHelp: whatWouldHelp.present ? whatWouldHelp.value : this.whatWouldHelp,
+    whatWouldHelp: whatWouldHelp.present
+        ? whatWouldHelp.value
+        : this.whatWouldHelp,
     nextTime: nextTime.present ? nextTime.value : this.nextTime,
   );
   Attempt copyWithCompanion(AttemptsCompanion data) {
@@ -587,8 +323,12 @@ class Attempt extends DataClass implements Insertable<Attempt> {
       startedAt: data.startedAt.present ? data.startedAt.value : this.startedAt,
       endedAt: data.endedAt.present ? data.endedAt.value : this.endedAt,
       trigger: data.trigger.present ? data.trigger.value : this.trigger,
-      whatHappened: data.whatHappened.present ? data.whatHappened.value : this.whatHappened,
-      whatWouldHelp: data.whatWouldHelp.present ? data.whatWouldHelp.value : this.whatWouldHelp,
+      whatHappened: data.whatHappened.present
+          ? data.whatHappened.value
+          : this.whatHappened,
+      whatWouldHelp: data.whatWouldHelp.present
+          ? data.whatWouldHelp.value
+          : this.whatWouldHelp,
       nextTime: data.nextTime.present ? data.nextTime.value : this.nextTime,
     );
   }
@@ -608,7 +348,15 @@ class Attempt extends DataClass implements Insertable<Attempt> {
   }
 
   @override
-  int get hashCode => Object.hash(id, startedAt, endedAt, trigger, whatHappened, whatWouldHelp, nextTime);
+  int get hashCode => Object.hash(
+    id,
+    startedAt,
+    endedAt,
+    trigger,
+    whatHappened,
+    whatWouldHelp,
+    nextTime,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -701,7 +449,9 @@ class AttemptsCompanion extends UpdateCompanion<Attempt> {
       map['ended_at'] = Variable<DateTime>(endedAt.value);
     }
     if (trigger.present) {
-      map['trigger'] = Variable<String>($AttemptsTable.$convertertriggern.toSql(trigger.value));
+      map['trigger'] = Variable<String>(
+        $AttemptsTable.$convertertriggern.toSql(trigger.value),
+      );
     }
     if (whatHappened.present) {
       map['what_happened'] = Variable<String>(whatHappened.value);
@@ -730,6 +480,479 @@ class AttemptsCompanion extends UpdateCompanion<Attempt> {
   }
 }
 
+class $SmokingProductsTable extends SmokingProducts
+    with TableInfo<$SmokingProductsTable, SmokingProduct> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $SmokingProductsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _attemptIdMeta = const VerificationMeta(
+    'attemptId',
+  );
+  @override
+  late final GeneratedColumn<int> attemptId = GeneratedColumn<int>(
+    'attempt_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES attempts (id)',
+    ),
+  );
+  @override
+  late final GeneratedColumnWithTypeConverter<ProductType, String> type =
+      GeneratedColumn<String>(
+        'type',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      ).withConverter<ProductType>($SmokingProductsTable.$convertertype);
+  static const VerificationMeta _amountMeta = const VerificationMeta('amount');
+  @override
+  late final GeneratedColumn<double> amount = GeneratedColumn<double>(
+    'amount',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: true,
+  );
+  @override
+  late final GeneratedColumnWithTypeConverter<ConsumptionPeriod, String>
+  period = GeneratedColumn<String>(
+    'period',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  ).withConverter<ConsumptionPeriod>($SmokingProductsTable.$converterperiod);
+  static const VerificationMeta _unitsPerPackMeta = const VerificationMeta(
+    'unitsPerPack',
+  );
+  @override
+  late final GeneratedColumn<int> unitsPerPack = GeneratedColumn<int>(
+    'units_per_pack',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _packPriceMeta = const VerificationMeta(
+    'packPrice',
+  );
+  @override
+  late final GeneratedColumn<double> packPrice = GeneratedColumn<double>(
+    'pack_price',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    attemptId,
+    type,
+    amount,
+    period,
+    unitsPerPack,
+    packPrice,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'smoking_products';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<SmokingProduct> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('attempt_id')) {
+      context.handle(
+        _attemptIdMeta,
+        attemptId.isAcceptableOrUnknown(data['attempt_id']!, _attemptIdMeta),
+      );
+    }
+    if (data.containsKey('amount')) {
+      context.handle(
+        _amountMeta,
+        amount.isAcceptableOrUnknown(data['amount']!, _amountMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_amountMeta);
+    }
+    if (data.containsKey('units_per_pack')) {
+      context.handle(
+        _unitsPerPackMeta,
+        unitsPerPack.isAcceptableOrUnknown(
+          data['units_per_pack']!,
+          _unitsPerPackMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_unitsPerPackMeta);
+    }
+    if (data.containsKey('pack_price')) {
+      context.handle(
+        _packPriceMeta,
+        packPrice.isAcceptableOrUnknown(data['pack_price']!, _packPriceMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_packPriceMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  SmokingProduct map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return SmokingProduct(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      attemptId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}attempt_id'],
+      ),
+      type: $SmokingProductsTable.$convertertype.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}type'],
+        )!,
+      ),
+      amount: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}amount'],
+      )!,
+      period: $SmokingProductsTable.$converterperiod.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}period'],
+        )!,
+      ),
+      unitsPerPack: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}units_per_pack'],
+      )!,
+      packPrice: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}pack_price'],
+      )!,
+    );
+  }
+
+  @override
+  $SmokingProductsTable createAlias(String alias) {
+    return $SmokingProductsTable(attachedDatabase, alias);
+  }
+
+  static JsonTypeConverter2<ProductType, String, String> $convertertype =
+      const EnumNameConverter<ProductType>(ProductType.values);
+  static JsonTypeConverter2<ConsumptionPeriod, String, String>
+  $converterperiod = const EnumNameConverter<ConsumptionPeriod>(
+    ConsumptionPeriod.values,
+  );
+}
+
+class SmokingProduct extends DataClass implements Insertable<SmokingProduct> {
+  final int id;
+
+  /// The attempt these smoking habits belong to: each attempt keeps its own products, so a switch
+  /// (e.g. sticks → cigarettes) after a relapse does not change the savings of earlier attempts.
+  /// Nullable only because SQLite cannot add a NOT NULL column; always set.
+  final int? attemptId;
+  final ProductType type;
+
+  /// Units consumed per [period]: cigarettes/sticks, devices, or bottles.
+  final double amount;
+  final ConsumptionPeriod period;
+
+  /// Units in one purchased pack (20 cigarettes; 1 for a disposable or a bottle).
+  final int unitsPerPack;
+  final double packPrice;
+  const SmokingProduct({
+    required this.id,
+    this.attemptId,
+    required this.type,
+    required this.amount,
+    required this.period,
+    required this.unitsPerPack,
+    required this.packPrice,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    if (!nullToAbsent || attemptId != null) {
+      map['attempt_id'] = Variable<int>(attemptId);
+    }
+    {
+      map['type'] = Variable<String>(
+        $SmokingProductsTable.$convertertype.toSql(type),
+      );
+    }
+    map['amount'] = Variable<double>(amount);
+    {
+      map['period'] = Variable<String>(
+        $SmokingProductsTable.$converterperiod.toSql(period),
+      );
+    }
+    map['units_per_pack'] = Variable<int>(unitsPerPack);
+    map['pack_price'] = Variable<double>(packPrice);
+    return map;
+  }
+
+  SmokingProductsCompanion toCompanion(bool nullToAbsent) {
+    return SmokingProductsCompanion(
+      id: Value(id),
+      attemptId: attemptId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(attemptId),
+      type: Value(type),
+      amount: Value(amount),
+      period: Value(period),
+      unitsPerPack: Value(unitsPerPack),
+      packPrice: Value(packPrice),
+    );
+  }
+
+  factory SmokingProduct.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return SmokingProduct(
+      id: serializer.fromJson<int>(json['id']),
+      attemptId: serializer.fromJson<int?>(json['attemptId']),
+      type: $SmokingProductsTable.$convertertype.fromJson(
+        serializer.fromJson<String>(json['type']),
+      ),
+      amount: serializer.fromJson<double>(json['amount']),
+      period: $SmokingProductsTable.$converterperiod.fromJson(
+        serializer.fromJson<String>(json['period']),
+      ),
+      unitsPerPack: serializer.fromJson<int>(json['unitsPerPack']),
+      packPrice: serializer.fromJson<double>(json['packPrice']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'attemptId': serializer.toJson<int?>(attemptId),
+      'type': serializer.toJson<String>(
+        $SmokingProductsTable.$convertertype.toJson(type),
+      ),
+      'amount': serializer.toJson<double>(amount),
+      'period': serializer.toJson<String>(
+        $SmokingProductsTable.$converterperiod.toJson(period),
+      ),
+      'unitsPerPack': serializer.toJson<int>(unitsPerPack),
+      'packPrice': serializer.toJson<double>(packPrice),
+    };
+  }
+
+  SmokingProduct copyWith({
+    int? id,
+    Value<int?> attemptId = const Value.absent(),
+    ProductType? type,
+    double? amount,
+    ConsumptionPeriod? period,
+    int? unitsPerPack,
+    double? packPrice,
+  }) => SmokingProduct(
+    id: id ?? this.id,
+    attemptId: attemptId.present ? attemptId.value : this.attemptId,
+    type: type ?? this.type,
+    amount: amount ?? this.amount,
+    period: period ?? this.period,
+    unitsPerPack: unitsPerPack ?? this.unitsPerPack,
+    packPrice: packPrice ?? this.packPrice,
+  );
+  SmokingProduct copyWithCompanion(SmokingProductsCompanion data) {
+    return SmokingProduct(
+      id: data.id.present ? data.id.value : this.id,
+      attemptId: data.attemptId.present ? data.attemptId.value : this.attemptId,
+      type: data.type.present ? data.type.value : this.type,
+      amount: data.amount.present ? data.amount.value : this.amount,
+      period: data.period.present ? data.period.value : this.period,
+      unitsPerPack: data.unitsPerPack.present
+          ? data.unitsPerPack.value
+          : this.unitsPerPack,
+      packPrice: data.packPrice.present ? data.packPrice.value : this.packPrice,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SmokingProduct(')
+          ..write('id: $id, ')
+          ..write('attemptId: $attemptId, ')
+          ..write('type: $type, ')
+          ..write('amount: $amount, ')
+          ..write('period: $period, ')
+          ..write('unitsPerPack: $unitsPerPack, ')
+          ..write('packPrice: $packPrice')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, attemptId, type, amount, period, unitsPerPack, packPrice);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is SmokingProduct &&
+          other.id == this.id &&
+          other.attemptId == this.attemptId &&
+          other.type == this.type &&
+          other.amount == this.amount &&
+          other.period == this.period &&
+          other.unitsPerPack == this.unitsPerPack &&
+          other.packPrice == this.packPrice);
+}
+
+class SmokingProductsCompanion extends UpdateCompanion<SmokingProduct> {
+  final Value<int> id;
+  final Value<int?> attemptId;
+  final Value<ProductType> type;
+  final Value<double> amount;
+  final Value<ConsumptionPeriod> period;
+  final Value<int> unitsPerPack;
+  final Value<double> packPrice;
+  const SmokingProductsCompanion({
+    this.id = const Value.absent(),
+    this.attemptId = const Value.absent(),
+    this.type = const Value.absent(),
+    this.amount = const Value.absent(),
+    this.period = const Value.absent(),
+    this.unitsPerPack = const Value.absent(),
+    this.packPrice = const Value.absent(),
+  });
+  SmokingProductsCompanion.insert({
+    this.id = const Value.absent(),
+    this.attemptId = const Value.absent(),
+    required ProductType type,
+    required double amount,
+    required ConsumptionPeriod period,
+    required int unitsPerPack,
+    required double packPrice,
+  }) : type = Value(type),
+       amount = Value(amount),
+       period = Value(period),
+       unitsPerPack = Value(unitsPerPack),
+       packPrice = Value(packPrice);
+  static Insertable<SmokingProduct> custom({
+    Expression<int>? id,
+    Expression<int>? attemptId,
+    Expression<String>? type,
+    Expression<double>? amount,
+    Expression<String>? period,
+    Expression<int>? unitsPerPack,
+    Expression<double>? packPrice,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (attemptId != null) 'attempt_id': attemptId,
+      if (type != null) 'type': type,
+      if (amount != null) 'amount': amount,
+      if (period != null) 'period': period,
+      if (unitsPerPack != null) 'units_per_pack': unitsPerPack,
+      if (packPrice != null) 'pack_price': packPrice,
+    });
+  }
+
+  SmokingProductsCompanion copyWith({
+    Value<int>? id,
+    Value<int?>? attemptId,
+    Value<ProductType>? type,
+    Value<double>? amount,
+    Value<ConsumptionPeriod>? period,
+    Value<int>? unitsPerPack,
+    Value<double>? packPrice,
+  }) {
+    return SmokingProductsCompanion(
+      id: id ?? this.id,
+      attemptId: attemptId ?? this.attemptId,
+      type: type ?? this.type,
+      amount: amount ?? this.amount,
+      period: period ?? this.period,
+      unitsPerPack: unitsPerPack ?? this.unitsPerPack,
+      packPrice: packPrice ?? this.packPrice,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (attemptId.present) {
+      map['attempt_id'] = Variable<int>(attemptId.value);
+    }
+    if (type.present) {
+      map['type'] = Variable<String>(
+        $SmokingProductsTable.$convertertype.toSql(type.value),
+      );
+    }
+    if (amount.present) {
+      map['amount'] = Variable<double>(amount.value);
+    }
+    if (period.present) {
+      map['period'] = Variable<String>(
+        $SmokingProductsTable.$converterperiod.toSql(period.value),
+      );
+    }
+    if (unitsPerPack.present) {
+      map['units_per_pack'] = Variable<int>(unitsPerPack.value);
+    }
+    if (packPrice.present) {
+      map['pack_price'] = Variable<double>(packPrice.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SmokingProductsCompanion(')
+          ..write('id: $id, ')
+          ..write('attemptId: $attemptId, ')
+          ..write('type: $type, ')
+          ..write('amount: $amount, ')
+          ..write('period: $period, ')
+          ..write('unitsPerPack: $unitsPerPack, ')
+          ..write('packPrice: $packPrice')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $CravingsTable extends Cravings with TableInfo<$CravingsTable, Craving> {
   @override
   final GeneratedDatabase attachedDatabase;
@@ -744,9 +967,13 @@ class $CravingsTable extends Cravings with TableInfo<$CravingsTable, Craving> {
     hasAutoIncrement: true,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'),
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
   );
-  static const VerificationMeta _attemptIdMeta = const VerificationMeta('attemptId');
+  static const VerificationMeta _attemptIdMeta = const VerificationMeta(
+    'attemptId',
+  );
   @override
   late final GeneratedColumn<int> attemptId = GeneratedColumn<int>(
     'attempt_id',
@@ -754,7 +981,9 @@ class $CravingsTable extends Cravings with TableInfo<$CravingsTable, Craving> {
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: true,
-    defaultConstraints: GeneratedColumn.constraintIsAlways('REFERENCES attempts (id)'),
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES attempts (id)',
+    ),
   );
   static const VerificationMeta _atMeta = const VerificationMeta('at');
   @override
@@ -765,7 +994,9 @@ class $CravingsTable extends Cravings with TableInfo<$CravingsTable, Craving> {
     type: DriftSqlType.dateTime,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _resistedMeta = const VerificationMeta('resisted');
+  static const VerificationMeta _resistedMeta = const VerificationMeta(
+    'resisted',
+  );
   @override
   late final GeneratedColumn<bool> resisted = GeneratedColumn<bool>(
     'resisted',
@@ -773,16 +1004,19 @@ class $CravingsTable extends Cravings with TableInfo<$CravingsTable, Craving> {
     false,
     type: DriftSqlType.bool,
     requiredDuringInsert: true,
-    defaultConstraints: GeneratedColumn.constraintIsAlways('CHECK ("resisted" IN (0, 1))'),
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("resisted" IN (0, 1))',
+    ),
   );
   @override
-  late final GeneratedColumnWithTypeConverter<Trigger?, String> trigger = GeneratedColumn<String>(
-    'trigger',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  ).withConverter<Trigger?>($CravingsTable.$convertertriggern);
+  late final GeneratedColumnWithTypeConverter<Trigger?, String> trigger =
+      GeneratedColumn<String>(
+        'trigger',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      ).withConverter<Trigger?>($CravingsTable.$convertertriggern);
   @override
   List<GeneratedColumn> get $columns => [id, attemptId, at, resisted, trigger];
   @override
@@ -791,14 +1025,20 @@ class $CravingsTable extends Cravings with TableInfo<$CravingsTable, Craving> {
   String get actualTableName => $name;
   static const String $name = 'cravings';
   @override
-  VerificationContext validateIntegrity(Insertable<Craving> instance, {bool isInserting = false}) {
+  VerificationContext validateIntegrity(
+    Insertable<Craving> instance, {
+    bool isInserting = false,
+  }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     }
     if (data.containsKey('attempt_id')) {
-      context.handle(_attemptIdMeta, attemptId.isAcceptableOrUnknown(data['attempt_id']!, _attemptIdMeta));
+      context.handle(
+        _attemptIdMeta,
+        attemptId.isAcceptableOrUnknown(data['attempt_id']!, _attemptIdMeta),
+      );
     } else if (isInserting) {
       context.missing(_attemptIdMeta);
     }
@@ -808,7 +1048,10 @@ class $CravingsTable extends Cravings with TableInfo<$CravingsTable, Craving> {
       context.missing(_atMeta);
     }
     if (data.containsKey('resisted')) {
-      context.handle(_resistedMeta, resisted.isAcceptableOrUnknown(data['resisted']!, _resistedMeta));
+      context.handle(
+        _resistedMeta,
+        resisted.isAcceptableOrUnknown(data['resisted']!, _resistedMeta),
+      );
     } else if (isInserting) {
       context.missing(_resistedMeta);
     }
@@ -821,12 +1064,27 @@ class $CravingsTable extends Cravings with TableInfo<$CravingsTable, Craving> {
   Craving map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return Craving(
-      id: attachedDatabase.typeMapping.read(DriftSqlType.int, data['${effectivePrefix}id'])!,
-      attemptId: attachedDatabase.typeMapping.read(DriftSqlType.int, data['${effectivePrefix}attempt_id'])!,
-      at: attachedDatabase.typeMapping.read(DriftSqlType.dateTime, data['${effectivePrefix}at'])!,
-      resisted: attachedDatabase.typeMapping.read(DriftSqlType.bool, data['${effectivePrefix}resisted'])!,
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      attemptId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}attempt_id'],
+      )!,
+      at: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}at'],
+      )!,
+      resisted: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}resisted'],
+      )!,
       trigger: $CravingsTable.$convertertriggern.fromSql(
-        attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}trigger']),
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}trigger'],
+        ),
       ),
     );
   }
@@ -836,12 +1094,10 @@ class $CravingsTable extends Cravings with TableInfo<$CravingsTable, Craving> {
     return $CravingsTable(attachedDatabase, alias);
   }
 
-  static JsonTypeConverter2<Trigger, String, String> $convertertrigger = const EnumNameConverter<Trigger>(
-    Trigger.values,
-  );
-  static JsonTypeConverter2<Trigger?, String?, String?> $convertertriggern = JsonTypeConverter2.asNullable(
-    $convertertrigger,
-  );
+  static JsonTypeConverter2<Trigger, String, String> $convertertrigger =
+      const EnumNameConverter<Trigger>(Trigger.values);
+  static JsonTypeConverter2<Trigger?, String?, String?> $convertertriggern =
+      JsonTypeConverter2.asNullable($convertertrigger);
 }
 
 class Craving extends DataClass implements Insertable<Craving> {
@@ -850,7 +1106,13 @@ class Craving extends DataClass implements Insertable<Craving> {
   final DateTime at;
   final bool resisted;
   final Trigger? trigger;
-  const Craving({required this.id, required this.attemptId, required this.at, required this.resisted, this.trigger});
+  const Craving({
+    required this.id,
+    required this.attemptId,
+    required this.at,
+    required this.resisted,
+    this.trigger,
+  });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -859,7 +1121,9 @@ class Craving extends DataClass implements Insertable<Craving> {
     map['at'] = Variable<DateTime>(at);
     map['resisted'] = Variable<bool>(resisted);
     if (!nullToAbsent || trigger != null) {
-      map['trigger'] = Variable<String>($CravingsTable.$convertertriggern.toSql(trigger));
+      map['trigger'] = Variable<String>(
+        $CravingsTable.$convertertriggern.toSql(trigger),
+      );
     }
     return map;
   }
@@ -870,18 +1134,25 @@ class Craving extends DataClass implements Insertable<Craving> {
       attemptId: Value(attemptId),
       at: Value(at),
       resisted: Value(resisted),
-      trigger: trigger == null && nullToAbsent ? const Value.absent() : Value(trigger),
+      trigger: trigger == null && nullToAbsent
+          ? const Value.absent()
+          : Value(trigger),
     );
   }
 
-  factory Craving.fromJson(Map<String, dynamic> json, {ValueSerializer? serializer}) {
+  factory Craving.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return Craving(
       id: serializer.fromJson<int>(json['id']),
       attemptId: serializer.fromJson<int>(json['attemptId']),
       at: serializer.fromJson<DateTime>(json['at']),
       resisted: serializer.fromJson<bool>(json['resisted']),
-      trigger: $CravingsTable.$convertertriggern.fromJson(serializer.fromJson<String?>(json['trigger'])),
+      trigger: $CravingsTable.$convertertriggern.fromJson(
+        serializer.fromJson<String?>(json['trigger']),
+      ),
     );
   }
   @override
@@ -892,7 +1163,9 @@ class Craving extends DataClass implements Insertable<Craving> {
       'attemptId': serializer.toJson<int>(attemptId),
       'at': serializer.toJson<DateTime>(at),
       'resisted': serializer.toJson<bool>(resisted),
-      'trigger': serializer.toJson<String?>($CravingsTable.$convertertriggern.toJson(trigger)),
+      'trigger': serializer.toJson<String?>(
+        $CravingsTable.$convertertriggern.toJson(trigger),
+      ),
     };
   }
 
@@ -1014,7 +1287,9 @@ class CravingsCompanion extends UpdateCompanion<Craving> {
       map['resisted'] = Variable<bool>(resisted.value);
     }
     if (trigger.present) {
-      map['trigger'] = Variable<String>($CravingsTable.$convertertriggern.toSql(trigger.value));
+      map['trigger'] = Variable<String>(
+        $CravingsTable.$convertertriggern.toSql(trigger.value),
+      );
     }
     return map;
   }
@@ -1038,7 +1313,9 @@ class $UnlockedAchievementsTable extends UnlockedAchievements
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $UnlockedAchievementsTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _achievementIdMeta = const VerificationMeta('achievementId');
+  static const VerificationMeta _achievementIdMeta = const VerificationMeta(
+    'achievementId',
+  );
   @override
   late final GeneratedColumn<String> achievementId = GeneratedColumn<String>(
     'achievement_id',
@@ -1047,7 +1324,9 @@ class $UnlockedAchievementsTable extends UnlockedAchievements
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _attemptIdMeta = const VerificationMeta('attemptId');
+  static const VerificationMeta _attemptIdMeta = const VerificationMeta(
+    'attemptId',
+  );
   @override
   late final GeneratedColumn<int> attemptId = GeneratedColumn<int>(
     'attempt_id',
@@ -1055,9 +1334,13 @@ class $UnlockedAchievementsTable extends UnlockedAchievements
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: true,
-    defaultConstraints: GeneratedColumn.constraintIsAlways('REFERENCES attempts (id)'),
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES attempts (id)',
+    ),
   );
-  static const VerificationMeta _unlockedAtMeta = const VerificationMeta('unlockedAt');
+  static const VerificationMeta _unlockedAtMeta = const VerificationMeta(
+    'unlockedAt',
+  );
   @override
   late final GeneratedColumn<DateTime> unlockedAt = GeneratedColumn<DateTime>(
     'unlocked_at',
@@ -1074,24 +1357,36 @@ class $UnlockedAchievementsTable extends UnlockedAchievements
   String get actualTableName => $name;
   static const String $name = 'unlocked_achievements';
   @override
-  VerificationContext validateIntegrity(Insertable<UnlockedAchievement> instance, {bool isInserting = false}) {
+  VerificationContext validateIntegrity(
+    Insertable<UnlockedAchievement> instance, {
+    bool isInserting = false,
+  }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
     if (data.containsKey('achievement_id')) {
       context.handle(
         _achievementIdMeta,
-        achievementId.isAcceptableOrUnknown(data['achievement_id']!, _achievementIdMeta),
+        achievementId.isAcceptableOrUnknown(
+          data['achievement_id']!,
+          _achievementIdMeta,
+        ),
       );
     } else if (isInserting) {
       context.missing(_achievementIdMeta);
     }
     if (data.containsKey('attempt_id')) {
-      context.handle(_attemptIdMeta, attemptId.isAcceptableOrUnknown(data['attempt_id']!, _attemptIdMeta));
+      context.handle(
+        _attemptIdMeta,
+        attemptId.isAcceptableOrUnknown(data['attempt_id']!, _attemptIdMeta),
+      );
     } else if (isInserting) {
       context.missing(_attemptIdMeta);
     }
     if (data.containsKey('unlocked_at')) {
-      context.handle(_unlockedAtMeta, unlockedAt.isAcceptableOrUnknown(data['unlocked_at']!, _unlockedAtMeta));
+      context.handle(
+        _unlockedAtMeta,
+        unlockedAt.isAcceptableOrUnknown(data['unlocked_at']!, _unlockedAtMeta),
+      );
     } else if (isInserting) {
       context.missing(_unlockedAtMeta);
     }
@@ -1104,9 +1399,18 @@ class $UnlockedAchievementsTable extends UnlockedAchievements
   UnlockedAchievement map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return UnlockedAchievement(
-      achievementId: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}achievement_id'])!,
-      attemptId: attachedDatabase.typeMapping.read(DriftSqlType.int, data['${effectivePrefix}attempt_id'])!,
-      unlockedAt: attachedDatabase.typeMapping.read(DriftSqlType.dateTime, data['${effectivePrefix}unlocked_at'])!,
+      achievementId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}achievement_id'],
+      )!,
+      attemptId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}attempt_id'],
+      )!,
+      unlockedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}unlocked_at'],
+      )!,
     );
   }
 
@@ -1116,11 +1420,16 @@ class $UnlockedAchievementsTable extends UnlockedAchievements
   }
 }
 
-class UnlockedAchievement extends DataClass implements Insertable<UnlockedAchievement> {
+class UnlockedAchievement extends DataClass
+    implements Insertable<UnlockedAchievement> {
   final String achievementId;
   final int attemptId;
   final DateTime unlockedAt;
-  const UnlockedAchievement({required this.achievementId, required this.attemptId, required this.unlockedAt});
+  const UnlockedAchievement({
+    required this.achievementId,
+    required this.attemptId,
+    required this.unlockedAt,
+  });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -1138,7 +1447,10 @@ class UnlockedAchievement extends DataClass implements Insertable<UnlockedAchiev
     );
   }
 
-  factory UnlockedAchievement.fromJson(Map<String, dynamic> json, {ValueSerializer? serializer}) {
+  factory UnlockedAchievement.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return UnlockedAchievement(
       achievementId: serializer.fromJson<String>(json['achievementId']),
@@ -1156,16 +1468,24 @@ class UnlockedAchievement extends DataClass implements Insertable<UnlockedAchiev
     };
   }
 
-  UnlockedAchievement copyWith({String? achievementId, int? attemptId, DateTime? unlockedAt}) => UnlockedAchievement(
+  UnlockedAchievement copyWith({
+    String? achievementId,
+    int? attemptId,
+    DateTime? unlockedAt,
+  }) => UnlockedAchievement(
     achievementId: achievementId ?? this.achievementId,
     attemptId: attemptId ?? this.attemptId,
     unlockedAt: unlockedAt ?? this.unlockedAt,
   );
   UnlockedAchievement copyWithCompanion(UnlockedAchievementsCompanion data) {
     return UnlockedAchievement(
-      achievementId: data.achievementId.present ? data.achievementId.value : this.achievementId,
+      achievementId: data.achievementId.present
+          ? data.achievementId.value
+          : this.achievementId,
       attemptId: data.attemptId.present ? data.attemptId.value : this.attemptId,
-      unlockedAt: data.unlockedAt.present ? data.unlockedAt.value : this.unlockedAt,
+      unlockedAt: data.unlockedAt.present
+          ? data.unlockedAt.value
+          : this.unlockedAt,
     );
   }
 
@@ -1190,7 +1510,8 @@ class UnlockedAchievement extends DataClass implements Insertable<UnlockedAchiev
           other.unlockedAt == this.unlockedAt);
 }
 
-class UnlockedAchievementsCompanion extends UpdateCompanion<UnlockedAchievement> {
+class UnlockedAchievementsCompanion
+    extends UpdateCompanion<UnlockedAchievement> {
   final Value<String> achievementId;
   final Value<int> attemptId;
   final Value<DateTime> unlockedAt;
@@ -1267,12 +1588,15 @@ class UnlockedAchievementsCompanion extends UpdateCompanion<UnlockedAchievement>
   }
 }
 
-class $ArticlesReadTable extends ArticlesRead with TableInfo<$ArticlesReadTable, ArticlesReadData> {
+class $ArticlesReadTable extends ArticlesRead
+    with TableInfo<$ArticlesReadTable, ArticlesReadData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $ArticlesReadTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _articleIdMeta = const VerificationMeta('articleId');
+  static const VerificationMeta _articleIdMeta = const VerificationMeta(
+    'articleId',
+  );
   @override
   late final GeneratedColumn<String> articleId = GeneratedColumn<String>(
     'article_id',
@@ -1298,16 +1622,25 @@ class $ArticlesReadTable extends ArticlesRead with TableInfo<$ArticlesReadTable,
   String get actualTableName => $name;
   static const String $name = 'articles_read';
   @override
-  VerificationContext validateIntegrity(Insertable<ArticlesReadData> instance, {bool isInserting = false}) {
+  VerificationContext validateIntegrity(
+    Insertable<ArticlesReadData> instance, {
+    bool isInserting = false,
+  }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
     if (data.containsKey('article_id')) {
-      context.handle(_articleIdMeta, articleId.isAcceptableOrUnknown(data['article_id']!, _articleIdMeta));
+      context.handle(
+        _articleIdMeta,
+        articleId.isAcceptableOrUnknown(data['article_id']!, _articleIdMeta),
+      );
     } else if (isInserting) {
       context.missing(_articleIdMeta);
     }
     if (data.containsKey('read_at')) {
-      context.handle(_readAtMeta, readAt.isAcceptableOrUnknown(data['read_at']!, _readAtMeta));
+      context.handle(
+        _readAtMeta,
+        readAt.isAcceptableOrUnknown(data['read_at']!, _readAtMeta),
+      );
     } else if (isInserting) {
       context.missing(_readAtMeta);
     }
@@ -1320,8 +1653,14 @@ class $ArticlesReadTable extends ArticlesRead with TableInfo<$ArticlesReadTable,
   ArticlesReadData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return ArticlesReadData(
-      articleId: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}article_id'])!,
-      readAt: attachedDatabase.typeMapping.read(DriftSqlType.dateTime, data['${effectivePrefix}read_at'])!,
+      articleId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}article_id'],
+      )!,
+      readAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}read_at'],
+      )!,
     );
   }
 
@@ -1331,7 +1670,8 @@ class $ArticlesReadTable extends ArticlesRead with TableInfo<$ArticlesReadTable,
   }
 }
 
-class ArticlesReadData extends DataClass implements Insertable<ArticlesReadData> {
+class ArticlesReadData extends DataClass
+    implements Insertable<ArticlesReadData> {
   final String articleId;
   final DateTime readAt;
   const ArticlesReadData({required this.articleId, required this.readAt});
@@ -1344,10 +1684,16 @@ class ArticlesReadData extends DataClass implements Insertable<ArticlesReadData>
   }
 
   ArticlesReadCompanion toCompanion(bool nullToAbsent) {
-    return ArticlesReadCompanion(articleId: Value(articleId), readAt: Value(readAt));
+    return ArticlesReadCompanion(
+      articleId: Value(articleId),
+      readAt: Value(readAt),
+    );
   }
 
-  factory ArticlesReadData.fromJson(Map<String, dynamic> json, {ValueSerializer? serializer}) {
+  factory ArticlesReadData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return ArticlesReadData(
       articleId: serializer.fromJson<String>(json['articleId']),
@@ -1364,7 +1710,10 @@ class ArticlesReadData extends DataClass implements Insertable<ArticlesReadData>
   }
 
   ArticlesReadData copyWith({String? articleId, DateTime? readAt}) =>
-      ArticlesReadData(articleId: articleId ?? this.articleId, readAt: readAt ?? this.readAt);
+      ArticlesReadData(
+        articleId: articleId ?? this.articleId,
+        readAt: readAt ?? this.readAt,
+      );
   ArticlesReadData copyWithCompanion(ArticlesReadCompanion data) {
     return ArticlesReadData(
       articleId: data.articleId.present ? data.articleId.value : this.articleId,
@@ -1386,7 +1735,9 @@ class ArticlesReadData extends DataClass implements Insertable<ArticlesReadData>
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is ArticlesReadData && other.articleId == this.articleId && other.readAt == this.readAt);
+      (other is ArticlesReadData &&
+          other.articleId == this.articleId &&
+          other.readAt == this.readAt);
 }
 
 class ArticlesReadCompanion extends UpdateCompanion<ArticlesReadData> {
@@ -1398,9 +1749,12 @@ class ArticlesReadCompanion extends UpdateCompanion<ArticlesReadData> {
     this.readAt = const Value.absent(),
     this.rowid = const Value.absent(),
   });
-  ArticlesReadCompanion.insert({required String articleId, required DateTime readAt, this.rowid = const Value.absent()})
-    : articleId = Value(articleId),
-      readAt = Value(readAt);
+  ArticlesReadCompanion.insert({
+    required String articleId,
+    required DateTime readAt,
+    this.rowid = const Value.absent(),
+  }) : articleId = Value(articleId),
+       readAt = Value(readAt);
   static Insertable<ArticlesReadData> custom({
     Expression<String>? articleId,
     Expression<DateTime>? readAt,
@@ -1413,7 +1767,11 @@ class ArticlesReadCompanion extends UpdateCompanion<ArticlesReadData> {
     });
   }
 
-  ArticlesReadCompanion copyWith({Value<String>? articleId, Value<DateTime>? readAt, Value<int>? rowid}) {
+  ArticlesReadCompanion copyWith({
+    Value<String>? articleId,
+    Value<DateTime>? readAt,
+    Value<int>? rowid,
+  }) {
     return ArticlesReadCompanion(
       articleId: articleId ?? this.articleId,
       readAt: readAt ?? this.readAt,
@@ -1450,197 +1808,27 @@ class ArticlesReadCompanion extends UpdateCompanion<ArticlesReadData> {
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
-  late final $SmokingProductsTable smokingProducts = $SmokingProductsTable(this);
   late final $AttemptsTable attempts = $AttemptsTable(this);
+  late final $SmokingProductsTable smokingProducts = $SmokingProductsTable(
+    this,
+  );
   late final $CravingsTable cravings = $CravingsTable(this);
-  late final $UnlockedAchievementsTable unlockedAchievements = $UnlockedAchievementsTable(this);
+  late final $UnlockedAchievementsTable unlockedAchievements =
+      $UnlockedAchievementsTable(this);
   late final $ArticlesReadTable articlesRead = $ArticlesReadTable(this);
   @override
-  Iterable<TableInfo<Table, Object?>> get allTables => allSchemaEntities.whereType<TableInfo<Table, Object?>>();
+  Iterable<TableInfo<Table, Object?>> get allTables =>
+      allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities => [
-    smokingProducts,
     attempts,
+    smokingProducts,
     cravings,
     unlockedAchievements,
     articlesRead,
   ];
 }
 
-typedef $$SmokingProductsTableCreateCompanionBuilder = SmokingProductsCompanion Function({
-  Value<int> id,
-  required ProductType type,
-  required double amount,
-  required ConsumptionPeriod period,
-  required int unitsPerPack,
-  required double packPrice,
-});
-typedef $$SmokingProductsTableUpdateCompanionBuilder = SmokingProductsCompanion Function({
-  Value<int> id,
-  Value<ProductType> type,
-  Value<double> amount,
-  Value<ConsumptionPeriod> period,
-  Value<int> unitsPerPack,
-  Value<double> packPrice,
-});
-
-class $$SmokingProductsTableFilterComposer extends Composer<_$AppDatabase, $SmokingProductsTable> {
-  $$SmokingProductsTableFilterComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnFilters<int> get id => $composableBuilder(column: $table.id, builder: (column) => ColumnFilters(column));
-
-  ColumnWithTypeConverterFilters<ProductType, ProductType, String> get type =>
-      $composableBuilder(column: $table.type, builder: (column) => ColumnWithTypeConverterFilters(column));
-
-  ColumnFilters<double> get amount =>
-      $composableBuilder(column: $table.amount, builder: (column) => ColumnFilters(column));
-
-  ColumnWithTypeConverterFilters<ConsumptionPeriod, ConsumptionPeriod, String> get period =>
-      $composableBuilder(column: $table.period, builder: (column) => ColumnWithTypeConverterFilters(column));
-
-  ColumnFilters<int> get unitsPerPack =>
-      $composableBuilder(column: $table.unitsPerPack, builder: (column) => ColumnFilters(column));
-
-  ColumnFilters<double> get packPrice =>
-      $composableBuilder(column: $table.packPrice, builder: (column) => ColumnFilters(column));
-}
-
-class $$SmokingProductsTableOrderingComposer extends Composer<_$AppDatabase, $SmokingProductsTable> {
-  $$SmokingProductsTableOrderingComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnOrderings<int> get id => $composableBuilder(column: $table.id, builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<String> get type =>
-      $composableBuilder(column: $table.type, builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<double> get amount =>
-      $composableBuilder(column: $table.amount, builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<String> get period =>
-      $composableBuilder(column: $table.period, builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<int> get unitsPerPack =>
-      $composableBuilder(column: $table.unitsPerPack, builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<double> get packPrice =>
-      $composableBuilder(column: $table.packPrice, builder: (column) => ColumnOrderings(column));
-}
-
-class $$SmokingProductsTableAnnotationComposer extends Composer<_$AppDatabase, $SmokingProductsTable> {
-  $$SmokingProductsTableAnnotationComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  GeneratedColumn<int> get id => $composableBuilder(column: $table.id, builder: (column) => column);
-
-  GeneratedColumnWithTypeConverter<ProductType, String> get type =>
-      $composableBuilder(column: $table.type, builder: (column) => column);
-
-  GeneratedColumn<double> get amount => $composableBuilder(column: $table.amount, builder: (column) => column);
-
-  GeneratedColumnWithTypeConverter<ConsumptionPeriod, String> get period =>
-      $composableBuilder(column: $table.period, builder: (column) => column);
-
-  GeneratedColumn<int> get unitsPerPack => $composableBuilder(column: $table.unitsPerPack, builder: (column) => column);
-
-  GeneratedColumn<double> get packPrice => $composableBuilder(column: $table.packPrice, builder: (column) => column);
-}
-
-class $$SmokingProductsTableTableManager
-    extends
-        RootTableManager<
-          _$AppDatabase,
-          $SmokingProductsTable,
-          SmokingProduct,
-          $$SmokingProductsTableFilterComposer,
-          $$SmokingProductsTableOrderingComposer,
-          $$SmokingProductsTableAnnotationComposer,
-          $$SmokingProductsTableCreateCompanionBuilder,
-          $$SmokingProductsTableUpdateCompanionBuilder,
-          (SmokingProduct, BaseReferences<_$AppDatabase, $SmokingProductsTable, SmokingProduct>),
-          SmokingProduct,
-          PrefetchHooks Function()
-        > {
-  $$SmokingProductsTableTableManager(_$AppDatabase db, $SmokingProductsTable table)
-    : super(
-        TableManagerState(
-          db: db,
-          table: table,
-          createFilteringComposer: () => $$SmokingProductsTableFilterComposer($db: db, $table: table),
-          createOrderingComposer: () => $$SmokingProductsTableOrderingComposer($db: db, $table: table),
-          createComputedFieldComposer: () => $$SmokingProductsTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback:
-              ({
-                Value<int> id = const Value.absent(),
-                Value<ProductType> type = const Value.absent(),
-                Value<double> amount = const Value.absent(),
-                Value<ConsumptionPeriod> period = const Value.absent(),
-                Value<int> unitsPerPack = const Value.absent(),
-                Value<double> packPrice = const Value.absent(),
-              }) => SmokingProductsCompanion(
-                id: id,
-                type: type,
-                amount: amount,
-                period: period,
-                unitsPerPack: unitsPerPack,
-                packPrice: packPrice,
-              ),
-          createCompanionCallback:
-              ({
-                Value<int> id = const Value.absent(),
-                required ProductType type,
-                required double amount,
-                required ConsumptionPeriod period,
-                required int unitsPerPack,
-                required double packPrice,
-              }) => SmokingProductsCompanion.insert(
-                id: id,
-                type: type,
-                amount: amount,
-                period: period,
-                unitsPerPack: unitsPerPack,
-                packPrice: packPrice,
-              ),
-          withReferenceMapper: (p0) => p0
-              .map(
-                (e) => (
-                  e.readTable<$SmokingProductsTable, SmokingProduct>(table),
-                  BaseReferences<_$AppDatabase, $SmokingProductsTable, SmokingProduct>(db, table, e),
-                ),
-              )
-              .toList(),
-          prefetchHooksCallback: null,
-        ),
-      );
-}
-
-typedef $$SmokingProductsTableProcessedTableManager =
-    ProcessedTableManager<
-      _$AppDatabase,
-      $SmokingProductsTable,
-      SmokingProduct,
-      $$SmokingProductsTableFilterComposer,
-      $$SmokingProductsTableOrderingComposer,
-      $$SmokingProductsTableAnnotationComposer,
-      $$SmokingProductsTableCreateCompanionBuilder,
-      $$SmokingProductsTableUpdateCompanionBuilder,
-      (SmokingProduct, BaseReferences<_$AppDatabase, $SmokingProductsTable, SmokingProduct>),
-      SmokingProduct,
-      PrefetchHooks Function()
-    >;
 typedef $$AttemptsTableCreateCompanionBuilder = AttemptsCompanion Function({
   Value<int> id,
   required DateTime startedAt,
@@ -1660,11 +1848,36 @@ typedef $$AttemptsTableUpdateCompanionBuilder = AttemptsCompanion Function({
   Value<String?> nextTime,
 });
 
-final class $$AttemptsTableReferences extends BaseReferences<_$AppDatabase, $AttemptsTable, Attempt> {
+final class $$AttemptsTableReferences
+    extends BaseReferences<_$AppDatabase, $AttemptsTable, Attempt> {
   $$AttemptsTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static MultiTypedResultKey<$CravingsTable, List<Craving>> _cravingsRefsTable(_$AppDatabase db) =>
-      MultiTypedResultKey.fromTable(db.cravings, aliasName: 'attempts__id__cravings__attempt_id');
+  static MultiTypedResultKey<$SmokingProductsTable, List<SmokingProduct>>
+  _smokingProductsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.smokingProducts,
+    aliasName: 'attempts__id__smoking_products__attempt_id',
+  );
+
+  $$SmokingProductsTableProcessedTableManager get smokingProductsRefs {
+    final manager = $$SmokingProductsTableTableManager(
+      $_db,
+      $_db.smokingProducts,
+    ).filter((f) => f.attemptId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _smokingProductsRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$CravingsTable, List<Craving>> _cravingsRefsTable(
+    _$AppDatabase db,
+  ) => MultiTypedResultKey.fromTable(
+    db.cravings,
+    aliasName: 'attempts__id__cravings__attempt_id',
+  );
 
   $$CravingsTableProcessedTableManager get cravingsRefs {
     final manager = $$CravingsTableTableManager(
@@ -1673,28 +1886,39 @@ final class $$AttemptsTableReferences extends BaseReferences<_$AppDatabase, $Att
     ).filter((f) => f.attemptId.id.sqlEquals($_itemColumn<int>('id')!));
 
     final cache = $_typedResult.readTableOrNull(_cravingsRefsTable($_db));
-    return ProcessedTableManager(manager.$state.copyWith(prefetchedData: cache));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
   }
 
-  static MultiTypedResultKey<$UnlockedAchievementsTable, List<UnlockedAchievement>> _unlockedAchievementsRefsTable(
-    _$AppDatabase db,
-  ) => MultiTypedResultKey.fromTable(
-    db.unlockedAchievements,
-    aliasName: 'attempts__id__unlocked_achievements__attempt_id',
-  );
+  static MultiTypedResultKey<
+    $UnlockedAchievementsTable,
+    List<UnlockedAchievement>
+  >
+  _unlockedAchievementsRefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.unlockedAchievements,
+        aliasName: 'attempts__id__unlocked_achievements__attempt_id',
+      );
 
-  $$UnlockedAchievementsTableProcessedTableManager get unlockedAchievementsRefs {
+  $$UnlockedAchievementsTableProcessedTableManager
+  get unlockedAchievementsRefs {
     final manager = $$UnlockedAchievementsTableTableManager(
       $_db,
       $_db.unlockedAchievements,
     ).filter((f) => f.attemptId.id.sqlEquals($_itemColumn<int>('id')!));
 
-    final cache = $_typedResult.readTableOrNull(_unlockedAchievementsRefsTable($_db));
-    return ProcessedTableManager(manager.$state.copyWith(prefetchedData: cache));
+    final cache = $_typedResult.readTableOrNull(
+      _unlockedAchievementsRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
   }
 }
 
-class $$AttemptsTableFilterComposer extends Composer<_$AppDatabase, $AttemptsTable> {
+class $$AttemptsTableFilterComposer
+    extends Composer<_$AppDatabase, $AttemptsTable> {
   $$AttemptsTableFilterComposer({
     required super.$db,
     required super.$table,
@@ -1702,64 +1926,120 @@ class $$AttemptsTableFilterComposer extends Composer<_$AppDatabase, $AttemptsTab
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<int> get id => $composableBuilder(column: $table.id, builder: (column) => ColumnFilters(column));
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<DateTime> get startedAt =>
-      $composableBuilder(column: $table.startedAt, builder: (column) => ColumnFilters(column));
+  ColumnFilters<DateTime> get startedAt => $composableBuilder(
+    column: $table.startedAt,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<DateTime> get endedAt =>
-      $composableBuilder(column: $table.endedAt, builder: (column) => ColumnFilters(column));
+  ColumnFilters<DateTime> get endedAt => $composableBuilder(
+    column: $table.endedAt,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnWithTypeConverterFilters<Trigger?, Trigger, String> get trigger =>
-      $composableBuilder(column: $table.trigger, builder: (column) => ColumnWithTypeConverterFilters(column));
+      $composableBuilder(
+        column: $table.trigger,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 
-  ColumnFilters<String> get whatHappened =>
-      $composableBuilder(column: $table.whatHappened, builder: (column) => ColumnFilters(column));
+  ColumnFilters<String> get whatHappened => $composableBuilder(
+    column: $table.whatHappened,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<String> get whatWouldHelp =>
-      $composableBuilder(column: $table.whatWouldHelp, builder: (column) => ColumnFilters(column));
+  ColumnFilters<String> get whatWouldHelp => $composableBuilder(
+    column: $table.whatWouldHelp,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<String> get nextTime =>
-      $composableBuilder(column: $table.nextTime, builder: (column) => ColumnFilters(column));
+  ColumnFilters<String> get nextTime => $composableBuilder(
+    column: $table.nextTime,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  Expression<bool> cravingsRefs(Expression<bool> Function($$CravingsTableFilterComposer f) f) {
-    final $$CravingsTableFilterComposer composer = $composerBuilder(
+  Expression<bool> smokingProductsRefs(
+    Expression<bool> Function($$SmokingProductsTableFilterComposer f) f,
+  ) {
+    final $$SmokingProductsTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
-      referencedTable: $db.cravings,
+      referencedTable: $db.smokingProducts,
       getReferencedColumn: (t) => t.attemptId,
-      builder: (joinBuilder, {$addJoinBuilderToRootComposer, $removeJoinBuilderFromRootComposer}) =>
-          $$CravingsTableFilterComposer(
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SmokingProductsTableFilterComposer(
             $db: $db,
-            $table: $db.cravings,
+            $table: $db.smokingProducts,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer: $removeJoinBuilderFromRootComposer,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
           ),
     );
     return f(composer);
   }
 
-  Expression<bool> unlockedAchievementsRefs(Expression<bool> Function($$UnlockedAchievementsTableFilterComposer f) f) {
+  Expression<bool> cravingsRefs(
+    Expression<bool> Function($$CravingsTableFilterComposer f) f,
+  ) {
+    final $$CravingsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.cravings,
+      getReferencedColumn: (t) => t.attemptId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CravingsTableFilterComposer(
+            $db: $db,
+            $table: $db.cravings,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> unlockedAchievementsRefs(
+    Expression<bool> Function($$UnlockedAchievementsTableFilterComposer f) f,
+  ) {
     final $$UnlockedAchievementsTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
       referencedTable: $db.unlockedAchievements,
       getReferencedColumn: (t) => t.attemptId,
-      builder: (joinBuilder, {$addJoinBuilderToRootComposer, $removeJoinBuilderFromRootComposer}) =>
-          $$UnlockedAchievementsTableFilterComposer(
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$UnlockedAchievementsTableFilterComposer(
             $db: $db,
             $table: $db.unlockedAchievements,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer: $removeJoinBuilderFromRootComposer,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
           ),
     );
     return f(composer);
   }
 }
 
-class $$AttemptsTableOrderingComposer extends Composer<_$AppDatabase, $AttemptsTable> {
+class $$AttemptsTableOrderingComposer
+    extends Composer<_$AppDatabase, $AttemptsTable> {
   $$AttemptsTableOrderingComposer({
     required super.$db,
     required super.$table,
@@ -1767,28 +2047,44 @@ class $$AttemptsTableOrderingComposer extends Composer<_$AppDatabase, $AttemptsT
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<int> get id => $composableBuilder(column: $table.id, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<DateTime> get startedAt =>
-      $composableBuilder(column: $table.startedAt, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<DateTime> get startedAt => $composableBuilder(
+    column: $table.startedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<DateTime> get endedAt =>
-      $composableBuilder(column: $table.endedAt, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<DateTime> get endedAt => $composableBuilder(
+    column: $table.endedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<String> get trigger =>
-      $composableBuilder(column: $table.trigger, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<String> get trigger => $composableBuilder(
+    column: $table.trigger,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<String> get whatHappened =>
-      $composableBuilder(column: $table.whatHappened, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<String> get whatHappened => $composableBuilder(
+    column: $table.whatHappened,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<String> get whatWouldHelp =>
-      $composableBuilder(column: $table.whatWouldHelp, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<String> get whatWouldHelp => $composableBuilder(
+    column: $table.whatWouldHelp,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<String> get nextTime =>
-      $composableBuilder(column: $table.nextTime, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<String> get nextTime => $composableBuilder(
+    column: $table.nextTime,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
-class $$AttemptsTableAnnotationComposer extends Composer<_$AppDatabase, $AttemptsTable> {
+class $$AttemptsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $AttemptsTable> {
   $$AttemptsTableAnnotationComposer({
     required super.$db,
     required super.$table,
@@ -1796,36 +2092,76 @@ class $$AttemptsTableAnnotationComposer extends Composer<_$AppDatabase, $Attempt
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<int> get id => $composableBuilder(column: $table.id, builder: (column) => column);
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
 
-  GeneratedColumn<DateTime> get startedAt => $composableBuilder(column: $table.startedAt, builder: (column) => column);
+  GeneratedColumn<DateTime> get startedAt =>
+      $composableBuilder(column: $table.startedAt, builder: (column) => column);
 
-  GeneratedColumn<DateTime> get endedAt => $composableBuilder(column: $table.endedAt, builder: (column) => column);
+  GeneratedColumn<DateTime> get endedAt =>
+      $composableBuilder(column: $table.endedAt, builder: (column) => column);
 
   GeneratedColumnWithTypeConverter<Trigger?, String> get trigger =>
       $composableBuilder(column: $table.trigger, builder: (column) => column);
 
-  GeneratedColumn<String> get whatHappened =>
-      $composableBuilder(column: $table.whatHappened, builder: (column) => column);
+  GeneratedColumn<String> get whatHappened => $composableBuilder(
+    column: $table.whatHappened,
+    builder: (column) => column,
+  );
 
-  GeneratedColumn<String> get whatWouldHelp =>
-      $composableBuilder(column: $table.whatWouldHelp, builder: (column) => column);
+  GeneratedColumn<String> get whatWouldHelp => $composableBuilder(
+    column: $table.whatWouldHelp,
+    builder: (column) => column,
+  );
 
-  GeneratedColumn<String> get nextTime => $composableBuilder(column: $table.nextTime, builder: (column) => column);
+  GeneratedColumn<String> get nextTime =>
+      $composableBuilder(column: $table.nextTime, builder: (column) => column);
 
-  Expression<T> cravingsRefs<T extends Object>(Expression<T> Function($$CravingsTableAnnotationComposer a) f) {
+  Expression<T> smokingProductsRefs<T extends Object>(
+    Expression<T> Function($$SmokingProductsTableAnnotationComposer a) f,
+  ) {
+    final $$SmokingProductsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.smokingProducts,
+      getReferencedColumn: (t) => t.attemptId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SmokingProductsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.smokingProducts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> cravingsRefs<T extends Object>(
+    Expression<T> Function($$CravingsTableAnnotationComposer a) f,
+  ) {
     final $$CravingsTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
       referencedTable: $db.cravings,
       getReferencedColumn: (t) => t.attemptId,
-      builder: (joinBuilder, {$addJoinBuilderToRootComposer, $removeJoinBuilderFromRootComposer}) =>
-          $$CravingsTableAnnotationComposer(
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CravingsTableAnnotationComposer(
             $db: $db,
             $table: $db.cravings,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer: $removeJoinBuilderFromRootComposer,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
           ),
     );
     return f(composer);
@@ -1834,20 +2170,26 @@ class $$AttemptsTableAnnotationComposer extends Composer<_$AppDatabase, $Attempt
   Expression<T> unlockedAchievementsRefs<T extends Object>(
     Expression<T> Function($$UnlockedAchievementsTableAnnotationComposer a) f,
   ) {
-    final $$UnlockedAchievementsTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.unlockedAchievements,
-      getReferencedColumn: (t) => t.attemptId,
-      builder: (joinBuilder, {$addJoinBuilderToRootComposer, $removeJoinBuilderFromRootComposer}) =>
-          $$UnlockedAchievementsTableAnnotationComposer(
-            $db: $db,
-            $table: $db.unlockedAchievements,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer: $removeJoinBuilderFromRootComposer,
-          ),
-    );
+    final $$UnlockedAchievementsTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.unlockedAchievements,
+          getReferencedColumn: (t) => t.attemptId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$UnlockedAchievementsTableAnnotationComposer(
+                $db: $db,
+                $table: $db.unlockedAchievements,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
     return f(composer);
   }
 }
@@ -1865,16 +2207,23 @@ class $$AttemptsTableTableManager
           $$AttemptsTableUpdateCompanionBuilder,
           (Attempt, $$AttemptsTableReferences),
           Attempt,
-          PrefetchHooks Function({bool cravingsRefs, bool unlockedAchievementsRefs})
+          PrefetchHooks Function({
+            bool smokingProductsRefs,
+            bool cravingsRefs,
+            bool unlockedAchievementsRefs,
+          })
         > {
   $$AttemptsTableTableManager(_$AppDatabase db, $AttemptsTable table)
     : super(
         TableManagerState(
           db: db,
           table: table,
-          createFilteringComposer: () => $$AttemptsTableFilterComposer($db: db, $table: table),
-          createOrderingComposer: () => $$AttemptsTableOrderingComposer($db: db, $table: table),
-          createComputedFieldComposer: () => $$AttemptsTableAnnotationComposer($db: db, $table: table),
+          createFilteringComposer: () =>
+              $$AttemptsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$AttemptsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$AttemptsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
@@ -1912,40 +2261,96 @@ class $$AttemptsTableTableManager
                 nextTime: nextTime,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable<$AttemptsTable, Attempt>(table), $$AttemptsTableReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable<$AttemptsTable, Attempt>(table),
+                  $$AttemptsTableReferences(db, table, e),
+                ),
+              )
               .toList(),
-          prefetchHooksCallback: ({cravingsRefs = false, unlockedAchievementsRefs = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [
-                if (cravingsRefs) db.cravings,
-                if (unlockedAchievementsRefs) db.unlockedAchievements,
-              ],
-              addJoins: null,
-              getPrefetchedDataCallback: (items) async {
-                return [
-                  if (cravingsRefs)
-                    await $_getPrefetchedData<Attempt, $AttemptsTable, Craving>(
-                      currentTable: table,
-                      referencedTable: $$AttemptsTableReferences._cravingsRefsTable(db),
-                      managerFromTypedResult: (p0) => $$AttemptsTableReferences(db, table, p0).cravingsRefs,
-                      referencedItemsForCurrentItem: (item, referencedItems) =>
-                          referencedItems.where((e) => e.attemptId == item.id),
-                      typedResults: items,
-                    ),
-                  if (unlockedAchievementsRefs)
-                    await $_getPrefetchedData<Attempt, $AttemptsTable, UnlockedAchievement>(
-                      currentTable: table,
-                      referencedTable: $$AttemptsTableReferences._unlockedAchievementsRefsTable(db),
-                      managerFromTypedResult: (p0) => $$AttemptsTableReferences(db, table, p0).unlockedAchievementsRefs,
-                      referencedItemsForCurrentItem: (item, referencedItems) =>
-                          referencedItems.where((e) => e.attemptId == item.id),
-                      typedResults: items,
-                    ),
-                ];
+          prefetchHooksCallback:
+              ({
+                smokingProductsRefs = false,
+                cravingsRefs = false,
+                unlockedAchievementsRefs = false,
+              }) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (smokingProductsRefs) db.smokingProducts,
+                    if (cravingsRefs) db.cravings,
+                    if (unlockedAchievementsRefs) db.unlockedAchievements,
+                  ],
+                  addJoins: null,
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (smokingProductsRefs)
+                        await $_getPrefetchedData<
+                          Attempt,
+                          $AttemptsTable,
+                          SmokingProduct
+                        >(
+                          currentTable: table,
+                          referencedTable: $$AttemptsTableReferences
+                              ._smokingProductsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$AttemptsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).smokingProductsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.attemptId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (cravingsRefs)
+                        await $_getPrefetchedData<
+                          Attempt,
+                          $AttemptsTable,
+                          Craving
+                        >(
+                          currentTable: table,
+                          referencedTable: $$AttemptsTableReferences
+                              ._cravingsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$AttemptsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).cravingsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.attemptId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (unlockedAchievementsRefs)
+                        await $_getPrefetchedData<
+                          Attempt,
+                          $AttemptsTable,
+                          UnlockedAchievement
+                        >(
+                          currentTable: table,
+                          referencedTable: $$AttemptsTableReferences
+                              ._unlockedAchievementsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$AttemptsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).unlockedAchievementsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.attemptId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
               },
-            );
-          },
         ),
       );
 }
@@ -1962,7 +2367,369 @@ typedef $$AttemptsTableProcessedTableManager =
       $$AttemptsTableUpdateCompanionBuilder,
       (Attempt, $$AttemptsTableReferences),
       Attempt,
-      PrefetchHooks Function({bool cravingsRefs, bool unlockedAchievementsRefs})
+      PrefetchHooks Function({
+        bool smokingProductsRefs,
+        bool cravingsRefs,
+        bool unlockedAchievementsRefs,
+      })
+    >;
+typedef $$SmokingProductsTableCreateCompanionBuilder =
+    SmokingProductsCompanion Function({
+      Value<int> id,
+      Value<int?> attemptId,
+      required ProductType type,
+      required double amount,
+      required ConsumptionPeriod period,
+      required int unitsPerPack,
+      required double packPrice,
+    });
+typedef $$SmokingProductsTableUpdateCompanionBuilder =
+    SmokingProductsCompanion Function({
+      Value<int> id,
+      Value<int?> attemptId,
+      Value<ProductType> type,
+      Value<double> amount,
+      Value<ConsumptionPeriod> period,
+      Value<int> unitsPerPack,
+      Value<double> packPrice,
+    });
+
+final class $$SmokingProductsTableReferences
+    extends
+        BaseReferences<_$AppDatabase, $SmokingProductsTable, SmokingProduct> {
+  $$SmokingProductsTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $AttemptsTable _attemptIdTable(_$AppDatabase db) =>
+      db.attempts.createAlias('smoking_products__attempt_id__attempts__id');
+
+  $$AttemptsTableProcessedTableManager? get attemptId {
+    final $_column = $_itemColumn<int>('attempt_id');
+    if ($_column == null) return null;
+    final manager = $$AttemptsTableTableManager(
+      $_db,
+      $_db.attempts,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_attemptIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$SmokingProductsTableFilterComposer
+    extends Composer<_$AppDatabase, $SmokingProductsTable> {
+  $$SmokingProductsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<ProductType, ProductType, String> get type =>
+      $composableBuilder(
+        column: $table.type,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
+
+  ColumnFilters<double> get amount => $composableBuilder(
+    column: $table.amount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<ConsumptionPeriod, ConsumptionPeriod, String>
+  get period => $composableBuilder(
+    column: $table.period,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+
+  ColumnFilters<int> get unitsPerPack => $composableBuilder(
+    column: $table.unitsPerPack,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get packPrice => $composableBuilder(
+    column: $table.packPrice,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$AttemptsTableFilterComposer get attemptId {
+    final $$AttemptsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.attemptId,
+      referencedTable: $db.attempts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AttemptsTableFilterComposer(
+            $db: $db,
+            $table: $db.attempts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$SmokingProductsTableOrderingComposer
+    extends Composer<_$AppDatabase, $SmokingProductsTable> {
+  $$SmokingProductsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get type => $composableBuilder(
+    column: $table.type,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get amount => $composableBuilder(
+    column: $table.amount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get period => $composableBuilder(
+    column: $table.period,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get unitsPerPack => $composableBuilder(
+    column: $table.unitsPerPack,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get packPrice => $composableBuilder(
+    column: $table.packPrice,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$AttemptsTableOrderingComposer get attemptId {
+    final $$AttemptsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.attemptId,
+      referencedTable: $db.attempts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AttemptsTableOrderingComposer(
+            $db: $db,
+            $table: $db.attempts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$SmokingProductsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $SmokingProductsTable> {
+  $$SmokingProductsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<ProductType, String> get type =>
+      $composableBuilder(column: $table.type, builder: (column) => column);
+
+  GeneratedColumn<double> get amount =>
+      $composableBuilder(column: $table.amount, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<ConsumptionPeriod, String> get period =>
+      $composableBuilder(column: $table.period, builder: (column) => column);
+
+  GeneratedColumn<int> get unitsPerPack => $composableBuilder(
+    column: $table.unitsPerPack,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get packPrice =>
+      $composableBuilder(column: $table.packPrice, builder: (column) => column);
+
+  $$AttemptsTableAnnotationComposer get attemptId {
+    final $$AttemptsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.attemptId,
+      referencedTable: $db.attempts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AttemptsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.attempts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$SmokingProductsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $SmokingProductsTable,
+          SmokingProduct,
+          $$SmokingProductsTableFilterComposer,
+          $$SmokingProductsTableOrderingComposer,
+          $$SmokingProductsTableAnnotationComposer,
+          $$SmokingProductsTableCreateCompanionBuilder,
+          $$SmokingProductsTableUpdateCompanionBuilder,
+          (SmokingProduct, $$SmokingProductsTableReferences),
+          SmokingProduct,
+          PrefetchHooks Function({bool attemptId})
+        > {
+  $$SmokingProductsTableTableManager(
+    _$AppDatabase db,
+    $SmokingProductsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$SmokingProductsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$SmokingProductsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$SmokingProductsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int?> attemptId = const Value.absent(),
+                Value<ProductType> type = const Value.absent(),
+                Value<double> amount = const Value.absent(),
+                Value<ConsumptionPeriod> period = const Value.absent(),
+                Value<int> unitsPerPack = const Value.absent(),
+                Value<double> packPrice = const Value.absent(),
+              }) => SmokingProductsCompanion(
+                id: id,
+                attemptId: attemptId,
+                type: type,
+                amount: amount,
+                period: period,
+                unitsPerPack: unitsPerPack,
+                packPrice: packPrice,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int?> attemptId = const Value.absent(),
+                required ProductType type,
+                required double amount,
+                required ConsumptionPeriod period,
+                required int unitsPerPack,
+                required double packPrice,
+              }) => SmokingProductsCompanion.insert(
+                id: id,
+                attemptId: attemptId,
+                type: type,
+                amount: amount,
+                period: period,
+                unitsPerPack: unitsPerPack,
+                packPrice: packPrice,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$SmokingProductsTable, SmokingProduct>(table),
+                  $$SmokingProductsTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({attemptId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (attemptId) {
+                      state = state.withJoin(
+                        currentTable: table,
+                        currentColumn: table.attemptId,
+                        referencedTable: $$SmokingProductsTableReferences
+                            ._attemptIdTable(db),
+                        referencedColumn: $$SmokingProductsTableReferences
+                            ._attemptIdTable(db)
+                            .id,
+                      ) as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$SmokingProductsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $SmokingProductsTable,
+      SmokingProduct,
+      $$SmokingProductsTableFilterComposer,
+      $$SmokingProductsTableOrderingComposer,
+      $$SmokingProductsTableAnnotationComposer,
+      $$SmokingProductsTableCreateCompanionBuilder,
+      $$SmokingProductsTableUpdateCompanionBuilder,
+      (SmokingProduct, $$SmokingProductsTableReferences),
+      SmokingProduct,
+      PrefetchHooks Function({bool attemptId})
     >;
 typedef $$CravingsTableCreateCompanionBuilder = CravingsCompanion Function({
   Value<int> id,
@@ -1979,7 +2746,8 @@ typedef $$CravingsTableUpdateCompanionBuilder = CravingsCompanion Function({
   Value<Trigger?> trigger,
 });
 
-final class $$CravingsTableReferences extends BaseReferences<_$AppDatabase, $CravingsTable, Craving> {
+final class $$CravingsTableReferences
+    extends BaseReferences<_$AppDatabase, $CravingsTable, Craving> {
   $$CravingsTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
   static $AttemptsTable _attemptIdTable(_$AppDatabase db) =>
@@ -1988,14 +2756,20 @@ final class $$CravingsTableReferences extends BaseReferences<_$AppDatabase, $Cra
   $$AttemptsTableProcessedTableManager get attemptId {
     final $_column = $_itemColumn<int>('attempt_id')!;
 
-    final manager = $$AttemptsTableTableManager($_db, $_db.attempts).filter((f) => f.id.sqlEquals($_column));
+    final manager = $$AttemptsTableTableManager(
+      $_db,
+      $_db.attempts,
+    ).filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_attemptIdTable($_db));
     if (item == null) return manager;
-    return ProcessedTableManager(manager.$state.copyWith(prefetchedData: [item]));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
   }
 }
 
-class $$CravingsTableFilterComposer extends Composer<_$AppDatabase, $CravingsTable> {
+class $$CravingsTableFilterComposer
+    extends Composer<_$AppDatabase, $CravingsTable> {
   $$CravingsTableFilterComposer({
     required super.$db,
     required super.$table,
@@ -2003,15 +2777,26 @@ class $$CravingsTableFilterComposer extends Composer<_$AppDatabase, $CravingsTab
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<int> get id => $composableBuilder(column: $table.id, builder: (column) => ColumnFilters(column));
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<DateTime> get at => $composableBuilder(column: $table.at, builder: (column) => ColumnFilters(column));
+  ColumnFilters<DateTime> get at => $composableBuilder(
+    column: $table.at,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<bool> get resisted =>
-      $composableBuilder(column: $table.resisted, builder: (column) => ColumnFilters(column));
+  ColumnFilters<bool> get resisted => $composableBuilder(
+    column: $table.resisted,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnWithTypeConverterFilters<Trigger?, Trigger, String> get trigger =>
-      $composableBuilder(column: $table.trigger, builder: (column) => ColumnWithTypeConverterFilters(column));
+      $composableBuilder(
+        column: $table.trigger,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 
   $$AttemptsTableFilterComposer get attemptId {
     final $$AttemptsTableFilterComposer composer = $composerBuilder(
@@ -2019,20 +2804,26 @@ class $$CravingsTableFilterComposer extends Composer<_$AppDatabase, $CravingsTab
       getCurrentColumn: (t) => t.attemptId,
       referencedTable: $db.attempts,
       getReferencedColumn: (t) => t.id,
-      builder: (joinBuilder, {$addJoinBuilderToRootComposer, $removeJoinBuilderFromRootComposer}) =>
-          $$AttemptsTableFilterComposer(
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AttemptsTableFilterComposer(
             $db: $db,
             $table: $db.attempts,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer: $removeJoinBuilderFromRootComposer,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
           ),
     );
     return composer;
   }
 }
 
-class $$CravingsTableOrderingComposer extends Composer<_$AppDatabase, $CravingsTable> {
+class $$CravingsTableOrderingComposer
+    extends Composer<_$AppDatabase, $CravingsTable> {
   $$CravingsTableOrderingComposer({
     required super.$db,
     required super.$table,
@@ -2040,16 +2831,25 @@ class $$CravingsTableOrderingComposer extends Composer<_$AppDatabase, $CravingsT
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<int> get id => $composableBuilder(column: $table.id, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<DateTime> get at =>
-      $composableBuilder(column: $table.at, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<DateTime> get at => $composableBuilder(
+    column: $table.at,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<bool> get resisted =>
-      $composableBuilder(column: $table.resisted, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<bool> get resisted => $composableBuilder(
+    column: $table.resisted,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<String> get trigger =>
-      $composableBuilder(column: $table.trigger, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<String> get trigger => $composableBuilder(
+    column: $table.trigger,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   $$AttemptsTableOrderingComposer get attemptId {
     final $$AttemptsTableOrderingComposer composer = $composerBuilder(
@@ -2057,20 +2857,26 @@ class $$CravingsTableOrderingComposer extends Composer<_$AppDatabase, $CravingsT
       getCurrentColumn: (t) => t.attemptId,
       referencedTable: $db.attempts,
       getReferencedColumn: (t) => t.id,
-      builder: (joinBuilder, {$addJoinBuilderToRootComposer, $removeJoinBuilderFromRootComposer}) =>
-          $$AttemptsTableOrderingComposer(
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AttemptsTableOrderingComposer(
             $db: $db,
             $table: $db.attempts,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer: $removeJoinBuilderFromRootComposer,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
           ),
     );
     return composer;
   }
 }
 
-class $$CravingsTableAnnotationComposer extends Composer<_$AppDatabase, $CravingsTable> {
+class $$CravingsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $CravingsTable> {
   $$CravingsTableAnnotationComposer({
     required super.$db,
     required super.$table,
@@ -2078,11 +2884,14 @@ class $$CravingsTableAnnotationComposer extends Composer<_$AppDatabase, $Craving
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<int> get id => $composableBuilder(column: $table.id, builder: (column) => column);
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
 
-  GeneratedColumn<DateTime> get at => $composableBuilder(column: $table.at, builder: (column) => column);
+  GeneratedColumn<DateTime> get at =>
+      $composableBuilder(column: $table.at, builder: (column) => column);
 
-  GeneratedColumn<bool> get resisted => $composableBuilder(column: $table.resisted, builder: (column) => column);
+  GeneratedColumn<bool> get resisted =>
+      $composableBuilder(column: $table.resisted, builder: (column) => column);
 
   GeneratedColumnWithTypeConverter<Trigger?, String> get trigger =>
       $composableBuilder(column: $table.trigger, builder: (column) => column);
@@ -2093,13 +2902,18 @@ class $$CravingsTableAnnotationComposer extends Composer<_$AppDatabase, $Craving
       getCurrentColumn: (t) => t.attemptId,
       referencedTable: $db.attempts,
       getReferencedColumn: (t) => t.id,
-      builder: (joinBuilder, {$addJoinBuilderToRootComposer, $removeJoinBuilderFromRootComposer}) =>
-          $$AttemptsTableAnnotationComposer(
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AttemptsTableAnnotationComposer(
             $db: $db,
             $table: $db.attempts,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer: $removeJoinBuilderFromRootComposer,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
           ),
     );
     return composer;
@@ -2126,25 +2940,47 @@ class $$CravingsTableTableManager
         TableManagerState(
           db: db,
           table: table,
-          createFilteringComposer: () => $$CravingsTableFilterComposer($db: db, $table: table),
-          createOrderingComposer: () => $$CravingsTableOrderingComposer($db: db, $table: table),
-          createComputedFieldComposer: () => $$CravingsTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback: ({
-            Value<int> id = const Value.absent(),
-            Value<int> attemptId = const Value.absent(),
-            Value<DateTime> at = const Value.absent(),
-            Value<bool> resisted = const Value.absent(),
-            Value<Trigger?> trigger = const Value.absent(),
-          }) => CravingsCompanion(id: id, attemptId: attemptId, at: at, resisted: resisted, trigger: trigger),
-          createCompanionCallback: ({
-            Value<int> id = const Value.absent(),
-            required int attemptId,
-            required DateTime at,
-            required bool resisted,
-            Value<Trigger?> trigger = const Value.absent(),
-          }) => CravingsCompanion.insert(id: id, attemptId: attemptId, at: at, resisted: resisted, trigger: trigger),
+          createFilteringComposer: () =>
+              $$CravingsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$CravingsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$CravingsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int> attemptId = const Value.absent(),
+                Value<DateTime> at = const Value.absent(),
+                Value<bool> resisted = const Value.absent(),
+                Value<Trigger?> trigger = const Value.absent(),
+              }) => CravingsCompanion(
+                id: id,
+                attemptId: attemptId,
+                at: at,
+                resisted: resisted,
+                trigger: trigger,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required int attemptId,
+                required DateTime at,
+                required bool resisted,
+                Value<Trigger?> trigger = const Value.absent(),
+              }) => CravingsCompanion.insert(
+                id: id,
+                attemptId: attemptId,
+                at: at,
+                resisted: resisted,
+                trigger: trigger,
+              ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable<$CravingsTable, Craving>(table), $$CravingsTableReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable<$CravingsTable, Craving>(table),
+                  $$CravingsTableReferences(db, table, e),
+                ),
+              )
               .toList(),
           prefetchHooksCallback: ({attemptId = false}) {
             return PrefetchHooks(
@@ -2170,8 +3006,11 @@ class $$CravingsTableTableManager
                       state = state.withJoin(
                         currentTable: table,
                         currentColumn: table.attemptId,
-                        referencedTable: $$CravingsTableReferences._attemptIdTable(db),
-                        referencedColumn: $$CravingsTableReferences._attemptIdTable(db).id,
+                        referencedTable: $$CravingsTableReferences
+                            ._attemptIdTable(db),
+                        referencedColumn: $$CravingsTableReferences
+                            ._attemptIdTable(db)
+                            .id,
                       ) as T;
                     }
 
@@ -2200,37 +3039,54 @@ typedef $$CravingsTableProcessedTableManager =
       Craving,
       PrefetchHooks Function({bool attemptId})
     >;
-typedef $$UnlockedAchievementsTableCreateCompanionBuilder = UnlockedAchievementsCompanion Function({
-  required String achievementId,
-  required int attemptId,
-  required DateTime unlockedAt,
-  Value<int> rowid,
-});
-typedef $$UnlockedAchievementsTableUpdateCompanionBuilder = UnlockedAchievementsCompanion Function({
-  Value<String> achievementId,
-  Value<int> attemptId,
-  Value<DateTime> unlockedAt,
-  Value<int> rowid,
-});
+typedef $$UnlockedAchievementsTableCreateCompanionBuilder =
+    UnlockedAchievementsCompanion Function({
+      required String achievementId,
+      required int attemptId,
+      required DateTime unlockedAt,
+      Value<int> rowid,
+    });
+typedef $$UnlockedAchievementsTableUpdateCompanionBuilder =
+    UnlockedAchievementsCompanion Function({
+      Value<String> achievementId,
+      Value<int> attemptId,
+      Value<DateTime> unlockedAt,
+      Value<int> rowid,
+    });
 
 final class $$UnlockedAchievementsTableReferences
-    extends BaseReferences<_$AppDatabase, $UnlockedAchievementsTable, UnlockedAchievement> {
-  $$UnlockedAchievementsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $UnlockedAchievementsTable,
+          UnlockedAchievement
+        > {
+  $$UnlockedAchievementsTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
 
-  static $AttemptsTable _attemptIdTable(_$AppDatabase db) =>
-      db.attempts.createAlias('unlocked_achievements__attempt_id__attempts__id');
+  static $AttemptsTable _attemptIdTable(_$AppDatabase db) => db.attempts
+      .createAlias('unlocked_achievements__attempt_id__attempts__id');
 
   $$AttemptsTableProcessedTableManager get attemptId {
     final $_column = $_itemColumn<int>('attempt_id')!;
 
-    final manager = $$AttemptsTableTableManager($_db, $_db.attempts).filter((f) => f.id.sqlEquals($_column));
+    final manager = $$AttemptsTableTableManager(
+      $_db,
+      $_db.attempts,
+    ).filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_attemptIdTable($_db));
     if (item == null) return manager;
-    return ProcessedTableManager(manager.$state.copyWith(prefetchedData: [item]));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
   }
 }
 
-class $$UnlockedAchievementsTableFilterComposer extends Composer<_$AppDatabase, $UnlockedAchievementsTable> {
+class $$UnlockedAchievementsTableFilterComposer
+    extends Composer<_$AppDatabase, $UnlockedAchievementsTable> {
   $$UnlockedAchievementsTableFilterComposer({
     required super.$db,
     required super.$table,
@@ -2238,11 +3094,15 @@ class $$UnlockedAchievementsTableFilterComposer extends Composer<_$AppDatabase, 
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<String> get achievementId =>
-      $composableBuilder(column: $table.achievementId, builder: (column) => ColumnFilters(column));
+  ColumnFilters<String> get achievementId => $composableBuilder(
+    column: $table.achievementId,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<DateTime> get unlockedAt =>
-      $composableBuilder(column: $table.unlockedAt, builder: (column) => ColumnFilters(column));
+  ColumnFilters<DateTime> get unlockedAt => $composableBuilder(
+    column: $table.unlockedAt,
+    builder: (column) => ColumnFilters(column),
+  );
 
   $$AttemptsTableFilterComposer get attemptId {
     final $$AttemptsTableFilterComposer composer = $composerBuilder(
@@ -2250,20 +3110,26 @@ class $$UnlockedAchievementsTableFilterComposer extends Composer<_$AppDatabase, 
       getCurrentColumn: (t) => t.attemptId,
       referencedTable: $db.attempts,
       getReferencedColumn: (t) => t.id,
-      builder: (joinBuilder, {$addJoinBuilderToRootComposer, $removeJoinBuilderFromRootComposer}) =>
-          $$AttemptsTableFilterComposer(
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AttemptsTableFilterComposer(
             $db: $db,
             $table: $db.attempts,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer: $removeJoinBuilderFromRootComposer,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
           ),
     );
     return composer;
   }
 }
 
-class $$UnlockedAchievementsTableOrderingComposer extends Composer<_$AppDatabase, $UnlockedAchievementsTable> {
+class $$UnlockedAchievementsTableOrderingComposer
+    extends Composer<_$AppDatabase, $UnlockedAchievementsTable> {
   $$UnlockedAchievementsTableOrderingComposer({
     required super.$db,
     required super.$table,
@@ -2271,11 +3137,15 @@ class $$UnlockedAchievementsTableOrderingComposer extends Composer<_$AppDatabase
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<String> get achievementId =>
-      $composableBuilder(column: $table.achievementId, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<String> get achievementId => $composableBuilder(
+    column: $table.achievementId,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<DateTime> get unlockedAt =>
-      $composableBuilder(column: $table.unlockedAt, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<DateTime> get unlockedAt => $composableBuilder(
+    column: $table.unlockedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   $$AttemptsTableOrderingComposer get attemptId {
     final $$AttemptsTableOrderingComposer composer = $composerBuilder(
@@ -2283,20 +3153,26 @@ class $$UnlockedAchievementsTableOrderingComposer extends Composer<_$AppDatabase
       getCurrentColumn: (t) => t.attemptId,
       referencedTable: $db.attempts,
       getReferencedColumn: (t) => t.id,
-      builder: (joinBuilder, {$addJoinBuilderToRootComposer, $removeJoinBuilderFromRootComposer}) =>
-          $$AttemptsTableOrderingComposer(
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AttemptsTableOrderingComposer(
             $db: $db,
             $table: $db.attempts,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer: $removeJoinBuilderFromRootComposer,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
           ),
     );
     return composer;
   }
 }
 
-class $$UnlockedAchievementsTableAnnotationComposer extends Composer<_$AppDatabase, $UnlockedAchievementsTable> {
+class $$UnlockedAchievementsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $UnlockedAchievementsTable> {
   $$UnlockedAchievementsTableAnnotationComposer({
     required super.$db,
     required super.$table,
@@ -2304,11 +3180,15 @@ class $$UnlockedAchievementsTableAnnotationComposer extends Composer<_$AppDataba
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<String> get achievementId =>
-      $composableBuilder(column: $table.achievementId, builder: (column) => column);
+  GeneratedColumn<String> get achievementId => $composableBuilder(
+    column: $table.achievementId,
+    builder: (column) => column,
+  );
 
-  GeneratedColumn<DateTime> get unlockedAt =>
-      $composableBuilder(column: $table.unlockedAt, builder: (column) => column);
+  GeneratedColumn<DateTime> get unlockedAt => $composableBuilder(
+    column: $table.unlockedAt,
+    builder: (column) => column,
+  );
 
   $$AttemptsTableAnnotationComposer get attemptId {
     final $$AttemptsTableAnnotationComposer composer = $composerBuilder(
@@ -2316,13 +3196,18 @@ class $$UnlockedAchievementsTableAnnotationComposer extends Composer<_$AppDataba
       getCurrentColumn: (t) => t.attemptId,
       referencedTable: $db.attempts,
       getReferencedColumn: (t) => t.id,
-      builder: (joinBuilder, {$addJoinBuilderToRootComposer, $removeJoinBuilderFromRootComposer}) =>
-          $$AttemptsTableAnnotationComposer(
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AttemptsTableAnnotationComposer(
             $db: $db,
             $table: $db.attempts,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer: $removeJoinBuilderFromRootComposer,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
           ),
     );
     return composer;
@@ -2344,14 +3229,25 @@ class $$UnlockedAchievementsTableTableManager
           UnlockedAchievement,
           PrefetchHooks Function({bool attemptId})
         > {
-  $$UnlockedAchievementsTableTableManager(_$AppDatabase db, $UnlockedAchievementsTable table)
-    : super(
+  $$UnlockedAchievementsTableTableManager(
+    _$AppDatabase db,
+    $UnlockedAchievementsTable table,
+  ) : super(
         TableManagerState(
           db: db,
           table: table,
-          createFilteringComposer: () => $$UnlockedAchievementsTableFilterComposer($db: db, $table: table),
-          createOrderingComposer: () => $$UnlockedAchievementsTableOrderingComposer($db: db, $table: table),
-          createComputedFieldComposer: () => $$UnlockedAchievementsTableAnnotationComposer($db: db, $table: table),
+          createFilteringComposer: () =>
+              $$UnlockedAchievementsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$UnlockedAchievementsTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$UnlockedAchievementsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
           updateCompanionCallback:
               ({
                 Value<String> achievementId = const Value.absent(),
@@ -2379,7 +3275,9 @@ class $$UnlockedAchievementsTableTableManager
           withReferenceMapper: (p0) => p0
               .map(
                 (e) => (
-                  e.readTable<$UnlockedAchievementsTable, UnlockedAchievement>(table),
+                  e.readTable<$UnlockedAchievementsTable, UnlockedAchievement>(
+                    table,
+                  ),
                   $$UnlockedAchievementsTableReferences(db, table, e),
                 ),
               )
@@ -2408,8 +3306,11 @@ class $$UnlockedAchievementsTableTableManager
                       state = state.withJoin(
                         currentTable: table,
                         currentColumn: table.attemptId,
-                        referencedTable: $$UnlockedAchievementsTableReferences._attemptIdTable(db),
-                        referencedColumn: $$UnlockedAchievementsTableReferences._attemptIdTable(db).id,
+                        referencedTable: $$UnlockedAchievementsTableReferences
+                            ._attemptIdTable(db),
+                        referencedColumn: $$UnlockedAchievementsTableReferences
+                            ._attemptIdTable(db)
+                            .id,
                       ) as T;
                     }
 
@@ -2438,18 +3339,21 @@ typedef $$UnlockedAchievementsTableProcessedTableManager =
       UnlockedAchievement,
       PrefetchHooks Function({bool attemptId})
     >;
-typedef $$ArticlesReadTableCreateCompanionBuilder = ArticlesReadCompanion Function({
-  required String articleId,
-  required DateTime readAt,
-  Value<int> rowid,
-});
-typedef $$ArticlesReadTableUpdateCompanionBuilder = ArticlesReadCompanion Function({
-  Value<String> articleId,
-  Value<DateTime> readAt,
-  Value<int> rowid,
-});
+typedef $$ArticlesReadTableCreateCompanionBuilder =
+    ArticlesReadCompanion Function({
+      required String articleId,
+      required DateTime readAt,
+      Value<int> rowid,
+    });
+typedef $$ArticlesReadTableUpdateCompanionBuilder =
+    ArticlesReadCompanion Function({
+      Value<String> articleId,
+      Value<DateTime> readAt,
+      Value<int> rowid,
+    });
 
-class $$ArticlesReadTableFilterComposer extends Composer<_$AppDatabase, $ArticlesReadTable> {
+class $$ArticlesReadTableFilterComposer
+    extends Composer<_$AppDatabase, $ArticlesReadTable> {
   $$ArticlesReadTableFilterComposer({
     required super.$db,
     required super.$table,
@@ -2457,14 +3361,19 @@ class $$ArticlesReadTableFilterComposer extends Composer<_$AppDatabase, $Article
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<String> get articleId =>
-      $composableBuilder(column: $table.articleId, builder: (column) => ColumnFilters(column));
+  ColumnFilters<String> get articleId => $composableBuilder(
+    column: $table.articleId,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<DateTime> get readAt =>
-      $composableBuilder(column: $table.readAt, builder: (column) => ColumnFilters(column));
+  ColumnFilters<DateTime> get readAt => $composableBuilder(
+    column: $table.readAt,
+    builder: (column) => ColumnFilters(column),
+  );
 }
 
-class $$ArticlesReadTableOrderingComposer extends Composer<_$AppDatabase, $ArticlesReadTable> {
+class $$ArticlesReadTableOrderingComposer
+    extends Composer<_$AppDatabase, $ArticlesReadTable> {
   $$ArticlesReadTableOrderingComposer({
     required super.$db,
     required super.$table,
@@ -2472,14 +3381,19 @@ class $$ArticlesReadTableOrderingComposer extends Composer<_$AppDatabase, $Artic
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<String> get articleId =>
-      $composableBuilder(column: $table.articleId, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<String> get articleId => $composableBuilder(
+    column: $table.articleId,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<DateTime> get readAt =>
-      $composableBuilder(column: $table.readAt, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<DateTime> get readAt => $composableBuilder(
+    column: $table.readAt,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
-class $$ArticlesReadTableAnnotationComposer extends Composer<_$AppDatabase, $ArticlesReadTable> {
+class $$ArticlesReadTableAnnotationComposer
+    extends Composer<_$AppDatabase, $ArticlesReadTable> {
   $$ArticlesReadTableAnnotationComposer({
     required super.$db,
     required super.$table,
@@ -2487,9 +3401,11 @@ class $$ArticlesReadTableAnnotationComposer extends Composer<_$AppDatabase, $Art
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<String> get articleId => $composableBuilder(column: $table.articleId, builder: (column) => column);
+  GeneratedColumn<String> get articleId =>
+      $composableBuilder(column: $table.articleId, builder: (column) => column);
 
-  GeneratedColumn<DateTime> get readAt => $composableBuilder(column: $table.readAt, builder: (column) => column);
+  GeneratedColumn<DateTime> get readAt =>
+      $composableBuilder(column: $table.readAt, builder: (column) => column);
 }
 
 class $$ArticlesReadTableTableManager
@@ -2503,7 +3419,10 @@ class $$ArticlesReadTableTableManager
           $$ArticlesReadTableAnnotationComposer,
           $$ArticlesReadTableCreateCompanionBuilder,
           $$ArticlesReadTableUpdateCompanionBuilder,
-          (ArticlesReadData, BaseReferences<_$AppDatabase, $ArticlesReadTable, ArticlesReadData>),
+          (
+            ArticlesReadData,
+            BaseReferences<_$AppDatabase, $ArticlesReadTable, ArticlesReadData>,
+          ),
           ArticlesReadData,
           PrefetchHooks Function()
         > {
@@ -2512,24 +3431,41 @@ class $$ArticlesReadTableTableManager
         TableManagerState(
           db: db,
           table: table,
-          createFilteringComposer: () => $$ArticlesReadTableFilterComposer($db: db, $table: table),
-          createOrderingComposer: () => $$ArticlesReadTableOrderingComposer($db: db, $table: table),
-          createComputedFieldComposer: () => $$ArticlesReadTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback: ({
-            Value<String> articleId = const Value.absent(),
-            Value<DateTime> readAt = const Value.absent(),
-            Value<int> rowid = const Value.absent(),
-          }) => ArticlesReadCompanion(articleId: articleId, readAt: readAt, rowid: rowid),
-          createCompanionCallback: ({
-            required String articleId,
-            required DateTime readAt,
-            Value<int> rowid = const Value.absent(),
-          }) => ArticlesReadCompanion.insert(articleId: articleId, readAt: readAt, rowid: rowid),
+          createFilteringComposer: () =>
+              $$ArticlesReadTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$ArticlesReadTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$ArticlesReadTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> articleId = const Value.absent(),
+                Value<DateTime> readAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => ArticlesReadCompanion(
+                articleId: articleId,
+                readAt: readAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String articleId,
+                required DateTime readAt,
+                Value<int> rowid = const Value.absent(),
+              }) => ArticlesReadCompanion.insert(
+                articleId: articleId,
+                readAt: readAt,
+                rowid: rowid,
+              ),
           withReferenceMapper: (p0) => p0
               .map(
                 (e) => (
                   e.readTable<$ArticlesReadTable, ArticlesReadData>(table),
-                  BaseReferences<_$AppDatabase, $ArticlesReadTable, ArticlesReadData>(db, table, e),
+                  BaseReferences<
+                    _$AppDatabase,
+                    $ArticlesReadTable,
+                    ArticlesReadData
+                  >(db, table, e),
                 ),
               )
               .toList(),
@@ -2548,7 +3484,10 @@ typedef $$ArticlesReadTableProcessedTableManager =
       $$ArticlesReadTableAnnotationComposer,
       $$ArticlesReadTableCreateCompanionBuilder,
       $$ArticlesReadTableUpdateCompanionBuilder,
-      (ArticlesReadData, BaseReferences<_$AppDatabase, $ArticlesReadTable, ArticlesReadData>),
+      (
+        ArticlesReadData,
+        BaseReferences<_$AppDatabase, $ArticlesReadTable, ArticlesReadData>,
+      ),
       ArticlesReadData,
       PrefetchHooks Function()
     >;
@@ -2556,11 +3495,14 @@ typedef $$ArticlesReadTableProcessedTableManager =
 class $AppDatabaseManager {
   final _$AppDatabase _db;
   $AppDatabaseManager(this._db);
+  $$AttemptsTableTableManager get attempts =>
+      $$AttemptsTableTableManager(_db, _db.attempts);
   $$SmokingProductsTableTableManager get smokingProducts =>
       $$SmokingProductsTableTableManager(_db, _db.smokingProducts);
-  $$AttemptsTableTableManager get attempts => $$AttemptsTableTableManager(_db, _db.attempts);
-  $$CravingsTableTableManager get cravings => $$CravingsTableTableManager(_db, _db.cravings);
+  $$CravingsTableTableManager get cravings =>
+      $$CravingsTableTableManager(_db, _db.cravings);
   $$UnlockedAchievementsTableTableManager get unlockedAchievements =>
       $$UnlockedAchievementsTableTableManager(_db, _db.unlockedAchievements);
-  $$ArticlesReadTableTableManager get articlesRead => $$ArticlesReadTableTableManager(_db, _db.articlesRead);
+  $$ArticlesReadTableTableManager get articlesRead =>
+      $$ArticlesReadTableTableManager(_db, _db.articlesRead);
 }

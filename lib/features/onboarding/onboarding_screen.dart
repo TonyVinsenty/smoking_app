@@ -8,8 +8,17 @@ import '../../data/providers.dart';
 import '../../l10n/app_localizations.dart';
 
 /// First-run questionnaire: what the user smokes, how much, prices, quit date.
+///
+/// With [editing] it only asks what and how much the user smokes (pre-filled) and returns the answers,
+/// e.g. when a new attempt starts after a relapse.
 class OnboardingScreen extends ConsumerStatefulWidget {
-  const OnboardingScreen({super.key});
+  const OnboardingScreen({super.key, this.editing});
+
+  final List<SmokingProduct>? editing;
+
+  /// Opens the product steps pre-filled with [current]; returns the new answers, or null if cancelled.
+  static Future<List<SmokingProductsCompanion>?> editProducts(BuildContext context, List<SmokingProduct> current) =>
+      Navigator.of(context).push(MaterialPageRoute(builder: (_) => OnboardingScreen(editing: current)));
 
   @override
   ConsumerState<OnboardingScreen> createState() => _OnboardingScreenState();
@@ -17,6 +26,15 @@ class OnboardingScreen extends ConsumerStatefulWidget {
 
 class _ProductForm {
   _ProductForm(this.type) : unitsPerPack = TextEditingController(text: _hasPacks(type) ? '20' : '1');
+
+  factory _ProductForm.from(SmokingProduct p) {
+    String num(double v) => NumberFormat('0.##', 'ru').format(v);
+    return _ProductForm(p.type)
+      ..amount.text = num(p.amount)
+      ..price.text = num(p.packPrice)
+      ..unitsPerPack.text = '${p.unitsPerPack}'
+      ..period = p.period;
+  }
 
   final ProductType type;
   final amount = TextEditingController();
@@ -56,6 +74,19 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   bool _quitTimeUnknown = false; // «Не помню»: show only the date
   bool _saving = false;
 
+  bool get _editing => widget.editing != null;
+
+  @override
+  void initState() {
+    super.initState();
+    if (_editing) {
+      _step = 1;
+      for (final p in widget.editing!) {
+        _forms[p.type] = _ProductForm.from(p);
+      }
+    }
+  }
+
   @override
   void dispose() {
     for (final f in _forms.values) {
@@ -71,6 +102,10 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   };
 
   Future<void> _finish() async {
+    if (_editing) {
+      Navigator.of(context).pop([for (final f in _forms.values) f.toCompanion()]);
+      return;
+    }
     setState(() => _saving = true);
     await ref.read(databaseProvider).completeOnboarding([
       for (final f in _forms.values) f.toCompanion(),
@@ -105,12 +140,13 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    final isLast = _step == 3;
+    final isLast = _step == (_editing ? 2 : 3);
     return Scaffold(
+      appBar: _editing ? AppBar(title: Text(l.productsEditTitle)) : null,
       body: SafeArea(
         child: Column(
           children: [
-            if (_step > 0)
+            if (_step > 0 && !_editing)
               Padding(
                 padding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
                 child: LinearProgressIndicator(value: _step / 3, borderRadius: BorderRadius.circular(4)),
@@ -134,7 +170,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
               padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
               child: Row(
                 children: [
-                  if (_step > 0) TextButton(onPressed: () => setState(() => _step--), child: Text(l.back)),
+                  if (_step > (_editing ? 1 : 0)) TextButton(onPressed: () => setState(() => _step--), child: Text(l.back)),
                   const Spacer(),
                   FilledButton(
                     onPressed: !_canContinue || _saving
@@ -143,6 +179,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                         ? _finish
                         : () => setState(() => _step++),
                     child: Text(switch (_step) {
+                      _ when isLast && _editing => l.save,
                       0 => l.onbStart,
                       3 => l.onbFinish,
                       _ => l.next,

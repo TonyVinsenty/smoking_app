@@ -63,3 +63,16 @@ int totalXp({
 /// Longest single attempt (the personal record), including the running one.
 Duration bestAttempt(List<Attempt> attempts, DateTime now) =>
     attempts.fold(Duration.zero, (best, a) => attemptDuration(a, now) > best ? attemptDuration(a, now) : best);
+
+/// Smoking habits of attempt [attemptId] (each attempt keeps its own).
+List<SmokingProduct> productsOf(List<SmokingProduct> all, int attemptId) =>
+    all.where((p) => p.attemptId == attemptId).toList();
+
+/// Habits of the most recent attempt: offered as defaults when a new attempt starts.
+List<SmokingProduct> latestProducts(List<SmokingProduct> all, List<Attempt> attempts) {
+  for (final a in attempts.toList()..sort((a, b) => b.startedAt.compareTo(a.startedAt))) {
+    final own = productsOf(all, a.id);
+    if (own.isNotEmpty) return own;
+  }
+  return const [];
+}

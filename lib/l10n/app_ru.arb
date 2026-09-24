@@ -202,5 +202,12 @@
   "settingsResetHint": "Удалить все данные и начать с первого экрана",
   "settingsResetConfirmTitle": "Удалить все данные?",
   "settingsResetConfirmText": "Попытки, достижения, дневник и ответы о курении будут удалены навсегда. Приложение начнётся заново с первого экрана.",
-  "settingsResetConfirm": "Удалить всё"
+  "settingsResetConfirm": "Удалить всё",
+  "productsEditTitle": "Что вы курите",
+  "newAttemptTitle": "Настройки курения",
+  "newAttemptText": "Оставить прошлые настройки? По ним считаются сэкономленные деньги. Если за это время вы перешли на другое — измените.",
+  "newAttemptKeep": "Оставить",
+  "newAttemptChange": "Изменить",
+  "productSummary": "{amount} {period} · {price} ₽ {type, select, cigarettes{за пачку} sticks{за пачку} disposable{за штуку} liquid{за флакон} other{}}",
+  "@productSummary": {"placeholders": {"amount": {"type": "String"}, "period": {"type": "String"}, "price": {"type": "String"}, "type": {"type": "String"}}}
 }

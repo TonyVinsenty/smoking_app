@@ -9,6 +9,7 @@ final databaseProvider = Provider<AppDatabase>((ref) {
   return db;
 });
 
+/// Smoking habits of all attempts; use `productsOf` to pick one attempt's.
 final productsProvider = StreamProvider<List<SmokingProduct>>(
   (ref) => ref.watch(databaseProvider).select(ref.watch(databaseProvider).smokingProducts).watch(),
 );

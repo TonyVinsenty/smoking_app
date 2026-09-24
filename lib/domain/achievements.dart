@@ -21,10 +21,10 @@ List<Achievement> dueAchievements({
   if (current == null) return [];
   final everUnlocked = unlocked.map((u) => u.achievementId).toSet();
   final unlockedNow = unlocked.where((u) => u.attemptId == current.id).map((u) => u.achievementId).toSet();
-  final money = attempts.fold<double>(0, (sum, a) => sum + moneySaved(products, attemptDuration(a, now)));
+  final money = attempts.fold<double>(0, (sum, a) => sum + moneySaved(productsOf(products, a.id), attemptDuration(a, now)));
   final units = attempts.fold<double>(
     0,
-    (sum, a) => sum + unitsAvoided(products, attemptDuration(a, now)).values.fold(0.0, (s, v) => s + v),
+    (sum, a) => sum + unitsAvoided(productsOf(products, a.id), attemptDuration(a, now)).values.fold(0.0, (s, v) => s + v),
   );
 
   num? progress(Achievement a) => switch (a.conditionType) {
