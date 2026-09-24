@@ -29,5 +29,10 @@ Russian only for now, but everything is translatable: UI strings in `lib/l10n/ap
 3. Leaderboard & friends (friend code) on Firebase/Supabase free tier; anonymous opt-in "relays"; "second pilot" (opt-in support contact gets kind notifications); then premium (themes, icon packs, badge frames, premium badge, extended stats/export, share-card templates), store release.
 Open question for later: a growing tree / pet as a progress metaphor (owner unsure — discuss).
 
+## Progress (MVP)
+Done: skeleton, onboarding, home (timer, savings, level/XP, quote), SOS (trigger → breathing → resisted, FAB on all tabs), app name Zero. Runs on emulator `Pixel_8` (`flutter emulators --launch Pixel_8`).
+Next: achievement unlocking + Health tab → «Я закурил» flow (confirm + diary) + attempt history → Knowledge tab → Settings (theme, large font, my data, reset) → notifications → craving-map stats.
+Dev notes: run `flutter gen-l10n` after editing ARB, `dart run build_runner build` after DB changes; no Python on this machine; `kotlin.incremental=false` needed (C:/D: drives).
+
 ## Content
 `assets/content/ru/`: health_milestones.json, achievements.json, levels.json, quotes.json, sos_tips.json, articles/index.json + *.md. Ideas backlog: docs/content-ideas.md.
