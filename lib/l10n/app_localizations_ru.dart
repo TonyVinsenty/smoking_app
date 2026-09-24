@@ -231,6 +231,30 @@ class AppLocalizationsRu extends AppLocalizations {
   String get homeMoneySaved => 'Сэкономлено';
 
   @override
+  String get homeSavingsMore => 'Подробнее';
+
+  @override
+  String get savingsToday => 'Сегодня';
+
+  @override
+  String get savingsWeek => 'На этой неделе';
+
+  @override
+  String get savingsMonth => 'В этом месяце';
+
+  @override
+  String get savingsTotal => 'Всего';
+
+  @override
+  String get savingsPeriodsHint =>
+      'Неделя считается с понедельника, месяц — с 1-го числа.';
+
+  @override
+  String savingsForecast(String perMonth, String perYear) {
+    return 'Если так продолжать — около $perMonth в месяц и $perYear в год.';
+  }
+
+  @override
   String get homeNotSmoked => 'Не выкурено';
 
   @override

@@ -358,6 +358,48 @@ abstract class AppLocalizations {
   /// **'Сэкономлено'**
   String get homeMoneySaved;
 
+  /// No description provided for @homeSavingsMore.
+  ///
+  /// In ru, this message translates to:
+  /// **'Подробнее'**
+  String get homeSavingsMore;
+
+  /// No description provided for @savingsToday.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сегодня'**
+  String get savingsToday;
+
+  /// No description provided for @savingsWeek.
+  ///
+  /// In ru, this message translates to:
+  /// **'На этой неделе'**
+  String get savingsWeek;
+
+  /// No description provided for @savingsMonth.
+  ///
+  /// In ru, this message translates to:
+  /// **'В этом месяце'**
+  String get savingsMonth;
+
+  /// No description provided for @savingsTotal.
+  ///
+  /// In ru, this message translates to:
+  /// **'Всего'**
+  String get savingsTotal;
+
+  /// No description provided for @savingsPeriodsHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Неделя считается с понедельника, месяц — с 1-го числа.'**
+  String get savingsPeriodsHint;
+
+  /// No description provided for @savingsForecast.
+  ///
+  /// In ru, this message translates to:
+  /// **'Если так продолжать — около {perMonth} в месяц и {perYear} в год.'**
+  String savingsForecast(String perMonth, String perYear);
+
   /// No description provided for @homeNotSmoked.
   ///
   /// In ru, this message translates to:

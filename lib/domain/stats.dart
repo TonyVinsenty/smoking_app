@@ -14,6 +14,13 @@ Map<ProductType, double> unitsAvoided(List<SmokingProduct> products, Duration du
   return {for (final p in products) p.type: p.amount / p.period.days * days};
 }
 
+/// Money saved during attempt [a] from [from] (e.g. start of today / week / month) until [now].
+double moneySavedSince(List<SmokingProduct> products, Attempt a, DateTime from, DateTime now) {
+  final start = a.startedAt.isAfter(from) ? a.startedAt : from;
+  final end = a.endedAt ?? now;
+  return end.isAfter(start) ? moneySaved(products, end.difference(start)) : 0;
+}
+
 Duration attemptDuration(Attempt a, DateTime now) {
   final d = (a.endedAt ?? now).difference(a.startedAt);
   return d.isNegative ? Duration.zero : d;

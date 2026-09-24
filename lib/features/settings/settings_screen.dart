@@ -29,7 +29,11 @@ class SettingsScreen extends ConsumerWidget {
               showSelectedIcon: false,
               segments: [
                 for (final m in const [ThemeMode.system, ThemeMode.dark, ThemeMode.light])
-                  ButtonSegment(value: m, label: Text(l.themeModeName(m.name))),
+                  // Shrinks a little with «Крупный текст» instead of breaking «Системный» onto two lines.
+                  ButtonSegment(
+                    value: m,
+                    label: FittedBox(fit: BoxFit.scaleDown, child: Text(l.themeModeName(m.name), maxLines: 1)),
+                  ),
               ],
               selected: {ref.watch(themeModeProvider)},
               onSelectionChanged: (s) => ref.read(themeModeProvider.notifier).set(s.first),
