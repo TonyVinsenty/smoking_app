@@ -17,8 +17,8 @@ extension ConsumptionPeriodDays on ConsumptionPeriod {
       };
 }
 
-/// Why the user smoked (asked after «Я закурил»).
-enum RelapseTrigger { stress, alcohol, company, coffee, afterMeal, boredom, ritual, other }
+/// What provoked a craving (SOS) or a relapse («Я закурил»).
+enum Trigger { stress, alcohol, company, coffee, afterMeal, boredom, ritual, other }
 
 class SmokingProducts extends Table {
   IntColumn get id => integer().autoIncrement()();
@@ -37,8 +37,12 @@ class Attempts extends Table {
   IntColumn get id => integer().autoIncrement()();
   DateTimeColumn get startedAt => dateTime()();
   DateTimeColumn get endedAt => dateTime().nullable()();
-  TextColumn get trigger => textEnum<RelapseTrigger>().nullable()();
-  TextColumn get note => text().nullable()();
+  TextColumn get trigger => textEnum<Trigger>().nullable()();
+
+  // "No-guilt diary" answers after a relapse, all optional.
+  TextColumn get whatHappened => text().nullable()();
+  TextColumn get whatWouldHelp => text().nullable()();
+  TextColumn get nextTime => text().nullable()();
 }
 
 class Cravings extends Table {
@@ -46,6 +50,7 @@ class Cravings extends Table {
   IntColumn get attemptId => integer().references(Attempts, #id)();
   DateTimeColumn get at => dateTime()();
   BoolColumn get resisted => boolean()();
+  TextColumn get trigger => textEnum<Trigger>().nullable()();
 }
 
 class UnlockedAchievements extends Table {
@@ -82,6 +87,14 @@ class AppDatabase extends _$AppDatabase {
 
   Future<int> startAttempt(DateTime startedAt) =>
       into(attempts).insert(AttemptsCompanion.insert(startedAt: startedAt));
+
+  Future<void> logCraving({required int attemptId, required bool resisted, Trigger? trigger}) =>
+      into(cravings).insert(CravingsCompanion.insert(
+        attemptId: attemptId,
+        at: DateTime.now(),
+        resisted: resisted,
+        trigger: Value(trigger),
+      ));
 
   /// Wipes all user data («Полный сброс»).
   Future<void> resetAll() => transaction(() async {

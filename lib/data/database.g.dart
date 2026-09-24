@@ -462,25 +462,57 @@ class $AttemptsTable extends Attempts with TableInfo<$AttemptsTable, Attempt> {
     requiredDuringInsert: false,
   );
   @override
-  late final GeneratedColumnWithTypeConverter<RelapseTrigger?, String> trigger =
+  late final GeneratedColumnWithTypeConverter<Trigger?, String> trigger =
       GeneratedColumn<String>(
         'trigger',
         aliasedName,
         true,
         type: DriftSqlType.string,
         requiredDuringInsert: false,
-      ).withConverter<RelapseTrigger?>($AttemptsTable.$convertertriggern);
-  static const VerificationMeta _noteMeta = const VerificationMeta('note');
+      ).withConverter<Trigger?>($AttemptsTable.$convertertriggern);
+  static const VerificationMeta _whatHappenedMeta = const VerificationMeta(
+    'whatHappened',
+  );
   @override
-  late final GeneratedColumn<String> note = GeneratedColumn<String>(
-    'note',
+  late final GeneratedColumn<String> whatHappened = GeneratedColumn<String>(
+    'what_happened',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _whatWouldHelpMeta = const VerificationMeta(
+    'whatWouldHelp',
+  );
+  @override
+  late final GeneratedColumn<String> whatWouldHelp = GeneratedColumn<String>(
+    'what_would_help',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _nextTimeMeta = const VerificationMeta(
+    'nextTime',
+  );
+  @override
+  late final GeneratedColumn<String> nextTime = GeneratedColumn<String>(
+    'next_time',
     aliasedName,
     true,
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
   @override
-  List<GeneratedColumn> get $columns => [id, startedAt, endedAt, trigger, note];
+  List<GeneratedColumn> get $columns => [
+    id,
+    startedAt,
+    endedAt,
+    trigger,
+    whatHappened,
+    whatWouldHelp,
+    nextTime,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -510,10 +542,28 @@ class $AttemptsTable extends Attempts with TableInfo<$AttemptsTable, Attempt> {
         endedAt.isAcceptableOrUnknown(data['ended_at']!, _endedAtMeta),
       );
     }
-    if (data.containsKey('note')) {
+    if (data.containsKey('what_happened')) {
       context.handle(
-        _noteMeta,
-        note.isAcceptableOrUnknown(data['note']!, _noteMeta),
+        _whatHappenedMeta,
+        whatHappened.isAcceptableOrUnknown(
+          data['what_happened']!,
+          _whatHappenedMeta,
+        ),
+      );
+    }
+    if (data.containsKey('what_would_help')) {
+      context.handle(
+        _whatWouldHelpMeta,
+        whatWouldHelp.isAcceptableOrUnknown(
+          data['what_would_help']!,
+          _whatWouldHelpMeta,
+        ),
+      );
+    }
+    if (data.containsKey('next_time')) {
+      context.handle(
+        _nextTimeMeta,
+        nextTime.isAcceptableOrUnknown(data['next_time']!, _nextTimeMeta),
       );
     }
     return context;
@@ -543,9 +593,17 @@ class $AttemptsTable extends Attempts with TableInfo<$AttemptsTable, Attempt> {
           data['${effectivePrefix}trigger'],
         ),
       ),
-      note: attachedDatabase.typeMapping.read(
+      whatHappened: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}note'],
+        data['${effectivePrefix}what_happened'],
+      ),
+      whatWouldHelp: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}what_would_help'],
+      ),
+      nextTime: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}next_time'],
       ),
     );
   }
@@ -555,24 +613,28 @@ class $AttemptsTable extends Attempts with TableInfo<$AttemptsTable, Attempt> {
     return $AttemptsTable(attachedDatabase, alias);
   }
 
-  static JsonTypeConverter2<RelapseTrigger, String, String> $convertertrigger =
-      const EnumNameConverter<RelapseTrigger>(RelapseTrigger.values);
-  static JsonTypeConverter2<RelapseTrigger?, String?, String?>
-  $convertertriggern = JsonTypeConverter2.asNullable($convertertrigger);
+  static JsonTypeConverter2<Trigger, String, String> $convertertrigger =
+      const EnumNameConverter<Trigger>(Trigger.values);
+  static JsonTypeConverter2<Trigger?, String?, String?> $convertertriggern =
+      JsonTypeConverter2.asNullable($convertertrigger);
 }
 
 class Attempt extends DataClass implements Insertable<Attempt> {
   final int id;
   final DateTime startedAt;
   final DateTime? endedAt;
-  final RelapseTrigger? trigger;
-  final String? note;
+  final Trigger? trigger;
+  final String? whatHappened;
+  final String? whatWouldHelp;
+  final String? nextTime;
   const Attempt({
     required this.id,
     required this.startedAt,
     this.endedAt,
     this.trigger,
-    this.note,
+    this.whatHappened,
+    this.whatWouldHelp,
+    this.nextTime,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -587,8 +649,14 @@ class Attempt extends DataClass implements Insertable<Attempt> {
         $AttemptsTable.$convertertriggern.toSql(trigger),
       );
     }
-    if (!nullToAbsent || note != null) {
-      map['note'] = Variable<String>(note);
+    if (!nullToAbsent || whatHappened != null) {
+      map['what_happened'] = Variable<String>(whatHappened);
+    }
+    if (!nullToAbsent || whatWouldHelp != null) {
+      map['what_would_help'] = Variable<String>(whatWouldHelp);
+    }
+    if (!nullToAbsent || nextTime != null) {
+      map['next_time'] = Variable<String>(nextTime);
     }
     return map;
   }
@@ -603,7 +671,15 @@ class Attempt extends DataClass implements Insertable<Attempt> {
       trigger: trigger == null && nullToAbsent
           ? const Value.absent()
           : Value(trigger),
-      note: note == null && nullToAbsent ? const Value.absent() : Value(note),
+      whatHappened: whatHappened == null && nullToAbsent
+          ? const Value.absent()
+          : Value(whatHappened),
+      whatWouldHelp: whatWouldHelp == null && nullToAbsent
+          ? const Value.absent()
+          : Value(whatWouldHelp),
+      nextTime: nextTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(nextTime),
     );
   }
 
@@ -619,7 +695,9 @@ class Attempt extends DataClass implements Insertable<Attempt> {
       trigger: $AttemptsTable.$convertertriggern.fromJson(
         serializer.fromJson<String?>(json['trigger']),
       ),
-      note: serializer.fromJson<String?>(json['note']),
+      whatHappened: serializer.fromJson<String?>(json['whatHappened']),
+      whatWouldHelp: serializer.fromJson<String?>(json['whatWouldHelp']),
+      nextTime: serializer.fromJson<String?>(json['nextTime']),
     );
   }
   @override
@@ -632,7 +710,9 @@ class Attempt extends DataClass implements Insertable<Attempt> {
       'trigger': serializer.toJson<String?>(
         $AttemptsTable.$convertertriggern.toJson(trigger),
       ),
-      'note': serializer.toJson<String?>(note),
+      'whatHappened': serializer.toJson<String?>(whatHappened),
+      'whatWouldHelp': serializer.toJson<String?>(whatWouldHelp),
+      'nextTime': serializer.toJson<String?>(nextTime),
     };
   }
 
@@ -640,14 +720,20 @@ class Attempt extends DataClass implements Insertable<Attempt> {
     int? id,
     DateTime? startedAt,
     Value<DateTime?> endedAt = const Value.absent(),
-    Value<RelapseTrigger?> trigger = const Value.absent(),
-    Value<String?> note = const Value.absent(),
+    Value<Trigger?> trigger = const Value.absent(),
+    Value<String?> whatHappened = const Value.absent(),
+    Value<String?> whatWouldHelp = const Value.absent(),
+    Value<String?> nextTime = const Value.absent(),
   }) => Attempt(
     id: id ?? this.id,
     startedAt: startedAt ?? this.startedAt,
     endedAt: endedAt.present ? endedAt.value : this.endedAt,
     trigger: trigger.present ? trigger.value : this.trigger,
-    note: note.present ? note.value : this.note,
+    whatHappened: whatHappened.present ? whatHappened.value : this.whatHappened,
+    whatWouldHelp: whatWouldHelp.present
+        ? whatWouldHelp.value
+        : this.whatWouldHelp,
+    nextTime: nextTime.present ? nextTime.value : this.nextTime,
   );
   Attempt copyWithCompanion(AttemptsCompanion data) {
     return Attempt(
@@ -655,7 +741,13 @@ class Attempt extends DataClass implements Insertable<Attempt> {
       startedAt: data.startedAt.present ? data.startedAt.value : this.startedAt,
       endedAt: data.endedAt.present ? data.endedAt.value : this.endedAt,
       trigger: data.trigger.present ? data.trigger.value : this.trigger,
-      note: data.note.present ? data.note.value : this.note,
+      whatHappened: data.whatHappened.present
+          ? data.whatHappened.value
+          : this.whatHappened,
+      whatWouldHelp: data.whatWouldHelp.present
+          ? data.whatWouldHelp.value
+          : this.whatWouldHelp,
+      nextTime: data.nextTime.present ? data.nextTime.value : this.nextTime,
     );
   }
 
@@ -666,13 +758,23 @@ class Attempt extends DataClass implements Insertable<Attempt> {
           ..write('startedAt: $startedAt, ')
           ..write('endedAt: $endedAt, ')
           ..write('trigger: $trigger, ')
-          ..write('note: $note')
+          ..write('whatHappened: $whatHappened, ')
+          ..write('whatWouldHelp: $whatWouldHelp, ')
+          ..write('nextTime: $nextTime')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, startedAt, endedAt, trigger, note);
+  int get hashCode => Object.hash(
+    id,
+    startedAt,
+    endedAt,
+    trigger,
+    whatHappened,
+    whatWouldHelp,
+    nextTime,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -681,42 +783,54 @@ class Attempt extends DataClass implements Insertable<Attempt> {
           other.startedAt == this.startedAt &&
           other.endedAt == this.endedAt &&
           other.trigger == this.trigger &&
-          other.note == this.note);
+          other.whatHappened == this.whatHappened &&
+          other.whatWouldHelp == this.whatWouldHelp &&
+          other.nextTime == this.nextTime);
 }
 
 class AttemptsCompanion extends UpdateCompanion<Attempt> {
   final Value<int> id;
   final Value<DateTime> startedAt;
   final Value<DateTime?> endedAt;
-  final Value<RelapseTrigger?> trigger;
-  final Value<String?> note;
+  final Value<Trigger?> trigger;
+  final Value<String?> whatHappened;
+  final Value<String?> whatWouldHelp;
+  final Value<String?> nextTime;
   const AttemptsCompanion({
     this.id = const Value.absent(),
     this.startedAt = const Value.absent(),
     this.endedAt = const Value.absent(),
     this.trigger = const Value.absent(),
-    this.note = const Value.absent(),
+    this.whatHappened = const Value.absent(),
+    this.whatWouldHelp = const Value.absent(),
+    this.nextTime = const Value.absent(),
   });
   AttemptsCompanion.insert({
     this.id = const Value.absent(),
     required DateTime startedAt,
     this.endedAt = const Value.absent(),
     this.trigger = const Value.absent(),
-    this.note = const Value.absent(),
+    this.whatHappened = const Value.absent(),
+    this.whatWouldHelp = const Value.absent(),
+    this.nextTime = const Value.absent(),
   }) : startedAt = Value(startedAt);
   static Insertable<Attempt> custom({
     Expression<int>? id,
     Expression<DateTime>? startedAt,
     Expression<DateTime>? endedAt,
     Expression<String>? trigger,
-    Expression<String>? note,
+    Expression<String>? whatHappened,
+    Expression<String>? whatWouldHelp,
+    Expression<String>? nextTime,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (startedAt != null) 'started_at': startedAt,
       if (endedAt != null) 'ended_at': endedAt,
       if (trigger != null) 'trigger': trigger,
-      if (note != null) 'note': note,
+      if (whatHappened != null) 'what_happened': whatHappened,
+      if (whatWouldHelp != null) 'what_would_help': whatWouldHelp,
+      if (nextTime != null) 'next_time': nextTime,
     });
   }
 
@@ -724,15 +838,19 @@ class AttemptsCompanion extends UpdateCompanion<Attempt> {
     Value<int>? id,
     Value<DateTime>? startedAt,
     Value<DateTime?>? endedAt,
-    Value<RelapseTrigger?>? trigger,
-    Value<String?>? note,
+    Value<Trigger?>? trigger,
+    Value<String?>? whatHappened,
+    Value<String?>? whatWouldHelp,
+    Value<String?>? nextTime,
   }) {
     return AttemptsCompanion(
       id: id ?? this.id,
       startedAt: startedAt ?? this.startedAt,
       endedAt: endedAt ?? this.endedAt,
       trigger: trigger ?? this.trigger,
-      note: note ?? this.note,
+      whatHappened: whatHappened ?? this.whatHappened,
+      whatWouldHelp: whatWouldHelp ?? this.whatWouldHelp,
+      nextTime: nextTime ?? this.nextTime,
     );
   }
 
@@ -753,8 +871,14 @@ class AttemptsCompanion extends UpdateCompanion<Attempt> {
         $AttemptsTable.$convertertriggern.toSql(trigger.value),
       );
     }
-    if (note.present) {
-      map['note'] = Variable<String>(note.value);
+    if (whatHappened.present) {
+      map['what_happened'] = Variable<String>(whatHappened.value);
+    }
+    if (whatWouldHelp.present) {
+      map['what_would_help'] = Variable<String>(whatWouldHelp.value);
+    }
+    if (nextTime.present) {
+      map['next_time'] = Variable<String>(nextTime.value);
     }
     return map;
   }
@@ -766,7 +890,9 @@ class AttemptsCompanion extends UpdateCompanion<Attempt> {
           ..write('startedAt: $startedAt, ')
           ..write('endedAt: $endedAt, ')
           ..write('trigger: $trigger, ')
-          ..write('note: $note')
+          ..write('whatHappened: $whatHappened, ')
+          ..write('whatWouldHelp: $whatWouldHelp, ')
+          ..write('nextTime: $nextTime')
           ..write(')'))
         .toString();
   }
@@ -828,7 +954,16 @@ class $CravingsTable extends Cravings with TableInfo<$CravingsTable, Craving> {
     ),
   );
   @override
-  List<GeneratedColumn> get $columns => [id, attemptId, at, resisted];
+  late final GeneratedColumnWithTypeConverter<Trigger?, String> trigger =
+      GeneratedColumn<String>(
+        'trigger',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      ).withConverter<Trigger?>($CravingsTable.$convertertriggern);
+  @override
+  List<GeneratedColumn> get $columns => [id, attemptId, at, resisted, trigger];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -890,6 +1025,12 @@ class $CravingsTable extends Cravings with TableInfo<$CravingsTable, Craving> {
         DriftSqlType.bool,
         data['${effectivePrefix}resisted'],
       )!,
+      trigger: $CravingsTable.$convertertriggern.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}trigger'],
+        ),
+      ),
     );
   }
 
@@ -897,6 +1038,11 @@ class $CravingsTable extends Cravings with TableInfo<$CravingsTable, Craving> {
   $CravingsTable createAlias(String alias) {
     return $CravingsTable(attachedDatabase, alias);
   }
+
+  static JsonTypeConverter2<Trigger, String, String> $convertertrigger =
+      const EnumNameConverter<Trigger>(Trigger.values);
+  static JsonTypeConverter2<Trigger?, String?, String?> $convertertriggern =
+      JsonTypeConverter2.asNullable($convertertrigger);
 }
 
 class Craving extends DataClass implements Insertable<Craving> {
@@ -904,11 +1050,13 @@ class Craving extends DataClass implements Insertable<Craving> {
   final int attemptId;
   final DateTime at;
   final bool resisted;
+  final Trigger? trigger;
   const Craving({
     required this.id,
     required this.attemptId,
     required this.at,
     required this.resisted,
+    this.trigger,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -917,6 +1065,11 @@ class Craving extends DataClass implements Insertable<Craving> {
     map['attempt_id'] = Variable<int>(attemptId);
     map['at'] = Variable<DateTime>(at);
     map['resisted'] = Variable<bool>(resisted);
+    if (!nullToAbsent || trigger != null) {
+      map['trigger'] = Variable<String>(
+        $CravingsTable.$convertertriggern.toSql(trigger),
+      );
+    }
     return map;
   }
 
@@ -926,6 +1079,9 @@ class Craving extends DataClass implements Insertable<Craving> {
       attemptId: Value(attemptId),
       at: Value(at),
       resisted: Value(resisted),
+      trigger: trigger == null && nullToAbsent
+          ? const Value.absent()
+          : Value(trigger),
     );
   }
 
@@ -939,6 +1095,9 @@ class Craving extends DataClass implements Insertable<Craving> {
       attemptId: serializer.fromJson<int>(json['attemptId']),
       at: serializer.fromJson<DateTime>(json['at']),
       resisted: serializer.fromJson<bool>(json['resisted']),
+      trigger: $CravingsTable.$convertertriggern.fromJson(
+        serializer.fromJson<String?>(json['trigger']),
+      ),
     );
   }
   @override
@@ -949,22 +1108,32 @@ class Craving extends DataClass implements Insertable<Craving> {
       'attemptId': serializer.toJson<int>(attemptId),
       'at': serializer.toJson<DateTime>(at),
       'resisted': serializer.toJson<bool>(resisted),
+      'trigger': serializer.toJson<String?>(
+        $CravingsTable.$convertertriggern.toJson(trigger),
+      ),
     };
   }
 
-  Craving copyWith({int? id, int? attemptId, DateTime? at, bool? resisted}) =>
-      Craving(
-        id: id ?? this.id,
-        attemptId: attemptId ?? this.attemptId,
-        at: at ?? this.at,
-        resisted: resisted ?? this.resisted,
-      );
+  Craving copyWith({
+    int? id,
+    int? attemptId,
+    DateTime? at,
+    bool? resisted,
+    Value<Trigger?> trigger = const Value.absent(),
+  }) => Craving(
+    id: id ?? this.id,
+    attemptId: attemptId ?? this.attemptId,
+    at: at ?? this.at,
+    resisted: resisted ?? this.resisted,
+    trigger: trigger.present ? trigger.value : this.trigger,
+  );
   Craving copyWithCompanion(CravingsCompanion data) {
     return Craving(
       id: data.id.present ? data.id.value : this.id,
       attemptId: data.attemptId.present ? data.attemptId.value : this.attemptId,
       at: data.at.present ? data.at.value : this.at,
       resisted: data.resisted.present ? data.resisted.value : this.resisted,
+      trigger: data.trigger.present ? data.trigger.value : this.trigger,
     );
   }
 
@@ -974,13 +1143,14 @@ class Craving extends DataClass implements Insertable<Craving> {
           ..write('id: $id, ')
           ..write('attemptId: $attemptId, ')
           ..write('at: $at, ')
-          ..write('resisted: $resisted')
+          ..write('resisted: $resisted, ')
+          ..write('trigger: $trigger')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, attemptId, at, resisted);
+  int get hashCode => Object.hash(id, attemptId, at, resisted, trigger);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -988,7 +1158,8 @@ class Craving extends DataClass implements Insertable<Craving> {
           other.id == this.id &&
           other.attemptId == this.attemptId &&
           other.at == this.at &&
-          other.resisted == this.resisted);
+          other.resisted == this.resisted &&
+          other.trigger == this.trigger);
 }
 
 class CravingsCompanion extends UpdateCompanion<Craving> {
@@ -996,17 +1167,20 @@ class CravingsCompanion extends UpdateCompanion<Craving> {
   final Value<int> attemptId;
   final Value<DateTime> at;
   final Value<bool> resisted;
+  final Value<Trigger?> trigger;
   const CravingsCompanion({
     this.id = const Value.absent(),
     this.attemptId = const Value.absent(),
     this.at = const Value.absent(),
     this.resisted = const Value.absent(),
+    this.trigger = const Value.absent(),
   });
   CravingsCompanion.insert({
     this.id = const Value.absent(),
     required int attemptId,
     required DateTime at,
     required bool resisted,
+    this.trigger = const Value.absent(),
   }) : attemptId = Value(attemptId),
        at = Value(at),
        resisted = Value(resisted);
@@ -1015,12 +1189,14 @@ class CravingsCompanion extends UpdateCompanion<Craving> {
     Expression<int>? attemptId,
     Expression<DateTime>? at,
     Expression<bool>? resisted,
+    Expression<String>? trigger,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (attemptId != null) 'attempt_id': attemptId,
       if (at != null) 'at': at,
       if (resisted != null) 'resisted': resisted,
+      if (trigger != null) 'trigger': trigger,
     });
   }
 
@@ -1029,12 +1205,14 @@ class CravingsCompanion extends UpdateCompanion<Craving> {
     Value<int>? attemptId,
     Value<DateTime>? at,
     Value<bool>? resisted,
+    Value<Trigger?>? trigger,
   }) {
     return CravingsCompanion(
       id: id ?? this.id,
       attemptId: attemptId ?? this.attemptId,
       at: at ?? this.at,
       resisted: resisted ?? this.resisted,
+      trigger: trigger ?? this.trigger,
     );
   }
 
@@ -1053,6 +1231,11 @@ class CravingsCompanion extends UpdateCompanion<Craving> {
     if (resisted.present) {
       map['resisted'] = Variable<bool>(resisted.value);
     }
+    if (trigger.present) {
+      map['trigger'] = Variable<String>(
+        $CravingsTable.$convertertriggern.toSql(trigger.value),
+      );
+    }
     return map;
   }
 
@@ -1062,7 +1245,8 @@ class CravingsCompanion extends UpdateCompanion<Craving> {
           ..write('id: $id, ')
           ..write('attemptId: $attemptId, ')
           ..write('at: $at, ')
-          ..write('resisted: $resisted')
+          ..write('resisted: $resisted, ')
+          ..write('trigger: $trigger')
           ..write(')'))
         .toString();
   }
@@ -1826,15 +2010,19 @@ typedef $$AttemptsTableCreateCompanionBuilder = AttemptsCompanion Function({
   Value<int> id,
   required DateTime startedAt,
   Value<DateTime?> endedAt,
-  Value<RelapseTrigger?> trigger,
-  Value<String?> note,
+  Value<Trigger?> trigger,
+  Value<String?> whatHappened,
+  Value<String?> whatWouldHelp,
+  Value<String?> nextTime,
 });
 typedef $$AttemptsTableUpdateCompanionBuilder = AttemptsCompanion Function({
   Value<int> id,
   Value<DateTime> startedAt,
   Value<DateTime?> endedAt,
-  Value<RelapseTrigger?> trigger,
-  Value<String?> note,
+  Value<Trigger?> trigger,
+  Value<String?> whatHappened,
+  Value<String?> whatWouldHelp,
+  Value<String?> nextTime,
 });
 
 final class $$AttemptsTableReferences
@@ -1910,14 +2098,24 @@ class $$AttemptsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnWithTypeConverterFilters<RelapseTrigger?, RelapseTrigger, String>
-  get trigger => $composableBuilder(
-    column: $table.trigger,
-    builder: (column) => ColumnWithTypeConverterFilters(column),
+  ColumnWithTypeConverterFilters<Trigger?, Trigger, String> get trigger =>
+      $composableBuilder(
+        column: $table.trigger,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
+
+  ColumnFilters<String> get whatHappened => $composableBuilder(
+    column: $table.whatHappened,
+    builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get note => $composableBuilder(
-    column: $table.note,
+  ColumnFilters<String> get whatWouldHelp => $composableBuilder(
+    column: $table.whatWouldHelp,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get nextTime => $composableBuilder(
+    column: $table.nextTime,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -2001,8 +2199,18 @@ class $$AttemptsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get note => $composableBuilder(
-    column: $table.note,
+  ColumnOrderings<String> get whatHappened => $composableBuilder(
+    column: $table.whatHappened,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get whatWouldHelp => $composableBuilder(
+    column: $table.whatWouldHelp,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get nextTime => $composableBuilder(
+    column: $table.nextTime,
     builder: (column) => ColumnOrderings(column),
   );
 }
@@ -2025,11 +2233,21 @@ class $$AttemptsTableAnnotationComposer
   GeneratedColumn<DateTime> get endedAt =>
       $composableBuilder(column: $table.endedAt, builder: (column) => column);
 
-  GeneratedColumnWithTypeConverter<RelapseTrigger?, String> get trigger =>
+  GeneratedColumnWithTypeConverter<Trigger?, String> get trigger =>
       $composableBuilder(column: $table.trigger, builder: (column) => column);
 
-  GeneratedColumn<String> get note =>
-      $composableBuilder(column: $table.note, builder: (column) => column);
+  GeneratedColumn<String> get whatHappened => $composableBuilder(
+    column: $table.whatHappened,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get whatWouldHelp => $composableBuilder(
+    column: $table.whatWouldHelp,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get nextTime =>
+      $composableBuilder(column: $table.nextTime, builder: (column) => column);
 
   Expression<T> cravingsRefs<T extends Object>(
     Expression<T> Function($$CravingsTableAnnotationComposer a) f,
@@ -2117,28 +2335,36 @@ class $$AttemptsTableTableManager
                 Value<int> id = const Value.absent(),
                 Value<DateTime> startedAt = const Value.absent(),
                 Value<DateTime?> endedAt = const Value.absent(),
-                Value<RelapseTrigger?> trigger = const Value.absent(),
-                Value<String?> note = const Value.absent(),
+                Value<Trigger?> trigger = const Value.absent(),
+                Value<String?> whatHappened = const Value.absent(),
+                Value<String?> whatWouldHelp = const Value.absent(),
+                Value<String?> nextTime = const Value.absent(),
               }) => AttemptsCompanion(
                 id: id,
                 startedAt: startedAt,
                 endedAt: endedAt,
                 trigger: trigger,
-                note: note,
+                whatHappened: whatHappened,
+                whatWouldHelp: whatWouldHelp,
+                nextTime: nextTime,
               ),
           createCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
                 required DateTime startedAt,
                 Value<DateTime?> endedAt = const Value.absent(),
-                Value<RelapseTrigger?> trigger = const Value.absent(),
-                Value<String?> note = const Value.absent(),
+                Value<Trigger?> trigger = const Value.absent(),
+                Value<String?> whatHappened = const Value.absent(),
+                Value<String?> whatWouldHelp = const Value.absent(),
+                Value<String?> nextTime = const Value.absent(),
               }) => AttemptsCompanion.insert(
                 id: id,
                 startedAt: startedAt,
                 endedAt: endedAt,
                 trigger: trigger,
-                note: note,
+                whatHappened: whatHappened,
+                whatWouldHelp: whatWouldHelp,
+                nextTime: nextTime,
               ),
           withReferenceMapper: (p0) => p0
               .map(
@@ -2228,12 +2454,14 @@ typedef $$CravingsTableCreateCompanionBuilder = CravingsCompanion Function({
   required int attemptId,
   required DateTime at,
   required bool resisted,
+  Value<Trigger?> trigger,
 });
 typedef $$CravingsTableUpdateCompanionBuilder = CravingsCompanion Function({
   Value<int> id,
   Value<int> attemptId,
   Value<DateTime> at,
   Value<bool> resisted,
+  Value<Trigger?> trigger,
 });
 
 final class $$CravingsTableReferences
@@ -2281,6 +2509,12 @@ class $$CravingsTableFilterComposer
     column: $table.resisted,
     builder: (column) => ColumnFilters(column),
   );
+
+  ColumnWithTypeConverterFilters<Trigger?, Trigger, String> get trigger =>
+      $composableBuilder(
+        column: $table.trigger,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 
   $$AttemptsTableFilterComposer get attemptId {
     final $$AttemptsTableFilterComposer composer = $composerBuilder(
@@ -2330,6 +2564,11 @@ class $$CravingsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get trigger => $composableBuilder(
+    column: $table.trigger,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$AttemptsTableOrderingComposer get attemptId {
     final $$AttemptsTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -2371,6 +2610,9 @@ class $$CravingsTableAnnotationComposer
 
   GeneratedColumn<bool> get resisted =>
       $composableBuilder(column: $table.resisted, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<Trigger?, String> get trigger =>
+      $composableBuilder(column: $table.trigger, builder: (column) => column);
 
   $$AttemptsTableAnnotationComposer get attemptId {
     final $$AttemptsTableAnnotationComposer composer = $composerBuilder(
@@ -2428,11 +2670,13 @@ class $$CravingsTableTableManager
                 Value<int> attemptId = const Value.absent(),
                 Value<DateTime> at = const Value.absent(),
                 Value<bool> resisted = const Value.absent(),
+                Value<Trigger?> trigger = const Value.absent(),
               }) => CravingsCompanion(
                 id: id,
                 attemptId: attemptId,
                 at: at,
                 resisted: resisted,
+                trigger: trigger,
               ),
           createCompanionCallback:
               ({
@@ -2440,11 +2684,13 @@ class $$CravingsTableTableManager
                 required int attemptId,
                 required DateTime at,
                 required bool resisted,
+                Value<Trigger?> trigger = const Value.absent(),
               }) => CravingsCompanion.insert(
                 id: id,
                 attemptId: attemptId,
                 at: at,
                 resisted: resisted,
+                trigger: trigger,
               ),
           withReferenceMapper: (p0) => p0
               .map(

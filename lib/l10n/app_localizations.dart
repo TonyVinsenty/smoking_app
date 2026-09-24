@@ -97,7 +97,7 @@ abstract class AppLocalizations {
   /// No description provided for @appTitle.
   ///
   /// In ru, this message translates to:
-  /// **'Не курю'**
+  /// **'Zero'**
   String get appTitle;
 
   /// No description provided for @tabHome.
@@ -273,6 +273,150 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Введите число больше нуля'**
   String get invalidNumber;
+
+  /// No description provided for @homeDays.
+  ///
+  /// In ru, this message translates to:
+  /// **'{count, plural, one{день} few{дня} many{дней} other{дня}}'**
+  String homeDays(int count);
+
+  /// No description provided for @homeSmokeFreeSince.
+  ///
+  /// In ru, this message translates to:
+  /// **'без курения с {date}'**
+  String homeSmokeFreeSince(String date);
+
+  /// No description provided for @homeLevel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Уровень {level}'**
+  String homeLevel(int level);
+
+  /// No description provided for @homeXpToNext.
+  ///
+  /// In ru, this message translates to:
+  /// **'{xp} XP до следующего уровня'**
+  String homeXpToNext(int xp);
+
+  /// No description provided for @homeMaxLevel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Максимальный уровень — вы легенда!'**
+  String get homeMaxLevel;
+
+  /// No description provided for @homeMoneySaved.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сэкономлено'**
+  String get homeMoneySaved;
+
+  /// No description provided for @homeNotSmoked.
+  ///
+  /// In ru, this message translates to:
+  /// **'Не выкурено'**
+  String get homeNotSmoked;
+
+  /// No description provided for @money.
+  ///
+  /// In ru, this message translates to:
+  /// **'{amount} ₽'**
+  String money(String amount);
+
+  /// No description provided for @unitsAvoided.
+  ///
+  /// In ru, this message translates to:
+  /// **'{type, select, cigarettes{{count} сиг.} sticks{{count} стик.} disposable{{count} одноразок} liquid{{count} флак.} other{{count}}}'**
+  String unitsAvoided(String type, String count);
+
+  /// No description provided for @homeNoAttemptTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Новая попытка'**
+  String get homeNoAttemptTitle;
+
+  /// No description provided for @homeNoAttemptText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Каждая попытка делает вас сильнее. Опыт и значки остаются с вами.'**
+  String get homeNoAttemptText;
+
+  /// No description provided for @homeStartAttempt.
+  ///
+  /// In ru, this message translates to:
+  /// **'Начать с этой минуты'**
+  String get homeStartAttempt;
+
+  /// No description provided for @sosButton.
+  ///
+  /// In ru, this message translates to:
+  /// **'SOS'**
+  String get sosButton;
+
+  /// No description provided for @sosTriggerTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Что сейчас происходит?'**
+  String get sosTriggerTitle;
+
+  /// No description provided for @sosTriggerHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Один тап — и я запомню, когда вас тянет сильнее всего'**
+  String get sosTriggerHint;
+
+  /// No description provided for @sosSkip.
+  ///
+  /// In ru, this message translates to:
+  /// **'Пропустить'**
+  String get sosSkip;
+
+  /// No description provided for @triggerName.
+  ///
+  /// In ru, this message translates to:
+  /// **'{trigger, select, stress{Стресс} alcohol{Алкоголь} company{Компания} coffee{Кофе} afterMeal{После еды} boredom{Скука} ritual{Привычный момент} other{Другое}}'**
+  String triggerName(String trigger);
+
+  /// No description provided for @sosBreatheIn.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вдох'**
+  String get sosBreatheIn;
+
+  /// No description provided for @sosHold.
+  ///
+  /// In ru, this message translates to:
+  /// **'Задержка'**
+  String get sosHold;
+
+  /// No description provided for @sosBreatheOut.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выдох'**
+  String get sosBreatheOut;
+
+  /// No description provided for @sosWaveHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Тяга — как волна: она нарастает и спадает за 3–5 минут. Просто продержитесь.'**
+  String get sosWaveHint;
+
+  /// No description provided for @sosAnotherTip.
+  ///
+  /// In ru, this message translates to:
+  /// **'Другой совет'**
+  String get sosAnotherTip;
+
+  /// No description provided for @sosResisted.
+  ///
+  /// In ru, this message translates to:
+  /// **'Справился!'**
+  String get sosResisted;
+
+  /// No description provided for @sosResistedToast.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вы сильнее тяги! +{xp} XP'**
+  String sosResistedToast(int xp);
 }
 
 class _AppLocalizationsDelegate

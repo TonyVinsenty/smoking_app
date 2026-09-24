@@ -10,7 +10,7 @@ class AppLocalizationsRu extends AppLocalizations {
   AppLocalizationsRu([String locale = 'ru']) : super(locale);
 
   @override
-  String get appTitle => 'Не курю';
+  String get appTitle => 'Zero';
 
   @override
   String get tabHome => 'Главная';
@@ -137,4 +137,120 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get invalidNumber => 'Введите число больше нуля';
+
+  @override
+  String homeDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'дня',
+      many: 'дней',
+      few: 'дня',
+      one: 'день',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String homeSmokeFreeSince(String date) {
+    return 'без курения с $date';
+  }
+
+  @override
+  String homeLevel(int level) {
+    return 'Уровень $level';
+  }
+
+  @override
+  String homeXpToNext(int xp) {
+    return '$xp XP до следующего уровня';
+  }
+
+  @override
+  String get homeMaxLevel => 'Максимальный уровень — вы легенда!';
+
+  @override
+  String get homeMoneySaved => 'Сэкономлено';
+
+  @override
+  String get homeNotSmoked => 'Не выкурено';
+
+  @override
+  String money(String amount) {
+    return '$amount ₽';
+  }
+
+  @override
+  String unitsAvoided(String type, String count) {
+    String _temp0 = intl.Intl.selectLogic(type, {
+      'cigarettes': '$count сиг.',
+      'sticks': '$count стик.',
+      'disposable': '$count одноразок',
+      'liquid': '$count флак.',
+      'other': '$count',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String get homeNoAttemptTitle => 'Новая попытка';
+
+  @override
+  String get homeNoAttemptText =>
+      'Каждая попытка делает вас сильнее. Опыт и значки остаются с вами.';
+
+  @override
+  String get homeStartAttempt => 'Начать с этой минуты';
+
+  @override
+  String get sosButton => 'SOS';
+
+  @override
+  String get sosTriggerTitle => 'Что сейчас происходит?';
+
+  @override
+  String get sosTriggerHint =>
+      'Один тап — и я запомню, когда вас тянет сильнее всего';
+
+  @override
+  String get sosSkip => 'Пропустить';
+
+  @override
+  String triggerName(String trigger) {
+    String _temp0 = intl.Intl.selectLogic(trigger, {
+      'stress': 'Стресс',
+      'alcohol': 'Алкоголь',
+      'company': 'Компания',
+      'coffee': 'Кофе',
+      'afterMeal': 'После еды',
+      'boredom': 'Скука',
+      'ritual': 'Привычный момент',
+      'other': 'Другое',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String get sosBreatheIn => 'Вдох';
+
+  @override
+  String get sosHold => 'Задержка';
+
+  @override
+  String get sosBreatheOut => 'Выдох';
+
+  @override
+  String get sosWaveHint =>
+      'Тяга — как волна: она нарастает и спадает за 3–5 минут. Просто продержитесь.';
+
+  @override
+  String get sosAnotherTip => 'Другой совет';
+
+  @override
+  String get sosResisted => 'Справился!';
+
+  @override
+  String sosResistedToast(int xp) {
+    return 'Вы сильнее тяги! +$xp XP';
+  }
 }

@@ -5,6 +5,7 @@ import '../features/home/home_screen.dart';
 import '../features/knowledge/knowledge_screen.dart';
 import '../features/leaderboard/leaderboard_screen.dart';
 import '../features/settings/settings_screen.dart';
+import '../features/sos/sos_screen.dart';
 import '../l10n/app_localizations.dart';
 
 /// Main screen with the bottom navigation bar.
@@ -31,6 +32,11 @@ class _HomeShellState extends State<HomeShell> {
     final l = AppLocalizations.of(context);
     return Scaffold(
       body: IndexedStack(index: _index, children: _screens),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () => SosScreen.open(context),
+        icon: const Icon(Icons.air),
+        label: Text(l.sosButton),
+      ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _index,
         onDestinationSelected: (i) => setState(() => _index = i),
