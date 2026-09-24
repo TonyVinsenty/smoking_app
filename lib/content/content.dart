@@ -71,6 +71,27 @@ class Quote {
   final String? author;
 }
 
+class Article {
+  Article.fromJson(Map<String, dynamic> j)
+    : id = j['id'],
+      title = j['title'],
+      summary = j['summary'],
+      category = j['category'],
+      readMinutes = j['readMinutes'],
+      file = j['file'];
+
+  final String id;
+  final String title;
+  final String summary;
+
+  /// addiction | health | practice | myths | vape | money
+  final String category;
+  final int readMinutes;
+
+  /// Markdown file relative to the locale folder; null while the article is not written yet (hidden).
+  final String? file;
+}
+
 class AppContent {
   AppContent({
     required this.levels,
@@ -78,6 +99,7 @@ class AppContent {
     required this.milestones,
     required this.quotes,
     required this.sosTips,
+    required this.articles,
   });
 
   final List<Level> levels;
@@ -85,6 +107,9 @@ class AppContent {
   final List<HealthMilestone> milestones;
   final List<Quote> quotes;
   final List<String> sosTips;
+
+  /// Published articles (those with a file), in index order.
+  final List<Article> articles;
 
   /// Highest level reached with [xp] and the next one (null at max level).
   (Level current, Level? next) levelFor(int xp) {
@@ -101,6 +126,7 @@ final contentProvider = FutureProvider<AppContent>((ref) async {
     _loadList('health_milestones.json'),
     _loadList('quotes.json'),
     _loadList('sos_tips.json'),
+    _loadList('articles/index.json'),
   ]);
   return AppContent(
     levels: results[0].map(Level.fromJson).toList()..sort((a, b) => a.level.compareTo(b.level)),
@@ -109,5 +135,11 @@ final contentProvider = FutureProvider<AppContent>((ref) async {
       ..sort((a, b) => a.afterMinutes.compareTo(b.afterMinutes)),
     quotes: results[3].map(Quote.fromJson).toList(),
     sosTips: [for (final t in results[4]) t['text'] as String],
+    articles: [for (final a in results[5].map(Article.fromJson)) if (a.file != null) a],
   );
 });
+
+/// Markdown text of an article.
+final articleBodyProvider = FutureProvider.family<String, Article>(
+  (ref, a) => rootBundle.loadString('assets/content/$contentLocale/${a.file}'),
+);

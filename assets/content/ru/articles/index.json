@@ -25,7 +25,7 @@
   },
   {
     "id": "after_relapse",
-    "title": "Что делать, если сорвался",
+    "title": "Что делать, если случился срыв",
     "summary": "Честный разговор о срывах без чувства вины и с планом, что делать дальше.",
     "category": "practice",
     "readMinutes": 5,
@@ -37,7 +37,7 @@
     "summary": "Чем электронные сигареты и системы нагревания табака отличаются от обычных — и почему это тоже никотиновая зависимость.",
     "category": "vape",
     "readMinutes": 5,
-    "file": null
+    "file": "articles/vape_iqos_truth.md"
   },
   {
     "id": "triggers_and_rituals",
@@ -45,7 +45,7 @@
     "summary": "Как находить и менять привычные ситуации, которые тянут за сигаретой.",
     "category": "practice",
     "readMinutes": 4,
-    "file": null
+    "file": "articles/triggers_and_rituals.md"
   },
   {
     "id": "alcohol_and_coffee",
@@ -53,7 +53,7 @@
     "summary": "Почему кофе и алкоголь — частые провокаторы тяги и как быть с ними на старте.",
     "category": "practice",
     "readMinutes": 3,
-    "file": null
+    "file": "articles/alcohol_and_coffee.md"
   },
   {
     "id": "sleep_and_quitting",
@@ -61,7 +61,7 @@
     "summary": "Почему в первые недели может нарушаться сон и как это исправить.",
     "category": "health",
     "readMinutes": 4,
-    "file": null
+    "file": "articles/sleep_and_quitting.md"
   },
   {
     "id": "stress_without_cigarettes",
@@ -69,7 +69,7 @@
     "summary": "Рабочие способы снять напряжение, когда рука тянется за пачкой.",
     "category": "practice",
     "readMinutes": 5,
-    "file": null
+    "file": "articles/stress_without_cigarettes.md"
   },
   {
     "id": "money_math",
@@ -77,7 +77,7 @@
     "summary": "Простые расчёты и идеи, на что потратить сэкономленное.",
     "category": "money",
     "readMinutes": 3,
-    "file": null
+    "file": "articles/money_math.md"
   },
   {
     "id": "breathing_techniques",
@@ -85,7 +85,7 @@
     "summary": "Несколько простых упражнений, которые помогают за 60 секунд.",
     "category": "practice",
     "readMinutes": 3,
-    "file": null
+    "file": "articles/breathing_techniques.md"
   },
   {
     "id": "social_pressure",
@@ -93,7 +93,7 @@
     "summary": "Как вести себя в компании курящих и что отвечать на предложения «за компанию».",
     "category": "practice",
     "readMinutes": 4,
-    "file": null
+    "file": "articles/social_pressure.md"
   },
   {
     "id": "exercise_helps",
@@ -101,7 +101,7 @@
     "summary": "Почему даже короткая прогулка снижает тягу и ускоряет восстановление.",
     "category": "health",
     "readMinutes": 4,
-    "file": null
+    "file": "articles/exercise_helps.md"
   },
   {
     "id": "common_myths",
@@ -109,7 +109,7 @@
     "summary": "Разбираем популярные заблуждения — от «одна не считается» до «уже поздно бросать».",
     "category": "myths",
     "readMinutes": 5,
-    "file": null
+    "file": "articles/common_myths.md"
   },
   {
     "id": "vape_types_explained",
@@ -117,6 +117,6 @@
     "summary": "Чем отличаются разные форматы электронных сигарет и как это влияет на отказ.",
     "category": "vape",
     "readMinutes": 4,
-    "file": null
+    "file": "articles/vape_types_explained.md"
   }
 ]

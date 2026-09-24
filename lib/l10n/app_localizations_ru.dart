@@ -799,4 +799,44 @@ class AppLocalizationsRu extends AppLocalizations {
     });
     return '$amount $period · $price ₽ $_temp0';
   }
+
+  @override
+  String knowledgeProgress(int read, int total) {
+    return 'Прочитано $read из $total';
+  }
+
+  @override
+  String get knowledgeAll => 'Все';
+
+  @override
+  String articleCategory(String category) {
+    String _temp0 = intl.Intl.selectLogic(category, {
+      'addiction': 'Зависимость',
+      'health': 'Здоровье',
+      'practice': 'Практика',
+      'myths': 'Мифы',
+      'vape': 'Вейпы и IQOS',
+      'money': 'Деньги',
+      'other': 'Другое',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String articleMinutes(int minutes) {
+    return '$minutes мин';
+  }
+
+  @override
+  String get articleRead => 'Прочитано';
+
+  @override
+  String get articleReadSnack => 'Статья прочитана';
+
+  @override
+  String get articleNext => 'Следующая статья';
+
+  @override
+  String get articleDisclaimer =>
+      'Статья носит справочный характер и не заменяет консультацию врача.';
 }

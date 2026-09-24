@@ -209,5 +209,16 @@
   "newAttemptKeep": "Оставить",
   "newAttemptChange": "Изменить",
   "productSummary": "{amount} {period} · {price} ₽ {type, select, cigarettes{за пачку} sticks{за пачку} disposable{за штуку} liquid{за флакон} other{}}",
-  "@productSummary": {"placeholders": {"amount": {"type": "String"}, "period": {"type": "String"}, "price": {"type": "String"}, "type": {"type": "String"}}}
+  "@productSummary": {"placeholders": {"amount": {"type": "String"}, "period": {"type": "String"}, "price": {"type": "String"}, "type": {"type": "String"}}},
+  "knowledgeProgress": "Прочитано {read} из {total}",
+  "@knowledgeProgress": {"placeholders": {"read": {"type": "int"}, "total": {"type": "int"}}},
+  "knowledgeAll": "Все",
+  "articleCategory": "{category, select, addiction{Зависимость} health{Здоровье} practice{Практика} myths{Мифы} vape{Вейпы и IQOS} money{Деньги} other{Другое}}",
+  "@articleCategory": {"placeholders": {"category": {"type": "String"}}},
+  "articleMinutes": "{minutes} мин",
+  "@articleMinutes": {"placeholders": {"minutes": {"type": "int"}}},
+  "articleRead": "Прочитано",
+  "articleReadSnack": "Статья прочитана",
+  "articleNext": "Следующая статья",
+  "articleDisclaimer": "Статья носит справочный характер и не заменяет консультацию врача."
 }

@@ -1028,6 +1028,54 @@ abstract class AppLocalizations {
     String price,
     String type,
   );
+
+  /// No description provided for @knowledgeProgress.
+  ///
+  /// In ru, this message translates to:
+  /// **'Прочитано {read} из {total}'**
+  String knowledgeProgress(int read, int total);
+
+  /// No description provided for @knowledgeAll.
+  ///
+  /// In ru, this message translates to:
+  /// **'Все'**
+  String get knowledgeAll;
+
+  /// No description provided for @articleCategory.
+  ///
+  /// In ru, this message translates to:
+  /// **'{category, select, addiction{Зависимость} health{Здоровье} practice{Практика} myths{Мифы} vape{Вейпы и IQOS} money{Деньги} other{Другое}}'**
+  String articleCategory(String category);
+
+  /// No description provided for @articleMinutes.
+  ///
+  /// In ru, this message translates to:
+  /// **'{minutes} мин'**
+  String articleMinutes(int minutes);
+
+  /// No description provided for @articleRead.
+  ///
+  /// In ru, this message translates to:
+  /// **'Прочитано'**
+  String get articleRead;
+
+  /// No description provided for @articleReadSnack.
+  ///
+  /// In ru, this message translates to:
+  /// **'Статья прочитана'**
+  String get articleReadSnack;
+
+  /// No description provided for @articleNext.
+  ///
+  /// In ru, this message translates to:
+  /// **'Следующая статья'**
+  String get articleNext;
+
+  /// No description provided for @articleDisclaimer.
+  ///
+  /// In ru, this message translates to:
+  /// **'Статья носит справочный характер и не заменяет консультацию врача.'**
+  String get articleDisclaimer;
 }
 
 class _AppLocalizationsDelegate

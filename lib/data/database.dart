@@ -158,6 +158,12 @@ class AppDatabase extends _$AppDatabase {
     );
   }
 
+  /// Counts once per article (for the «articlesRead» badges).
+  Future<void> markArticleRead(String articleId) => into(articlesRead).insert(
+    ArticlesReadCompanion.insert(articleId: articleId, readAt: DateTime.now()),
+    mode: InsertMode.insertOrIgnore,
+  );
+
   /// Wipes all user data («Полный сброс»).
   Future<void> resetAll() => transaction(() async {
     for (final table in allTables.toList().reversed) {
