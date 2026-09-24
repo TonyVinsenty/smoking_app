@@ -30,10 +30,9 @@ Russian only for now, but everything is translatable: UI strings in `lib/l10n/ap
 Open question for later: a growing tree / pet as a progress metaphor (owner unsure — discuss).
 
 ## Progress (MVP)
-Done: skeleton, onboarding, home (timer, savings, level/XP, quote), SOS (trigger → breathing → resisted, FAB on all tabs), app name Zero. Runs on emulator `Pixel_8` (`flutter emulators --launch Pixel_8`).
-Owner feedback after first emulator test (do FIRST next session): 1) onboarding/start text too small — enlarge (bodyLarge+ for body text, bigger headings), review font sizes app-wide; 2) add a reset for testing (restart from onboarding) — can be the real «Полный сброс» in Settings with confirmation, done early.
-Next: achievement unlocking + Health tab → «Я закурил» flow (confirm + diary) + attempt history → Knowledge tab → Settings (theme, large font, my data, reset) → notifications → craving-map stats.
-Dev notes: run `flutter gen-l10n` after editing ARB, `dart run build_runner build` after DB changes; no Python on this machine; `kotlin.incremental=false` needed (C:/D: drives).
+Done: skeleton, onboarding, home (timer, savings, level/XP, quote — tap for next), SOS (trigger → breathing → resisted, FAB on all tabs), app name Zero, larger text app-wide, Settings (theme mode, «Крупный текст», «Полный сброс»), achievement unlocking (HomeShell checks every second; time badges per attempt, others cumulative) + Health tab (recovery timeline, badge grid). Runs on emulator `Pixel_8` (`flutter emulators --launch Pixel_8`).
+Next: «Я закурил» flow (confirm + diary) + attempt history → Knowledge tab → Settings «Мои данные» (edit products) → notifications → craving-map stats.
+Dev notes: adb at D:/Android/Sdk/platform-tools/adb.exe (screenshots: `adb exec-out screencap -p`); run `flutter gen-l10n` after editing ARB, `dart run build_runner build` after DB changes; no Python on this machine; `kotlin.incremental=false` needed (C:/D: drives).
 
 ## Content
 `assets/content/ru/`: health_milestones.json, achievements.json, levels.json, quotes.json, sos_tips.json, articles/index.json + *.md. Ideas backlog: docs/content-ideas.md.
