@@ -31,6 +31,7 @@ Open question for later: a growing tree / pet as a progress metaphor (owner unsu
 
 ## Progress (MVP)
 Done: skeleton, onboarding, home (timer, savings, level/XP, quote), SOS (trigger → breathing → resisted, FAB on all tabs), app name Zero. Runs on emulator `Pixel_8` (`flutter emulators --launch Pixel_8`).
+Owner feedback after first emulator test (do FIRST next session): 1) onboarding/start text too small — enlarge (bodyLarge+ for body text, bigger headings), review font sizes app-wide; 2) add a reset for testing (restart from onboarding) — can be the real «Полный сброс» in Settings with confirmation, done early.
 Next: achievement unlocking + Health tab → «Я закурил» flow (confirm + diary) + attempt history → Knowledge tab → Settings (theme, large font, my data, reset) → notifications → craving-map stats.
 Dev notes: run `flutter gen-l10n` after editing ARB, `dart run build_runner build` after DB changes; no Python on this machine; `kotlin.incremental=false` needed (C:/D: drives).
 
