@@ -712,7 +712,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get relapseStartNow => 'Начать новую попытку сейчас';
 
   @override
-  String get relapseLater => 'Начну позже';
+  String get relapseLater => 'Начать новую попытку позже';
 
   @override
   String get historyTitle => 'История попыток';

@@ -187,7 +187,7 @@
   "relapseDoneText": "Без курения вы продержались {duration}. Ваш рекорд — {best}. Опыт, уровень и награды остаются с вами, а следующая попытка начнётся уже с этим знанием.",
   "@relapseDoneText": {"placeholders": {"duration": {"type": "String"}, "best": {"type": "String"}}},
   "relapseStartNow": "Начать новую попытку сейчас",
-  "relapseLater": "Начну позже",
+  "relapseLater": "Начать новую попытку позже",
   "historyTitle": "История попыток",
   "historyBest": "Рекорд",
   "historyTotal": "Всего без курения",

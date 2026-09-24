@@ -907,7 +907,7 @@ abstract class AppLocalizations {
   /// No description provided for @relapseLater.
   ///
   /// In ru, this message translates to:
-  /// **'Начну позже'**
+  /// **'Начать новую попытку позже'**
   String get relapseLater;
 
   /// No description provided for @historyTitle.
