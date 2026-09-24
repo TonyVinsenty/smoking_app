@@ -115,7 +115,8 @@ class AppLocalizationsRu extends AppLocalizations {
   String get onbConsumptionTitle => 'Сколько и почём';
 
   @override
-  String get onbConsumptionHint => 'Это нужно, чтобы считать сэкономленные деньги. Примерно — тоже хорошо.';
+  String get onbConsumptionHint =>
+      'Это нужно, чтобы считать сэкономленные деньги. Примерно — тоже хорошо.';
 
   @override
   String get onbQuitTitle => 'Когда вы бросили?';
@@ -245,7 +246,8 @@ class AppLocalizationsRu extends AppLocalizations {
   String get savingsTotal => 'Всего';
 
   @override
-  String get savingsPeriodsHint => 'Неделя считается с понедельника, месяц — с 1-го числа.';
+  String get savingsPeriodsHint =>
+      'Неделя считается с понедельника, месяц — с 1-го числа.';
 
   @override
   String savingsForecast(String perMonth, String perYear) {
@@ -276,7 +278,8 @@ class AppLocalizationsRu extends AppLocalizations {
   String get homeNoAttemptTitle => 'Новая попытка';
 
   @override
-  String get homeNoAttemptText => 'Каждая попытка делает вас сильнее. Опыт и значки остаются с вами.';
+  String get homeNoAttemptText =>
+      'Каждая попытка делает вас сильнее. Опыт и значки остаются с вами.';
 
   @override
   String get homeStartAttempt => 'Начать с этой минуты';
@@ -291,7 +294,8 @@ class AppLocalizationsRu extends AppLocalizations {
   String get sosTriggerTitle => 'Что сейчас происходит?';
 
   @override
-  String get sosTriggerHint => 'Один тап — и я запомню, когда вас тянет сильнее всего';
+  String get sosTriggerHint =>
+      'Один тап — и я запомню, когда вас тянет сильнее всего';
 
   @override
   String get sosSkip => 'Пропустить';
@@ -338,7 +342,8 @@ class AppLocalizationsRu extends AppLocalizations {
   String sosExerciseDesc(String exercise) {
     String _temp0 = intl.Intl.selectLogic(exercise, {
       'breathing': 'Вдох на 4 счёта, выдох на 6. Без задержек — просто следите за кругом.',
-      'countdown': 'Крупные числа от 10 до 0. Ничего делать не нужно — просто смотрите.',
+      'countdown':
+          'Крупные числа от 10 до 0. Ничего делать не нужно — просто смотрите.',
       'grounding': 'Пять простых шагов, чтобы вернуться в «здесь и сейчас».',
       'other': '',
     });
@@ -377,7 +382,8 @@ class AppLocalizationsRu extends AppLocalizations {
   String get sosGroundDone => 'Вы здесь и сейчас. Вы справляетесь.';
 
   @override
-  String get sosWaveHint => 'Тяга — как волна: она нарастает и спадает за 3–5 минут. Просто продержитесь.';
+  String get sosWaveHint =>
+      'Тяга — как волна: она нарастает и спадает за 3–5 минут. Просто продержитесь.';
 
   @override
   String get sosAnotherTip => 'Другой совет';
@@ -487,7 +493,8 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get healthNoAttempt => 'Начните новую попытку на главном экране — и отсчёт восстановления пойдёт заново.';
+  String get healthNoAttempt =>
+      'Начните новую попытку на главном экране — и отсчёт восстановления пойдёт заново.';
 
   @override
   String healthSource(String source) {
@@ -653,7 +660,8 @@ class AppLocalizationsRu extends AppLocalizations {
   String get relapseConfirmTitle => 'Отметить срыв?';
 
   @override
-  String get relapseConfirmText => 'Текущий отсчёт остановится. Опыт, уровень и награды останутся с вами.';
+  String get relapseConfirmText =>
+      'Текущий отсчёт остановится. Опыт, уровень и награды останутся с вами.';
 
   @override
   String get relapseConfirm => 'Да, отметить';
@@ -746,7 +754,8 @@ class AppLocalizationsRu extends AppLocalizations {
   String get settingsReset => 'Полный сброс';
 
   @override
-  String get settingsResetHint => 'Удалить все данные и начать с первого экрана';
+  String get settingsResetHint =>
+      'Удалить все данные и начать с первого экрана';
 
   @override
   String get settingsResetConfirmTitle => 'Удалить все данные?';
