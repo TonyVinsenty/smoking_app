@@ -203,6 +203,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get homeStartAttempt => 'Начать с этой минуты';
 
   @override
+  String get homeNextQuote => 'Следующая мысль';
+
+  @override
   String get sosButton => 'SOS';
 
   @override

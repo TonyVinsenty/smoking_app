@@ -346,6 +346,12 @@ abstract class AppLocalizations {
   /// **'Начать с этой минуты'**
   String get homeStartAttempt;
 
+  /// No description provided for @homeNextQuote.
+  ///
+  /// In ru, this message translates to:
+  /// **'Следующая мысль'**
+  String get homeNextQuote;
+
   /// No description provided for @sosButton.
   ///
   /// In ru, this message translates to:

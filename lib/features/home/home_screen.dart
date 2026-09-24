@@ -32,8 +32,8 @@ class HomeScreen extends ConsumerWidget {
       achievementXp: unlocked.map((u) => u.achievementId).toSet().map((id) => xpById[id] ?? 0),
       now: now,
     );
-    // Quote of the day.
-    final quote = content.quotes[now.difference(DateTime(2026)).inDays % content.quotes.length];
+    // Quote of the day; tapping the card shows the next one.
+    final quoteOfDay = now.difference(DateTime(2026)).inDays % content.quotes.length;
 
     return Scaffold(
       appBar: AppBar(title: Text(l.appTitle)),
@@ -49,7 +49,7 @@ class HomeScreen extends ConsumerWidget {
           const SizedBox(height: 12),
           _LevelCard(content: content, xp: xp),
           const SizedBox(height: 12),
-          _QuoteCard(quote: quote),
+          _QuoteCard(quotes: content.quotes, startIndex: quoteOfDay),
         ],
       ),
     );
@@ -75,10 +75,15 @@ class _TimerCard extends StatelessWidget {
         child: Column(
           children: [
             Text.rich(
-              TextSpan(children: [
-                TextSpan(text: '${d.inDays} ', style: theme.textTheme.displayLarge?.copyWith(fontWeight: FontWeight.bold)),
-                TextSpan(text: l.homeDays(d.inDays), style: theme.textTheme.headlineSmall),
-              ]),
+              TextSpan(
+                children: [
+                  TextSpan(
+                    text: '${d.inDays} ',
+                    style: theme.textTheme.displayLarge?.copyWith(fontWeight: FontWeight.bold),
+                  ),
+                  TextSpan(text: l.homeDays(d.inDays), style: theme.textTheme.headlineSmall),
+                ],
+              ),
               style: TextStyle(color: theme.colorScheme.onPrimaryContainer),
             ),
             Text(
@@ -113,16 +118,16 @@ class _SavingsCard extends StatelessWidget {
     final fmt = NumberFormat('#,##0', 'ru');
     final units = unitsAvoided(products, duration);
     Widget cell(IconData icon, String title, List<String> values) => Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Icon(icon, color: theme.colorScheme.primary),
-              const SizedBox(height: 8),
-              Text(title, style: theme.textTheme.labelLarge),
-              for (final v in values) Text(v, style: theme.textTheme.titleLarge),
-            ],
-          ),
-        );
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(icon, color: theme.colorScheme.primary),
+          const SizedBox(height: 8),
+          Text(title, style: theme.textTheme.labelLarge),
+          for (final v in values) Text(v, style: theme.textTheme.titleLarge),
+        ],
+      ),
+    );
     return Card(
       color: theme.colorScheme.surfaceContainerHigh,
       child: Padding(
@@ -195,28 +200,65 @@ class _LevelCard extends StatelessWidget {
   }
 }
 
-class _QuoteCard extends StatelessWidget {
-  const _QuoteCard({required this.quote});
+class _QuoteCard extends StatefulWidget {
+  const _QuoteCard({required this.quotes, required this.startIndex});
 
-  final Quote quote;
+  final List<Quote> quotes;
+  final int startIndex;
+
+  @override
+  State<_QuoteCard> createState() => _QuoteCardState();
+}
+
+class _QuoteCardState extends State<_QuoteCard> {
+  int _offset = 0;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final color = theme.colorScheme.onSecondaryContainer;
+    final quote = widget.quotes[(widget.startIndex + _offset) % widget.quotes.length];
+    void next() => setState(() => _offset++);
     return Card(
       color: theme.colorScheme.secondaryContainer,
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Icon(Icons.format_quote, color: theme.colorScheme.onSecondaryContainer),
-            Text(quote.text, style: theme.textTheme.titleMedium?.copyWith(color: theme.colorScheme.onSecondaryContainer)),
-            if (quote.author != null) ...[
-              const SizedBox(height: 8),
-              Text('— ${quote.author}', style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSecondaryContainer)),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: next,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 12, 8, 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(Icons.format_quote, color: color),
+                  const Spacer(),
+                  IconButton(
+                    icon: Icon(Icons.refresh, color: color),
+                    tooltip: AppLocalizations.of(context).homeNextQuote,
+                    onPressed: next,
+                  ),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 12),
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 250),
+                  child: Column(
+                    key: ValueKey(quote),
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(quote.text, style: theme.textTheme.titleMedium?.copyWith(color: color)),
+                      if (quote.author != null) ...[
+                        const SizedBox(height: 8),
+                        Text('— ${quote.author}', style: theme.textTheme.bodyMedium?.copyWith(color: color)),
+                      ],
+                    ],
+                  ),
+                ),
+              ),
             ],
-          ],
+          ),
         ),
       ),
     );

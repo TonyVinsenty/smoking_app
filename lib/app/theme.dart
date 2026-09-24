@@ -8,10 +8,11 @@ const _textScale = 1.12;
 
 ThemeData buildTheme(Brightness brightness) {
   final scheme = ColorScheme.fromSeed(seedColor: _seed, brightness: brightness);
-  return ThemeData(
-    colorScheme: scheme,
-    useMaterial3: true,
-    textTheme: Typography.englishLike2021.apply(fontSizeFactor: _textScale),
+  final base = ThemeData(colorScheme: scheme, useMaterial3: true);
+  // Sizes come from the M3 geometry, colors and font from the base theme.
+  final text = Typography.englishLike2021.merge(base.textTheme).apply(fontSizeFactor: _textScale);
+  return base.copyWith(
+    textTheme: text,
     cardTheme: const CardThemeData(
       elevation: 0,
       margin: EdgeInsets.zero,
