@@ -637,6 +637,23 @@ class AppLocalizationsRu extends AppLocalizations {
   String get settingsSos => 'SOS';
 
   @override
+  String get settingsNotifications => 'Уведомления';
+
+  @override
+  String get settingsNotificationsMilestones => 'Этапы восстановления';
+
+  @override
+  String get notificationChannel => 'Этапы восстановления';
+
+  @override
+  String get notificationChannelHint =>
+      'Редкие уведомления, когда здоровье делает очередной шаг';
+
+  @override
+  String get settingsNotificationsHint =>
+      'Редко и только по делу: когда здоровье делает очередной шаг. Ночью не беспокоим';
+
+  @override
   String get settingsSosExercise => 'Упражнение по умолчанию';
 
   @override

@@ -766,6 +766,36 @@ abstract class AppLocalizations {
   /// **'SOS'**
   String get settingsSos;
 
+  /// No description provided for @settingsNotifications.
+  ///
+  /// In ru, this message translates to:
+  /// **'Уведомления'**
+  String get settingsNotifications;
+
+  /// No description provided for @settingsNotificationsMilestones.
+  ///
+  /// In ru, this message translates to:
+  /// **'Этапы восстановления'**
+  String get settingsNotificationsMilestones;
+
+  /// No description provided for @notificationChannel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Этапы восстановления'**
+  String get notificationChannel;
+
+  /// No description provided for @notificationChannelHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Редкие уведомления, когда здоровье делает очередной шаг'**
+  String get notificationChannelHint;
+
+  /// No description provided for @settingsNotificationsHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Редко и только по делу: когда здоровье делает очередной шаг. Ночью не беспокоим'**
+  String get settingsNotificationsHint;
+
   /// No description provided for @settingsSosExercise.
   ///
   /// In ru, this message translates to:

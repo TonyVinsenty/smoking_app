@@ -76,6 +76,14 @@ class SettingsScreen extends ConsumerWidget {
             subtitle: Text(l.sosExerciseName(ref.watch(sosExerciseProvider).name)),
             onTap: () => showSosExercisePicker(context, ref),
           ),
+          header(l.settingsNotifications),
+          SwitchListTile(
+            secondary: const Icon(Icons.notifications_none),
+            title: Text(l.settingsNotificationsMilestones),
+            subtitle: Text(l.settingsNotificationsHint),
+            value: ref.watch(notificationsEnabledProvider),
+            onChanged: (on) => ref.read(notificationsEnabledProvider.notifier).set(on),
+          ),
           header(l.settingsData),
           if (current != null)
             ListTile(

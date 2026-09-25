@@ -58,3 +58,18 @@ class SosExerciseNotifier extends Notifier<SosExercise> {
 }
 
 final sosExerciseProvider = NotifierProvider<SosExerciseNotifier, SosExercise>(SosExerciseNotifier.new);
+
+class NotificationsEnabledNotifier extends Notifier<bool> {
+  static const _key = 'notifications';
+
+  @override
+  bool build() => ref.watch(prefsProvider).getBool(_key) ?? true;
+
+  void set(bool on) {
+    ref.read(prefsProvider).setBool(_key, on);
+    state = on;
+  }
+}
+
+/// Health-milestone notifications (on by default; rare and never at night).
+final notificationsEnabledProvider = NotifierProvider<NotificationsEnabledNotifier, bool>(NotificationsEnabledNotifier.new);

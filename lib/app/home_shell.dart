@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../content/content.dart';
+import 'notifications.dart';
 import '../data/providers.dart';
 import '../domain/achievements.dart';
 import '../features/health/achievement_celebration.dart';
@@ -100,6 +101,7 @@ class _HomeShellState extends ConsumerState<HomeShell> {
     ref.listen(articlesReadProvider, (_, _) => _checkAchievements());
     ref.listen(unlockedAchievementsProvider, (_, _) => _checkAchievements());
     ref.listen(contentProvider, (_, _) => _checkAchievements());
+    ref.watch(notificationSchedulerProvider);
     final l = AppLocalizations.of(context);
     return Scaffold(
       body: IndexedStack(index: _index, children: _screens),
