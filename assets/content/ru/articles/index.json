@@ -118,5 +118,85 @@
     "category": "vape",
     "readMinutes": 4,
     "file": "articles/vape_types_explained.md"
+  },
+  {
+    "id": "nrt_guide",
+    "title": "Никотинзаместительная терапия: пластыри, жвачка, спреи",
+    "summary": "Как выбрать форму НЗТ, с чего начать и как постепенно снижать дозу.",
+    "category": "therapy",
+    "readMinutes": 5,
+    "file": "articles/nrt_guide.md"
+  },
+  {
+    "id": "long_term_cravings",
+    "title": "Тяга через месяц, полгода, год: почему абстиненция не заканчивается на первой неделе",
+    "summary": "Почему желание закурить может возвращаться и спустя долгое время — и почему это не срыв.",
+    "category": "addiction",
+    "readMinutes": 4,
+    "file": "articles/long_term_cravings.md"
+  },
+  {
+    "id": "skin_and_teeth",
+    "title": "Кожа и зубы: что меняется после отказа",
+    "summary": "Как курение влияет на внешность и что заметно улучшается после отказа.",
+    "category": "health",
+    "readMinutes": 3,
+    "file": "articles/skin_and_teeth.md"
+  },
+  {
+    "id": "cough_after_quitting",
+    "title": "Кашель после отказа: почему усиливается и когда это нормально",
+    "summary": "Почему кашель может усилиться в первые недели и когда стоит обратиться к врачу.",
+    "category": "health",
+    "readMinutes": 4,
+    "file": "articles/cough_after_quitting.md"
+  },
+  {
+    "id": "anxiety_without_nicotine",
+    "title": "Тревога и раздражительность без никотина",
+    "summary": "Почему в первые недели меняется эмоциональное состояние и что с этим делать.",
+    "category": "health",
+    "readMinutes": 4,
+    "file": "articles/anxiety_without_nicotine.md"
+  },
+  {
+    "id": "first_week_plan",
+    "title": "Первая неделя по дням: с чего начать",
+    "summary": "Конкретный план на каждый день первой недели без сигарет.",
+    "category": "practice",
+    "readMinutes": 4,
+    "file": "articles/first_week_plan.md"
+  },
+  {
+    "id": "food_and_cravings",
+    "title": "Еда и тяга: как питаться в первые недели",
+    "summary": "Как отличить голод от тяги и что держать под рукой, чтобы не сорваться.",
+    "category": "practice",
+    "readMinutes": 4,
+    "file": "articles/food_and_cravings.md"
+  },
+  {
+    "id": "travel_and_holidays",
+    "title": "Отпуск, командировка, праздники: как удержаться вне привычного режима",
+    "summary": "Как подготовиться к поездкам и застольям, где риск сорваться выше обычного.",
+    "category": "practice",
+    "readMinutes": 4,
+    "file": "articles/travel_and_holidays.md"
+  },
+  {
+    "id": "asking_for_support",
+    "title": "Как попросить поддержки у близких",
+    "summary": "Конкретные формулировки, что попросить у близких и как об этом сказать.",
+    "category": "practice",
+    "readMinutes": 3,
+    "file": "articles/asking_for_support.md"
+  },
+  {
+    "id": "vaping_to_quit_myth",
+    "title": "Помогает ли вейп бросить курить",
+    "summary": "Честный разбор перехода на вейп как способа бросить курить — без осуждения, но с фактами.",
+    "category": "myths",
+    "readMinutes": 4,
+    "file": "articles/vaping_to_quit_myth.md"
   }
 ]

@@ -958,6 +958,24 @@ abstract class AppLocalizations {
   /// **'Мои данные'**
   String get settingsData;
 
+  /// No description provided for @settingsHabits.
+  ///
+  /// In ru, this message translates to:
+  /// **'Мои привычки'**
+  String get settingsHabits;
+
+  /// No description provided for @settingsHabitsHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Что и сколько вы курили, цены. По ним считается экономия текущей попытки'**
+  String get settingsHabitsHint;
+
+  /// No description provided for @settingsHabitsSaved.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сохранено. Экономия пересчитана'**
+  String get settingsHabitsSaved;
+
   /// No description provided for @settingsReset.
   ///
   /// In ru, this message translates to:
@@ -1044,7 +1062,7 @@ abstract class AppLocalizations {
   /// No description provided for @articleCategory.
   ///
   /// In ru, this message translates to:
-  /// **'{category, select, addiction{Зависимость} health{Здоровье} practice{Практика} myths{Мифы} vape{Вейпы и IQOS} money{Деньги} other{Другое}}'**
+  /// **'{category, select, addiction{Зависимость} health{Здоровье} practice{Практика} myths{Мифы} vape{Вейпы и IQOS} money{Деньги} therapy{Помощь и лечение} other{Другое}}'**
   String articleCategory(String category);
 
   /// No description provided for @articleMinutes.

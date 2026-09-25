@@ -751,6 +751,16 @@ class AppLocalizationsRu extends AppLocalizations {
   String get settingsData => 'Мои данные';
 
   @override
+  String get settingsHabits => 'Мои привычки';
+
+  @override
+  String get settingsHabitsHint =>
+      'Что и сколько вы курили, цены. По ним считается экономия текущей попытки';
+
+  @override
+  String get settingsHabitsSaved => 'Сохранено. Экономия пересчитана';
+
+  @override
   String get settingsReset => 'Полный сброс';
 
   @override
@@ -817,6 +827,7 @@ class AppLocalizationsRu extends AppLocalizations {
       'myths': 'Мифы',
       'vape': 'Вейпы и IQOS',
       'money': 'Деньги',
+      'therapy': 'Помощь и лечение',
       'other': 'Другое',
     });
     return '$_temp0';
