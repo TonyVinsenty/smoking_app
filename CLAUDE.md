@@ -36,7 +36,7 @@ Done: skeleton, onboarding, home (timer, savings, level/XP, quote — tap for ne
 Settings «Мои данные» → «Мои привычки» (edit products of current attempt via `db.replaceProducts`, snackbar).
 Notifications: health milestones ≥1 day scheduled ahead (lib/app/notifications.dart, one per moment, quiet hours 21–10 → 10:00, from 20:00 since Android may deliver ~1h late), Settings switch «Этапы восстановления» (on by default), permission asked on first home screen.
 Craving map («Карта тяги»): home card (resisted X of Y, most often part of day · trigger) → full screen (period 7d/30d/all, summary, time-of-day bars + peak hour, triggers, tip for top trigger from trigger_tips.json, weekdays; bars split resisted/smoked); logic in lib/domain/craving_stats.dart.
-Next: settings leftovers → device test (see Phases). Labels use gender-neutral forms («Я закурил(а)», «Тяга прошла!»).
+Next: MVP device test on a real phone, then phase 2 polish. Labels use gender-neutral forms («Я закурил(а)», «Тяга прошла!»).
 Dev notes: adb at D:/Android/Sdk/platform-tools/adb.exe (screenshots: `adb exec-out screencap -p`); run `flutter gen-l10n` after editing ARB, `dart run build_runner build` after DB changes; no Python on this machine; `kotlin.incremental=false` needed (C:/D: drives).
 
 ## Content
