@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/format.dart';
+import '../../data/database.dart';
 import '../../data/providers.dart';
 import '../../data/settings.dart';
 import '../../l10n/app_localizations.dart';
 import '../../domain/stats.dart';
+import '../onboarding/onboarding_screen.dart';
 import '../relapse/history_screen.dart';
 import '../relapse/relapse_screen.dart';
 import '../sos/sos_screen.dart';
@@ -75,6 +77,13 @@ class SettingsScreen extends ConsumerWidget {
             onTap: () => showSosExercisePicker(context, ref),
           ),
           header(l.settingsData),
+          if (current != null)
+            ListTile(
+              leading: const Icon(Icons.tune),
+              title: Text(l.settingsHabits),
+              subtitle: Text(l.settingsHabitsHint),
+              onTap: () => _editHabits(context, ref, current),
+            ),
           ListTile(
             leading: Icon(Icons.delete_forever_outlined, color: theme.colorScheme.error),
             title: Text(l.settingsReset, style: TextStyle(color: theme.colorScheme.error)),
@@ -84,6 +93,19 @@ class SettingsScreen extends ConsumerWidget {
         ],
       ),
     );
+  }
+
+  /// «Мои привычки»: edits the smoking habits of the current attempt; savings are recalculated from them.
+  Future<void> _editHabits(BuildContext context, WidgetRef ref, Attempt current) async {
+    final messenger = ScaffoldMessenger.of(context);
+    final saved = AppLocalizations.of(context).settingsHabitsSaved;
+    final products = await OnboardingScreen.editProducts(
+      context,
+      productsOf(ref.read(productsProvider).value ?? const [], current.id),
+    );
+    if (products == null) return;
+    await ref.read(databaseProvider).replaceProducts(current.id, products);
+    messenger.showSnackBar(SnackBar(content: Text(saved)));
   }
 
   Future<void> _confirmReset(BuildContext context, WidgetRef ref) async {
