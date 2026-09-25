@@ -80,9 +80,10 @@ class Notifications {
     }
   }
 
-  /// Moves a moment from the quiet hours (21:00–10:00) to the next 10:00.
+  /// Moves a moment from the quiet hours (21:00–10:00) to the next 10:00. Android may deliver
+  /// up to an hour late, so from 20:00 on it already counts as evening.
   static DateTime daytime(DateTime t) {
-    if (t.hour >= 10 && t.hour < 21) return t;
+    if (t.hour >= 10 && t.hour < 20) return t;
     final morning = DateTime(t.year, t.month, t.day, 10);
     return t.hour < 10 ? morning : DateTime(t.year, t.month, t.day + 1, 10);
   }

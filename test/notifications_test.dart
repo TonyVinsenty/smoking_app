@@ -6,6 +6,6 @@ void main() {
     expect(Notifications.daytime(DateTime(2026, 1, 5, 15, 30)), DateTime(2026, 1, 5, 15, 30));
     expect(Notifications.daytime(DateTime(2026, 1, 5, 3)), DateTime(2026, 1, 5, 10));
     expect(Notifications.daytime(DateTime(2026, 1, 5, 22)), DateTime(2026, 1, 6, 10));
-    expect(Notifications.daytime(DateTime(2026, 1, 31, 21)), DateTime(2026, 2, 1, 10));
+    expect(Notifications.daytime(DateTime(2026, 1, 31, 20, 30)), DateTime(2026, 2, 1, 10));
   });
 }
