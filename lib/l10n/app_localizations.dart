@@ -1124,6 +1124,138 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Статья носит справочный характер и не заменяет консультацию врача.'**
   String get articleDisclaimer;
+
+  /// No description provided for @cravingTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Карта тяги'**
+  String get cravingTitle;
+
+  /// No description provided for @cravingHomeEmpty.
+  ///
+  /// In ru, this message translates to:
+  /// **'Когда потянет курить — нажмите SOS. Здесь появится, когда и почему вас тянет чаще всего.'**
+  String get cravingHomeEmpty;
+
+  /// No description provided for @cravingResistedOf.
+  ///
+  /// In ru, this message translates to:
+  /// **'Справились: {resisted} из {total}'**
+  String cravingResistedOf(int resisted, int total);
+
+  /// No description provided for @cravingOften.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чаще всего — {part}'**
+  String cravingOften(String part);
+
+  /// No description provided for @dayPartWhen.
+  ///
+  /// In ru, this message translates to:
+  /// **'{part, select, morning{утром} afternoon{днём} evening{вечером} night{ночью} other{}}'**
+  String dayPartWhen(String part);
+
+  /// No description provided for @dayPartName.
+  ///
+  /// In ru, this message translates to:
+  /// **'{part, select, morning{Утро} afternoon{День} evening{Вечер} night{Ночь} other{}}'**
+  String dayPartName(String part);
+
+  /// No description provided for @dayPartHours.
+  ///
+  /// In ru, this message translates to:
+  /// **'{part, select, morning{6–12} afternoon{12–18} evening{18–24} night{0–6} other{}}'**
+  String dayPartHours(String part);
+
+  /// No description provided for @cravingPeriodWeek.
+  ///
+  /// In ru, this message translates to:
+  /// **'7 дней'**
+  String get cravingPeriodWeek;
+
+  /// No description provided for @cravingPeriodMonth.
+  ///
+  /// In ru, this message translates to:
+  /// **'30 дней'**
+  String get cravingPeriodMonth;
+
+  /// No description provided for @cravingPeriodAll.
+  ///
+  /// In ru, this message translates to:
+  /// **'Всё время'**
+  String get cravingPeriodAll;
+
+  /// No description provided for @cravingSummary.
+  ///
+  /// In ru, this message translates to:
+  /// **'{count, plural, one{раз тяга прошла без сигареты} few{раза тяга прошла без сигареты} many{раз тяга прошла без сигареты} other{раза тяга прошла без сигареты}}'**
+  String cravingSummary(int count);
+
+  /// No description provided for @cravingOfTotal.
+  ///
+  /// In ru, this message translates to:
+  /// **'из {total}'**
+  String cravingOfTotal(int total);
+
+  /// No description provided for @cravingTimeOfDay.
+  ///
+  /// In ru, this message translates to:
+  /// **'Время суток'**
+  String get cravingTimeOfDay;
+
+  /// No description provided for @cravingPeakHour.
+  ///
+  /// In ru, this message translates to:
+  /// **'Самый трудный час — около {from}:00–{to}:00'**
+  String cravingPeakHour(String from, String to);
+
+  /// No description provided for @cravingTriggers.
+  ///
+  /// In ru, this message translates to:
+  /// **'Поводы'**
+  String get cravingTriggers;
+
+  /// No description provided for @cravingNoTrigger.
+  ///
+  /// In ru, this message translates to:
+  /// **'Повод не указан'**
+  String get cravingNoTrigger;
+
+  /// No description provided for @cravingWeekdays.
+  ///
+  /// In ru, this message translates to:
+  /// **'Дни недели'**
+  String get cravingWeekdays;
+
+  /// No description provided for @cravingTipTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чаще всего повод — «{trigger}»'**
+  String cravingTipTitle(String trigger);
+
+  /// No description provided for @cravingLegendResisted.
+  ///
+  /// In ru, this message translates to:
+  /// **'справились'**
+  String get cravingLegendResisted;
+
+  /// No description provided for @cravingLegendSmoked.
+  ///
+  /// In ru, this message translates to:
+  /// **'закурили'**
+  String get cravingLegendSmoked;
+
+  /// No description provided for @cravingNoData.
+  ///
+  /// In ru, this message translates to:
+  /// **'За этот период записей нет. Когда потянет курить, нажмите SOS — каждая запись делает карту точнее.'**
+  String get cravingNoData;
+
+  /// No description provided for @cravingSource.
+  ///
+  /// In ru, this message translates to:
+  /// **'Карта строится по нажатиям SOS и записям «Я закурил(а)». Все данные хранятся только на вашем телефоне.'**
+  String get cravingSource;
 }
 
 class _AppLocalizationsDelegate

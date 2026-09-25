@@ -867,4 +867,120 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get articleDisclaimer =>
       'Статья носит справочный характер и не заменяет консультацию врача.';
+
+  @override
+  String get cravingTitle => 'Карта тяги';
+
+  @override
+  String get cravingHomeEmpty =>
+      'Когда потянет курить — нажмите SOS. Здесь появится, когда и почему вас тянет чаще всего.';
+
+  @override
+  String cravingResistedOf(int resisted, int total) {
+    return 'Справились: $resisted из $total';
+  }
+
+  @override
+  String cravingOften(String part) {
+    return 'Чаще всего — $part';
+  }
+
+  @override
+  String dayPartWhen(String part) {
+    String _temp0 = intl.Intl.selectLogic(part, {
+      'morning': 'утром',
+      'afternoon': 'днём',
+      'evening': 'вечером',
+      'night': 'ночью',
+      'other': '',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String dayPartName(String part) {
+    String _temp0 = intl.Intl.selectLogic(part, {
+      'morning': 'Утро',
+      'afternoon': 'День',
+      'evening': 'Вечер',
+      'night': 'Ночь',
+      'other': '',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String dayPartHours(String part) {
+    String _temp0 = intl.Intl.selectLogic(part, {
+      'morning': '6–12',
+      'afternoon': '12–18',
+      'evening': '18–24',
+      'night': '0–6',
+      'other': '',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String get cravingPeriodWeek => '7 дней';
+
+  @override
+  String get cravingPeriodMonth => '30 дней';
+
+  @override
+  String get cravingPeriodAll => 'Всё время';
+
+  @override
+  String cravingSummary(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'раза тяга прошла без сигареты',
+      many: 'раз тяга прошла без сигареты',
+      few: 'раза тяга прошла без сигареты',
+      one: 'раз тяга прошла без сигареты',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String cravingOfTotal(int total) {
+    return 'из $total';
+  }
+
+  @override
+  String get cravingTimeOfDay => 'Время суток';
+
+  @override
+  String cravingPeakHour(String from, String to) {
+    return 'Самый трудный час — около $from:00–$to:00';
+  }
+
+  @override
+  String get cravingTriggers => 'Поводы';
+
+  @override
+  String get cravingNoTrigger => 'Повод не указан';
+
+  @override
+  String get cravingWeekdays => 'Дни недели';
+
+  @override
+  String cravingTipTitle(String trigger) {
+    return 'Чаще всего повод — «$trigger»';
+  }
+
+  @override
+  String get cravingLegendResisted => 'справились';
+
+  @override
+  String get cravingLegendSmoked => 'закурили';
+
+  @override
+  String get cravingNoData =>
+      'За этот период записей нет. Когда потянет курить, нажмите SOS — каждая запись делает карту точнее.';
+
+  @override
+  String get cravingSource =>
+      'Карта строится по нажатиям SOS и записям «Я закурил(а)». Все данные хранятся только на вашем телефоне.';
 }

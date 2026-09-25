@@ -5,8 +5,10 @@ import 'package:intl/intl.dart';
 import '../../content/content.dart';
 import '../../data/database.dart';
 import '../../data/providers.dart';
+import '../../domain/craving_stats.dart';
 import '../../domain/stats.dart';
 import '../../l10n/app_localizations.dart';
+import '../cravings/craving_map_screen.dart';
 import '../relapse/new_attempt.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -48,6 +50,8 @@ class HomeScreen extends ConsumerWidget {
             _SavingsCard(products: productsOf(products, current.id), attempt: current, now: now),
           ] else
             const _NoAttemptCard(),
+          const SizedBox(height: 12),
+          _CravingCard(stats: CravingStats(cravings)),
           const SizedBox(height: 12),
           _LevelCard(content: content, xp: xp),
           const SizedBox(height: 12),
@@ -434,6 +438,55 @@ class _NoAttemptCard extends ConsumerWidget {
               child: Text(l.homeStartAttempt),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Short summary of the craving map; opens the full screen.
+class _CravingCard extends StatelessWidget {
+  const _CravingCard({required this.stats});
+
+  final CravingStats stats;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    final part = stats.topPart;
+    final trigger = stats.topTrigger;
+    final often = [
+      if (part != null) l.dayPartWhen(part.name),
+      if (trigger != null) l.triggerName(trigger.name).toLowerCase(),
+    ].join(' · ');
+    return Card(
+      color: theme.colorScheme.surfaceContainerHigh,
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: () => Navigator.push(context, MaterialPageRoute<void>(builder: (_) => const CravingMapScreen())),
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(Icons.insights, color: theme.colorScheme.primary),
+                  const SizedBox(width: 8),
+                  Expanded(child: Text(l.cravingTitle, style: theme.textTheme.labelLarge)),
+                  Icon(Icons.chevron_right, color: theme.colorScheme.primary),
+                ],
+              ),
+              const SizedBox(height: 8),
+              if (stats.isEmpty)
+                Text(l.cravingHomeEmpty, style: theme.textTheme.bodyMedium)
+              else ...[
+                Text(l.cravingResistedOf(stats.summary.resisted, stats.summary.total), style: theme.textTheme.titleLarge),
+                if (often.isNotEmpty) Text(l.cravingOften(often), style: theme.textTheme.bodyMedium),
+              ],
+            ],
+          ),
         ),
       ),
     );

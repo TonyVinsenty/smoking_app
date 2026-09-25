@@ -99,6 +99,7 @@ class AppContent {
     required this.milestones,
     required this.quotes,
     required this.sosTips,
+    required this.triggerTips,
     required this.articles,
   });
 
@@ -107,6 +108,9 @@ class AppContent {
   final List<HealthMilestone> milestones;
   final List<Quote> quotes;
   final List<String> sosTips;
+
+  /// Advice for the most frequent craving trigger, keyed by `Trigger.name`.
+  final Map<String, String> triggerTips;
 
   /// Published articles (those with a file), in index order.
   final List<Article> articles;
@@ -127,6 +131,7 @@ final contentProvider = FutureProvider<AppContent>((ref) async {
     _loadList('quotes.json'),
     _loadList('sos_tips.json'),
     _loadList('articles/index.json'),
+    _loadList('trigger_tips.json'),
   ]);
   return AppContent(
     levels: results[0].map(Level.fromJson).toList()..sort((a, b) => a.level.compareTo(b.level)),
@@ -136,6 +141,7 @@ final contentProvider = FutureProvider<AppContent>((ref) async {
     quotes: results[3].map(Quote.fromJson).toList(),
     sosTips: [for (final t in results[4]) t['text'] as String],
     articles: [for (final a in results[5].map(Article.fromJson)) if (a.file != null) a],
+    triggerTips: {for (final t in results[6]) t['trigger'] as String: t['text'] as String},
   );
 });
 
