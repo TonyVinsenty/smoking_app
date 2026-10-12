@@ -652,6 +652,107 @@ class AppLocalizationsRu extends AppLocalizations {
       'Начните новую попытку на главном экране — и здесь появится счёт.';
 
   @override
+  String get diaryChannel => 'Дневник самочувствия';
+
+  @override
+  String get diaryChannelHint => 'Напоминания заполнить дневник';
+
+  @override
+  String get diaryNotificationTitle => 'Как вы себя чувствуете?';
+
+  @override
+  String get diaryNotificationBody =>
+      'Пара отметок в дневнике самочувствия — и будет видно, как становится лучше.';
+
+  @override
+  String get settingsDiaryReminder => 'Напоминать о Дневнике самочувствия';
+
+  @override
+  String get settingsDiaryReminderHint =>
+      'Красная точка на «Здоровье», когда пора заполнить';
+
+  @override
+  String get settingsDiaryPeriod => 'Как часто';
+
+  @override
+  String get settingsDiaryTime => 'Во сколько';
+
+  @override
+  String diaryPeriod(String days) {
+    String _temp0 = intl.Intl.selectLogic(days, {
+      '1': 'Каждый день',
+      '3': 'Раз в 3 дня',
+      'other': 'Раз в неделю',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String get diaryIntro =>
+      'Отмечайте время от времени, как вы себя чувствуете, — и график покажет, как становится лучше.';
+
+  @override
+  String get diaryHowNow => 'Как вы сейчас?';
+
+  @override
+  String diaryQuestion(String q) {
+    String _temp0 = intl.Intl.selectLogic(q, {
+      'sleep': 'Сон',
+      'breathing': 'Дыхание',
+      'mood': 'Настроение',
+      'other': 'Вкус и запах',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String diaryScale(String v) {
+    String _temp0 = intl.Intl.selectLogic(v, {
+      '1': 'Плохо',
+      '2': 'Так себе',
+      '3': 'Нормально',
+      '4': 'Хорошо',
+      'other': 'Отлично',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String get diarySave => 'Записать';
+
+  @override
+  String get diarySaved => 'Записано. Спасибо!';
+
+  @override
+  String get diaryDoneToday => 'Сегодня уже записано';
+
+  @override
+  String get diaryAgain => 'Записать ещё раз';
+
+  @override
+  String diaryNext(String date) {
+    return 'Следующая запись — $date';
+  }
+
+  @override
+  String get diaryChart => 'Как меняется самочувствие';
+
+  @override
+  String get diaryChartEmpty => 'График появится после двух записей.';
+
+  @override
+  String diaryChange(int first, int last) {
+    return '$first → $last';
+  }
+
+  @override
+  String get diaryRemindHint =>
+      'Напоминания можно включить в Настройках → Уведомления.';
+
+  @override
+  String get diaryLocalNote => 'Дневник хранится только на этом телефоне.';
+
+  @override
   String achUnlockedCount(int unlocked, int total, int percent) {
     return 'Открыто $unlocked из $total ($percent%)';
   }

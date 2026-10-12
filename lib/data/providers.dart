@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../domain/stats.dart';
 import 'database.dart';
+import 'settings.dart';
 
 final databaseProvider = Provider<AppDatabase>((ref) {
   final db = AppDatabase();
@@ -49,4 +50,19 @@ final mainProductProvider = Provider<ProductType?>((ref) {
   final attempts = ref.watch(attemptsProvider).value;
   if (products == null || attempts == null) return null;
   return mainProduct(latestProducts(products, attempts));
+});
+
+/// «Дневник самочувствия», oldest first.
+final wellbeingProvider = StreamProvider<List<WellbeingEntry>>((ref) {
+  final db = ref.watch(databaseProvider);
+  return (db.select(db.wellbeingEntries)..orderBy([(e) => OrderingTerm.asc(e.at)])).watch();
+});
+
+/// Red dots on «Здоровье» and «Дневник»: reminders are on and a diary entry is due.
+final diaryDueProvider = Provider<bool>((ref) {
+  final entries = ref.watch(wellbeingProvider).value;
+  if (entries == null) return false;
+  final due = ref.watch(diaryReminderProvider).dueAt(entries.lastOrNull?.at);
+  final now = ref.watch(nowProvider).value ?? DateTime.now();
+  return due != null && !now.isBefore(due);
 });

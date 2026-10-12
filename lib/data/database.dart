@@ -75,12 +75,22 @@ class ArticlesRead extends Table {
   Set<Column> get primaryKey => {articleId};
 }
 
-@DriftDatabase(tables: [Attempts, SmokingProducts, Cravings, UnlockedAchievements, ArticlesRead])
+/// «Дневник самочувствия»: how the user feels, each answer on a 1–5 scale (5 = best).
+class WellbeingEntries extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  DateTimeColumn get at => dateTime()();
+  IntColumn get sleep => integer()();
+  IntColumn get breathing => integer()();
+  IntColumn get mood => integer()();
+  IntColumn get tasteSmell => integer()();
+}
+
+@DriftDatabase(tables: [Attempts, SmokingProducts, Cravings, UnlockedAchievements, ArticlesRead, WellbeingEntries])
 class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? driftDatabase(name: 'smoking_app'));
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -95,6 +105,7 @@ class AppDatabase extends _$AppDatabase {
         );
         await customStatement('DELETE FROM smoking_products WHERE attempt_id IS NULL');
       }
+      if (from < 3) await m.createTable(wellbeingEntries);
     },
   );
 
@@ -108,7 +119,9 @@ class AppDatabase extends _$AppDatabase {
   Future<int> startAttempt(DateTime startedAt, List<SmokingProductsCompanion> products) => transaction(() async {
     final id = await into(attempts).insert(AttemptsCompanion.insert(startedAt: startedAt));
     await batch(
-      (b) => b.insertAll(smokingProducts, [for (final p in products) p.copyWith(id: const Value.absent(), attemptId: Value(id))]),
+      (b) => b.insertAll(smokingProducts, [
+        for (final p in products) p.copyWith(id: const Value.absent(), attemptId: Value(id)),
+      ]),
     );
     return id;
   });
@@ -117,7 +130,9 @@ class AppDatabase extends _$AppDatabase {
   Future<void> replaceProducts(int attemptId, List<SmokingProductsCompanion> products) => transaction(() async {
     await (delete(smokingProducts)..where((p) => p.attemptId.equals(attemptId))).go();
     await batch(
-      (b) => b.insertAll(smokingProducts, [for (final p in products) p.copyWith(id: const Value.absent(), attemptId: Value(attemptId))]),
+      (b) => b.insertAll(smokingProducts, [
+        for (final p in products) p.copyWith(id: const Value.absent(), attemptId: Value(attemptId)),
+      ]),
     );
   });
 
@@ -163,6 +178,17 @@ class AppDatabase extends _$AppDatabase {
     ArticlesReadCompanion.insert(articleId: articleId, readAt: DateTime.now()),
     mode: InsertMode.insertOrIgnore,
   );
+
+  Future<void> addWellbeing({required int sleep, required int breathing, required int mood, required int tasteSmell}) =>
+      into(wellbeingEntries).insert(
+        WellbeingEntriesCompanion.insert(
+          at: DateTime.now(),
+          sleep: sleep,
+          breathing: breathing,
+          mood: mood,
+          tasteSmell: tasteSmell,
+        ),
+      );
 
   /// Wipes all user data («Полный сброс»).
   Future<void> resetAll() => transaction(() async {

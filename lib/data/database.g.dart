@@ -1805,6 +1805,398 @@ class ArticlesReadCompanion extends UpdateCompanion<ArticlesReadData> {
   }
 }
 
+class $WellbeingEntriesTable extends WellbeingEntries
+    with TableInfo<$WellbeingEntriesTable, WellbeingEntry> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $WellbeingEntriesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _atMeta = const VerificationMeta('at');
+  @override
+  late final GeneratedColumn<DateTime> at = GeneratedColumn<DateTime>(
+    'at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _sleepMeta = const VerificationMeta('sleep');
+  @override
+  late final GeneratedColumn<int> sleep = GeneratedColumn<int>(
+    'sleep',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _breathingMeta = const VerificationMeta(
+    'breathing',
+  );
+  @override
+  late final GeneratedColumn<int> breathing = GeneratedColumn<int>(
+    'breathing',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _moodMeta = const VerificationMeta('mood');
+  @override
+  late final GeneratedColumn<int> mood = GeneratedColumn<int>(
+    'mood',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _tasteSmellMeta = const VerificationMeta(
+    'tasteSmell',
+  );
+  @override
+  late final GeneratedColumn<int> tasteSmell = GeneratedColumn<int>(
+    'taste_smell',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    at,
+    sleep,
+    breathing,
+    mood,
+    tasteSmell,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'wellbeing_entries';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<WellbeingEntry> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('at')) {
+      context.handle(_atMeta, at.isAcceptableOrUnknown(data['at']!, _atMeta));
+    } else if (isInserting) {
+      context.missing(_atMeta);
+    }
+    if (data.containsKey('sleep')) {
+      context.handle(
+        _sleepMeta,
+        sleep.isAcceptableOrUnknown(data['sleep']!, _sleepMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_sleepMeta);
+    }
+    if (data.containsKey('breathing')) {
+      context.handle(
+        _breathingMeta,
+        breathing.isAcceptableOrUnknown(data['breathing']!, _breathingMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_breathingMeta);
+    }
+    if (data.containsKey('mood')) {
+      context.handle(
+        _moodMeta,
+        mood.isAcceptableOrUnknown(data['mood']!, _moodMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_moodMeta);
+    }
+    if (data.containsKey('taste_smell')) {
+      context.handle(
+        _tasteSmellMeta,
+        tasteSmell.isAcceptableOrUnknown(data['taste_smell']!, _tasteSmellMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_tasteSmellMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  WellbeingEntry map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return WellbeingEntry(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      at: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}at'],
+      )!,
+      sleep: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}sleep'],
+      )!,
+      breathing: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}breathing'],
+      )!,
+      mood: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}mood'],
+      )!,
+      tasteSmell: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}taste_smell'],
+      )!,
+    );
+  }
+
+  @override
+  $WellbeingEntriesTable createAlias(String alias) {
+    return $WellbeingEntriesTable(attachedDatabase, alias);
+  }
+}
+
+class WellbeingEntry extends DataClass implements Insertable<WellbeingEntry> {
+  final int id;
+  final DateTime at;
+  final int sleep;
+  final int breathing;
+  final int mood;
+  final int tasteSmell;
+  const WellbeingEntry({
+    required this.id,
+    required this.at,
+    required this.sleep,
+    required this.breathing,
+    required this.mood,
+    required this.tasteSmell,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['at'] = Variable<DateTime>(at);
+    map['sleep'] = Variable<int>(sleep);
+    map['breathing'] = Variable<int>(breathing);
+    map['mood'] = Variable<int>(mood);
+    map['taste_smell'] = Variable<int>(tasteSmell);
+    return map;
+  }
+
+  WellbeingEntriesCompanion toCompanion(bool nullToAbsent) {
+    return WellbeingEntriesCompanion(
+      id: Value(id),
+      at: Value(at),
+      sleep: Value(sleep),
+      breathing: Value(breathing),
+      mood: Value(mood),
+      tasteSmell: Value(tasteSmell),
+    );
+  }
+
+  factory WellbeingEntry.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return WellbeingEntry(
+      id: serializer.fromJson<int>(json['id']),
+      at: serializer.fromJson<DateTime>(json['at']),
+      sleep: serializer.fromJson<int>(json['sleep']),
+      breathing: serializer.fromJson<int>(json['breathing']),
+      mood: serializer.fromJson<int>(json['mood']),
+      tasteSmell: serializer.fromJson<int>(json['tasteSmell']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'at': serializer.toJson<DateTime>(at),
+      'sleep': serializer.toJson<int>(sleep),
+      'breathing': serializer.toJson<int>(breathing),
+      'mood': serializer.toJson<int>(mood),
+      'tasteSmell': serializer.toJson<int>(tasteSmell),
+    };
+  }
+
+  WellbeingEntry copyWith({
+    int? id,
+    DateTime? at,
+    int? sleep,
+    int? breathing,
+    int? mood,
+    int? tasteSmell,
+  }) => WellbeingEntry(
+    id: id ?? this.id,
+    at: at ?? this.at,
+    sleep: sleep ?? this.sleep,
+    breathing: breathing ?? this.breathing,
+    mood: mood ?? this.mood,
+    tasteSmell: tasteSmell ?? this.tasteSmell,
+  );
+  WellbeingEntry copyWithCompanion(WellbeingEntriesCompanion data) {
+    return WellbeingEntry(
+      id: data.id.present ? data.id.value : this.id,
+      at: data.at.present ? data.at.value : this.at,
+      sleep: data.sleep.present ? data.sleep.value : this.sleep,
+      breathing: data.breathing.present ? data.breathing.value : this.breathing,
+      mood: data.mood.present ? data.mood.value : this.mood,
+      tasteSmell: data.tasteSmell.present
+          ? data.tasteSmell.value
+          : this.tasteSmell,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('WellbeingEntry(')
+          ..write('id: $id, ')
+          ..write('at: $at, ')
+          ..write('sleep: $sleep, ')
+          ..write('breathing: $breathing, ')
+          ..write('mood: $mood, ')
+          ..write('tasteSmell: $tasteSmell')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, at, sleep, breathing, mood, tasteSmell);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is WellbeingEntry &&
+          other.id == this.id &&
+          other.at == this.at &&
+          other.sleep == this.sleep &&
+          other.breathing == this.breathing &&
+          other.mood == this.mood &&
+          other.tasteSmell == this.tasteSmell);
+}
+
+class WellbeingEntriesCompanion extends UpdateCompanion<WellbeingEntry> {
+  final Value<int> id;
+  final Value<DateTime> at;
+  final Value<int> sleep;
+  final Value<int> breathing;
+  final Value<int> mood;
+  final Value<int> tasteSmell;
+  const WellbeingEntriesCompanion({
+    this.id = const Value.absent(),
+    this.at = const Value.absent(),
+    this.sleep = const Value.absent(),
+    this.breathing = const Value.absent(),
+    this.mood = const Value.absent(),
+    this.tasteSmell = const Value.absent(),
+  });
+  WellbeingEntriesCompanion.insert({
+    this.id = const Value.absent(),
+    required DateTime at,
+    required int sleep,
+    required int breathing,
+    required int mood,
+    required int tasteSmell,
+  }) : at = Value(at),
+       sleep = Value(sleep),
+       breathing = Value(breathing),
+       mood = Value(mood),
+       tasteSmell = Value(tasteSmell);
+  static Insertable<WellbeingEntry> custom({
+    Expression<int>? id,
+    Expression<DateTime>? at,
+    Expression<int>? sleep,
+    Expression<int>? breathing,
+    Expression<int>? mood,
+    Expression<int>? tasteSmell,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (at != null) 'at': at,
+      if (sleep != null) 'sleep': sleep,
+      if (breathing != null) 'breathing': breathing,
+      if (mood != null) 'mood': mood,
+      if (tasteSmell != null) 'taste_smell': tasteSmell,
+    });
+  }
+
+  WellbeingEntriesCompanion copyWith({
+    Value<int>? id,
+    Value<DateTime>? at,
+    Value<int>? sleep,
+    Value<int>? breathing,
+    Value<int>? mood,
+    Value<int>? tasteSmell,
+  }) {
+    return WellbeingEntriesCompanion(
+      id: id ?? this.id,
+      at: at ?? this.at,
+      sleep: sleep ?? this.sleep,
+      breathing: breathing ?? this.breathing,
+      mood: mood ?? this.mood,
+      tasteSmell: tasteSmell ?? this.tasteSmell,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (at.present) {
+      map['at'] = Variable<DateTime>(at.value);
+    }
+    if (sleep.present) {
+      map['sleep'] = Variable<int>(sleep.value);
+    }
+    if (breathing.present) {
+      map['breathing'] = Variable<int>(breathing.value);
+    }
+    if (mood.present) {
+      map['mood'] = Variable<int>(mood.value);
+    }
+    if (tasteSmell.present) {
+      map['taste_smell'] = Variable<int>(tasteSmell.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('WellbeingEntriesCompanion(')
+          ..write('id: $id, ')
+          ..write('at: $at, ')
+          ..write('sleep: $sleep, ')
+          ..write('breathing: $breathing, ')
+          ..write('mood: $mood, ')
+          ..write('tasteSmell: $tasteSmell')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -1816,6 +2208,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $UnlockedAchievementsTable unlockedAchievements =
       $UnlockedAchievementsTable(this);
   late final $ArticlesReadTable articlesRead = $ArticlesReadTable(this);
+  late final $WellbeingEntriesTable wellbeingEntries = $WellbeingEntriesTable(
+    this,
+  );
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -1826,6 +2221,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     cravings,
     unlockedAchievements,
     articlesRead,
+    wellbeingEntries,
   ];
 }
 
@@ -3491,6 +3887,236 @@ typedef $$ArticlesReadTableProcessedTableManager =
       ArticlesReadData,
       PrefetchHooks Function()
     >;
+typedef $$WellbeingEntriesTableCreateCompanionBuilder =
+    WellbeingEntriesCompanion Function({
+      Value<int> id,
+      required DateTime at,
+      required int sleep,
+      required int breathing,
+      required int mood,
+      required int tasteSmell,
+    });
+typedef $$WellbeingEntriesTableUpdateCompanionBuilder =
+    WellbeingEntriesCompanion Function({
+      Value<int> id,
+      Value<DateTime> at,
+      Value<int> sleep,
+      Value<int> breathing,
+      Value<int> mood,
+      Value<int> tasteSmell,
+    });
+
+class $$WellbeingEntriesTableFilterComposer
+    extends Composer<_$AppDatabase, $WellbeingEntriesTable> {
+  $$WellbeingEntriesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get at => $composableBuilder(
+    column: $table.at,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get sleep => $composableBuilder(
+    column: $table.sleep,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get breathing => $composableBuilder(
+    column: $table.breathing,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get mood => $composableBuilder(
+    column: $table.mood,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get tasteSmell => $composableBuilder(
+    column: $table.tasteSmell,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$WellbeingEntriesTableOrderingComposer
+    extends Composer<_$AppDatabase, $WellbeingEntriesTable> {
+  $$WellbeingEntriesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get at => $composableBuilder(
+    column: $table.at,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get sleep => $composableBuilder(
+    column: $table.sleep,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get breathing => $composableBuilder(
+    column: $table.breathing,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get mood => $composableBuilder(
+    column: $table.mood,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get tasteSmell => $composableBuilder(
+    column: $table.tasteSmell,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$WellbeingEntriesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $WellbeingEntriesTable> {
+  $$WellbeingEntriesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get at =>
+      $composableBuilder(column: $table.at, builder: (column) => column);
+
+  GeneratedColumn<int> get sleep =>
+      $composableBuilder(column: $table.sleep, builder: (column) => column);
+
+  GeneratedColumn<int> get breathing =>
+      $composableBuilder(column: $table.breathing, builder: (column) => column);
+
+  GeneratedColumn<int> get mood =>
+      $composableBuilder(column: $table.mood, builder: (column) => column);
+
+  GeneratedColumn<int> get tasteSmell => $composableBuilder(
+    column: $table.tasteSmell,
+    builder: (column) => column,
+  );
+}
+
+class $$WellbeingEntriesTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $WellbeingEntriesTable,
+          WellbeingEntry,
+          $$WellbeingEntriesTableFilterComposer,
+          $$WellbeingEntriesTableOrderingComposer,
+          $$WellbeingEntriesTableAnnotationComposer,
+          $$WellbeingEntriesTableCreateCompanionBuilder,
+          $$WellbeingEntriesTableUpdateCompanionBuilder,
+          (
+            WellbeingEntry,
+            BaseReferences<
+              _$AppDatabase,
+              $WellbeingEntriesTable,
+              WellbeingEntry
+            >,
+          ),
+          WellbeingEntry,
+          PrefetchHooks Function()
+        > {
+  $$WellbeingEntriesTableTableManager(
+    _$AppDatabase db,
+    $WellbeingEntriesTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$WellbeingEntriesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$WellbeingEntriesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$WellbeingEntriesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<DateTime> at = const Value.absent(),
+                Value<int> sleep = const Value.absent(),
+                Value<int> breathing = const Value.absent(),
+                Value<int> mood = const Value.absent(),
+                Value<int> tasteSmell = const Value.absent(),
+              }) => WellbeingEntriesCompanion(
+                id: id,
+                at: at,
+                sleep: sleep,
+                breathing: breathing,
+                mood: mood,
+                tasteSmell: tasteSmell,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required DateTime at,
+                required int sleep,
+                required int breathing,
+                required int mood,
+                required int tasteSmell,
+              }) => WellbeingEntriesCompanion.insert(
+                id: id,
+                at: at,
+                sleep: sleep,
+                breathing: breathing,
+                mood: mood,
+                tasteSmell: tasteSmell,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$WellbeingEntriesTable, WellbeingEntry>(table),
+                  BaseReferences<
+                    _$AppDatabase,
+                    $WellbeingEntriesTable,
+                    WellbeingEntry
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$WellbeingEntriesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $WellbeingEntriesTable,
+      WellbeingEntry,
+      $$WellbeingEntriesTableFilterComposer,
+      $$WellbeingEntriesTableOrderingComposer,
+      $$WellbeingEntriesTableAnnotationComposer,
+      $$WellbeingEntriesTableCreateCompanionBuilder,
+      $$WellbeingEntriesTableUpdateCompanionBuilder,
+      (
+        WellbeingEntry,
+        BaseReferences<_$AppDatabase, $WellbeingEntriesTable, WellbeingEntry>,
+      ),
+      WellbeingEntry,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -3505,4 +4131,6 @@ class $AppDatabaseManager {
       $$UnlockedAchievementsTableTableManager(_db, _db.unlockedAchievements);
   $$ArticlesReadTableTableManager get articlesRead =>
       $$ArticlesReadTableTableManager(_db, _db.articlesRead);
+  $$WellbeingEntriesTableTableManager get wellbeingEntries =>
+      $$WellbeingEntriesTableTableManager(_db, _db.wellbeingEntries);
 }

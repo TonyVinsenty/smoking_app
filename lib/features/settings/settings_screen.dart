@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/widgets/toast.dart';
+import '../../app/widgets/wheel_time_picker.dart';
 import '../../app/format.dart';
 import '../../data/database.dart';
 import '../../data/providers.dart';
@@ -78,6 +79,7 @@ class SettingsScreen extends ConsumerWidget {
             value: ref.watch(notificationsEnabledProvider),
             onChanged: (on) => ref.read(notificationsEnabledProvider.notifier).set(on),
           ),
+          ..._diaryReminder(context, ref),
           header(l.settingsData),
           if (current != null)
             ListTile(
@@ -95,6 +97,60 @@ class SettingsScreen extends ConsumerWidget {
         ],
       ),
     );
+  }
+
+  /// Checkbox for «Дневник самочувствия» reminders; once on, how often and at what time.
+  List<Widget> _diaryReminder(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context);
+    final r = ref.watch(diaryReminderProvider);
+    void set(DiaryReminder value) => ref.read(diaryReminderProvider.notifier).set(value);
+    return [
+      CheckboxListTile(
+        secondary: const Icon(Icons.edit_calendar_outlined),
+        title: Text(l.settingsDiaryReminder),
+        subtitle: Text(l.settingsDiaryReminderHint),
+        value: r.enabled,
+        onChanged: (on) => set(r.copyWith(enabled: on)),
+      ),
+      if (r.enabled) ...[
+        ListTile(
+          contentPadding: const EdgeInsets.only(left: 72, right: 16),
+          title: Text(l.settingsDiaryPeriod),
+          subtitle: Text(l.diaryPeriod('${r.periodDays}')),
+          onTap: () async {
+            final days = await showDialog<int>(
+              context: context,
+              builder: (context) => SimpleDialog(
+                title: Text(l.settingsDiaryPeriod),
+                children: [
+                  RadioGroup<int>(
+                    groupValue: r.periodDays,
+                    onChanged: (v) => Navigator.pop(context, v),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        for (final d in DiaryReminder.periods)
+                          RadioListTile<int>(value: d, title: Text(l.diaryPeriod('$d'))),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            );
+            if (days != null) set(r.copyWith(periodDays: days));
+          },
+        ),
+        ListTile(
+          contentPadding: const EdgeInsets.only(left: 72, right: 16),
+          title: Text(l.settingsDiaryTime),
+          subtitle: Text(r.time.format(context)),
+          onTap: () async {
+            final time = await showWheelTimePicker(context, initialTime: r.time, title: l.settingsDiaryTime);
+            if (time != null) set(r.copyWith(time: time));
+          },
+        ),
+      ],
+    ];
   }
 
   /// «Мои привычки»: edits the smoking habits of the current attempt; savings are recalculated from them.

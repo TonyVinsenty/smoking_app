@@ -83,3 +83,54 @@ class ExpandedSectionsNotifier extends Notifier<Set<String>> {
 final expandedSectionsProvider = NotifierProvider.family<ExpandedSectionsNotifier, Set<String>, String>(
   ExpandedSectionsNotifier.new,
 );
+
+/// Reminders to fill in «Дневник самочувствия»: off by default; every [periodDays] days at [time].
+class DiaryReminder {
+  const DiaryReminder({this.enabled = false, this.periodDays = 1, this.time = const TimeOfDay(hour: 20, minute: 0)});
+
+  static const periods = [1, 3, 7];
+
+  final bool enabled;
+  final int periodDays;
+  final TimeOfDay time;
+
+  /// When the next entry is due: [periodDays] after the last entry's day, at [time]; right away if there is none.
+  DateTime? dueAt(DateTime? lastEntry) {
+    if (!enabled) return null;
+    if (lastEntry == null) return DateTime(2000, 1, 1, time.hour, time.minute);
+    return DateTime(lastEntry.year, lastEntry.month, lastEntry.day + periodDays, time.hour, time.minute);
+  }
+
+  DiaryReminder copyWith({bool? enabled, int? periodDays, TimeOfDay? time}) => DiaryReminder(
+    enabled: enabled ?? this.enabled,
+    periodDays: periodDays ?? this.periodDays,
+    time: time ?? this.time,
+  );
+}
+
+class DiaryReminderNotifier extends Notifier<DiaryReminder> {
+  static const _key = 'diaryReminder';
+
+  @override
+  DiaryReminder build() {
+    final saved = ref.watch(prefsProvider).getStringList(_key);
+    if (saved == null || saved.length != 3) return const DiaryReminder();
+    final minutes = int.tryParse(saved[2]) ?? 20 * 60;
+    return DiaryReminder(
+      enabled: saved[0] == 'true',
+      periodDays: int.tryParse(saved[1]) ?? 1,
+      time: TimeOfDay(hour: minutes ~/ 60, minute: minutes % 60),
+    );
+  }
+
+  void set(DiaryReminder r) {
+    ref.read(prefsProvider).setStringList(_key, [
+      '${r.enabled}',
+      '${r.periodDays}',
+      '${r.time.hour * 60 + r.time.minute}',
+    ]);
+    state = r;
+  }
+}
+
+final diaryReminderProvider = NotifierProvider<DiaryReminderNotifier, DiaryReminder>(DiaryReminderNotifier.new);

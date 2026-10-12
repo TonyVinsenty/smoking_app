@@ -15,13 +15,16 @@ class Notifications {
   static final _plugin = FlutterLocalNotificationsPlugin();
   static bool _ready = false;
 
-  static NotificationDetails get _details {
+  /// Milestone notifications use their minute count (a day or more) as id.
+  static const _diaryId = 1;
+
+  static NotificationDetails _details({bool diary = false}) {
     final l = lookupAppLocalizations(const Locale('ru'));
     return NotificationDetails(
       android: AndroidNotificationDetails(
-        'milestones',
-        l.notificationChannel,
-        channelDescription: l.notificationChannelHint,
+        diary ? 'diary' : 'milestones',
+        diary ? l.diaryChannel : l.notificationChannel,
+        channelDescription: diary ? l.diaryChannelHint : l.notificationChannelHint,
         importance: Importance.defaultImportance,
       ),
       iOS: const DarwinNotificationDetails(),
@@ -56,10 +59,29 @@ class Notifications {
     );
   }
 
-  /// Replaces all pending notifications with the milestones still ahead of [startedAt].
-  static Future<void> reschedule(DateTime? startedAt, List<HealthMilestone> milestones) async {
+  /// Replaces all pending notifications with the milestones still ahead of [startedAt] and the next
+  /// «Дневник самочувствия» reminder at [diaryAt] (when overdue — the next such time of day).
+  static Future<void> reschedule(DateTime? startedAt, List<HealthMilestone> milestones, {DateTime? diaryAt}) async {
     await _init();
     await _plugin.cancelAllPendingNotifications();
+    if (diaryAt != null) {
+      await requestPermission();
+      var at = diaryAt;
+      final now = DateTime.now();
+      if (!at.isAfter(now)) {
+        at = DateTime(now.year, now.month, now.day, at.hour, at.minute);
+        if (!at.isAfter(now)) at = DateTime(now.year, now.month, now.day + 1, at.hour, at.minute);
+      }
+      final l = lookupAppLocalizations(const Locale('ru'));
+      await _plugin.zonedSchedule(
+        id: _diaryId,
+        scheduledDate: tz.TZDateTime.from(at.toUtc(), tz.UTC),
+        notificationDetails: _details(diary: true),
+        androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+        title: l.diaryNotificationTitle,
+        body: l.diaryNotificationBody,
+      );
+    }
     if (startedAt == null) return;
     await requestPermission();
     final now = DateTime.now();
@@ -72,7 +94,7 @@ class Notifications {
       await _plugin.zonedSchedule(
         id: m.afterMinutes,
         scheduledDate: tz.TZDateTime.from(at.toUtc(), tz.UTC),
-        notificationDetails: _details,
+        notificationDetails: _details(),
         androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
         title: m.title,
         body: m.description,
@@ -95,5 +117,11 @@ final notificationSchedulerProvider = FutureProvider<void>((ref) async {
   final attempts = await ref.watch(attemptsProvider.future);
   final current = attempts.where((a) => a.endedAt == null).firstOrNull;
   final content = await ref.watch(contentProvider.future);
-  await Notifications.reschedule(enabled ? current?.startedAt : null, content.milestones);
+  final diary = ref.watch(diaryReminderProvider);
+  final entries = await ref.watch(wellbeingProvider.future);
+  await Notifications.reschedule(
+    enabled ? current?.startedAt : null,
+    content.milestones,
+    diaryAt: diary.dueAt(entries.lastOrNull?.at),
+  );
 });

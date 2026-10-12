@@ -832,6 +832,144 @@ abstract class AppLocalizations {
   /// **'Начните новую попытку на главном экране — и здесь появится счёт.'**
   String get notInhaledNoAttempt;
 
+  /// No description provided for @diaryChannel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Дневник самочувствия'**
+  String get diaryChannel;
+
+  /// No description provided for @diaryChannelHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Напоминания заполнить дневник'**
+  String get diaryChannelHint;
+
+  /// No description provided for @diaryNotificationTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Как вы себя чувствуете?'**
+  String get diaryNotificationTitle;
+
+  /// No description provided for @diaryNotificationBody.
+  ///
+  /// In ru, this message translates to:
+  /// **'Пара отметок в дневнике самочувствия — и будет видно, как становится лучше.'**
+  String get diaryNotificationBody;
+
+  /// No description provided for @settingsDiaryReminder.
+  ///
+  /// In ru, this message translates to:
+  /// **'Напоминать о Дневнике самочувствия'**
+  String get settingsDiaryReminder;
+
+  /// No description provided for @settingsDiaryReminderHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Красная точка на «Здоровье», когда пора заполнить'**
+  String get settingsDiaryReminderHint;
+
+  /// No description provided for @settingsDiaryPeriod.
+  ///
+  /// In ru, this message translates to:
+  /// **'Как часто'**
+  String get settingsDiaryPeriod;
+
+  /// No description provided for @settingsDiaryTime.
+  ///
+  /// In ru, this message translates to:
+  /// **'Во сколько'**
+  String get settingsDiaryTime;
+
+  /// No description provided for @diaryPeriod.
+  ///
+  /// In ru, this message translates to:
+  /// **'{days, select, 1{Каждый день} 3{Раз в 3 дня} other{Раз в неделю}}'**
+  String diaryPeriod(String days);
+
+  /// No description provided for @diaryIntro.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отмечайте время от времени, как вы себя чувствуете, — и график покажет, как становится лучше.'**
+  String get diaryIntro;
+
+  /// No description provided for @diaryHowNow.
+  ///
+  /// In ru, this message translates to:
+  /// **'Как вы сейчас?'**
+  String get diaryHowNow;
+
+  /// No description provided for @diaryQuestion.
+  ///
+  /// In ru, this message translates to:
+  /// **'{q, select, sleep{Сон} breathing{Дыхание} mood{Настроение} other{Вкус и запах}}'**
+  String diaryQuestion(String q);
+
+  /// No description provided for @diaryScale.
+  ///
+  /// In ru, this message translates to:
+  /// **'{v, select, 1{Плохо} 2{Так себе} 3{Нормально} 4{Хорошо} other{Отлично}}'**
+  String diaryScale(String v);
+
+  /// No description provided for @diarySave.
+  ///
+  /// In ru, this message translates to:
+  /// **'Записать'**
+  String get diarySave;
+
+  /// No description provided for @diarySaved.
+  ///
+  /// In ru, this message translates to:
+  /// **'Записано. Спасибо!'**
+  String get diarySaved;
+
+  /// No description provided for @diaryDoneToday.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сегодня уже записано'**
+  String get diaryDoneToday;
+
+  /// No description provided for @diaryAgain.
+  ///
+  /// In ru, this message translates to:
+  /// **'Записать ещё раз'**
+  String get diaryAgain;
+
+  /// No description provided for @diaryNext.
+  ///
+  /// In ru, this message translates to:
+  /// **'Следующая запись — {date}'**
+  String diaryNext(String date);
+
+  /// No description provided for @diaryChart.
+  ///
+  /// In ru, this message translates to:
+  /// **'Как меняется самочувствие'**
+  String get diaryChart;
+
+  /// No description provided for @diaryChartEmpty.
+  ///
+  /// In ru, this message translates to:
+  /// **'График появится после двух записей.'**
+  String get diaryChartEmpty;
+
+  /// No description provided for @diaryChange.
+  ///
+  /// In ru, this message translates to:
+  /// **'{first} → {last}'**
+  String diaryChange(int first, int last);
+
+  /// No description provided for @diaryRemindHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Напоминания можно включить в Настройках → Уведомления.'**
+  String get diaryRemindHint;
+
+  /// No description provided for @diaryLocalNote.
+  ///
+  /// In ru, this message translates to:
+  /// **'Дневник хранится только на этом телефоне.'**
+  String get diaryLocalNote;
+
   /// No description provided for @achUnlockedCount.
   ///
   /// In ru, this message translates to:

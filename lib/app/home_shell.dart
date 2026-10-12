@@ -122,7 +122,12 @@ class _HomeShellState extends ConsumerState<HomeShell> {
           onSelected: (i) => setState(() => _index = i),
           items: [
             BarItem(icon: Icons.home_outlined, selectedIcon: Icons.home, label: l.tabHome),
-            BarItem(icon: Icons.favorite_outline, selectedIcon: Icons.favorite, label: l.tabHealth),
+            BarItem(
+              icon: Icons.favorite_outline,
+              selectedIcon: Icons.favorite,
+              label: l.tabHealth,
+              dot: ref.watch(diaryDueProvider),
+            ),
             BarItem(icon: Icons.menu_book_outlined, selectedIcon: Icons.menu_book, label: l.tabKnowledge),
             BarItem(icon: Icons.leaderboard_outlined, selectedIcon: Icons.leaderboard, label: l.tabLeaderboard),
             BarItem(icon: Icons.settings_outlined, selectedIcon: Icons.settings, label: l.tabSettings),

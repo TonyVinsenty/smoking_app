@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 
 /// One tab of [EvenBottomBar].
 class BarItem {
-  const BarItem({required this.icon, required this.selectedIcon, required this.label});
+  const BarItem({required this.icon, required this.selectedIcon, required this.label, this.dot = false});
 
   final IconData icon;
   final IconData selectedIcon;
   final String label;
+
+  /// A small red dot on the icon: something here waits for the user.
+  final bool dot;
 }
 
 /// Looks like the Material 3 NavigationBar, but spreads the tabs with equal gaps between them and the
@@ -80,9 +83,13 @@ class _BarButton extends StatelessWidget {
                       color: selected ? scheme.primaryContainer : Colors.transparent,
                       borderRadius: BorderRadius.circular(16),
                     ),
-                    child: Icon(
-                      selected ? item.selectedIcon : item.icon,
-                      color: selected ? scheme.onSecondaryContainer : scheme.onSurfaceVariant,
+                    alignment: Alignment.center,
+                    child: Badge(
+                      isLabelVisible: item.dot,
+                      child: Icon(
+                        selected ? item.selectedIcon : item.icon,
+                        color: selected ? scheme.onSecondaryContainer : scheme.onSurfaceVariant,
+                      ),
                     ),
                   ),
                 ),
