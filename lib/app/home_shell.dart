@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../content/content.dart';
 import 'notifications.dart';
+import 'widgets/bottom_bar.dart';
 import 'widgets/toast.dart';
 import '../data/providers.dart';
 import '../domain/achievements.dart';
@@ -116,35 +117,15 @@ class _HomeShellState extends ConsumerState<HomeShell> {
       ),
       // Tab labels keep their size with a large system font, otherwise «Настройки» does not fit.
       bottomNavigationBar: MediaQuery.withNoTextScaling(
-        child: NavigationBar(
+        child: EvenBottomBar(
           selectedIndex: _index,
-          onDestinationSelected: (i) => setState(() => _index = i),
-          destinations: [
-            NavigationDestination(
-              icon: const Icon(Icons.home_outlined),
-              selectedIcon: const Icon(Icons.home),
-              label: l.tabHome,
-            ),
-            NavigationDestination(
-              icon: const Icon(Icons.favorite_outline),
-              selectedIcon: const Icon(Icons.favorite),
-              label: l.tabHealth,
-            ),
-            NavigationDestination(
-              icon: const Icon(Icons.menu_book_outlined),
-              selectedIcon: const Icon(Icons.menu_book),
-              label: l.tabKnowledge,
-            ),
-            NavigationDestination(
-              icon: const Icon(Icons.leaderboard_outlined),
-              selectedIcon: const Icon(Icons.leaderboard),
-              label: l.tabLeaderboard,
-            ),
-            NavigationDestination(
-              icon: const Icon(Icons.settings_outlined),
-              selectedIcon: const Icon(Icons.settings),
-              label: l.tabSettings,
-            ),
+          onSelected: (i) => setState(() => _index = i),
+          items: [
+            BarItem(icon: Icons.home_outlined, selectedIcon: Icons.home, label: l.tabHome),
+            BarItem(icon: Icons.favorite_outline, selectedIcon: Icons.favorite, label: l.tabHealth),
+            BarItem(icon: Icons.menu_book_outlined, selectedIcon: Icons.menu_book, label: l.tabKnowledge),
+            BarItem(icon: Icons.leaderboard_outlined, selectedIcon: Icons.leaderboard, label: l.tabLeaderboard),
+            BarItem(icon: Icons.settings_outlined, selectedIcon: Icons.settings, label: l.tabSettings),
           ],
         ),
       ),
