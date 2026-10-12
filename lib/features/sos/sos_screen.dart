@@ -372,24 +372,24 @@ class _GroundingState extends State<_Grounding> {
     final done = _step >= _steps.length;
     final color = theme.colorScheme.onPrimaryContainer;
 
-    final Widget card;
-    if (done) {
-      card = Column(
-        key: const ValueKey('done'),
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(Icons.favorite, size: 48, color: color),
-          const SizedBox(height: 12),
-          Text(
-            l.sosGroundDone,
-            textAlign: TextAlign.center,
-            style: theme.textTheme.titleLarge?.copyWith(color: color),
-          ),
-        ],
-      );
-    } else {
-      final (count, id, icon) = _steps[_step];
-      card = Column(
+    Widget content(int step) {
+      if (step >= _steps.length) {
+        return Column(
+          key: const ValueKey('done'),
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.favorite, size: 48, color: color),
+            const SizedBox(height: 12),
+            Text(
+              l.sosGroundDone,
+              textAlign: TextAlign.center,
+              style: theme.textTheme.titleLarge?.copyWith(color: color),
+            ),
+          ],
+        );
+      }
+      final (count, id, icon) = _steps[step];
+      return Column(
         key: ValueKey(id),
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -429,7 +429,14 @@ class _GroundingState extends State<_Grounding> {
             padding: const EdgeInsets.all(24),
             child: SizedBox(
               width: double.infinity,
-              child: AnimatedSwitcher(duration: const Duration(milliseconds: 300), child: card),
+              // Invisible copies of every step reserve the size of the largest one, so the card never jumps.
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  for (var i = 0; i <= _steps.length; i++) ExcludeSemantics(child: Visibility.maintain(visible: false, child: content(i))),
+                  AnimatedSwitcher(duration: const Duration(milliseconds: 300), child: content(_step)),
+                ],
+              ),
             ),
           ),
         ),
@@ -451,7 +458,7 @@ class _GroundingState extends State<_Grounding> {
         ),
         const SizedBox(height: 8),
         done
-            ? TextButton.icon(
+            ? FilledButton.tonalIcon(
                 icon: const Icon(Icons.replay),
                 label: Text(l.sosAgain),
                 onPressed: () => setState(() => _step = 0),
