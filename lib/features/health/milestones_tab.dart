@@ -3,6 +3,7 @@ import 'dart:ui' show PathMetric;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../app/widgets/motion.dart';
 import '../../app/widgets/sos_fab.dart';
 import '../../app/widgets/choice.dart';
 import '../../app/widgets/cards.dart';
@@ -158,9 +159,12 @@ class _Summary extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(l.healthPassedLabel, style: theme.textTheme.labelMedium?.copyWith(color: color)),
-          MetricText(l.bodyProgress(reached, total), color: color),
+          CountUp(
+            value: reached.toDouble(),
+            builder: (context, v) => MetricText(l.bodyProgress(v.round(), total), color: color),
+          ),
           const SizedBox(height: 12),
-          LinearProgressIndicator(value: reached / total, minHeight: 8, borderRadius: BorderRadius.circular(4)),
+          GrowBar(value: reached / total, minHeight: 8),
           const SizedBox(height: 12),
           if (!hasAttempt)
             Text(l.healthNoAttempt, style: text)
@@ -291,14 +295,7 @@ class _MilestoneRow extends StatelessWidget {
                       if (reached)
                         Text(l.healthReached, style: theme.textTheme.labelMedium?.copyWith(color: scheme.primary))
                       else ...[
-                        if (isNext) ...[
-                          LinearProgressIndicator(
-                            value: progress,
-                            minHeight: 6,
-                            borderRadius: BorderRadius.circular(3),
-                          ),
-                          const SizedBox(height: 4),
-                        ],
+                        if (isNext) ...[GrowBar(value: progress, minHeight: 6), const SizedBox(height: 4)],
                         Text(
                           l.healthRemaining(
                             formatRemaining(l, Duration(seconds: ((m.afterMinutes - minutes) * 60).ceil())),

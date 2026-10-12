@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'motion.dart';
+
 /// The level number inside a ring that fills up towards the next level.
 class LevelRing extends StatelessWidget {
   const LevelRing({super.key, required this.level, required this.progress, this.size = 60});
@@ -19,12 +21,17 @@ class LevelRing extends StatelessWidget {
       child: Stack(
         fit: StackFit.expand,
         children: [
-          CircularProgressIndicator(
-            value: progress,
-            strokeWidth: 5,
-            strokeCap: StrokeCap.round,
-            color: scheme.primary,
-            backgroundColor: scheme.primary.withValues(alpha: 0.14),
+          TweenAnimationBuilder<double>(
+            tween: Tween(begin: 0, end: progress),
+            duration: motion(context, const Duration(milliseconds: 1100)),
+            curve: Curves.easeOutCubic,
+            builder: (context, v, _) => CircularProgressIndicator(
+              value: v,
+              strokeWidth: 5,
+              strokeCap: StrokeCap.round,
+              color: scheme.primary,
+              backgroundColor: scheme.primary.withValues(alpha: 0.14),
+            ),
           ),
           Center(
             child: Text(

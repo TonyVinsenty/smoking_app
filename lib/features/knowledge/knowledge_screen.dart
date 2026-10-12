@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../app/widgets/motion.dart';
 import '../../app/widgets/sos_fab.dart';
 import '../../app/widgets/cards.dart';
 import '../../content/content.dart';
@@ -51,15 +52,15 @@ class _KnowledgeScreenState extends ConsumerState<KnowledgeScreen> {
                   children: [
                     Icon(Icons.menu_book_outlined, color: theme.colorScheme.onPrimaryContainer),
                     const SizedBox(width: 12),
-                    Text(l.knowledgeProgress(readCount, articles.length), style: theme.textTheme.titleMedium),
+                    CountUp(
+                      value: readCount.toDouble(),
+                      builder: (context, v) =>
+                          Text(l.knowledgeProgress(v.round(), articles.length), style: theme.textTheme.titleMedium),
+                    ),
                   ],
                 ),
                 const SizedBox(height: 12),
-                LinearProgressIndicator(
-                  value: articles.isEmpty ? 0 : readCount / articles.length,
-                  minHeight: 8,
-                  borderRadius: BorderRadius.circular(4),
-                ),
+                GrowBar(value: articles.isEmpty ? 0 : readCount / articles.length, minHeight: 8),
               ],
             ),
           ),

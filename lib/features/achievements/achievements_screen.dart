@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../app/widgets/motion.dart';
 import '../../app/widgets/cards.dart';
 import '../../app/format.dart';
 import '../../app/widgets/badge_icon.dart';
@@ -77,9 +78,12 @@ class _AchievementsList extends ConsumerWidget {
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
           sliver: SliverToBoxAdapter(
             child: _Progress(
-              title: Text(
-                l.achUnlockedCount(firstUnlock.length, total, percentOf(firstUnlock.length, total)),
-                style: theme.textTheme.titleMedium,
+              title: CountUp(
+                value: firstUnlock.length.toDouble(),
+                builder: (context, v) => Text(
+                  l.achUnlockedCount(v.round(), total, percentOf(v.round(), total)),
+                  style: theme.textTheme.titleMedium,
+                ),
               ),
               value: firstUnlock.length / total,
             ),
@@ -187,7 +191,7 @@ class _Progress extends StatelessWidget {
       title,
       ClipRRect(
         borderRadius: BorderRadius.circular(4),
-        child: LinearProgressIndicator(value: value, minHeight: 6),
+        child: GrowBar(value: value, minHeight: 6),
       ),
     ],
   );

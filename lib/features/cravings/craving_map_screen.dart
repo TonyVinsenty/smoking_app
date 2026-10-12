@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../app/widgets/motion.dart';
 import '../../app/widgets/first_hint.dart';
 import '../../app/widgets/choice.dart';
 import '../../app/widgets/cards.dart';
@@ -132,18 +133,20 @@ class _SummaryCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.baseline,
             textBaseline: TextBaseline.alphabetic,
             children: [
-              Text('${count.resisted}', style: theme.textTheme.displayLarge?.copyWith(color: color)),
+              CountUp(
+                value: count.resisted.toDouble(),
+                builder: (context, v) => Text(
+                  '${v.round()}',
+                  style: theme.textTheme.displayLarge?.copyWith(color: color, fontFeatures: tabular),
+                ),
+              ),
               const SizedBox(width: 8),
               Text(l.cravingOfTotal(count.total), style: theme.textTheme.titleLarge?.copyWith(color: color)),
             ],
           ),
           Text(l.cravingSummary(count.resisted), style: theme.textTheme.titleMedium?.copyWith(color: color)),
           const SizedBox(height: 12),
-          LinearProgressIndicator(
-            value: count.resisted / count.total,
-            minHeight: 8,
-            borderRadius: BorderRadius.circular(4),
-          ),
+          GrowBar(value: count.resisted / count.total, minHeight: 8),
         ],
       ),
     );

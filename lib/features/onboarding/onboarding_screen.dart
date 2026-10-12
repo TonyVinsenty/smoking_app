@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../app/widgets/motion.dart';
 import '../../app/widgets/choice.dart';
 import '../../data/database.dart';
 import '../../app/widgets/wheel_time_picker.dart';
@@ -151,7 +152,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
             if (_step > 0 && !_editing)
               Padding(
                 padding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
-                child: LinearProgressIndicator(value: _step / 3, borderRadius: BorderRadius.circular(4)),
+                child: GrowBar(value: _step / 3),
               ),
             Expanded(
               child: AnimatedSwitcher(

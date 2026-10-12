@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../app/theme.dart';
+import '../../app/widgets/motion.dart';
 import '../../app/widgets/level_ring.dart';
 import '../../app/format.dart';
 import '../../app/widgets/sos_fab.dart';
@@ -216,10 +218,9 @@ class _TimerCard extends StatelessWidget {
         ],
       ),
       const SizedBox(height: 6),
-      LinearProgressIndicator(
+      GrowBar(
         value: progress,
         minHeight: 6,
-        borderRadius: BorderRadius.circular(3),
         color: theme.colorScheme.primary,
         backgroundColor: color.withValues(alpha: 0.14),
       ),
@@ -242,7 +243,7 @@ class _SavingsCard extends StatelessWidget {
     final fmt = NumberFormat('#,##0', 'ru');
     final duration = attemptDuration(attempt, now);
     final units = unitsAvoided(products, duration);
-    Widget cell(IconData icon, String title, List<String> values, {bool more = false}) => Padding(
+    Widget cell(IconData icon, String title, List<Widget> values, {bool more = false}) => Padding(
       padding: const EdgeInsets.all(20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -250,7 +251,7 @@ class _SavingsCard extends StatelessWidget {
           IconBubble(icon),
           const SizedBox(height: 12),
           Text(title, style: theme.textTheme.labelMedium?.copyWith(color: scheme.onSurfaceVariant)),
-          for (final v in values) MetricText(v),
+          ...values,
           if (more)
             Padding(
               padding: const EdgeInsets.only(top: 4),
@@ -270,12 +271,13 @@ class _SavingsCard extends StatelessWidget {
         onTap: () =>
             showModalBottomSheet<void>(context: context, showDragHandle: true, builder: (_) => const _SavingsDetails()),
         child: cell(Icons.savings_outlined, l.homeMoneySaved, [
-          l.money(fmt.format(moneySaved(products, duration))),
+          CountUp(value: moneySaved(products, duration), builder: (context, v) => MetricText(l.money(fmt.format(v)))),
         ], more: true),
       ),
     );
     final avoided = cell(Icons.smoke_free, l.homeNotSmoked, [
-      for (final e in units.entries) avoidedText(l, e.key, e.value),
+      for (final e in units.entries)
+        CountUp(value: e.value, builder: (context, v) => MetricText(avoidedText(l, e.key, v))),
     ]);
     // With a large system font two columns would break words mid-way, so stack them.
     final stacked = MediaQuery.textScalerOf(context).scale(10) > 13;
@@ -333,9 +335,10 @@ class _SavingsDetails extends ConsumerWidget {
                 child: Row(
                   children: [
                     Expanded(child: Text(label, style: theme.textTheme.bodyLarge)),
-                    Text(
-                      money(moneySavedSince(products, attempt, from, now)),
-                      style: theme.textTheme.titleMedium?.copyWith(fontFeatures: const [FontFeature.tabularFigures()]),
+                    CountUp(
+                      value: moneySavedSince(products, attempt, from, now),
+                      builder: (context, v) =>
+                          Text(money(v), style: theme.textTheme.titleMedium?.copyWith(fontFeatures: tabular)),
                     ),
                   ],
                 ),
