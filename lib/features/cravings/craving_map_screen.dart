@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../app/widgets/first_hint.dart';
 import '../../app/widgets/choice.dart';
 import '../../app/widgets/cards.dart';
 import '../../app/theme.dart';
@@ -45,6 +46,7 @@ class _CravingMapScreenState extends ConsumerState<CravingMapScreen> {
       body: ListView(
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
         children: [
+          FirstHint(id: 'cravingMap', title: l.hintCravingTitle, text: l.hintCravingText),
           AppSegments<_Period>(
             options: [
               (_Period.week, l.cravingPeriodWeek),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../app/widgets/first_hint.dart';
 import '../../app/theme.dart';
 import '../../app/widgets/cards.dart';
 import '../../app/widgets/toast.dart';
@@ -68,11 +69,11 @@ class _DiaryTabState extends ConsumerState<DiaryTab> {
     return ListView(
       padding: healthTabPadding,
       children: [
+        FirstHint(id: 'diary', title: l.hintDiaryTitle, text: l.hintDiaryText),
         Text(l.diaryIntro, style: theme.textTheme.bodyLarge),
         const SizedBox(height: 16),
         if (doneToday && !_again)
           AppCard(
-            tone: CardTone.tip,
             padding: const EdgeInsets.fromLTRB(16, 16, 8, 4),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

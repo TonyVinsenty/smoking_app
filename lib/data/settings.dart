@@ -134,3 +134,18 @@ class DiaryReminderNotifier extends Notifier<DiaryReminder> {
 }
 
 final diaryReminderProvider = NotifierProvider<DiaryReminderNotifier, DiaryReminder>(DiaryReminderNotifier.new);
+
+/// One-time hints already closed by the user (e.g. how to read the craving map).
+class SeenHintsNotifier extends Notifier<Set<String>> {
+  static const _key = 'seenHints';
+
+  @override
+  Set<String> build() => (ref.watch(prefsProvider).getStringList(_key) ?? const []).toSet();
+
+  void dismiss(String hint) {
+    state = {...state, hint};
+    ref.read(prefsProvider).setStringList(_key, state.toList());
+  }
+}
+
+final seenHintsProvider = NotifierProvider<SeenHintsNotifier, Set<String>>(SeenHintsNotifier.new);

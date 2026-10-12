@@ -1320,6 +1320,23 @@ class AppLocalizationsRu extends AppLocalizations {
       'Статья носит справочный характер и не заменяет консультацию врача.';
 
   @override
+  String get hintGotIt => 'Понятно';
+
+  @override
+  String get hintCravingTitle => 'Как читать карту';
+
+  @override
+  String get hintCravingText =>
+      'Сюда попадает каждое нажатие SOS и каждая запись «Я закурил(а)». Бирюзовым отмечена тяга, с которой вы справились, серым — когда закурили. Ищите время и поводы, которые повторяются: к ним можно подготовиться заранее.';
+
+  @override
+  String get hintDiaryTitle => 'Как заполнять';
+
+  @override
+  String get hintDiaryText =>
+      'Ответьте на четыре вопроса по шкале от 1 до 5: 1 — плохо, 5 — отлично. Хватит раза в день или реже, напоминание можно включить в Настройках. Графики появятся после двух записей.';
+
+  @override
   String get cravingTitle => 'Карта тяги';
 
   @override

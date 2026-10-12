@@ -105,9 +105,16 @@ class AppCard extends StatelessWidget {
 
 /// A tip or hint: lightbulb, optional title, text. Same look on every screen.
 class TipCard extends StatelessWidget {
-  const TipCard({super.key, this.title, required this.child, this.icon = Icons.lightbulb_outline});
+  const TipCard({
+    super.key,
+    this.title,
+    required this.child,
+    this.icon = Icons.lightbulb_outline,
+    this.padding = const EdgeInsets.all(20),
+  });
 
   final String? title;
+  final EdgeInsetsGeometry padding;
   final Widget child;
   final IconData icon;
 
@@ -117,6 +124,7 @@ class TipCard extends StatelessWidget {
     final color = AppCard.onColor(context, CardTone.tip);
     return AppCard(
       tone: CardTone.tip,
+      padding: padding,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
