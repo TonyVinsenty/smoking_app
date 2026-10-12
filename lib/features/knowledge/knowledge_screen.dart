@@ -16,6 +16,7 @@ class KnowledgeScreen extends ConsumerStatefulWidget {
 
 class _KnowledgeScreenState extends ConsumerState<KnowledgeScreen> {
   String? _category; // null = all
+  final _collapsed = <String>{};
 
   @override
   Widget build(BuildContext context) {
@@ -88,9 +89,11 @@ class _KnowledgeScreenState extends ConsumerState<KnowledgeScreen> {
                 category: c,
                 read: articles.where((a) => a.category == c && read.contains(a.id)).length,
                 total: articles.where((a) => a.category == c).length,
+                open: !_collapsed.contains(c),
+                onTap: () => setState(() => _collapsed.contains(c) ? _collapsed.remove(c) : _collapsed.add(c)),
               ),
               for (final a in articles)
-                if (a.category == c) _ArticleCard(article: a, isRead: read.contains(a.id)),
+                if (a.category == c && !_collapsed.contains(c)) _ArticleCard(article: a, isRead: read.contains(a.id)),
             ]
           else
             for (final a in shown) _ArticleCard(article: a, isRead: read.contains(a.id)),
@@ -112,28 +115,49 @@ IconData _categoryIcon(String category) => switch (category) {
 };
 
 class _GroupHeader extends StatelessWidget {
-  const _GroupHeader({required this.category, required this.read, required this.total});
+  const _GroupHeader({
+    required this.category,
+    required this.read,
+    required this.total,
+    required this.open,
+    required this.onTap,
+  });
 
   final String category;
   final int read;
   final int total;
+  final bool open;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.fromLTRB(4, 20, 4, 8),
-      child: Row(
-        children: [
-          Icon(_categoryIcon(category), color: theme.colorScheme.primary),
-          const SizedBox(width: 10),
-          Expanded(child: Text(l.articleCategory(category), style: theme.textTheme.titleLarge)),
-          Text(
-            l.knowledgeGroupRead(read, total),
-            style: theme.textTheme.labelLarge?.copyWith(color: theme.colorScheme.outline),
+      padding: const EdgeInsets.only(top: 8),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(12),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(4, 12, 4, 8),
+          child: Row(
+            children: [
+              Icon(_categoryIcon(category), color: theme.colorScheme.primary),
+              const SizedBox(width: 10),
+              Expanded(child: Text(l.articleCategory(category), style: theme.textTheme.titleLarge)),
+              Text(
+                l.knowledgeGroupRead(read, total),
+                style: theme.textTheme.labelLarge?.copyWith(color: theme.colorScheme.outline),
+              ),
+              const SizedBox(width: 4),
+              AnimatedRotation(
+                turns: open ? 0.5 : 0,
+                duration: const Duration(milliseconds: 200),
+                child: Icon(Icons.expand_more, color: theme.colorScheme.outline),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
