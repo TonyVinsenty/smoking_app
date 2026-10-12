@@ -6,6 +6,7 @@ import '../../app/format.dart';
 import '../../data/database.dart';
 import '../../data/providers.dart';
 import '../../data/settings.dart';
+import '../../app/widgets/tab_page.dart';
 import '../../l10n/app_localizations.dart';
 import '../../domain/stats.dart';
 import '../onboarding/onboarding_screen.dart';
@@ -26,8 +27,7 @@ class SettingsScreen extends ConsumerWidget {
       padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
       child: Text(text, style: theme.textTheme.titleSmall?.copyWith(color: theme.colorScheme.primary)),
     );
-    return Scaffold(
-      appBar: AppBar(title: Text(l.tabSettings)),
+    return TabPage(
       body: ListView(
         padding: const EdgeInsets.only(bottom: 96),
         children: [

@@ -7,6 +7,7 @@ import '../../app/format.dart';
 import '../../content/content.dart';
 import '../../data/providers.dart';
 import '../../domain/stats.dart';
+import '../../app/widgets/tab_page.dart';
 import '../../l10n/app_localizations.dart';
 
 enum _Filter { passed, nearest, all }
@@ -65,11 +66,10 @@ class _HealthScreenState extends ConsumerState<HealthScreen> {
       if (reached == milestones.length || _filter == _Filter.passed) null,
     ];
 
-    return Scaffold(
-      appBar: AppBar(title: Text(l.tabHealth)),
+    return TabPage(
       body: SingleChildScrollView(
         // Room below the last card so it can scroll clear of the SOS button.
-        padding: const EdgeInsets.fromLTRB(16, 8, 16, 120),
+        padding: const EdgeInsets.fromLTRB(16, 16, 16, 120),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [

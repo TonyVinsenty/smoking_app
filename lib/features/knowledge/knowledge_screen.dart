@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../content/content.dart';
 import '../../data/providers.dart';
+import '../../app/widgets/tab_page.dart';
 import '../../l10n/app_localizations.dart';
 import 'article_screen.dart';
 
@@ -33,11 +34,10 @@ class _KnowledgeScreenState extends ConsumerState<KnowledgeScreen> {
     ];
     final readCount = articles.where((a) => read.contains(a.id)).length;
 
-    return Scaffold(
-      appBar: AppBar(title: Text(l.tabKnowledge)),
+    return TabPage(
       body: ListView(
         // Room below the last card so it can scroll clear of the SOS button.
-        padding: const EdgeInsets.fromLTRB(16, 8, 16, 120),
+        padding: const EdgeInsets.fromLTRB(16, 16, 16, 120),
         children: [
           Card(
             color: theme.colorScheme.primaryContainer,
