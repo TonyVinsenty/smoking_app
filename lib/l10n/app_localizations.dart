@@ -487,7 +487,7 @@ abstract class AppLocalizations {
   /// No description provided for @sosChangeExercise.
   ///
   /// In ru, this message translates to:
-  /// **'Упражнение можно сменить'**
+  /// **'Сменить'**
   String get sosChangeExercise;
 
   /// No description provided for @sosPickExercise.

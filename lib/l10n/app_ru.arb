@@ -87,7 +87,7 @@
   "@triggerName": {"placeholders": {"trigger": {"type": "String"}}},
   "sosBreatheIn": "Вдох",
   "sosBreatheOut": "Выдох",
-  "sosChangeExercise": "Упражнение можно сменить",
+  "sosChangeExercise": "Сменить",
   "sosPickExercise": "Выберите упражнение",
   "sosExerciseName": "{exercise, select, breathing{Спокойное дыхание} countdown{Отсчёт 10 → 0} grounding{Заземление 5-4-3-2-1} other{}}",
   "@sosExerciseName": {"placeholders": {"exercise": {"type": "String"}}},

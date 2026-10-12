@@ -322,7 +322,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get sosBreatheOut => 'Выдох';
 
   @override
-  String get sosChangeExercise => 'Упражнение можно сменить';
+  String get sosChangeExercise => 'Сменить';
 
   @override
   String get sosPickExercise => 'Выберите упражнение';

@@ -146,11 +146,28 @@ class _ExerciseStepState extends ConsumerState<_ExerciseStep> {
       padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
       child: Column(
         children: [
-          TextButton.icon(
-            icon: Icon(_exerciseIcon(exercise)),
-            label: Text('${l.sosExerciseName(exercise.name)} · ${l.sosChangeExercise}'),
-            onPressed: () => showSosExercisePicker(context, ref),
+          Wrap(
+            alignment: WrapAlignment.center,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            spacing: 12,
+            runSpacing: 4,
+            children: [
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(_exerciseIcon(exercise), color: theme.colorScheme.primary),
+                  const SizedBox(width: 8),
+                  Flexible(child: Text(l.sosExerciseName(exercise.name), style: theme.textTheme.titleMedium)),
+                ],
+              ),
+              OutlinedButton.icon(
+                icon: const Icon(Icons.swap_horiz),
+                label: Text(l.sosChangeExercise),
+                onPressed: () => showSosExercisePicker(context, ref),
+              ),
+            ],
           ),
+          const SizedBox(height: 8),
           Text(l.sosWaveHint, textAlign: TextAlign.center, style: theme.textTheme.bodyLarge),
           Expanded(
             child: AnimatedSwitcher(
