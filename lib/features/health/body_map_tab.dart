@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../app/widgets/cards.dart';
 import '../../app/widgets/choice.dart';
 import '../../app/format.dart';
 import '../../content/content.dart';
@@ -88,55 +89,52 @@ class _AreaTile extends StatelessWidget {
     final scheme = theme.colorScheme;
     final done = milestones.where((m) => minutes >= m.afterMinutes).length;
     final full = done == milestones.length;
-    return Card(
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: () => _showMilestones(context),
-        child: Stack(
-          children: [
-            // The fill rises from the bottom as milestones are passed.
-            Positioned.fill(
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: TweenAnimationBuilder<double>(
-                  tween: Tween(begin: 0, end: done / milestones.length),
-                  duration: const Duration(milliseconds: 900),
-                  curve: Curves.easeOutCubic,
-                  builder: (_, v, _) => FractionallySizedBox(
-                    heightFactor: v,
-                    widthFactor: 1,
-                    child: ColoredBox(color: scheme.primaryContainer),
+    // A finished area turns mint with a check: a small celebration. Otherwise dots show the progress.
+    final tone = full ? CardTone.hero : CardTone.plain;
+    final on = AppCard.onColor(context, tone);
+    return AppCard(
+      tone: tone,
+      padding: const EdgeInsets.all(14),
+      onTap: () => _showMilestones(context),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              full
+                  ? Container(
+                      width: 36,
+                      height: 36,
+                      decoration: BoxDecoration(color: scheme.primary, borderRadius: BorderRadius.circular(11)),
+                      child: Icon(Icons.check_rounded, size: 22, color: scheme.onPrimary),
+                    )
+                  : IconBubble(categoryIcon(area), size: 36),
+              const Spacer(),
+              Text(
+                l.bodyProgress(done, milestones.length),
+                style: theme.textTheme.labelLarge?.copyWith(color: on, fontWeight: FontWeight.w700),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Text(l.bodyArea(area), style: theme.textTheme.titleSmall?.copyWith(color: on)),
+          const SizedBox(height: 8),
+          Wrap(
+            spacing: 5,
+            runSpacing: 5,
+            children: [
+              for (var i = 0; i < milestones.length; i++)
+                Container(
+                  width: 9,
+                  height: 9,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: i < done ? (full ? scheme.onPrimaryContainer : scheme.primary) : scheme.outlineVariant,
                   ),
                 ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 16,
-                        backgroundColor: full ? scheme.primary : scheme.surface,
-                        child: Icon(
-                          categoryIcon(area, filled: full),
-                          size: 18,
-                          color: full ? scheme.onPrimary : scheme.primary,
-                        ),
-                      ),
-                      const Spacer(),
-                      Text(l.bodyProgress(done, milestones.length), style: theme.textTheme.labelLarge),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  Text(l.bodyArea(area), style: theme.textTheme.titleSmall),
-                ],
-              ),
-            ),
-          ],
-        ),
+            ],
+          ),
+        ],
       ),
     );
   }

@@ -95,29 +95,28 @@ class InfoLabel extends StatelessWidget {
 /// Text for narrow places (cards beside the trail, tiles): with a very large system font it shrinks just
 /// enough for its longest word to fit, so a word never breaks in the middle.
 class WordFitText extends StatelessWidget {
-  const WordFitText(this.text, {super.key, this.style, this.textAlign});
+  const WordFitText(this.text, {super.key, required this.width, this.style, this.textAlign});
 
   final String text;
+
+  /// Width the text gets. Passed in rather than measured, so it also works inside IntrinsicHeight.
+  final double width;
   final TextStyle? style;
   final TextAlign? textAlign;
 
   @override
   Widget build(BuildContext context) {
     final scaler = MediaQuery.textScalerOf(context);
-    return LayoutBuilder(
-      builder: (context, box) {
-        final painter = TextPainter(textDirection: TextDirection.ltr, textScaler: scaler);
-        var widest = 0.0;
-        for (final word in text.split(RegExp(r'\s+'))) {
-          painter.text = TextSpan(text: word, style: style ?? DefaultTextStyle.of(context).style);
-          painter.layout();
-          if (painter.width > widest) widest = painter.width;
-        }
-        painter.dispose();
-        final fit = widest <= box.maxWidth || widest == 0 ? 1.0 : box.maxWidth / widest * 0.98;
-        return Text(text, style: style, textAlign: textAlign, textScaler: fit == 1 ? scaler : _Shrunk(scaler, fit));
-      },
-    );
+    final painter = TextPainter(textDirection: TextDirection.ltr, textScaler: scaler);
+    var widest = 0.0;
+    for (final word in text.split(RegExp(r'\s+'))) {
+      painter.text = TextSpan(text: word, style: style ?? DefaultTextStyle.of(context).style);
+      painter.layout();
+      if (painter.width > widest) widest = painter.width;
+    }
+    painter.dispose();
+    final fit = widest <= width || widest == 0 ? 1.0 : width / widest * 0.98;
+    return Text(text, style: style, textAlign: textAlign, textScaler: fit == 1 ? scaler : _Shrunk(scaler, fit));
   }
 }
 
