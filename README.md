@@ -4,4 +4,4 @@
 
 Flutter, Android + iOS. Все данные хранятся только на телефоне.
 
-Подробности о продукте, плане развития и текущем прогрессе — в [CLAUDE.md](CLAUDE.md), копилка идей — в [docs/content-ideas.md](docs/content-ideas.md).
+План, решения и прогресс — в [docs/ROADMAP.md](docs/ROADMAP.md), правила работы — в [CLAUDE.md](CLAUDE.md), копилка идей — в [docs/content-ideas.md](docs/content-ideas.md).
