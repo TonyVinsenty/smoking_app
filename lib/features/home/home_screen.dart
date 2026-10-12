@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../app/widgets/reserve_largest.dart';
 import '../../content/content.dart';
 import '../../data/database.dart';
 import '../../data/providers.dart';
@@ -390,6 +391,17 @@ class _QuoteCardState extends State<_QuoteCard> {
     final theme = Theme.of(context);
     final color = theme.colorScheme.onSecondaryContainer;
     final quote = widget.quotes[(widget.startIndex + _offset) % widget.quotes.length];
+    Widget quoteView(Quote q) => Column(
+      key: ValueKey(q),
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(q.text, style: theme.textTheme.titleMedium?.copyWith(color: color)),
+        if (q.author != null) ...[
+          const SizedBox(height: 8),
+          Text('— ${q.author}', style: theme.textTheme.bodyMedium?.copyWith(color: color)),
+        ],
+      ],
+    );
     void next() => setState(() => _offset++);
     return Card(
       color: theme.colorScheme.secondaryContainer,
@@ -414,19 +426,9 @@ class _QuoteCardState extends State<_QuoteCard> {
               ),
               Padding(
                 padding: const EdgeInsets.only(right: 12),
-                child: AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 250),
-                  child: Column(
-                    key: ValueKey(quote),
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(quote.text, style: theme.textTheme.titleMedium?.copyWith(color: color)),
-                      if (quote.author != null) ...[
-                        const SizedBox(height: 8),
-                        Text('— ${quote.author}', style: theme.textTheme.bodyMedium?.copyWith(color: color)),
-                      ],
-                    ],
-                  ),
+                child: ReserveLargest(
+                  candidates: [for (final q in widget.quotes) quoteView(q)],
+                  child: AnimatedSwitcher(duration: const Duration(milliseconds: 250), child: quoteView(quote)),
                 ),
               ),
             ],

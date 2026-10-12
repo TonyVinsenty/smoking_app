@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../app/widgets/reserve_largest.dart';
 import '../../content/content.dart';
 import '../../data/database.dart';
 import '../../data/providers.dart';
@@ -181,7 +182,10 @@ class _ExerciseStepState extends ConsumerState<_ExerciseStep> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(tips[_tipIndex], style: theme.textTheme.bodyLarge),
+                  ReserveLargest(
+                    candidates: [for (final t in tips) Text(t, style: theme.textTheme.bodyLarge)],
+                    child: Text(tips[_tipIndex], style: theme.textTheme.bodyLarge),
+                  ),
                   Align(
                     alignment: Alignment.centerRight,
                     child: TextButton.icon(
