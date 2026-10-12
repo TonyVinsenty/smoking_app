@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
+import '../../app/widgets/sos_fab.dart';
+
 import '../../l10n/app_localizations.dart';
 
 /// Room below the last card so it can scroll clear of the SOS button.
-const healthTabPadding = EdgeInsets.fromLTRB(16, 16, 16, 120);
+const healthTabPadding = EdgeInsets.fromLTRB(16, 16, 16, sosClearance);
 
 class HealthDisclaimer extends StatelessWidget {
   const HealthDisclaimer({super.key, this.text});

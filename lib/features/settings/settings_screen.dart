@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../app/widgets/sos_fab.dart';
 import '../../app/widgets/choice.dart';
 import '../../app/widgets/toast.dart';
 import '../../app/widgets/wheel_time_picker.dart';
@@ -31,7 +32,7 @@ class SettingsScreen extends ConsumerWidget {
     );
     return TabPage(
       body: ListView(
-        padding: const EdgeInsets.only(bottom: 96),
+        padding: const EdgeInsets.only(bottom: sosClearance),
         children: [
           header(l.settingsAppearance),
           Padding(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../app/widgets/sos_fab.dart';
 import '../../app/widgets/cards.dart';
 import '../../content/content.dart';
 import '../../data/providers.dart';
@@ -39,7 +40,7 @@ class _KnowledgeScreenState extends ConsumerState<KnowledgeScreen> {
     return TabPage(
       body: ListView(
         // Room below the last card so it can scroll clear of the SOS button.
-        padding: const EdgeInsets.fromLTRB(16, 16, 16, 120),
+        padding: const EdgeInsets.fromLTRB(16, 16, 16, sosClearance),
         children: [
           AppCard(
             tone: CardTone.hero,

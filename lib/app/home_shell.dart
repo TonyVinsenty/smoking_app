@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../content/content.dart';
 import 'notifications.dart';
 import 'widgets/bottom_bar.dart';
+import 'widgets/sos_fab.dart';
 import 'widgets/toast.dart';
 import '../data/providers.dart';
 import '../domain/achievements.dart';
@@ -26,6 +27,9 @@ class HomeShell extends ConsumerStatefulWidget {
 
 class _HomeShellState extends ConsumerState<HomeShell> {
   int _index = 0;
+
+  /// SOS shows its label; it shrinks to a round button while the user scrolls down.
+  bool _sosExtended = true;
   bool _unlocking = false;
 
   /// "achievementId@attemptId" already written, so a badge is not reported twice before the DB stream catches up.
@@ -105,21 +109,25 @@ class _HomeShellState extends ConsumerState<HomeShell> {
     ref.watch(notificationSchedulerProvider);
     final l = AppLocalizations.of(context);
     return Scaffold(
-      body: IndexedStack(index: _index, children: _screens),
-      // Slightly see-through so it does not hide the content it floats over.
-      floatingActionButton: FloatingActionButton.extended(
-        backgroundColor: Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.75),
-        elevation: 2,
-        highlightElevation: 4,
+      body: SosScrollWatcher(
+        onExtended: (on) {
+          if (on != _sosExtended) setState(() => _sosExtended = on);
+        },
+        child: IndexedStack(index: _index, children: _screens),
+      ),
+      floatingActionButton: SosFab(
+        extended: _sosExtended,
+        label: l.sosButton,
         onPressed: () => SosScreen.open(context),
-        icon: const Icon(Icons.air),
-        label: Text(l.sosButton),
       ),
       // Tab labels keep their size with a large system font, otherwise «Настройки» does not fit.
       bottomNavigationBar: MediaQuery.withNoTextScaling(
         child: EvenBottomBar(
           selectedIndex: _index,
-          onSelected: (i) => setState(() => _index = i),
+          onSelected: (i) => setState(() {
+            _index = i;
+            _sosExtended = true;
+          }),
           items: [
             BarItem(icon: Icons.home_outlined, selectedIcon: Icons.home, label: l.tabHome),
             BarItem(

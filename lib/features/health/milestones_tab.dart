@@ -3,6 +3,7 @@ import 'dart:ui' show PathMetric;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../app/widgets/sos_fab.dart';
 import '../../app/widgets/choice.dart';
 import '../../app/widgets/cards.dart';
 import '../../app/format.dart';
@@ -71,7 +72,7 @@ class _MilestonesTabState extends ConsumerState<MilestonesTab> {
 
     return SingleChildScrollView(
       // Room below the last card so it can scroll clear of the SOS button.
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 120),
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, sosClearance),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [

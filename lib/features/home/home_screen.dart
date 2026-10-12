@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../app/widgets/sos_fab.dart';
 import '../../app/widgets/cards.dart';
 import '../../app/widgets/metric_text.dart';
 import '../../app/widgets/reserve_largest.dart';
@@ -61,7 +62,7 @@ class HomeScreen extends ConsumerWidget {
       ),
       body: ListView(
         // Room below the last card so it can scroll clear of the SOS button.
-        padding: const EdgeInsets.fromLTRB(16, 8, 16, 120),
+        padding: const EdgeInsets.fromLTRB(16, 8, 16, sosClearance),
         children: [
           if (current != null) ...[
             _TimerCard(attempt: current, now: now),
