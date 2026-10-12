@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../content/content.dart';
 import '../../data/providers.dart';
+import '../../data/settings.dart';
 import '../../app/widgets/tab_page.dart';
 import '../../l10n/app_localizations.dart';
 import 'article_screen.dart';
@@ -17,13 +18,13 @@ class KnowledgeScreen extends ConsumerStatefulWidget {
 
 class _KnowledgeScreenState extends ConsumerState<KnowledgeScreen> {
   String? _category; // null = all
-  final _collapsed = <String>{};
 
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final articles = ref.watch(contentProvider).value?.articles;
+    final expanded = ref.watch(expandedSectionsProvider('knowledge'));
     final read = {for (final r in ref.watch(articlesReadProvider).value ?? const []) r.articleId};
     if (articles == null) return const Scaffold(body: Center(child: CircularProgressIndicator()));
 
@@ -89,11 +90,11 @@ class _KnowledgeScreenState extends ConsumerState<KnowledgeScreen> {
                 category: c,
                 read: articles.where((a) => a.category == c && read.contains(a.id)).length,
                 total: articles.where((a) => a.category == c).length,
-                open: !_collapsed.contains(c),
-                onTap: () => setState(() => _collapsed.contains(c) ? _collapsed.remove(c) : _collapsed.add(c)),
+                open: expanded.contains(c),
+                onTap: () => ref.read(expandedSectionsProvider('knowledge').notifier).toggle(c),
               ),
               for (final a in articles)
-                if (a.category == c && !_collapsed.contains(c)) _ArticleCard(article: a, isRead: read.contains(a.id)),
+                if (a.category == c && expanded.contains(c)) _ArticleCard(article: a, isRead: read.contains(a.id)),
             ]
           else
             for (final a in shown) _ArticleCard(article: a, isRead: read.contains(a.id)),
