@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../app/format.dart';
+import '../../app/widgets/wheel_time_picker.dart';
 import '../../data/database.dart';
 import '../../data/providers.dart';
 import '../../domain/stats.dart';
@@ -65,7 +66,7 @@ class _RelapseScreenState extends ConsumerState<RelapseScreen> {
       lastDate: now,
     );
     if (date == null || !mounted) return;
-    final time = await showTimePicker(context: context, initialTime: TimeOfDay.fromDateTime(_at ?? now));
+    final time = await showWheelTimePicker(context, initialTime: TimeOfDay.fromDateTime(_at ?? now));
     if (time == null) return;
     var at = DateTime(date.year, date.month, date.day, time.hour, time.minute);
     if (at.isAfter(now)) at = now;

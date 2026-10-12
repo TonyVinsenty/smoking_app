@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../data/database.dart';
+import '../../app/widgets/wheel_time_picker.dart';
 import '../../data/providers.dart';
 import '../../l10n/app_localizations.dart';
 
@@ -122,10 +123,10 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     );
     if (date == null || !mounted) return;
     // «Не помню» (cancel) or dismissing the picker means 10:00.
-    final time = await showTimePicker(
-      context: context,
+    final time = await showWheelTimePicker(
+      context,
       initialTime: _quitAt == null ? const TimeOfDay(hour: 10, minute: 0) : TimeOfDay.fromDateTime(_quitAt!),
-      helpText: AppLocalizations.of(context).onbQuitTimeHelp,
+      title: AppLocalizations.of(context).onbQuitTimeHelp,
       cancelText: AppLocalizations.of(context).onbQuitTimeUnknown,
     );
     if (!mounted) return;
