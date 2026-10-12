@@ -142,76 +142,101 @@ class _ExerciseStepState extends ConsumerState<_ExerciseStep> {
     final tips = ref.watch(contentProvider).value?.sosTips ?? const [];
     if (_tipIndex < 0 && tips.isNotEmpty) _tipIndex = _random.nextInt(tips.length);
 
+    final header = Wrap(
+      alignment: WrapAlignment.center,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      spacing: 12,
+      runSpacing: 4,
+      children: [
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(_exerciseIcon(exercise), color: theme.colorScheme.primary),
+            const SizedBox(width: 8),
+            Flexible(child: Text(l.sosExerciseName(exercise.name), style: theme.textTheme.titleMedium)),
+          ],
+        ),
+        OutlinedButton.icon(
+          icon: const Icon(Icons.swap_horiz),
+          label: Text(l.sosChangeExercise),
+          onPressed: () => showSosExercisePicker(context, ref),
+        ),
+      ],
+    );
+    final hint = Text(l.sosWaveHint, textAlign: TextAlign.center, style: theme.textTheme.bodyLarge);
+    final exerciseView = AnimatedSwitcher(
+      duration: const Duration(milliseconds: 300),
+      child: switch (exercise) {
+        SosExercise.breathing => const _CalmBreathing(key: ValueKey(SosExercise.breathing)),
+        SosExercise.countdown => const _Countdown(key: ValueKey(SosExercise.countdown)),
+        SosExercise.grounding => const _Grounding(key: ValueKey(SosExercise.grounding)),
+      },
+    );
+    final tip = tips.isEmpty
+        ? null
+        : Card(
+            color: theme.colorScheme.surfaceContainerHigh,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(20, 16, 8, 8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(tips[_tipIndex], style: theme.textTheme.bodyLarge),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton.icon(
+                      icon: const Icon(Icons.refresh),
+                      label: Text(l.sosAnotherTip),
+                      onPressed: () =>
+                          setState(() => _tipIndex = (_tipIndex + 1 + _random.nextInt(tips.length - 1)) % tips.length),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+    final resisted = SizedBox(
+      width: double.infinity,
+      child: FilledButton.icon(
+        icon: const Icon(Icons.fitness_center),
+        label: Text(l.sosResisted),
+        onPressed: widget.onResisted,
+      ),
+    );
+
+    // With a large system font everything above the main button scrolls instead of overflowing.
+    final roomy = MediaQuery.textScalerOf(context).scale(10) <= 13;
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
       child: Column(
-        children: [
-          Wrap(
-            alignment: WrapAlignment.center,
-            crossAxisAlignment: WrapCrossAlignment.center,
-            spacing: 12,
-            runSpacing: 4,
-            children: [
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(_exerciseIcon(exercise), color: theme.colorScheme.primary),
-                  const SizedBox(width: 8),
-                  Flexible(child: Text(l.sosExerciseName(exercise.name), style: theme.textTheme.titleMedium)),
-                ],
-              ),
-              OutlinedButton.icon(
-                icon: const Icon(Icons.swap_horiz),
-                label: Text(l.sosChangeExercise),
-                onPressed: () => showSosExercisePicker(context, ref),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Text(l.sosWaveHint, textAlign: TextAlign.center, style: theme.textTheme.bodyLarge),
-          Expanded(
-            child: AnimatedSwitcher(
-              duration: const Duration(milliseconds: 300),
-              child: switch (exercise) {
-                SosExercise.breathing => const _CalmBreathing(key: ValueKey(SosExercise.breathing)),
-                SosExercise.countdown => const _Countdown(key: ValueKey(SosExercise.countdown)),
-                SosExercise.grounding => const _Grounding(key: ValueKey(SosExercise.grounding)),
-              },
-            ),
-          ),
-          if (tips.isNotEmpty)
-            Card(
-              color: theme.colorScheme.surfaceContainerHigh,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(20, 16, 8, 8),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(tips[_tipIndex], style: theme.textTheme.bodyLarge),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: TextButton.icon(
-                        icon: const Icon(Icons.refresh),
-                        label: Text(l.sosAnotherTip),
-                        onPressed: () => setState(
-                          () => _tipIndex = (_tipIndex + 1 + _random.nextInt(tips.length - 1)) % tips.length,
-                        ),
-                      ),
-                    ),
-                  ],
+        children: roomy
+            ? [
+                header,
+                const SizedBox(height: 8),
+                hint,
+                Expanded(child: exerciseView),
+                ?tip,
+                const SizedBox(height: 16),
+                resisted,
+              ]
+            : [
+                Expanded(
+                  child: ListView(
+                    children: [
+                      header,
+                      const SizedBox(height: 8),
+                      hint,
+                      const SizedBox(height: 16),
+                      // The breathing circle has no height of its own.
+                      exercise == SosExercise.breathing ? SizedBox(height: 260, child: exerciseView) : exerciseView,
+                      const SizedBox(height: 16),
+                      ?tip,
+                    ],
+                  ),
                 ),
-              ),
-            ),
-          const SizedBox(height: 16),
-          SizedBox(
-            width: double.infinity,
-            child: FilledButton.icon(
-              icon: const Icon(Icons.fitness_center),
-              label: Text(l.sosResisted),
-              onPressed: widget.onResisted,
-            ),
-          ),
-        ],
+                const SizedBox(height: 16),
+                resisted,
+              ],
       ),
     );
   }
@@ -433,7 +458,8 @@ class _GroundingState extends State<_Grounding> {
               child: Stack(
                 alignment: Alignment.center,
                 children: [
-                  for (var i = 0; i <= _steps.length; i++) ExcludeSemantics(child: Visibility.maintain(visible: false, child: content(i))),
+                  for (var i = 0; i <= _steps.length; i++)
+                    ExcludeSemantics(child: Visibility.maintain(visible: false, child: content(i))),
                   AnimatedSwitcher(duration: const Duration(milliseconds: 300), child: content(_step)),
                 ],
               ),

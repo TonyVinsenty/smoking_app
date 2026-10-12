@@ -699,12 +699,6 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get settingsLargeText => 'Крупный текст';
-
-  @override
-  String get settingsLargeTextHint => 'Увеличивает текст во всём приложении';
-
-  @override
   String get settingsSos => 'SOS';
 
   @override

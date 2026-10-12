@@ -21,11 +21,18 @@ class HealthScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: Text(l.tabHealth),
-          bottom: TabBar(
-            tabs: [
-              Tab(text: l.healthTabRecovery),
-              Tab(text: l.healthTabAchievements),
-            ],
+          // Two tabs share the width: with a large system font «Восстановление» would be cut off.
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(kTextTabBarHeight),
+            child: MediaQuery.withClampedTextScaling(
+              maxScaleFactor: 1.3,
+              child: TabBar(
+                tabs: [
+                  Tab(text: l.healthTabRecovery),
+                  Tab(text: l.healthTabAchievements),
+                ],
+              ),
+            ),
           ),
         ),
         body: const TabBarView(children: [_RecoveryTab(), _AchievementsTab()]),
@@ -189,6 +196,7 @@ class _AchievementsTab extends ConsumerWidget {
     }
     // Icon + two lines of title, whatever the text size.
     final line = MediaQuery.textScalerOf(context).scale(theme.textTheme.labelMedium!.fontSize!) * 1.4;
+    final textScale = line / (theme.textTheme.labelMedium!.fontSize! * 1.4);
     final tileHeight = 64 + 8 + 2 * line + 16;
     final total = content.achievements.length;
     return CustomScrollView(
@@ -233,7 +241,8 @@ class _AchievementsTab extends ConsumerWidget {
               padding: const EdgeInsets.symmetric(horizontal: 12),
               sliver: SliverGrid.builder(
                 gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 140,
+                  // Wider tiles (fewer columns) with a large system font, so titles do not break mid-word.
+                  maxCrossAxisExtent: 140 * textScale.clamp(1.0, 2.0),
                   mainAxisExtent: tileHeight,
                 ),
                 itemCount: items.length,

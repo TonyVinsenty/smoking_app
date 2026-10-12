@@ -48,13 +48,6 @@ class SettingsScreen extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: 8),
-          SwitchListTile(
-            secondary: const Icon(Icons.format_size),
-            title: Text(l.settingsLargeText),
-            subtitle: Text(l.settingsLargeTextHint),
-            value: ref.watch(largeTextProvider),
-            onChanged: (on) => ref.read(largeTextProvider.notifier).set(on),
-          ),
           header(l.settingsAttempt),
           if (current != null)
             ListTile(

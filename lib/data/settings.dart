@@ -22,23 +22,6 @@ class ThemeModeNotifier extends Notifier<ThemeMode> {
 
 final themeModeProvider = NotifierProvider<ThemeModeNotifier, ThemeMode>(ThemeModeNotifier.new);
 
-class LargeTextNotifier extends Notifier<bool> {
-  static const _key = 'largeText';
-
-  @override
-  bool build() => ref.watch(prefsProvider).getBool(_key) ?? false;
-
-  void set(bool on) {
-    ref.read(prefsProvider).setBool(_key, on);
-    state = on;
-  }
-}
-
-/// Accessibility option: scales all text up.
-final largeTextProvider = NotifierProvider<LargeTextNotifier, bool>(LargeTextNotifier.new);
-
-const largeTextScale = 1.25;
-
 /// Calming exercise shown in SOS. No breath-holding anywhere: it makes anxious users panic.
 enum SosExercise { breathing, countdown, grounding }
 

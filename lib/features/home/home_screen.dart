@@ -173,70 +173,76 @@ class _SavingsCard extends StatelessWidget {
       ),
     );
     Widget cell(IconData icon, String title, List<String> values, {VoidCallback? onInfo, VoidCallback? onMore}) =>
-        Expanded(
-          child: InkWell(
-            borderRadius: BorderRadius.circular(12),
-            onTap: onMore,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Icon(icon, color: theme.colorScheme.primary),
-                    if (onInfo != null) ...[const SizedBox(width: 4), infoButton(onInfo)],
-                  ],
-                ),
-                const SizedBox(height: 8),
-                Text(title, style: theme.textTheme.labelLarge),
-                for (final v in values) Text(v, style: theme.textTheme.titleLarge),
-                if (onMore != null)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 4),
-                    child: Text(
-                      '${l.homeSavingsMore} ›',
-                      style: theme.textTheme.labelLarge?.copyWith(color: theme.colorScheme.primary),
-                    ),
+        InkWell(
+          borderRadius: BorderRadius.circular(12),
+          onTap: onMore,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(icon, color: theme.colorScheme.primary),
+                  if (onInfo != null) ...[const SizedBox(width: 4), infoButton(onInfo)],
+                ],
+              ),
+              const SizedBox(height: 8),
+              Text(title, style: theme.textTheme.labelLarge),
+              for (final v in values) Text(v, style: theme.textTheme.titleLarge),
+              if (onMore != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 4),
+                  child: Text(
+                    '${l.homeSavingsMore} ›',
+                    style: theme.textTheme.labelLarge?.copyWith(color: theme.colorScheme.primary),
                   ),
-              ],
-            ),
+                ),
+            ],
           ),
         );
+    final cells = [
+      cell(
+        Icons.savings_outlined,
+        l.homeMoneySaved,
+        [l.money(fmt.format(moneySaved(products, duration)))],
+        onInfo: () => showDialog<void>(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text(l.homeSavingsInfoTitle),
+            content: Text(
+              l.homeSavingsInfo(
+                fmt.format(dailyCost(products)),
+                NumberFormat('#,##0.#', 'ru').format(dailyCost(products) / 24),
+              ),
+            ),
+            actions: [TextButton(onPressed: () => Navigator.pop(context), child: Text(l.done))],
+          ),
+        ),
+        onMore: () =>
+            showModalBottomSheet<void>(context: context, showDragHandle: true, builder: (_) => const _SavingsDetails()),
+      ),
+      cell(Icons.smoke_free, l.homeNotSmoked, [
+        for (final e in units.entries) l.unitsAvoided(e.key.name, fmt.format(e.value.floor())),
+      ]),
+    ];
+    // With a large system font two columns would break words mid-way, so stack them.
+    final stacked = MediaQuery.textScalerOf(context).scale(10) > 13;
     return Card(
       color: theme.colorScheme.surfaceContainerHigh,
       child: Padding(
         padding: const EdgeInsets.all(20),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            cell(
-              Icons.savings_outlined,
-              l.homeMoneySaved,
-              [l.money(fmt.format(moneySaved(products, duration)))],
-              onInfo: () => showDialog<void>(
-                context: context,
-                builder: (context) => AlertDialog(
-                  title: Text(l.homeSavingsInfoTitle),
-                  content: Text(
-                    l.homeSavingsInfo(
-                      fmt.format(dailyCost(products)),
-                      NumberFormat('#,##0.#', 'ru').format(dailyCost(products) / 24),
-                    ),
-                  ),
-                  actions: [TextButton(onPressed: () => Navigator.pop(context), child: Text(l.done))],
-                ),
+        child: stacked
+            ? Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [cells[0], const SizedBox(height: 16), cells[1]],
+              )
+            : Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(child: cells[0]),
+                  const SizedBox(width: 16),
+                  Expanded(child: cells[1]),
+                ],
               ),
-              onMore: () => showModalBottomSheet<void>(
-                context: context,
-                showDragHandle: true,
-                builder: (_) => const _SavingsDetails(),
-              ),
-            ),
-            const SizedBox(width: 16),
-            cell(Icons.smoke_free, l.homeNotSmoked, [
-              for (final e in units.entries) l.unitsAvoided(e.key.name, fmt.format(e.value.floor())),
-            ]),
-          ],
-        ),
       ),
     );
   }
@@ -433,10 +439,7 @@ class _NoAttemptCard extends ConsumerWidget {
             const SizedBox(height: 8),
             Text(l.homeNoAttemptText, style: theme.textTheme.bodyLarge),
             const SizedBox(height: 16),
-            FilledButton(
-              onPressed: () => startNewAttempt(context, ref),
-              child: Text(l.homeStartAttempt),
-            ),
+            FilledButton(onPressed: () => startNewAttempt(context, ref), child: Text(l.homeStartAttempt)),
           ],
         ),
       ),
@@ -482,7 +485,10 @@ class _CravingCard extends StatelessWidget {
               if (stats.isEmpty)
                 Text(l.cravingHomeEmpty, style: theme.textTheme.bodyMedium)
               else ...[
-                Text(l.cravingResistedOf(stats.summary.resisted, stats.summary.total), style: theme.textTheme.titleLarge),
+                Text(
+                  l.cravingResistedOf(stats.summary.resisted, stats.summary.total),
+                  style: theme.textTheme.titleLarge,
+                ),
                 if (often.isNotEmpty) Text(l.cravingOften(often), style: theme.textTheme.bodyMedium),
               ],
             ],

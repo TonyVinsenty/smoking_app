@@ -114,7 +114,7 @@ class _HomeShellState extends ConsumerState<HomeShell> {
         icon: const Icon(Icons.air),
         label: Text(l.sosButton),
       ),
-      // Tab labels keep their size with «Крупный текст», otherwise «Настройки» does not fit.
+      // Tab labels keep their size with a large system font, otherwise «Настройки» does not fit.
       bottomNavigationBar: MediaQuery.withNoTextScaling(
         child: NavigationBar(
           selectedIndex: _index,

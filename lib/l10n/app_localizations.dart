@@ -784,18 +784,6 @@ abstract class AppLocalizations {
   /// **'{mode, select, system{Системный} light{Светлый} dark{Тёмный} other{}}'**
   String themeModeName(String mode);
 
-  /// No description provided for @settingsLargeText.
-  ///
-  /// In ru, this message translates to:
-  /// **'Крупный текст'**
-  String get settingsLargeText;
-
-  /// No description provided for @settingsLargeTextHint.
-  ///
-  /// In ru, this message translates to:
-  /// **'Увеличивает текст во всём приложении'**
-  String get settingsLargeTextHint;
-
   /// No description provided for @settingsSos.
   ///
   /// In ru, this message translates to:

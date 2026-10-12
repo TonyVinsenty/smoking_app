@@ -171,8 +171,6 @@
   "settingsAppearance": "Цветовой тон",
   "themeModeName": "{mode, select, system{Системный} light{Светлый} dark{Тёмный} other{}}",
   "@themeModeName": {"placeholders": {"mode": {"type": "String"}}},
-  "settingsLargeText": "Крупный текст",
-  "settingsLargeTextHint": "Увеличивает текст во всём приложении",
   "settingsSos": "SOS",
   "settingsNotifications": "Уведомления",
   "settingsNotificationsMilestones": "Этапы восстановления",

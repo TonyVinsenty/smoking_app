@@ -13,6 +13,7 @@ import 'l10n/app_localizations.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final prefs = await SharedPreferences.getInstance();
+  await prefs.remove('largeText'); // old in-app option; the app now follows the system font size
   runApp(ProviderScope(overrides: [prefsProvider.overrideWithValue(prefs)], child: const SmokingApp()));
 }
 
@@ -21,7 +22,6 @@ class SmokingApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final largeText = ref.watch(largeTextProvider);
     return MaterialApp(
       onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
       debugShowCheckedModeBanner: false,
@@ -36,15 +36,6 @@ class SmokingApp extends ConsumerWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      builder: (context, child) {
-        if (!largeText) return child!;
-        final mq = MediaQuery.of(context);
-        final scale = mq.textScaler.scale(100) / 100 * largeTextScale;
-        return MediaQuery(
-          data: mq.copyWith(textScaler: TextScaler.linear(scale)),
-          child: child!,
-        );
-      },
       home: const _Root(),
     );
   }
