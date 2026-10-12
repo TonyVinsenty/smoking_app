@@ -89,6 +89,16 @@ class HealthMilestone {
   final String? source;
 }
 
+/// A real research number for the Здоровье tab.
+class HealthFact {
+  HealthFact.fromJson(Map<String, dynamic> j) : id = j['id'], value = j['value'], text = j['text'], source = j['source'];
+
+  final String id;
+  final String value;
+  final String text;
+  final String source;
+}
+
 class Quote {
   Quote.fromJson(Map<String, dynamic> j) : text = j['text'], author = j['author'];
 
@@ -122,6 +132,7 @@ class AppContent {
     required this.levels,
     required this.achievements,
     required this.milestones,
+    required this.healthFacts,
     required this.quotes,
     required this.sosTips,
     required this.triggerTips,
@@ -131,6 +142,7 @@ class AppContent {
   final List<Level> levels;
   final List<Achievement> achievements;
   final List<HealthMilestone> milestones;
+  final List<HealthFact> healthFacts;
   final List<Quote> quotes;
   final List<String> sosTips;
 
@@ -157,6 +169,7 @@ final contentProvider = FutureProvider<AppContent>((ref) async {
     _loadList('sos_tips.json'),
     _loadList('articles/index.json'),
     _loadList('trigger_tips.json'),
+    _loadList('health_facts.json'),
   ]);
   return AppContent(
     levels: results[0].map(Level.fromJson).toList()..sort((a, b) => a.level.compareTo(b.level)),
@@ -167,6 +180,7 @@ final contentProvider = FutureProvider<AppContent>((ref) async {
     sosTips: [for (final t in results[4]) t['text'] as String],
     articles: [for (final a in results[5].map(Article.fromJson)) if (a.file != null) a],
     triggerTips: {for (final t in results[6]) t['trigger'] as String: t['text'] as String},
+    healthFacts: results[7].map(HealthFact.fromJson).toList(),
   );
 });
 

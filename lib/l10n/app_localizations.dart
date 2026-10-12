@@ -610,12 +610,6 @@ abstract class AppLocalizations {
   /// **'{count, plural, one{{count} год} few{{count} года} many{{count} лет} other{{count} года}}'**
   String durYears(int count);
 
-  /// No description provided for @healthTabRecovery.
-  ///
-  /// In ru, this message translates to:
-  /// **'Восстановление'**
-  String get healthTabRecovery;
-
   /// No description provided for @healthTabAchievements.
   ///
   /// In ru, this message translates to:
@@ -651,6 +645,78 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Источник: {source}'**
   String healthSource(String source);
+
+  /// No description provided for @healthFilterPassed.
+  ///
+  /// In ru, this message translates to:
+  /// **'Пройденные'**
+  String get healthFilterPassed;
+
+  /// No description provided for @healthFilterNearest.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ближайшие'**
+  String get healthFilterNearest;
+
+  /// No description provided for @healthFilterAll.
+  ///
+  /// In ru, this message translates to:
+  /// **'Все'**
+  String get healthFilterAll;
+
+  /// No description provided for @healthPassedCount.
+  ///
+  /// In ru, this message translates to:
+  /// **'Пройдено этапов: {done} из {total}'**
+  String healthPassedCount(int done, int total);
+
+  /// No description provided for @healthNext.
+  ///
+  /// In ru, this message translates to:
+  /// **'Следующий этап — через {time}'**
+  String healthNext(String time);
+
+  /// No description provided for @healthAllPassed.
+  ///
+  /// In ru, this message translates to:
+  /// **'Все этапы пройдены — это огромный путь!'**
+  String get healthAllPassed;
+
+  /// No description provided for @healthFirstDays.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сейчас идут первые 8 дней: на них приходится больше всего срывов. Если тянет — нажмите SOS.'**
+  String get healthFirstDays;
+
+  /// No description provided for @healthFirstDaysDone.
+  ///
+  /// In ru, this message translates to:
+  /// **'Первые 8 дней позади, а на них приходится больше всего срывов.'**
+  String get healthFirstDaysDone;
+
+  /// No description provided for @healthYouAreHere.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вы здесь'**
+  String get healthYouAreHere;
+
+  /// No description provided for @healthSmokeFreeFor.
+  ///
+  /// In ru, this message translates to:
+  /// **'{time} без курения'**
+  String healthSmokeFreeFor(String time);
+
+  /// No description provided for @healthNonePassed.
+  ///
+  /// In ru, this message translates to:
+  /// **'Первый этап совсем скоро — загляните в «Ближайшие».'**
+  String get healthNonePassed;
+
+  /// No description provided for @healthFactsTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Факты из исследований'**
+  String get healthFactsTitle;
 
   /// No description provided for @achUnlockedCount.
   ///

@@ -475,9 +475,6 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get healthTabRecovery => 'Восстановление';
-
-  @override
   String get healthTabAchievements => 'Достижения';
 
   @override
@@ -500,6 +497,51 @@ class AppLocalizationsRu extends AppLocalizations {
   String healthSource(String source) {
     return 'Источник: $source';
   }
+
+  @override
+  String get healthFilterPassed => 'Пройденные';
+
+  @override
+  String get healthFilterNearest => 'Ближайшие';
+
+  @override
+  String get healthFilterAll => 'Все';
+
+  @override
+  String healthPassedCount(int done, int total) {
+    return 'Пройдено этапов: $done из $total';
+  }
+
+  @override
+  String healthNext(String time) {
+    return 'Следующий этап — через $time';
+  }
+
+  @override
+  String get healthAllPassed => 'Все этапы пройдены — это огромный путь!';
+
+  @override
+  String get healthFirstDays =>
+      'Сейчас идут первые 8 дней: на них приходится больше всего срывов. Если тянет — нажмите SOS.';
+
+  @override
+  String get healthFirstDaysDone =>
+      'Первые 8 дней позади, а на них приходится больше всего срывов.';
+
+  @override
+  String get healthYouAreHere => 'Вы здесь';
+
+  @override
+  String healthSmokeFreeFor(String time) {
+    return '$time без курения';
+  }
+
+  @override
+  String get healthNonePassed =>
+      'Первый этап совсем скоро — загляните в «Ближайшие».';
+
+  @override
+  String get healthFactsTitle => 'Факты из исследований';
 
   @override
   String achUnlockedCount(int unlocked, int total, int percent) {
