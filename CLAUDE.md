@@ -17,7 +17,7 @@ Russian only for now, but everything is translatable: UI strings in `lib/l10n/ap
 - **SOS «Хочу курить»**: floating button on every screen (+ home-screen widget later). Flow: one tap "what's happening" (trigger → craving map) → breathing exercise + quick tips → "справился" (logged, gives XP). Craving map shows personal patterns (time of day / trigger).
 - Health: recovery milestones timeline with progress + achievements/badges. Medical disclaimer required.
 - Levels: XP = 1/smoke-free hour (cumulative across attempts, never lost) + 10/resisted craving + achievement xp. Owner wants progress to feel tangible, not stingy: 50 levels (level-ups ~daily in week 1, ~monthly after a year), 70 achievements with generous XP (thresholds modelled on a typical user).
-- Content voice: «вы», gender-neutral, never shaming.
+- Content voice: «вы», gender-neutral, never shaming. Labels use gender-neutral forms («Я закурил(а)», «Тяга прошла!»).
 - New-badge celebration animation for 1–3 live unlocks; retroactive batches just get a snackbar. Owner wants more smoothness/animations overall — phase 2 polish.
 - «Я закурил» lives in Настройки only. One confirmation against accidental tap, then kind "no-guilt diary": trigger (stress, alcohol, company, coffee, after meal, boredom, ritual, other) + 3 short optional questions (what happened / what would have helped / what I'll try next time). Ends current attempt; badges stay in attempt history; best record kept. Never shaming.
 - Notifications in MVP: rare, only supportive, never annoying.
