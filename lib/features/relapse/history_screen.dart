@@ -92,6 +92,7 @@ class _AttemptCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final theme = Theme.of(context);
+    final current = attempt.endedAt == null;
     final date = DateFormat('d MMMM yyyy', 'ru');
     final range = attempt.endedAt == null
         ? '${date.format(attempt.startedAt)} — ${l.historyNow}'
@@ -102,43 +103,49 @@ class _AttemptCard extends StatelessWidget {
       (l.relapseQ3, attempt.nextTime),
     ].where((e) => e.$2 != null);
 
-    return Card(
-      color: attempt.endedAt == null ? theme.colorScheme.secondaryContainer : theme.colorScheme.surfaceContainerHigh,
+    return AppCard(
       margin: const EdgeInsets.only(top: 12),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Expanded(child: Text(l.historyAttempt(number), style: theme.textTheme.labelLarge)),
-                if (isBest) ...[
-                  Icon(Icons.star, size: 18, color: theme.colorScheme.primary),
-                  const SizedBox(width: 4),
-                  Text(l.historyBest, style: theme.textTheme.labelLarge?.copyWith(color: theme.colorScheme.primary)),
-                ],
+      padding: const EdgeInsets.all(16),
+      borderColor: current ? theme.colorScheme.primary : null,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  current ? l.historyCurrent(number) : l.historyAttempt(number),
+                  style: theme.textTheme.labelMedium?.copyWith(
+                    color: current ? theme.colorScheme.primary : theme.colorScheme.onSurfaceVariant,
+                    fontWeight: current ? FontWeight.w700 : null,
+                  ),
+                ),
+              ),
+              if (isBest) ...[
+                Icon(Icons.star, size: 18, color: theme.colorScheme.primary),
+                const SizedBox(width: 4),
+                Text(l.historyBest, style: theme.textTheme.labelLarge?.copyWith(color: theme.colorScheme.primary)),
               ],
-            ),
-            const SizedBox(height: 4),
-            MetricText(formatElapsed(l, attemptDuration(attempt, now)), style: theme.textTheme.headlineSmall),
-            Text(range, style: theme.textTheme.bodyMedium),
-            const SizedBox(height: 8),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: [
-                if (badges > 0) InfoLabel(l.historyBadges(badges), icon: Icons.emoji_events_outlined),
-                if (attempt.trigger != null) InfoLabel(l.triggerName(attempt.trigger!.name)),
-              ],
-            ),
-            for (final (q, a) in diary) ...[
-              const SizedBox(height: 12),
-              Text(q, style: theme.textTheme.labelLarge?.copyWith(color: theme.colorScheme.primary)),
-              Text(a!, style: theme.textTheme.bodyLarge),
             ],
+          ),
+          const SizedBox(height: 4),
+          MetricText(formatElapsed(l, attemptDuration(attempt, now)), style: theme.textTheme.headlineSmall),
+          Text(range, style: theme.textTheme.bodyMedium),
+          const SizedBox(height: 8),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              if (badges > 0) InfoLabel(l.historyBadges(badges), icon: Icons.emoji_events_outlined),
+              if (attempt.trigger != null) InfoLabel(l.triggerName(attempt.trigger!.name)),
+            ],
+          ),
+          for (final (q, a) in diary) ...[
+            const SizedBox(height: 12),
+            Text(q, style: theme.textTheme.labelLarge?.copyWith(color: theme.colorScheme.primary)),
+            Text(a!, style: theme.textTheme.bodyLarge),
           ],
-        ),
+        ],
       ),
     );
   }
