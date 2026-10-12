@@ -27,7 +27,7 @@
   "@productUnits": {"placeholders": {"type": {"type": "String"}}},
   "productPackPrice": "{type, select, cigarettes{Цена пачки, ₽} sticks{Цена пачки стиков, ₽} disposable{Цена одноразки, ₽} liquid{Цена флакона жидкости, ₽} other{}}",
   "@productPackPrice": {"placeholders": {"type": {"type": "String"}}},
-  "productUnitsPerPack": "Штук в пачке",
+  "productUnitsPerPack": "В пачке, шт.",
   "periodName": "{period, select, day{в день} week{в неделю} month{в месяц} other{}}",
   "@periodName": {"placeholders": {"period": {"type": "String"}}},
   "onbConsumptionTitle": "Сколько и почём",

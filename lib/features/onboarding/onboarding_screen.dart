@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../app/widgets/choice.dart';
 import '../../data/database.dart';
 import '../../app/widgets/wheel_time_picker.dart';
 import '../../data/providers.dart';
@@ -155,6 +156,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
             Expanded(
               child: AnimatedSwitcher(
                 duration: const Duration(milliseconds: 250),
+                // Steps start at the top (the default centres short ones in the middle of the screen).
+                layoutBuilder: (current, previous) =>
+                    Stack(alignment: Alignment.topCenter, children: [...previous, ?current]),
                 child: SingleChildScrollView(
                   key: ValueKey(_step),
                   padding: const EdgeInsets.all(24),
@@ -199,7 +203,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   Widget _title(String text, [String? hint]) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      Text(text, style: Theme.of(context).textTheme.headlineMedium),
+      Text(text, style: Theme.of(context).textTheme.headlineSmall),
       if (hint != null) ...[const SizedBox(height: 8), Text(hint, style: Theme.of(context).textTheme.bodyLarge)],
       const SizedBox(height: 24),
     ],
@@ -239,17 +243,14 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     children: [
       _title(l.onbConsumptionTitle, l.onbConsumptionHint),
       for (final f in _forms.values) ...[
-        Text(l.productName(f.type.name), style: Theme.of(context).textTheme.titleLarge),
+        Text(l.productName(f.type.name), style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: 12),
         _numberField(f.amount, l.productUnits(f.type.name)),
         const SizedBox(height: 8),
-        SegmentedButton<ConsumptionPeriod>(
-          showSelectedIcon: false, // the check mark made the buttons jump
-          segments: [
-            for (final p in ConsumptionPeriod.values) ButtonSegment(value: p, label: Text(l.periodName(p.name))),
-          ],
-          selected: {f.period},
-          onSelectionChanged: (s) => setState(() => f.period = s.first),
+        AppSegments<ConsumptionPeriod>(
+          options: [for (final p in ConsumptionPeriod.values) (p, l.periodName(p.name))],
+          selected: f.period,
+          onChanged: (p) => setState(() => f.period = p),
         ),
         const SizedBox(height: 12),
         Row(
@@ -257,7 +258,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
             Expanded(child: _numberField(f.price, l.productPackPrice(f.type.name))),
             if (f.hasPacks) ...[
               const SizedBox(width: 12),
-              SizedBox(width: 120, child: _numberField(f.unitsPerPack, l.productUnitsPerPack, integer: true)),
+              SizedBox(width: 130, child: _numberField(f.unitsPerPack, l.productUnitsPerPack, integer: true)),
             ],
           ],
         ),

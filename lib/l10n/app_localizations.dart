@@ -229,7 +229,7 @@ abstract class AppLocalizations {
   /// No description provided for @productUnitsPerPack.
   ///
   /// In ru, this message translates to:
-  /// **'Штук в пачке'**
+  /// **'В пачке, шт.'**
   String get productUnitsPerPack;
 
   /// No description provided for @periodName.

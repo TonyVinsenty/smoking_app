@@ -105,7 +105,7 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get productUnitsPerPack => 'Штук в пачке';
+  String get productUnitsPerPack => 'В пачке, шт.';
 
   @override
   String periodName(String period) {
