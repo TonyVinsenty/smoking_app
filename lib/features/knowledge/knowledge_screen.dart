@@ -26,7 +26,10 @@ class _KnowledgeScreenState extends ConsumerState<KnowledgeScreen> {
     if (articles == null) return const Scaffold(body: Center(child: CircularProgressIndicator()));
 
     final categories = {for (final a in articles) a.category}.toList();
-    final shown = [for (final a in articles) if (_category == null || a.category == _category) a];
+    final shown = [
+      for (final a in articles)
+        if (_category == null || a.category == _category) a,
+    ];
     final readCount = articles.where((a) => read.contains(a.id)).length;
 
     return Scaffold(
@@ -78,7 +81,58 @@ class _KnowledgeScreenState extends ConsumerState<KnowledgeScreen> {
             ],
           ),
           const SizedBox(height: 8),
-          for (final a in shown) _ArticleCard(article: a, isRead: read.contains(a.id)),
+          if (_category == null)
+            // «Все»: one section per topic, in the order topics first appear.
+            for (final c in categories) ...[
+              _GroupHeader(
+                category: c,
+                read: articles.where((a) => a.category == c && read.contains(a.id)).length,
+                total: articles.where((a) => a.category == c).length,
+              ),
+              for (final a in articles)
+                if (a.category == c) _ArticleCard(article: a, isRead: read.contains(a.id)),
+            ]
+          else
+            for (final a in shown) _ArticleCard(article: a, isRead: read.contains(a.id)),
+        ],
+      ),
+    );
+  }
+}
+
+IconData _categoryIcon(String category) => switch (category) {
+  'addiction' => Icons.psychology_outlined,
+  'health' => Icons.favorite_outline,
+  'practice' => Icons.directions_walk,
+  'myths' => Icons.help_outline,
+  'vape' => Icons.cloud_outlined,
+  'money' => Icons.savings_outlined,
+  'therapy' => Icons.medical_services_outlined,
+  _ => Icons.article_outlined,
+};
+
+class _GroupHeader extends StatelessWidget {
+  const _GroupHeader({required this.category, required this.read, required this.total});
+
+  final String category;
+  final int read;
+  final int total;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(4, 20, 4, 8),
+      child: Row(
+        children: [
+          Icon(_categoryIcon(category), color: theme.colorScheme.primary),
+          const SizedBox(width: 10),
+          Expanded(child: Text(l.articleCategory(category), style: theme.textTheme.titleLarge)),
+          Text(
+            l.knowledgeGroupRead(read, total),
+            style: theme.textTheme.labelLarge?.copyWith(color: theme.colorScheme.outline),
+          ),
         ],
       ),
     );
@@ -95,30 +149,64 @@ class _ArticleCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final theme = Theme.of(context);
-    final muted = theme.textTheme.labelMedium?.copyWith(color: theme.colorScheme.outline);
+    final scheme = theme.colorScheme;
+    final muted = theme.textTheme.labelMedium?.copyWith(color: scheme.outline);
     return Card(
+      // A tinted card with a border stands out from the page background in both themes.
+      color: scheme.surfaceContainerHigh,
+      margin: const EdgeInsets.symmetric(vertical: 6),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: BorderSide(color: scheme.outlineVariant),
+      ),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: () => ArticleScreen.open(context, article),
         child: Padding(
           padding: const EdgeInsets.all(16),
-          child: Column(
+          child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(article.title, style: theme.textTheme.titleMedium),
-              const SizedBox(height: 6),
-              Text(article.summary, style: theme.textTheme.bodyMedium),
-              const SizedBox(height: 10),
-              Row(
-                children: [
-                  Text('${l.articleCategory(article.category)} · ${l.articleMinutes(article.readMinutes)}', style: muted),
-                  const Spacer(),
-                  if (isRead) ...[
-                    Icon(Icons.check_circle, size: 18, color: theme.colorScheme.primary),
-                    const SizedBox(width: 4),
-                    Text(l.articleRead, style: theme.textTheme.labelMedium?.copyWith(color: theme.colorScheme.primary)),
+              Container(
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(
+                  color: isRead ? scheme.primary : scheme.primaryContainer,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  isRead ? Icons.check : _categoryIcon(article.category),
+                  color: isRead ? scheme.onPrimary : scheme.onPrimaryContainer,
+                ),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(article.title, style: theme.textTheme.titleMedium),
+                    const SizedBox(height: 6),
+                    Text(article.summary, style: theme.textTheme.bodyMedium?.copyWith(color: scheme.onSurfaceVariant)),
+                    const SizedBox(height: 10),
+                    Wrap(
+                      spacing: 12,
+                      runSpacing: 4,
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      children: [
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.schedule, size: 16, color: scheme.outline),
+                            const SizedBox(width: 4),
+                            Text(l.articleMinutes(article.readMinutes), style: muted),
+                          ],
+                        ),
+                        if (isRead)
+                          Text(l.articleRead, style: theme.textTheme.labelMedium?.copyWith(color: scheme.primary)),
+                      ],
+                    ),
                   ],
-                ],
+                ),
               ),
             ],
           ),

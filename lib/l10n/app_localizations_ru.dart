@@ -901,6 +901,11 @@ class AppLocalizationsRu extends AppLocalizations {
   String get knowledgeAll => 'Все';
 
   @override
+  String knowledgeGroupRead(int read, int total) {
+    return '$read из $total';
+  }
+
+  @override
   String articleCategory(String category) {
     String _temp0 = intl.Intl.selectLogic(category, {
       'addiction': 'Зависимость',

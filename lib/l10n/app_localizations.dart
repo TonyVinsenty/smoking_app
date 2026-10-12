@@ -1113,6 +1113,12 @@ abstract class AppLocalizations {
   /// **'Все'**
   String get knowledgeAll;
 
+  /// No description provided for @knowledgeGroupRead.
+  ///
+  /// In ru, this message translates to:
+  /// **'{read} из {total}'**
+  String knowledgeGroupRead(int read, int total);
+
   /// No description provided for @articleCategory.
   ///
   /// In ru, this message translates to:
