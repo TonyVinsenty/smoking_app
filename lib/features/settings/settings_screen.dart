@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../app/widgets/choice.dart';
 import '../../app/widgets/toast.dart';
 import '../../app/widgets/wheel_time_picker.dart';
 import '../../app/format.dart';
@@ -35,18 +36,12 @@ class SettingsScreen extends ConsumerWidget {
           header(l.settingsAppearance),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: SegmentedButton<ThemeMode>(
-              showSelectedIcon: false,
-              segments: [
-                for (final m in const [ThemeMode.system, ThemeMode.dark, ThemeMode.light])
-                  // Shrinks a little with «Крупный текст» instead of breaking «Системный» onto two lines.
-                  ButtonSegment(
-                    value: m,
-                    label: FittedBox(fit: BoxFit.scaleDown, child: Text(l.themeModeName(m.name), maxLines: 1)),
-                  ),
+            child: AppSegments<ThemeMode>(
+              options: [
+                for (final m in const [ThemeMode.system, ThemeMode.dark, ThemeMode.light]) (m, l.themeModeName(m.name)),
               ],
-              selected: {ref.watch(themeModeProvider)},
-              onSelectionChanged: (s) => ref.read(themeModeProvider.notifier).set(s.first),
+              selected: ref.watch(themeModeProvider),
+              onChanged: (m) => ref.read(themeModeProvider.notifier).set(m),
             ),
           ),
           const SizedBox(height: 8),

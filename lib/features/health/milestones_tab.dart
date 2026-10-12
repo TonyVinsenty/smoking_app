@@ -3,6 +3,7 @@ import 'dart:ui' show PathMetric;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../app/widgets/choice.dart';
 import '../../app/widgets/cards.dart';
 import '../../app/format.dart';
 import '../../app/widgets/metric_text.dart';
@@ -82,15 +83,14 @@ class _MilestonesTabState extends ConsumerState<MilestonesTab> {
             hasAttempt: current != null,
           ),
           const SizedBox(height: 16),
-          SegmentedButton<_Filter>(
-            showSelectedIcon: false,
-            segments: [
-              ButtonSegment(value: _Filter.passed, label: Text(l.healthFilterPassed)),
-              ButtonSegment(value: _Filter.nearest, label: Text(l.healthFilterNearest)),
-              ButtonSegment(value: _Filter.all, label: Text(l.healthFilterAll)),
+          AppSegments<_Filter>(
+            options: [
+              (_Filter.passed, l.healthFilterPassed),
+              (_Filter.nearest, l.healthFilterNearest),
+              (_Filter.all, l.healthFilterAll),
             ],
-            selected: {_filter},
-            onSelectionChanged: (s) => _setFilter(s.first),
+            selected: _filter,
+            onChanged: _setFilter,
           ),
           const SizedBox(height: 12),
           if (_filter == _Filter.passed && reached == 0)

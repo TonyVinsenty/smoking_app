@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../app/widgets/choice.dart';
 import '../../app/widgets/cards.dart';
 import '../../app/format.dart';
 import '../../app/widgets/metric_text.dart';
@@ -127,9 +128,8 @@ class _AttemptCard extends StatelessWidget {
               spacing: 8,
               runSpacing: 8,
               children: [
-                if (badges > 0)
-                  Chip(avatar: const Icon(Icons.military_tech_outlined, size: 18), label: Text(l.historyBadges(badges))),
-                if (attempt.trigger != null) Chip(label: Text(l.triggerName(attempt.trigger!.name))),
+                if (badges > 0) InfoLabel(l.historyBadges(badges), icon: Icons.emoji_events_outlined),
+                if (attempt.trigger != null) InfoLabel(l.triggerName(attempt.trigger!.name)),
               ],
             ),
             for (final (q, a) in diary) ...[

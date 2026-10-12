@@ -117,6 +117,18 @@ ThemeData buildTheme(Brightness brightness) {
       surfaceTintColor: Colors.transparent,
       titleTextStyle: text.titleLarge?.copyWith(color: scheme.onSurface),
     ),
+    // Filters (topics) and quick picks (SOS triggers): pill-shaped chips.
+    chipTheme: ChipThemeData(
+      shape: StadiumBorder(side: BorderSide(color: scheme.outlineVariant)),
+      labelStyle: text.labelLarge,
+      selectedColor: scheme.secondaryContainer,
+    ),
+    segmentedButtonTheme: SegmentedButtonThemeData(
+      style: ButtonStyle(
+        textStyle: WidgetStatePropertyAll(text.labelLarge?.copyWith(fontWeight: FontWeight.w600)),
+        side: WidgetStatePropertyAll(BorderSide(color: scheme.outlineVariant)),
+      ),
+    ),
     navigationBarTheme: NavigationBarThemeData(indicatorColor: scheme.primaryContainer),
     // A soft tinted card instead of the default inverse (white in dark mode) block.
     snackBarTheme: SnackBarThemeData(

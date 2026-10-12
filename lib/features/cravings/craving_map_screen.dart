@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../app/widgets/choice.dart';
 import '../../app/widgets/cards.dart';
 import '../../app/theme.dart';
 import '../../content/content.dart';
@@ -44,15 +45,14 @@ class _CravingMapScreenState extends ConsumerState<CravingMapScreen> {
       body: ListView(
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
         children: [
-          SegmentedButton<_Period>(
-            showSelectedIcon: false,
-            segments: [
-              ButtonSegment(value: _Period.week, label: Text(l.cravingPeriodWeek)),
-              ButtonSegment(value: _Period.month, label: Text(l.cravingPeriodMonth)),
-              ButtonSegment(value: _Period.all, label: Text(l.cravingPeriodAll)),
+          AppSegments<_Period>(
+            options: [
+              (_Period.week, l.cravingPeriodWeek),
+              (_Period.month, l.cravingPeriodMonth),
+              (_Period.all, l.cravingPeriodAll),
             ],
-            selected: {_period},
-            onSelectionChanged: (v) => setState(() => _period = v.first),
+            selected: _period,
+            onChanged: (v) => setState(() => _period = v),
           ),
           const SizedBox(height: 16),
           if (s.isEmpty)
