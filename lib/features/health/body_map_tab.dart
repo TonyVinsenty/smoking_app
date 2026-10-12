@@ -110,11 +110,7 @@ class _AreaTile extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 8),
-                  Text(
-                    l.bodyArea(area),
-                    maxLines: 2,
-                    style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
-                  ),
+                  Text(l.bodyArea(area), maxLines: 2, style: theme.textTheme.titleSmall),
                 ],
               ),
             ),

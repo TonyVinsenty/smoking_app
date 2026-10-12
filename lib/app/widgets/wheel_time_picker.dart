@@ -46,10 +46,7 @@ Future<TimeOfDay?> showWheelTimePicker(
                 ),
                 const SizedBox(width: 12),
                 Expanded(
-                  child: FilledButton(
-                    onPressed: () => Navigator.of(context).pop(selected),
-                    child: Text(l.done),
-                  ),
+                  child: FilledButton(onPressed: () => Navigator.of(context).pop(selected), child: Text(l.done)),
                 ),
               ],
             ),

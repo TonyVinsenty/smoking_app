@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/format.dart';
+import '../../app/widgets/metric_text.dart';
 import '../../content/content.dart';
 import '../../data/providers.dart';
 import '../../domain/stats.dart';
@@ -156,10 +157,8 @@ class _Summary extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              l.healthPassedCount(reached, total),
-              style: theme.textTheme.titleMedium?.copyWith(color: color, fontWeight: FontWeight.bold),
-            ),
+            Text(l.healthPassedLabel, style: theme.textTheme.labelMedium?.copyWith(color: color)),
+            MetricText(l.bodyProgress(reached, total), color: color),
             const SizedBox(height: 12),
             LinearProgressIndicator(value: reached / total, minHeight: 8, borderRadius: BorderRadius.circular(4)),
             const SizedBox(height: 12),

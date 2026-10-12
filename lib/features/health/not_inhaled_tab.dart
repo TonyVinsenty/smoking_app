@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../app/widgets/metric_text.dart';
 import '../../content/content.dart';
 import '../../data/database.dart';
 import '../../data/providers.dart';
@@ -95,10 +96,7 @@ class NotInhaledTab extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       spacing: 4,
                       children: [
-                        Text(
-                          l.unitsAvoided(e.key.name, fmt.format(e.value.floor())),
-                          style: theme.textTheme.headlineSmall?.copyWith(color: onCard, fontWeight: FontWeight.bold),
-                        ),
+                        MetricText(l.unitsAvoided(e.key.name, fmt.format(e.value.floor())), color: onCard),
                         for (final line in _details(l, fmt, e.key, e.value.floor(), mine))
                           Text(line, style: theme.textTheme.bodyLarge?.copyWith(color: onCard)),
                       ],
@@ -210,10 +208,7 @@ class _FactCard extends StatelessWidget {
                       children: [
                         TextSpan(
                           text: '${fact.value} ',
-                          style: theme.textTheme.titleLarge?.copyWith(
-                            color: scheme.primary,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: theme.textTheme.titleLarge?.copyWith(color: scheme.primary),
                         ),
                         TextSpan(text: fact.title, style: theme.textTheme.titleMedium),
                       ],

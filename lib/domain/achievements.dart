@@ -24,7 +24,10 @@ List<Achievement> dueAchievements({
   final everUnlocked = unlocked.map((u) => u.achievementId).toSet();
   final unlockedNow = unlocked.where((u) => u.attemptId == current.id).map((u) => u.achievementId).toSet();
   final main = mainProduct(productsOf(products, current.id));
-  final money = attempts.fold<double>(0, (sum, a) => sum + moneySaved(productsOf(products, a.id), attemptDuration(a, now)));
+  final money = attempts.fold<double>(
+    0,
+    (sum, a) => sum + moneySaved(productsOf(products, a.id), attemptDuration(a, now)),
+  );
   final units = attempts.fold<double>(
     0,
     (sum, a) => sum + (unitsAvoided(productsOf(products, a.id), attemptDuration(a, now))[main] ?? 0),

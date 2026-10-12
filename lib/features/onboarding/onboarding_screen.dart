@@ -171,7 +171,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
               padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
               child: Row(
                 children: [
-                  if (_step > (_editing ? 1 : 0)) TextButton(onPressed: () => setState(() => _step--), child: Text(l.back)),
+                  if (_step > (_editing ? 1 : 0))
+                    TextButton(onPressed: () => setState(() => _step--), child: Text(l.back)),
                   const Spacer(),
                   FilledButton(
                     onPressed: !_canContinue || _saving

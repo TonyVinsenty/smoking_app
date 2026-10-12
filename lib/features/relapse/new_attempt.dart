@@ -12,7 +12,10 @@ import '../onboarding/onboarding_screen.dart';
 /// (e.g. sticks → cigarettes), so first asks whether to keep the previous smoking habits or edit them.
 /// Returns false if the user backed out.
 Future<bool> startNewAttempt(BuildContext context, WidgetRef ref) async {
-  final previous = latestProducts(ref.read(productsProvider).value ?? const [], ref.read(attemptsProvider).value ?? const []);
+  final previous = latestProducts(
+    ref.read(productsProvider).value ?? const [],
+    ref.read(attemptsProvider).value ?? const [],
+  );
   final keep = previous.isEmpty ? false : await _askKeep(context, previous);
   if (keep == null || !context.mounted) return false;
   final products = keep
@@ -42,7 +45,12 @@ Future<bool?> _askKeep(BuildContext context, List<SmokingProduct> products) {
               const SizedBox(height: 12),
               Text(l.productName(p.type.name), style: theme.textTheme.titleMedium),
               Text(
-                l.productSummary(num.format(p.amount), l.periodName(p.period.name), num.format(p.packPrice), p.type.name),
+                l.productSummary(
+                  num.format(p.amount),
+                  l.periodName(p.period.name),
+                  num.format(p.packPrice),
+                  p.type.name,
+                ),
               ),
             ],
           ],

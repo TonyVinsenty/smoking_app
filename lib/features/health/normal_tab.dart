@@ -84,7 +84,7 @@ class _SymptomCard extends StatelessWidget {
           ),
         ),
     ];
-    final title = Text(s.title, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold));
+    final title = Text(s.title, style: theme.textTheme.titleMedium);
     final lasts = Text(l.normalLasts(s.duration), style: theme.textTheme.bodySmall?.copyWith(color: scheme.primary));
     if (!active) {
       return Card(

@@ -145,7 +145,7 @@ class _GroupHeader extends StatelessWidget {
             children: [
               Icon(_categoryIcon(category), color: theme.colorScheme.primary),
               const SizedBox(width: 10),
-              Expanded(child: Text(l.articleCategory(category), style: theme.textTheme.titleLarge)),
+              Expanded(child: Text(l.articleCategory(category), style: theme.textTheme.titleMedium)),
               Text(
                 l.knowledgeGroupRead(read, total),
                 style: theme.textTheme.labelLarge?.copyWith(color: theme.colorScheme.outline),

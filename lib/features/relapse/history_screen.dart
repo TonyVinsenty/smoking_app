@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../app/format.dart';
+import '../../app/widgets/metric_text.dart';
 import '../../data/database.dart';
 import '../../data/providers.dart';
 import '../../domain/stats.dart';
@@ -28,7 +29,12 @@ class HistoryScreen extends ConsumerWidget {
     Widget stat(String title, String value) => Expanded(
       child: Column(
         children: [
-          Text(value, textAlign: TextAlign.center, style: theme.textTheme.titleLarge),
+          MetricText(
+            value,
+            textAlign: TextAlign.center,
+            style: theme.textTheme.headlineSmall,
+            unitStyle: theme.textTheme.labelLarge,
+          ),
           Text(title, textAlign: TextAlign.center, style: theme.textTheme.labelMedium),
         ],
       ),
@@ -115,7 +121,7 @@ class _AttemptCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 4),
-            Text(formatElapsed(l, attemptDuration(attempt, now)), style: theme.textTheme.headlineSmall),
+            MetricText(formatElapsed(l, attemptDuration(attempt, now)), style: theme.textTheme.headlineSmall),
             Text(range, style: theme.textTheme.bodyMedium),
             const SizedBox(height: 8),
             Wrap(

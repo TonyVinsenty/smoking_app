@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../app/widgets/metric_text.dart';
 import '../../content/content.dart';
 import '../../l10n/app_localizations.dart';
 import 'health_common.dart';
@@ -41,10 +42,7 @@ class _FactCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              fact.value,
-              style: theme.textTheme.headlineMedium?.copyWith(color: scheme.primary, fontWeight: FontWeight.bold),
-            ),
+            MetricText(fact.value, color: scheme.primary),
             const SizedBox(height: 4),
             Text(fact.text, style: theme.textTheme.bodyMedium),
             const SizedBox(height: 8),

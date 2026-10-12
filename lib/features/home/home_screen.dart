@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../app/widgets/metric_text.dart';
 import '../../app/widgets/reserve_largest.dart';
 import '../../content/content.dart';
 import '../../data/database.dart';
@@ -110,10 +111,7 @@ class _TimerCard extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 10),
       child: Column(
         children: [
-          Text(
-            '${u.$1}',
-            style: theme.textTheme.displayMedium?.copyWith(color: color, fontWeight: FontWeight.bold, height: 1.1),
-          ),
+          Text('${u.$1}', style: theme.textTheme.displayLarge?.merge(clockStyle)),
           Text(u.$2, style: theme.textTheme.titleMedium?.copyWith(color: color)),
         ],
       ),
@@ -127,7 +125,7 @@ class _TimerCard extends StatelessWidget {
           children: [
             if (shown.isEmpty)
               // Less than a day: the clock is the hero.
-              Text(clock, style: theme.textTheme.displayMedium?.merge(clockStyle).copyWith(fontWeight: FontWeight.bold))
+              Text(clock, style: theme.textTheme.displayLarge?.merge(clockStyle))
             else ...[
               FittedBox(
                 fit: BoxFit.scaleDown,
@@ -151,7 +149,7 @@ class _TimerCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 8),
-              Text(clock, style: theme.textTheme.headlineMedium?.merge(clockStyle)),
+              Text(clock, style: theme.textTheme.titleLarge?.merge(clockStyle)),
               if (d.inDays >= 7)
                 Text(l.homeTotal(l.durDays(d.inDays)), style: theme.textTheme.titleMedium?.merge(clockStyle)),
             ],
@@ -204,7 +202,7 @@ class _SavingsCard extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               Text(title, style: theme.textTheme.labelLarge),
-              for (final v in values) Text(v, style: theme.textTheme.titleLarge),
+              for (final v in values) MetricText(v),
               if (onMore != null)
                 Padding(
                   padding: const EdgeInsets.only(top: 4),
@@ -395,7 +393,10 @@ class _QuoteCardState extends State<_QuoteCard> {
       key: ValueKey(q),
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(q.text, style: theme.textTheme.titleMedium?.copyWith(color: color)),
+        Text(
+          q.text,
+          style: theme.textTheme.bodyLarge?.copyWith(color: color, fontWeight: FontWeight.w500),
+        ),
         if (q.author != null) ...[
           const SizedBox(height: 8),
           Text('— ${q.author}', style: theme.textTheme.bodyMedium?.copyWith(color: color)),

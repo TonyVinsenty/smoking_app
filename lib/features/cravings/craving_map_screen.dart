@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../app/theme.dart';
 import '../../content/content.dart';
 import '../../data/providers.dart';
 import '../../domain/craving_stats.dart';
@@ -165,10 +166,7 @@ class _SummaryCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.baseline,
               textBaseline: TextBaseline.alphabetic,
               children: [
-                Text(
-                  '${count.resisted}',
-                  style: theme.textTheme.displayMedium?.copyWith(color: color, fontWeight: FontWeight.bold),
-                ),
+                Text('${count.resisted}', style: theme.textTheme.displayLarge?.copyWith(color: color)),
                 const SizedBox(width: 8),
                 Text(l.cravingOfTotal(count.total), style: theme.textTheme.titleLarge?.copyWith(color: color)),
               ],
@@ -263,7 +261,7 @@ class _Columns extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 4),
               child: Column(
                 children: [
-                  Text('${count.total}', style: theme.textTheme.labelLarge),
+                  Text('${count.total}', style: theme.textTheme.labelLarge?.copyWith(fontFeatures: tabular)),
                   const SizedBox(height: 4),
                   SizedBox(
                     height: height,
@@ -323,7 +321,7 @@ class _Row extends StatelessWidget {
           Row(
             children: [
               Expanded(child: Text(label, style: theme.textTheme.bodyLarge)),
-              Text('${count.total}', style: theme.textTheme.labelLarge),
+              Text('${count.total}', style: theme.textTheme.labelLarge?.copyWith(fontFeatures: tabular)),
             ],
           ),
           const SizedBox(height: 4),

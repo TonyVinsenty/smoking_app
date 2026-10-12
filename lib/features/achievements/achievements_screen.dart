@@ -89,10 +89,7 @@ class _AchievementsList extends ConsumerWidget {
                     Icon(allOpen ? Icons.unfold_less : Icons.unfold_more, color: theme.colorScheme.primary),
                     Text(
                       allOpen ? l.collapseAll : l.expandAll,
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        color: theme.colorScheme.primary,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: theme.textTheme.titleMedium?.copyWith(color: theme.colorScheme.primary),
                     ),
                   ],
                 ),
@@ -121,12 +118,7 @@ class _AchievementsList extends ConsumerWidget {
                           spacing: 8,
                           children: [
                             Icon(_groupIcon(group), color: theme.colorScheme.primary),
-                            Expanded(
-                              child: Text(
-                                l.achGroup(group),
-                                style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-                              ),
-                            ),
+                            Expanded(child: Text(l.achGroup(group), style: theme.textTheme.titleMedium)),
                             Text(
                               l.achGroupProgress(done, items.length, percentOf(done, items.length)),
                               style: theme.textTheme.labelLarge,
