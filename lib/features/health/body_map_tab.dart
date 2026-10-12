@@ -37,7 +37,7 @@ class BodyMapTab extends ConsumerWidget {
         // Rows of two equal-height tiles; they grow with a large system font.
         for (var i = 0; i < tiles.length; i += 2)
           Padding(
-            padding: const EdgeInsets.only(bottom: 12),
+            padding: const EdgeInsets.only(bottom: 10),
             child: IntrinsicHeight(
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -94,19 +94,27 @@ class _AreaTile extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(12),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CircleAvatar(
-                    radius: 22,
-                    backgroundColor: full ? scheme.primary : scheme.surface,
-                    child: Icon(categoryIcon(area), color: full ? scheme.onPrimary : scheme.primary),
+                  Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 16,
+                        backgroundColor: full ? scheme.primary : scheme.surface,
+                        child: Icon(categoryIcon(area), size: 18, color: full ? scheme.onPrimary : scheme.primary),
+                      ),
+                      const Spacer(),
+                      Text(l.bodyProgress(done, milestones.length), style: theme.textTheme.labelLarge),
+                    ],
                   ),
-                  const SizedBox(height: 12),
-                  Text(l.bodyArea(area), style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 4),
-                  Text(l.bodyProgress(done, milestones.length), style: theme.textTheme.bodyMedium),
+                  const SizedBox(height: 8),
+                  Text(
+                    l.bodyArea(area),
+                    maxLines: 2,
+                    style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+                  ),
                 ],
               ),
             ),

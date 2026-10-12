@@ -153,7 +153,7 @@
   "@normalLasts": {"placeholders": {"duration": {"type": "String"}}},
   "normalHelps": "Что помогает",
   "normalSources": "Сроки — по таблице симптомов отмены MSD Manual (материалы программы Rx for Change, Калифорнийский университет); совет про кашель — NHS.",
-  "bodyIntro": "Каждый пройденный этап восстановления заполняет свою часть карты. Нажмите на плитку, чтобы увидеть её этапы.",
+  "bodyIntro": "Пройденные этапы заполняют карту. Нажмите на плитку, чтобы увидеть её этапы.",
   "bodyArea": "{area, select, heart{Сердце} lungs{Лёгкие} circulation{Кровообращение} energy{Энергия} mind{Голова и настроение} taste_smell{Вкус и запах} other{Защита от болезней}}",
   "@bodyArea": {"placeholders": {"area": {"type": "String"}}},
   "bodyProgress": "{done} из {total}",

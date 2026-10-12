@@ -584,7 +584,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get bodyIntro =>
-      'Каждый пройденный этап восстановления заполняет свою часть карты. Нажмите на плитку, чтобы увидеть её этапы.';
+      'Пройденные этапы заполняют карту. Нажмите на плитку, чтобы увидеть её этапы.';
 
   @override
   String bodyArea(String area) {

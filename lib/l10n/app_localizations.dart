@@ -769,7 +769,7 @@ abstract class AppLocalizations {
   /// No description provided for @bodyIntro.
   ///
   /// In ru, this message translates to:
-  /// **'Каждый пройденный этап восстановления заполняет свою часть карты. Нажмите на плитку, чтобы увидеть её этапы.'**
+  /// **'Пройденные этапы заполняют карту. Нажмите на плитку, чтобы увидеть её этапы.'**
   String get bodyIntro;
 
   /// No description provided for @bodyArea.
