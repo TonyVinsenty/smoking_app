@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../app/theme.dart';
+import '../../app/widgets/motion.dart';
 import '../../app/widgets/cards.dart';
 import '../../app/widgets/toast.dart';
 import '../../content/content.dart';
@@ -383,18 +385,27 @@ class _CountdownState extends State<_Countdown> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
+        // The old number leaves upwards first, then the new one rises from below: they never overlap.
         AnimatedSwitcher(
-          duration: const Duration(milliseconds: 600),
-          transitionBuilder: (child, a) => FadeTransition(
-            opacity: a,
-            child: ScaleTransition(scale: Tween(begin: 0.8, end: 1.0).animate(a), child: child),
-          ),
+          duration: motion(context, const Duration(milliseconds: 700)),
+          transitionBuilder: (child, a) {
+            final incoming = child.key == ValueKey(_n);
+            final fade = CurvedAnimation(parent: a, curve: const Interval(0.5, 1));
+            return FadeTransition(
+              opacity: fade,
+              child: SlideTransition(
+                position: Tween(begin: Offset(0, incoming ? 0.35 : -0.35), end: Offset.zero).animate(fade),
+                child: child,
+              ),
+            );
+          },
           child: Text(
             '$_n',
             key: ValueKey(_n),
             style: theme.textTheme.displayLarge?.copyWith(
               fontSize: 120,
-              fontWeight: FontWeight.w300,
+              fontWeight: FontWeight.w500,
+              fontFeatures: tabular,
               color: theme.colorScheme.primary,
             ),
           ),
