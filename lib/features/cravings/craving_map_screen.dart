@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../app/widgets/cards.dart';
 import '../../app/theme.dart';
 import '../../content/content.dart';
 import '../../data/providers.dart';
@@ -55,13 +56,7 @@ class _CravingMapScreenState extends ConsumerState<CravingMapScreen> {
           ),
           const SizedBox(height: 16),
           if (s.isEmpty)
-            Card(
-              color: theme.colorScheme.surfaceContainerHigh,
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Text(l.cravingNoData, style: theme.textTheme.bodyLarge),
-              ),
-            )
+            AppCard(child: Text(l.cravingNoData, style: theme.textTheme.bodyLarge))
           else ...[
             _SummaryCard(count: s.summary),
             const SizedBox(height: 12),
@@ -94,36 +89,7 @@ class _CravingMapScreenState extends ConsumerState<CravingMapScreen> {
             ),
             if (tip != null) ...[
               const SizedBox(height: 12),
-              Card(
-                color: theme.colorScheme.secondaryContainer,
-                child: Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Icon(Icons.lightbulb_outline, color: theme.colorScheme.onSecondaryContainer),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: Text(
-                              l.cravingTipTitle(l.triggerName(top!.name)),
-                              style: theme.textTheme.titleMedium?.copyWith(
-                                color: theme.colorScheme.onSecondaryContainer,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        tip,
-                        style: theme.textTheme.bodyLarge?.copyWith(color: theme.colorScheme.onSecondaryContainer),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+              TipCard(title: l.cravingTipTitle(l.triggerName(top!.name)), child: Text(tip)),
             ],
             const SizedBox(height: 12),
             _Section(
@@ -155,31 +121,28 @@ class _SummaryCard extends StatelessWidget {
     final l = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final color = theme.colorScheme.onPrimaryContainer;
-    return Card(
-      color: theme.colorScheme.primaryContainer,
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.baseline,
-              textBaseline: TextBaseline.alphabetic,
-              children: [
-                Text('${count.resisted}', style: theme.textTheme.displayLarge?.copyWith(color: color)),
-                const SizedBox(width: 8),
-                Text(l.cravingOfTotal(count.total), style: theme.textTheme.titleLarge?.copyWith(color: color)),
-              ],
-            ),
-            Text(l.cravingSummary(count.resisted), style: theme.textTheme.titleMedium?.copyWith(color: color)),
-            const SizedBox(height: 12),
-            LinearProgressIndicator(
-              value: count.resisted / count.total,
-              minHeight: 8,
-              borderRadius: BorderRadius.circular(4),
-            ),
-          ],
-        ),
+    return AppCard(
+      tone: CardTone.hero,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
+            children: [
+              Text('${count.resisted}', style: theme.textTheme.displayLarge?.copyWith(color: color)),
+              const SizedBox(width: 8),
+              Text(l.cravingOfTotal(count.total), style: theme.textTheme.titleLarge?.copyWith(color: color)),
+            ],
+          ),
+          Text(l.cravingSummary(count.resisted), style: theme.textTheme.titleMedium?.copyWith(color: color)),
+          const SizedBox(height: 12),
+          LinearProgressIndicator(
+            value: count.resisted / count.total,
+            minHeight: 8,
+            borderRadius: BorderRadius.circular(4),
+          ),
+        ],
       ),
     );
   }
@@ -195,21 +158,17 @@ class _Section extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Card(
-      color: theme.colorScheme.surfaceContainerHigh,
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(title, style: theme.textTheme.titleLarge),
-            if (subtitle != null) ...[const SizedBox(height: 4), Text(subtitle!, style: theme.textTheme.bodyMedium)],
-            const SizedBox(height: 16),
-            child,
-            const SizedBox(height: 12),
-            const _Legend(),
-          ],
-        ),
+    return AppCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title, style: theme.textTheme.titleLarge),
+          if (subtitle != null) ...[const SizedBox(height: 4), Text(subtitle!, style: theme.textTheme.bodyMedium)],
+          const SizedBox(height: 16),
+          child,
+          const SizedBox(height: 12),
+          const _Legend(),
+        ],
       ),
     );
   }

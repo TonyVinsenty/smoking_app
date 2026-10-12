@@ -47,6 +47,52 @@ TextTheme _textTheme(TextTheme base) {
   );
 }
 
+/// Faint two-layer shadow of ordinary cards in the light theme.
+const softShadow = [
+  BoxShadow(color: Color(0x0F002822), blurRadius: 2, offset: Offset(0, 1)),
+  BoxShadow(color: Color(0x12002822), blurRadius: 14, offset: Offset(0, 4)),
+];
+
+/// Colours outside the Material scheme. Warm apricot is only for rewards and celebrations.
+@immutable
+class AppColors extends ThemeExtension<AppColors> {
+  const AppColors({required this.reward, required this.rewardContainer, required this.onRewardContainer});
+
+  /// Strong warm colour: «+10 XP», reward icons.
+  final Color reward;
+  final Color rewardContainer;
+  final Color onRewardContainer;
+
+  static const light = AppColors(
+    reward: Color(0xFFB0611F),
+    rewardContainer: Color(0xFFFBEBDC),
+    onRewardContainer: Color(0xFF4A2508),
+  );
+  static const dark = AppColors(
+    reward: Color(0xFFEDB07A),
+    rewardContainer: Color(0xFF3A2A1B),
+    onRewardContainer: Color(0xFFFBDDC2),
+  );
+
+  static AppColors of(BuildContext context) => Theme.of(context).extension<AppColors>()!;
+
+  @override
+  AppColors copyWith({Color? reward, Color? rewardContainer, Color? onRewardContainer}) => AppColors(
+    reward: reward ?? this.reward,
+    rewardContainer: rewardContainer ?? this.rewardContainer,
+    onRewardContainer: onRewardContainer ?? this.onRewardContainer,
+  );
+
+  @override
+  AppColors lerp(AppColors? other, double t) => other == null
+      ? this
+      : AppColors(
+          reward: Color.lerp(reward, other.reward, t)!,
+          rewardContainer: Color.lerp(rewardContainer, other.rewardContainer, t)!,
+          onRewardContainer: Color.lerp(onRewardContainer, other.onRewardContainer, t)!,
+        );
+}
+
 ThemeData buildTheme(Brightness brightness) {
   final scheme = ColorScheme.fromSeed(seedColor: _seed, brightness: brightness);
   final base = ThemeData(colorScheme: scheme, useMaterial3: true);
@@ -54,10 +100,15 @@ ThemeData buildTheme(Brightness brightness) {
   final text = _textTheme(Typography.englishLike2021.merge(base.textTheme));
   return base.copyWith(
     textTheme: text,
-    cardTheme: const CardThemeData(
-      elevation: 0,
+    extensions: [brightness == Brightness.light ? AppColors.light : AppColors.dark],
+    // Same look as AppCard(tone: plain) for any plain Card left.
+    cardTheme: CardThemeData(
+      color: brightness == Brightness.light ? scheme.surfaceContainerLowest : scheme.surfaceContainer,
+      elevation: brightness == Brightness.light ? 1 : 0,
+      shadowColor: const Color(0x66002822),
+      surfaceTintColor: Colors.transparent,
       margin: EdgeInsets.zero,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
     ),
     // The title bar keeps its color when content scrolls under it.
     appBarTheme: AppBarTheme(

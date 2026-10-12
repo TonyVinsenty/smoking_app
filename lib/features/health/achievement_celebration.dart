@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../app/widgets/cards.dart';
 import '../../app/format.dart';
 import '../../app/widgets/badge_icon.dart';
 import '../../content/content.dart';
@@ -154,7 +155,7 @@ class _CelebrationState extends State<_Celebration> with TickerProviderStateMixi
                         style: theme.textTheme.bodyLarge,
                       ),
                       const SizedBox(height: 12),
-                      Chip(label: Text('+${a.xp} XP')),
+                      RewardPill('+${a.xp} XP'),
                       const SizedBox(height: 8),
                       FilledButton(onPressed: () => Navigator.pop(context), child: Text(l.achCelebrateOk)),
                     ],

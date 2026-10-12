@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../app/widgets/cards.dart';
 import '../../app/format.dart';
 import '../../app/widgets/badge_icon.dart';
 import '../../content/content.dart';
@@ -262,7 +263,7 @@ class _BadgeTile extends ConsumerWidget {
                     label: Text(l.tierName(a.tier)),
                     side: BorderSide(color: rarity),
                   ),
-                  Chip(label: Text('+${a.xp} XP')),
+                  RewardPill('+${a.xp} XP'),
                 ],
               ),
             ],

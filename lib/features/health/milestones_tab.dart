@@ -3,6 +3,7 @@ import 'dart:ui' show PathMetric;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../app/widgets/cards.dart';
 import '../../app/format.dart';
 import '../../app/widgets/metric_text.dart';
 import '../../content/content.dart';
@@ -150,32 +151,29 @@ class _Summary extends StatelessWidget {
     final theme = Theme.of(context);
     final color = theme.colorScheme.onPrimaryContainer;
     final text = theme.textTheme.bodyMedium?.copyWith(color: color);
-    return Card(
-      color: theme.colorScheme.primaryContainer,
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(l.healthPassedLabel, style: theme.textTheme.labelMedium?.copyWith(color: color)),
-            MetricText(l.bodyProgress(reached, total), color: color),
-            const SizedBox(height: 12),
-            LinearProgressIndicator(value: reached / total, minHeight: 8, borderRadius: BorderRadius.circular(4)),
-            const SizedBox(height: 12),
-            if (!hasAttempt)
-              Text(l.healthNoAttempt, style: text)
-            else ...[
-              Text(
-                next == null
-                    ? l.healthAllPassed
-                    : l.healthNext(formatRemaining(l, Duration(seconds: ((next!.afterMinutes - minutes) * 60).ceil()))),
-                style: text,
-              ),
-              const SizedBox(height: 4),
-              Text(minutes < 8 * 1440 ? l.healthFirstDays : l.healthFirstDaysDone, style: text),
-            ],
+    return AppCard(
+      tone: CardTone.hero,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(l.healthPassedLabel, style: theme.textTheme.labelMedium?.copyWith(color: color)),
+          MetricText(l.bodyProgress(reached, total), color: color),
+          const SizedBox(height: 12),
+          LinearProgressIndicator(value: reached / total, minHeight: 8, borderRadius: BorderRadius.circular(4)),
+          const SizedBox(height: 12),
+          if (!hasAttempt)
+            Text(l.healthNoAttempt, style: text)
+          else ...[
+            Text(
+              next == null
+                  ? l.healthAllPassed
+                  : l.healthNext(formatRemaining(l, Duration(seconds: ((next!.afterMinutes - minutes) * 60).ceil()))),
+              style: text,
+            ),
+            const SizedBox(height: 4),
+            Text(minutes < 8 * 1440 ? l.healthFirstDays : l.healthFirstDaysDone, style: text),
           ],
-        ),
+        ],
       ),
     );
   }
@@ -270,49 +268,46 @@ class _MilestoneRow extends StatelessWidget {
               padding: const EdgeInsets.only(bottom: 12),
               child: Opacity(
                 opacity: reached || isNext ? 1 : 0.75,
-                child: Card(
-                  color: reached ? scheme.primaryContainer.withValues(alpha: 0.6) : scheme.surfaceContainerHigh,
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          formatPeriod(l, m.afterMinutes),
-                          style: theme.textTheme.labelLarge?.copyWith(color: scheme.primary),
-                        ),
-                        const SizedBox(height: 2),
-                        Text(m.title, style: theme.textTheme.titleMedium),
-                        const SizedBox(height: 4),
-                        Text(m.description, style: theme.textTheme.bodyMedium),
-                        const SizedBox(height: 8),
-                        if (reached)
-                          Text(l.healthReached, style: theme.textTheme.labelMedium?.copyWith(color: scheme.primary))
-                        else ...[
-                          if (isNext) ...[
-                            LinearProgressIndicator(
-                              value: progress,
-                              minHeight: 6,
-                              borderRadius: BorderRadius.circular(3),
-                            ),
-                            const SizedBox(height: 4),
-                          ],
-                          Text(
-                            l.healthRemaining(
-                              formatRemaining(l, Duration(seconds: ((m.afterMinutes - minutes) * 60).ceil())),
-                            ),
-                            style: theme.textTheme.labelMedium,
+                child: AppCard(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        formatPeriod(l, m.afterMinutes),
+                        style: theme.textTheme.labelLarge?.copyWith(color: scheme.primary),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(m.title, style: theme.textTheme.titleMedium),
+                      const SizedBox(height: 4),
+                      Text(m.description, style: theme.textTheme.bodyMedium),
+                      const SizedBox(height: 8),
+                      if (reached)
+                        Text(l.healthReached, style: theme.textTheme.labelMedium?.copyWith(color: scheme.primary))
+                      else ...[
+                        if (isNext) ...[
+                          LinearProgressIndicator(
+                            value: progress,
+                            minHeight: 6,
+                            borderRadius: BorderRadius.circular(3),
                           ),
-                        ],
-                        if (m.source != null) ...[
                           const SizedBox(height: 4),
-                          Text(
-                            l.healthSource(m.source!),
-                            style: theme.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
-                          ),
                         ],
+                        Text(
+                          l.healthRemaining(
+                            formatRemaining(l, Duration(seconds: ((m.afterMinutes - minutes) * 60).ceil())),
+                          ),
+                          style: theme.textTheme.labelMedium,
+                        ),
                       ],
-                    ),
+                      if (m.source != null) ...[
+                        const SizedBox(height: 4),
+                        Text(
+                          l.healthSource(m.source!),
+                          style: theme.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
+                        ),
+                      ],
+                    ],
                   ),
                 ),
               ),

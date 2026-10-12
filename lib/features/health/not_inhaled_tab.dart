@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../app/widgets/cards.dart';
 import '../../app/widgets/metric_text.dart';
 import '../../content/content.dart';
 import '../../data/database.dart';
@@ -82,53 +83,53 @@ class NotInhaledTab extends ConsumerWidget {
       children: [
         Text(l.notInhaledTitle, style: theme.textTheme.titleLarge),
         const SizedBox(height: 12),
-        for (final e in units.entries) ...[
-          Card(
-            color: scheme.primaryContainer,
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: Row(
-                spacing: 16,
-                children: [
-                  Icon(_productIcon(e.key), size: 36, color: onCard),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      spacing: 4,
-                      children: [
-                        MetricText(l.unitsAvoided(e.key.name, fmt.format(e.value.floor())), color: onCard),
-                        for (final line in _details(l, fmt, e.key, e.value.floor(), mine))
-                          Text(line, style: theme.textTheme.bodyLarge?.copyWith(color: onCard)),
-                      ],
+        // One main block for every product of the current attempt.
+        AppCard(
+          tone: CardTone.hero,
+          child: Column(
+            children: [
+              for (final (i, e) in units.entries.indexed) ...[
+                if (i > 0) Divider(height: 32, color: onCard.withValues(alpha: 0.2)),
+                Row(
+                  spacing: 16,
+                  children: [
+                    Icon(_productIcon(e.key), size: 36, color: onCard),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        spacing: 4,
+                        children: [
+                          MetricText(l.unitsAvoided(e.key.name, fmt.format(e.value.floor())), color: onCard),
+                          for (final line in _details(l, fmt, e.key, e.value.floor(), mine))
+                            Text(line, style: theme.textTheme.bodyMedium?.copyWith(color: onCard)),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ),
+                  ],
+                ),
+              ],
+            ],
           ),
-          const SizedBox(height: 12),
-        ],
+        ),
+        const SizedBox(height: 12),
         if (attempts.length > 1) ...[
-          Card(
-            color: scheme.surfaceContainerHigh,
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                spacing: 4,
-                children: [
-                  Text(l.notInhaledAllTime, style: theme.textTheme.titleMedium),
-                  for (final e in allTime.entries)
-                    Text(
-                      [
-                        l.unitsAvoided(e.key.name, fmt.format(e.value.floor())),
-                        if (e.key == ProductType.cigarettes || e.key == ProductType.sticks)
-                          _puffs(l, fmt, e.key, e.value.floor()),
-                      ].join(' · '),
-                      style: theme.textTheme.bodyLarge,
-                    ),
-                ],
-              ),
+          AppCard(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 4,
+              children: [
+                Text(l.notInhaledAllTime, style: theme.textTheme.titleMedium),
+                for (final e in allTime.entries)
+                  Text(
+                    [
+                      l.unitsAvoided(e.key.name, fmt.format(e.value.floor())),
+                      if (e.key == ProductType.cigarettes || e.key == ProductType.sticks)
+                        _puffs(l, fmt, e.key, e.value.floor()),
+                    ].join(' · '),
+                    style: theme.textTheme.bodyLarge,
+                  ),
+              ],
             ),
           ),
           const SizedBox(height: 12),
@@ -187,45 +188,39 @@ class _FactCard extends StatelessWidget {
     final l = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
-    return Card(
-      color: scheme.surfaceContainerHigh,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              spacing: 12,
-              children: [
-                CircleAvatar(
-                  radius: 20,
-                  backgroundColor: scheme.primaryContainer,
-                  child: Icon(icon, color: scheme.onPrimaryContainer),
-                ),
-                Expanded(
-                  child: Text.rich(
-                    TextSpan(
-                      children: [
-                        TextSpan(
-                          text: '${fact.value} ',
-                          style: theme.textTheme.titleLarge?.copyWith(color: scheme.primary),
-                        ),
-                        TextSpan(text: fact.title, style: theme.textTheme.titleMedium),
-                      ],
-                    ),
+    return AppCard(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            spacing: 12,
+            children: [
+              CircleAvatar(
+                radius: 20,
+                backgroundColor: scheme.secondaryContainer,
+                child: Icon(icon, color: scheme.onSecondaryContainer),
+              ),
+              Expanded(
+                child: Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(
+                        text: '${fact.value} ',
+                        style: theme.textTheme.titleLarge?.copyWith(color: scheme.primary),
+                      ),
+                      TextSpan(text: fact.title, style: theme.textTheme.titleMedium),
+                    ],
                   ),
                 ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Text(fact.text, style: theme.textTheme.bodyMedium),
-            const SizedBox(height: 8),
-            Text(
-              l.healthSource(fact.source),
-              style: theme.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
-            ),
-          ],
-        ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(fact.text, style: theme.textTheme.bodyMedium),
+          const SizedBox(height: 8),
+          Text(l.healthSource(fact.source), style: theme.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant)),
+        ],
       ),
     );
   }

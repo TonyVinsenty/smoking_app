@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../app/widgets/cards.dart';
 import '../../content/content.dart';
 import '../../data/providers.dart';
 import '../../domain/stats.dart';
@@ -88,7 +89,6 @@ class _SymptomCard extends StatelessWidget {
     final lasts = Text(l.normalLasts(s.duration), style: theme.textTheme.bodySmall?.copyWith(color: scheme.primary));
     if (!active) {
       return Card(
-        color: scheme.surfaceContainer,
         clipBehavior: Clip.antiAlias,
         child: Theme(
           // No divider lines around the expanded tile inside the card.
@@ -103,14 +103,11 @@ class _SymptomCard extends StatelessWidget {
         ),
       );
     }
-    return Card(
-      color: scheme.secondaryContainer,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [title, const SizedBox(height: 2), lasts, const SizedBox(height: 8), ...details],
-        ),
+    return AppCard(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [title, const SizedBox(height: 2), lasts, const SizedBox(height: 8), ...details],
       ),
     );
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../app/widgets/cards.dart';
 import '../../content/content.dart';
 import '../../data/providers.dart';
 import '../../data/settings.dart';
@@ -40,28 +41,25 @@ class _KnowledgeScreenState extends ConsumerState<KnowledgeScreen> {
         // Room below the last card so it can scroll clear of the SOS button.
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 120),
         children: [
-          Card(
-            color: theme.colorScheme.primaryContainer,
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Icon(Icons.menu_book, color: theme.colorScheme.onPrimaryContainer),
-                      const SizedBox(width: 12),
-                      Text(l.knowledgeProgress(readCount, articles.length), style: theme.textTheme.titleMedium),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  LinearProgressIndicator(
-                    value: articles.isEmpty ? 0 : readCount / articles.length,
-                    minHeight: 8,
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                ],
-              ),
+          AppCard(
+            tone: CardTone.hero,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(Icons.menu_book, color: theme.colorScheme.onPrimaryContainer),
+                    const SizedBox(width: 12),
+                    Text(l.knowledgeProgress(readCount, articles.length), style: theme.textTheme.titleMedium),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                LinearProgressIndicator(
+                  value: articles.isEmpty ? 0 : readCount / articles.length,
+                  minHeight: 8,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+              ],
             ),
           ),
           const SizedBox(height: 8),
@@ -176,66 +174,55 @@ class _ArticleCard extends StatelessWidget {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
     final muted = theme.textTheme.labelMedium?.copyWith(color: scheme.outline);
-    return Card(
-      // A tinted card with a border stands out from the page background in both themes.
-      color: scheme.surfaceContainerHigh,
+    return AppCard(
       margin: const EdgeInsets.symmetric(vertical: 6),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-        side: BorderSide(color: scheme.outlineVariant),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: () => ArticleScreen.open(context, article),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                width: 44,
-                height: 44,
-                decoration: BoxDecoration(
-                  color: isRead ? scheme.primary : scheme.primaryContainer,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(
-                  isRead ? Icons.check : _categoryIcon(article.category),
-                  color: isRead ? scheme.onPrimary : scheme.onPrimaryContainer,
-                ),
-              ),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+      onTap: () => ArticleScreen.open(context, article),
+      padding: const EdgeInsets.all(16),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              color: isRead ? scheme.primary : scheme.secondaryContainer,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(
+              isRead ? Icons.check : _categoryIcon(article.category),
+              color: isRead ? scheme.onPrimary : scheme.onSecondaryContainer,
+            ),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(article.title, style: theme.textTheme.titleMedium),
+                const SizedBox(height: 6),
+                Text(article.summary, style: theme.textTheme.bodyMedium?.copyWith(color: scheme.onSurfaceVariant)),
+                const SizedBox(height: 10),
+                Wrap(
+                  spacing: 12,
+                  runSpacing: 4,
+                  crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
-                    Text(article.title, style: theme.textTheme.titleMedium),
-                    const SizedBox(height: 6),
-                    Text(article.summary, style: theme.textTheme.bodyMedium?.copyWith(color: scheme.onSurfaceVariant)),
-                    const SizedBox(height: 10),
-                    Wrap(
-                      spacing: 12,
-                      runSpacing: 4,
-                      crossAxisAlignment: WrapCrossAlignment.center,
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(Icons.schedule, size: 16, color: scheme.outline),
-                            const SizedBox(width: 4),
-                            Text(l.articleMinutes(article.readMinutes), style: muted),
-                          ],
-                        ),
-                        if (isRead)
-                          Text(l.articleRead, style: theme.textTheme.labelMedium?.copyWith(color: scheme.primary)),
+                        Icon(Icons.schedule, size: 16, color: scheme.outline),
+                        const SizedBox(width: 4),
+                        Text(l.articleMinutes(article.readMinutes), style: muted),
                       ],
                     ),
+                    if (isRead)
+                      Text(l.articleRead, style: theme.textTheme.labelMedium?.copyWith(color: scheme.primary)),
                   ],
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

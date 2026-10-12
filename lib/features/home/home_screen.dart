@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../app/widgets/cards.dart';
 import '../../app/widgets/metric_text.dart';
 import '../../app/widgets/reserve_largest.dart';
 import '../../content/content.dart';
@@ -117,49 +118,47 @@ class _TimerCard extends StatelessWidget {
       ),
     );
 
-    return Card(
-      color: theme.colorScheme.primaryContainer,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
-        child: Column(
-          children: [
-            if (shown.isEmpty)
-              // Less than a day: the clock is the hero.
-              Text(clock, style: theme.textTheme.displayLarge?.merge(clockStyle))
-            else ...[
-              FittedBox(
-                fit: BoxFit.scaleDown,
-                child: IntrinsicHeight(
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      for (final (i, u) in shown.indexed) ...[
-                        if (i > 0)
-                          VerticalDivider(
-                            width: 12,
-                            thickness: 1.5,
-                            indent: 8,
-                            endIndent: 8,
-                            color: color.withValues(alpha: 0.35),
-                          ),
-                        tile(u),
-                      ],
+    return AppCard(
+      tone: CardTone.hero,
+      padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
+      child: Column(
+        children: [
+          if (shown.isEmpty)
+            // Less than a day: the clock is the hero.
+            Text(clock, style: theme.textTheme.displayLarge?.merge(clockStyle))
+          else ...[
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: IntrinsicHeight(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    for (final (i, u) in shown.indexed) ...[
+                      if (i > 0)
+                        VerticalDivider(
+                          width: 12,
+                          thickness: 1.5,
+                          indent: 8,
+                          endIndent: 8,
+                          color: color.withValues(alpha: 0.35),
+                        ),
+                      tile(u),
                     ],
-                  ),
+                  ],
                 ),
               ),
-              const SizedBox(height: 8),
-              Text(clock, style: theme.textTheme.titleLarge?.merge(clockStyle)),
-              if (d.inDays >= 7)
-                Text(l.homeTotal(l.durDays(d.inDays)), style: theme.textTheme.titleMedium?.merge(clockStyle)),
-            ],
-            const SizedBox(height: 8),
-            Text(
-              l.homeSmokeFreeSince(DateFormat('d MMMM yyyy', 'ru').format(attempt.startedAt)),
-              style: theme.textTheme.bodyMedium?.copyWith(color: color),
             ),
+            const SizedBox(height: 8),
+            Text(clock, style: theme.textTheme.titleLarge?.merge(clockStyle)),
+            if (d.inDays >= 7)
+              Text(l.homeTotal(l.durDays(d.inDays)), style: theme.textTheme.titleMedium?.merge(clockStyle)),
           ],
-        ),
+          const SizedBox(height: 8),
+          Text(
+            l.homeSmokeFreeSince(DateFormat('d MMMM yyyy', 'ru').format(attempt.startedAt)),
+            style: theme.textTheme.bodyMedium?.copyWith(color: color),
+          ),
+        ],
       ),
     );
   }
@@ -241,24 +240,20 @@ class _SavingsCard extends StatelessWidget {
     ];
     // With a large system font two columns would break words mid-way, so stack them.
     final stacked = MediaQuery.textScalerOf(context).scale(10) > 13;
-    return Card(
-      color: theme.colorScheme.surfaceContainerHigh,
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: stacked
-            ? Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [cells[0], const SizedBox(height: 16), cells[1]],
-              )
-            : Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(child: cells[0]),
-                  const SizedBox(width: 16),
-                  Expanded(child: cells[1]),
-                ],
-              ),
-      ),
+    return AppCard(
+      child: stacked
+          ? Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [cells[0], const SizedBox(height: 16), cells[1]],
+            )
+          : Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(child: cells[0]),
+                const SizedBox(width: 16),
+                Expanded(child: cells[1]),
+              ],
+            ),
     );
   }
 }
@@ -330,42 +325,35 @@ class _LevelCard extends StatelessWidget {
     final theme = Theme.of(context);
     final (level, next) = content.levelFor(xp);
     final progress = next == null ? 1.0 : (xp - level.xpRequired) / (next.xpRequired - level.xpRequired);
-    return Card(
-      color: theme.colorScheme.surfaceContainerHigh,
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                CircleAvatar(
-                  backgroundColor: theme.colorScheme.primary,
-                  foregroundColor: theme.colorScheme.onPrimary,
-                  child: Text('${level.level}'),
+    return AppCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              CircleAvatar(
+                backgroundColor: theme.colorScheme.primary,
+                foregroundColor: theme.colorScheme.onPrimary,
+                child: Text('${level.level}'),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(l.homeLevel(level.level), style: theme.textTheme.labelLarge),
+                    Text(level.title, style: theme.textTheme.titleMedium),
+                  ],
                 ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(l.homeLevel(level.level), style: theme.textTheme.labelLarge),
-                      Text(level.title, style: theme.textTheme.titleMedium),
-                    ],
-                  ),
-                ),
-                Text('$xp XP', style: theme.textTheme.labelLarge),
-              ],
-            ),
-            const SizedBox(height: 12),
-            LinearProgressIndicator(value: progress, minHeight: 8, borderRadius: BorderRadius.circular(4)),
-            const SizedBox(height: 8),
-            Text(
-              next == null ? l.homeMaxLevel : l.homeXpToNext(next.xpRequired - xp),
-              style: theme.textTheme.bodyMedium,
-            ),
-          ],
-        ),
+              ),
+              Text('$xp XP', style: theme.textTheme.labelLarge),
+            ],
+          ),
+          const SizedBox(height: 12),
+          LinearProgressIndicator(value: progress, minHeight: 8, borderRadius: BorderRadius.circular(4)),
+          const SizedBox(height: 8),
+          Text(next == null ? l.homeMaxLevel : l.homeXpToNext(next.xpRequired - xp), style: theme.textTheme.bodyMedium),
+        ],
       ),
     );
   }
@@ -387,7 +375,7 @@ class _QuoteCardState extends State<_QuoteCard> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final color = theme.colorScheme.onSecondaryContainer;
+    final color = theme.colorScheme.onSurface;
     final quote = widget.quotes[(widget.startIndex + _offset) % widget.quotes.length];
     Widget quoteView(Quote q) => Column(
       key: ValueKey(q),
@@ -404,37 +392,31 @@ class _QuoteCardState extends State<_QuoteCard> {
       ],
     );
     void next() => setState(() => _offset++);
-    return Card(
-      color: theme.colorScheme.secondaryContainer,
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: next,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 12, 8, 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    return AppCard(
+      onTap: next,
+      padding: const EdgeInsets.fromLTRB(20, 12, 8, 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             children: [
-              Row(
-                children: [
-                  Icon(Icons.format_quote, color: color),
-                  const Spacer(),
-                  IconButton(
-                    icon: Icon(Icons.refresh, color: color),
-                    tooltip: AppLocalizations.of(context).homeNextQuote,
-                    onPressed: next,
-                  ),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.only(right: 12),
-                child: ReserveLargest(
-                  candidates: [for (final q in widget.quotes) quoteView(q)],
-                  child: AnimatedSwitcher(duration: const Duration(milliseconds: 250), child: quoteView(quote)),
-                ),
+              Icon(Icons.format_quote, color: theme.colorScheme.primary),
+              const Spacer(),
+              IconButton(
+                icon: Icon(Icons.refresh, color: theme.colorScheme.onSurfaceVariant),
+                tooltip: AppLocalizations.of(context).homeNextQuote,
+                onPressed: next,
               ),
             ],
           ),
-        ),
+          Padding(
+            padding: const EdgeInsets.only(right: 12),
+            child: ReserveLargest(
+              candidates: [for (final q in widget.quotes) quoteView(q)],
+              child: AnimatedSwitcher(duration: const Duration(milliseconds: 250), child: quoteView(quote)),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -447,20 +429,17 @@ class _NoAttemptCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context);
     final theme = Theme.of(context);
-    return Card(
-      color: theme.colorScheme.primaryContainer,
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(l.homeNoAttemptTitle, style: theme.textTheme.headlineSmall),
-            const SizedBox(height: 8),
-            Text(l.homeNoAttemptText, style: theme.textTheme.bodyLarge),
-            const SizedBox(height: 16),
-            FilledButton(onPressed: () => startNewAttempt(context, ref), child: Text(l.homeStartAttempt)),
-          ],
-        ),
+    return AppCard(
+      tone: CardTone.hero,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(l.homeNoAttemptTitle, style: theme.textTheme.headlineSmall),
+          const SizedBox(height: 8),
+          Text(l.homeNoAttemptText, style: theme.textTheme.bodyLarge),
+          const SizedBox(height: 16),
+          FilledButton(onPressed: () => startNewAttempt(context, ref), child: Text(l.homeStartAttempt)),
+        ],
       ),
     );
   }
@@ -482,37 +461,27 @@ class _CravingCard extends StatelessWidget {
       if (part != null) l.dayPartWhen(part.name),
       if (trigger != null) l.triggerName(trigger.name).toLowerCase(),
     ].join(' · ');
-    return Card(
-      color: theme.colorScheme.surfaceContainerHigh,
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: () => Navigator.push(context, MaterialPageRoute<void>(builder: (_) => const CravingMapScreen())),
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    return AppCard(
+      onTap: () => Navigator.push(context, MaterialPageRoute<void>(builder: (_) => const CravingMapScreen())),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             children: [
-              Row(
-                children: [
-                  Icon(Icons.insights, color: theme.colorScheme.primary),
-                  const SizedBox(width: 8),
-                  Expanded(child: Text(l.cravingTitle, style: theme.textTheme.labelLarge)),
-                  Icon(Icons.chevron_right, color: theme.colorScheme.primary),
-                ],
-              ),
-              const SizedBox(height: 8),
-              if (stats.isEmpty)
-                Text(l.cravingHomeEmpty, style: theme.textTheme.bodyMedium)
-              else ...[
-                Text(
-                  l.cravingResistedOf(stats.summary.resisted, stats.summary.total),
-                  style: theme.textTheme.titleLarge,
-                ),
-                if (often.isNotEmpty) Text(l.cravingOften(often), style: theme.textTheme.bodyMedium),
-              ],
+              Icon(Icons.insights, color: theme.colorScheme.primary),
+              const SizedBox(width: 8),
+              Expanded(child: Text(l.cravingTitle, style: theme.textTheme.labelLarge)),
+              Icon(Icons.chevron_right, color: theme.colorScheme.primary),
             ],
           ),
-        ),
+          const SizedBox(height: 8),
+          if (stats.isEmpty)
+            Text(l.cravingHomeEmpty, style: theme.textTheme.bodyMedium)
+          else ...[
+            Text(l.cravingResistedOf(stats.summary.resisted, stats.summary.total), style: theme.textTheme.titleLarge),
+            if (often.isNotEmpty) Text(l.cravingOften(often), style: theme.textTheme.bodyMedium),
+          ],
+        ],
       ),
     );
   }

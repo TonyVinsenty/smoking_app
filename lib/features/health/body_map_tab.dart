@@ -71,7 +71,6 @@ class _AreaTile extends StatelessWidget {
     final done = milestones.where((m) => minutes >= m.afterMinutes).length;
     final full = done == milestones.length;
     return Card(
-      color: scheme.surfaceContainer,
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: () => _showMilestones(context),

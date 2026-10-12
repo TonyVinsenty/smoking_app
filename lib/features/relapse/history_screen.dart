@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../app/widgets/cards.dart';
 import '../../app/format.dart';
 import '../../app/widgets/metric_text.dart';
 import '../../data/database.dart';
@@ -45,18 +46,16 @@ class HistoryScreen extends ConsumerWidget {
       body: ListView(
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
         children: [
-          Card(
-            color: theme.colorScheme.primaryContainer,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 8),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  stat(l.historyBest, formatElapsed(l, best)),
-                  stat(l.historyTotal, formatElapsed(l, totalSmokeFree(attempts, now))),
-                  stat(l.historyCount, '${attempts.length}'),
-                ],
-              ),
+          AppCard(
+            tone: CardTone.hero,
+            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 8),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                stat(l.historyBest, formatElapsed(l, best)),
+                stat(l.historyTotal, formatElapsed(l, totalSmokeFree(attempts, now))),
+                stat(l.historyCount, '${attempts.length}'),
+              ],
             ),
           ),
           for (final (i, a) in attempts.indexed)

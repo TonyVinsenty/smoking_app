@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../app/widgets/cards.dart';
 import '../../app/widgets/metric_text.dart';
 import '../../content/content.dart';
 import '../../l10n/app_localizations.dart';
@@ -35,23 +36,17 @@ class _FactCard extends StatelessWidget {
     final l = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
-    return Card(
-      color: scheme.surfaceContainerHigh,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            MetricText(fact.value, color: scheme.primary),
-            const SizedBox(height: 4),
-            Text(fact.text, style: theme.textTheme.bodyMedium),
-            const SizedBox(height: 8),
-            Text(
-              l.healthSource(fact.source),
-              style: theme.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
-            ),
-          ],
-        ),
+    return AppCard(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          MetricText(fact.value, color: scheme.primary),
+          const SizedBox(height: 4),
+          Text(fact.text, style: theme.textTheme.bodyMedium),
+          const SizedBox(height: 8),
+          Text(l.healthSource(fact.source), style: theme.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant)),
+        ],
       ),
     );
   }

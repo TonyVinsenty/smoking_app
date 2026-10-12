@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../app/widgets/cards.dart';
 import '../../app/widgets/toast.dart';
 import '../../data/database.dart';
 import '../../data/providers.dart';
@@ -70,31 +71,29 @@ class _DiaryTabState extends ConsumerState<DiaryTab> {
         Text(l.diaryIntro, style: theme.textTheme.bodyLarge),
         const SizedBox(height: 16),
         if (doneToday && !_again)
-          Card(
-            color: theme.colorScheme.secondaryContainer,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 16, 8, 4),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    spacing: 12,
-                    children: [
-                      Icon(Icons.check_circle, color: theme.colorScheme.primary),
-                      Expanded(child: Text(l.diaryDoneToday, style: theme.textTheme.titleMedium)),
-                    ],
+          AppCard(
+            tone: CardTone.tip,
+            padding: const EdgeInsets.fromLTRB(16, 16, 8, 4),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  spacing: 12,
+                  children: [
+                    Icon(Icons.check_circle, color: theme.colorScheme.primary),
+                    Expanded(child: Text(l.diaryDoneToday, style: theme.textTheme.titleMedium)),
+                  ],
+                ),
+                if (due != null)
+                  Padding(
+                    padding: const EdgeInsets.only(left: 36, top: 4),
+                    child: Text(l.diaryNext(DateFormat('d MMMM, HH:mm', 'ru').format(due))),
                   ),
-                  if (due != null)
-                    Padding(
-                      padding: const EdgeInsets.only(left: 36, top: 4),
-                      child: Text(l.diaryNext(DateFormat('d MMMM, HH:mm', 'ru').format(due))),
-                    ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: TextButton(onPressed: () => setState(() => _again = true), child: Text(l.diaryAgain)),
-                  ),
-                ],
-              ),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton(onPressed: () => setState(() => _again = true), child: Text(l.diaryAgain)),
+                ),
+              ],
             ),
           )
         else
@@ -121,44 +120,41 @@ class _Form extends StatelessWidget {
     final l = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
-    return Card(
-      color: scheme.surfaceContainer,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(l.diaryHowNow, style: theme.textTheme.titleLarge),
-            for (final q in _questions) ...[
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  Expanded(child: Text(l.diaryQuestion(q), style: theme.textTheme.titleMedium)),
-                  if (answers[q] != null)
-                    Text('${answers[q]}', style: theme.textTheme.titleMedium?.copyWith(color: scheme.primary)),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Row(
-                spacing: 8,
-                children: [
-                  for (var v = 1; v <= 5; v++)
-                    Expanded(
-                      child: _ScaleButton(value: v, selected: answers[q] == v, onTap: () => onChanged(q, v)),
-                    ),
-                ],
-              ),
-              const SizedBox(height: 4),
-              Text(
-                answers[q] == null ? '${l.diaryScale('1')} … ${l.diaryScale('5')}' : l.diaryScale('${answers[q]}'),
-                textAlign: TextAlign.center,
-                style: theme.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
-              ),
-            ],
+    return AppCard(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(l.diaryHowNow, style: theme.textTheme.titleLarge),
+          for (final q in _questions) ...[
             const SizedBox(height: 16),
-            FilledButton(onPressed: answers.length == _questions.length ? onSave : null, child: Text(l.diarySave)),
+            Row(
+              children: [
+                Expanded(child: Text(l.diaryQuestion(q), style: theme.textTheme.titleMedium)),
+                if (answers[q] != null)
+                  Text('${answers[q]}', style: theme.textTheme.titleMedium?.copyWith(color: scheme.primary)),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Row(
+              spacing: 8,
+              children: [
+                for (var v = 1; v <= 5; v++)
+                  Expanded(
+                    child: _ScaleButton(value: v, selected: answers[q] == v, onTap: () => onChanged(q, v)),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 4),
+            Text(
+              answers[q] == null ? '${l.diaryScale('1')} … ${l.diaryScale('5')}' : l.diaryScale('${answers[q]}'),
+              textAlign: TextAlign.center,
+              style: theme.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
+            ),
           ],
-        ),
+          const SizedBox(height: 16),
+          FilledButton(onPressed: answers.length == _questions.length ? onSave : null, child: Text(l.diarySave)),
+        ],
       ),
     );
   }
@@ -205,65 +201,62 @@ class _Chart extends StatelessWidget {
     final l = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
-    return Card(
-      color: scheme.surfaceContainer,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(l.diaryChart, style: theme.textTheme.titleLarge),
+    return AppCard(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(l.diaryChart, style: theme.textTheme.titleLarge),
+          const SizedBox(height: 12),
+          if (entries.length < 2)
+            Text(l.diaryChartEmpty, style: theme.textTheme.bodyMedium)
+          else ...[
+            SizedBox(
+              height: 180,
+              width: double.infinity,
+              child: TweenAnimationBuilder<double>(
+                tween: Tween(begin: 0, end: 1),
+                duration: const Duration(milliseconds: 900),
+                curve: Curves.easeOutCubic,
+                builder: (_, t, _) => CustomPaint(
+                  painter: _ChartPainter(entries: entries, progress: t, grid: scheme.outlineVariant),
+                ),
+              ),
+            ),
+            const SizedBox(height: 4),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                for (final d in [entries.first.at, entries.last.at])
+                  Text(
+                    DateFormat('d MMM', 'ru').format(d),
+                    style: theme.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
+                  ),
+              ],
+            ),
             const SizedBox(height: 12),
-            if (entries.length < 2)
-              Text(l.diaryChartEmpty, style: theme.textTheme.bodyMedium)
-            else ...[
-              SizedBox(
-                height: 180,
-                width: double.infinity,
-                child: TweenAnimationBuilder<double>(
-                  tween: Tween(begin: 0, end: 1),
-                  duration: const Duration(milliseconds: 900),
-                  curve: Curves.easeOutCubic,
-                  builder: (_, t, _) => CustomPaint(
-                    painter: _ChartPainter(entries: entries, progress: t, grid: scheme.outlineVariant),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 4),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  for (final d in [entries.first.at, entries.last.at])
-                    Text(
-                      DateFormat('d MMM', 'ru').format(d),
-                      style: theme.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
+            // Legend with the change from the first entry to the latest.
+            for (final (i, q) in _questions.indexed)
+              Padding(
+                padding: const EdgeInsets.only(top: 6),
+                child: Row(
+                  spacing: 8,
+                  children: [
+                    Container(
+                      width: 12,
+                      height: 12,
+                      decoration: BoxDecoration(color: _colors[i], shape: BoxShape.circle),
                     ),
-                ],
-              ),
-              const SizedBox(height: 12),
-              // Legend with the change from the first entry to the latest.
-              for (final (i, q) in _questions.indexed)
-                Padding(
-                  padding: const EdgeInsets.only(top: 6),
-                  child: Row(
-                    spacing: 8,
-                    children: [
-                      Container(
-                        width: 12,
-                        height: 12,
-                        decoration: BoxDecoration(color: _colors[i], shape: BoxShape.circle),
-                      ),
-                      Expanded(child: Text(l.diaryQuestion(q), style: theme.textTheme.bodyMedium)),
-                      Text(
-                        l.diaryChange(_answer(entries.first, q), _answer(entries.last, q)),
-                        style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
-                      ),
-                    ],
-                  ),
+                    Expanded(child: Text(l.diaryQuestion(q), style: theme.textTheme.bodyMedium)),
+                    Text(
+                      l.diaryChange(_answer(entries.first, q), _answer(entries.last, q)),
+                      style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
+                    ),
+                  ],
                 ),
-            ],
+              ),
           ],
-        ),
+        ],
       ),
     );
   }

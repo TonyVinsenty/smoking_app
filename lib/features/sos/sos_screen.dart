@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../app/widgets/cards.dart';
 import '../../app/widgets/toast.dart';
 import '../../app/widgets/reserve_largest.dart';
 import '../../content/content.dart';
@@ -177,28 +178,26 @@ class _ExerciseStepState extends ConsumerState<_ExerciseStep> {
     );
     final tip = tips.isEmpty
         ? null
-        : Card(
-            color: theme.colorScheme.surfaceContainerHigh,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 16, 8, 8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ReserveLargest(
-                    candidates: [for (final t in tips) Text(t, style: theme.textTheme.bodyLarge)],
-                    child: Text(tips[_tipIndex], style: theme.textTheme.bodyLarge),
+        : AppCard(
+            tone: CardTone.tip,
+            padding: const EdgeInsets.fromLTRB(20, 16, 8, 8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ReserveLargest(
+                  candidates: [for (final t in tips) Text(t, style: theme.textTheme.bodyLarge)],
+                  child: Text(tips[_tipIndex], style: theme.textTheme.bodyLarge),
+                ),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton.icon(
+                    icon: const Icon(Icons.refresh),
+                    label: Text(l.sosAnotherTip),
+                    onPressed: () =>
+                        setState(() => _tipIndex = (_tipIndex + 1 + _random.nextInt(tips.length - 1)) % tips.length),
                   ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: TextButton.icon(
-                      icon: const Icon(Icons.refresh),
-                      label: Text(l.sosAnotherTip),
-                      onPressed: () =>
-                          setState(() => _tipIndex = (_tipIndex + 1 + _random.nextInt(tips.length - 1)) % tips.length),
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           );
     final resisted = SizedBox(
@@ -454,21 +453,19 @@ class _GroundingState extends State<_Grounding> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Card(
-          color: theme.colorScheme.primaryContainer,
-          child: Padding(
-            padding: const EdgeInsets.all(24),
-            child: SizedBox(
-              width: double.infinity,
-              // Invisible copies of every step reserve the size of the largest one, so the card never jumps.
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  for (var i = 0; i <= _steps.length; i++)
-                    ExcludeSemantics(child: Visibility.maintain(visible: false, child: content(i))),
-                  AnimatedSwitcher(duration: const Duration(milliseconds: 300), child: content(_step)),
-                ],
-              ),
+        AppCard(
+          tone: CardTone.hero,
+          padding: const EdgeInsets.all(24),
+          child: SizedBox(
+            width: double.infinity,
+            // Invisible copies of every step reserve the size of the largest one, so the card never jumps.
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                for (var i = 0; i <= _steps.length; i++)
+                  ExcludeSemantics(child: Visibility.maintain(visible: false, child: content(i))),
+                AnimatedSwitcher(duration: const Duration(milliseconds: 300), child: content(_step)),
+              ],
             ),
           ),
         ),
