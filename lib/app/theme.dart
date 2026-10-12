@@ -19,5 +19,19 @@ ThemeData buildTheme(Brightness brightness) {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
     ),
     navigationBarTheme: NavigationBarThemeData(indicatorColor: scheme.primaryContainer),
+    // A soft tinted card instead of the default inverse (white in dark mode) block.
+    snackBarTheme: SnackBarThemeData(
+      behavior: SnackBarBehavior.floating,
+      backgroundColor: scheme.secondaryContainer,
+      contentTextStyle: text.bodyMedium?.copyWith(color: scheme.onSecondaryContainer, fontWeight: FontWeight.w500),
+      actionTextColor: scheme.primary,
+      elevation: 3,
+      shape: RoundedRectangleBorder(
+        borderRadius: const BorderRadius.all(Radius.circular(16)),
+        side: BorderSide(color: scheme.primary.withValues(alpha: 0.35)),
+      ),
+      insetPadding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+      dismissDirection: DismissDirection.down,
+    ),
   );
 }

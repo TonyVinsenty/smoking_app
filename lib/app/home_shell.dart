@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../content/content.dart';
 import 'notifications.dart';
+import 'widgets/toast.dart';
 import '../data/providers.dart';
 import '../domain/achievements.dart';
 import '../features/health/achievement_celebration.dart';
@@ -77,8 +78,7 @@ class _HomeShellState extends ConsumerState<HomeShell> {
     if (fresh.length > 3) fresh = [];
     final retro = due.length - fresh.length;
     if (retro > 0) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(AppLocalizations.of(context).achNewMany(retro))));
+      showToast(context, AppLocalizations.of(context).achNewMany(retro), icon: Icons.emoji_events_outlined);
     }
     _unlocking = true; // no new checks while celebrating
     try {

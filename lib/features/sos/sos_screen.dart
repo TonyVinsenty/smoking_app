@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../app/widgets/toast.dart';
 import '../../app/widgets/reserve_largest.dart';
 import '../../content/content.dart';
 import '../../data/database.dart';
@@ -76,9 +77,10 @@ class _SosScreenState extends ConsumerState<SosScreen> {
     }
     if (!mounted) return;
     final messenger = ScaffoldMessenger.of(context);
+    final theme = Theme.of(context);
     final text = AppLocalizations.of(context).sosResistedToast(xpPerResistedCraving);
     Navigator.of(context).pop();
-    messenger.showSnackBar(SnackBar(content: Text(text)));
+    showToastWith(messenger, theme, text, icon: Icons.emoji_events_outlined);
   }
 
   @override

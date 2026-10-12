@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../app/widgets/toast.dart';
 import '../../content/content.dart';
 import '../../data/providers.dart';
 import '../../l10n/app_localizations.dart';
@@ -28,9 +29,7 @@ class _ArticleScreenState extends ConsumerState<ArticleScreen> {
     final alreadyRead = (ref.read(articlesReadProvider).value ?? const []).any((r) => r.articleId == widget.article.id);
     if (alreadyRead) return;
     ref.read(databaseProvider).markArticleRead(widget.article.id);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(AppLocalizations.of(context).articleReadSnack), duration: const Duration(seconds: 2)),
-    );
+    showToast(context, AppLocalizations.of(context).articleReadSnack);
   }
 
   @override
@@ -73,9 +72,9 @@ class _ArticleScreenState extends ConsumerState<ArticleScreen> {
                   if (next != null) ...[
                     const SizedBox(height: 24),
                     FilledButton.tonalIcon(
-                      onPressed: () => Navigator.of(
-                        context,
-                      ).pushReplacement(MaterialPageRoute(builder: (_) => ArticleScreen(article: next))),
+                      onPressed: () =>
+                          Navigator.of(context)
+                              .pushReplacement(MaterialPageRoute(builder: (_) => ArticleScreen(article: next))),
                       icon: const Icon(Icons.arrow_forward),
                       label: Text(l.articleNext),
                     ),

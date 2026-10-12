@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../app/widgets/toast.dart';
 import '../../app/format.dart';
 import '../../data/database.dart';
 import '../../data/providers.dart';
@@ -99,6 +100,7 @@ class SettingsScreen extends ConsumerWidget {
   /// «Мои привычки»: edits the smoking habits of the current attempt; savings are recalculated from them.
   Future<void> _editHabits(BuildContext context, WidgetRef ref, Attempt current) async {
     final messenger = ScaffoldMessenger.of(context);
+    final theme = Theme.of(context);
     final saved = AppLocalizations.of(context).settingsHabitsSaved;
     final products = await OnboardingScreen.editProducts(
       context,
@@ -106,7 +108,7 @@ class SettingsScreen extends ConsumerWidget {
     );
     if (products == null) return;
     await ref.read(databaseProvider).replaceProducts(current.id, products);
-    messenger.showSnackBar(SnackBar(content: Text(saved)));
+    showToastWith(messenger, theme, saved);
   }
 
   Future<void> _confirmReset(BuildContext context, WidgetRef ref) async {
