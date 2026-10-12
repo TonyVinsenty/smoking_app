@@ -9,6 +9,7 @@ import '../../domain/craving_stats.dart';
 import '../../domain/stats.dart';
 import '../../l10n/app_localizations.dart';
 import '../cravings/craving_map_screen.dart';
+import '../health/health_screen.dart';
 import '../relapse/new_attempt.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -39,7 +40,16 @@ class HomeScreen extends ConsumerWidget {
     final quoteOfDay = now.difference(DateTime(2026)).inDays % content.quotes.length;
 
     return Scaffold(
-      appBar: AppBar(title: Text(l.appTitle)),
+      appBar: AppBar(
+        title: Text(l.appTitle),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.emoji_events_outlined),
+            tooltip: l.healthTabAchievements,
+            onPressed: () => ref.read(showAchievementsProvider.notifier).show(),
+          ),
+        ],
+      ),
       body: ListView(
         // Room below the last card so it can scroll clear of the SOS button.
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 120),

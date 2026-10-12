@@ -101,6 +101,7 @@ class _HomeShellState extends ConsumerState<HomeShell> {
     ref.listen(articlesReadProvider, (_, _) => _checkAchievements());
     ref.listen(unlockedAchievementsProvider, (_, _) => _checkAchievements());
     ref.listen(contentProvider, (_, _) => _checkAchievements());
+    ref.listen(showAchievementsProvider, (_, _) => setState(() => _index = 1));
     ref.watch(notificationSchedulerProvider);
     final l = AppLocalizations.of(context);
     return Scaffold(
@@ -136,8 +137,8 @@ class _HomeShellState extends ConsumerState<HomeShell> {
               label: l.tabKnowledge,
             ),
             NavigationDestination(
-              icon: const Icon(Icons.emoji_events_outlined),
-              selectedIcon: const Icon(Icons.emoji_events),
+              icon: const Icon(Icons.leaderboard_outlined),
+              selectedIcon: const Icon(Icons.leaderboard),
               label: l.tabLeaderboard,
             ),
             NavigationDestination(

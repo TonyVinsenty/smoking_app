@@ -10,33 +10,55 @@ import '../../data/providers.dart';
 import '../../domain/stats.dart';
 import '../../l10n/app_localizations.dart';
 
-class HealthScreen extends StatelessWidget {
+/// Bumped to jump from anywhere to the Здоровье tab, «Достижения» page (e.g. the home trophy button).
+class ShowAchievementsNotifier extends Notifier<int> {
+  @override
+  int build() => 0;
+
+  void show() => state++;
+}
+
+final showAchievementsProvider = NotifierProvider<ShowAchievementsNotifier, int>(ShowAchievementsNotifier.new);
+
+class HealthScreen extends ConsumerStatefulWidget {
   const HealthScreen({super.key});
+
+  @override
+  ConsumerState<HealthScreen> createState() => _HealthScreenState();
+}
+
+class _HealthScreenState extends ConsumerState<HealthScreen> with SingleTickerProviderStateMixin {
+  late final _tabs = TabController(length: 2, vsync: this);
+
+  @override
+  void dispose() {
+    _tabs.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(l.tabHealth),
-          // Two tabs share the width: with a large system font «Восстановление» would be cut off.
-          bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(kTextTabBarHeight),
-            child: MediaQuery.withClampedTextScaling(
-              maxScaleFactor: 1.3,
-              child: TabBar(
-                tabs: [
-                  Tab(text: l.healthTabRecovery),
-                  Tab(text: l.healthTabAchievements),
-                ],
-              ),
+    ref.listen(showAchievementsProvider, (_, _) => _tabs.animateTo(1));
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(l.tabHealth),
+        // Two tabs share the width: with a large system font «Восстановление» would be cut off.
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(kTextTabBarHeight),
+          child: MediaQuery.withClampedTextScaling(
+            maxScaleFactor: 1.3,
+            child: TabBar(
+              controller: _tabs,
+              tabs: [
+                Tab(text: l.healthTabRecovery),
+                Tab(text: l.healthTabAchievements),
+              ],
             ),
           ),
         ),
-        body: const TabBarView(children: [_RecoveryTab(), _AchievementsTab()]),
       ),
+      body: TabBarView(controller: _tabs, children: const [_RecoveryTab(), _AchievementsTab()]),
     );
   }
 }
@@ -210,47 +232,48 @@ class _AchievementsTab extends ConsumerWidget {
             ),
           ),
         ),
-        for (final group in Achievement.groups) ...() {
-          // Easiest first within a group.
-          final items = content.achievements.where((a) => a.group == group).toList()
-            ..sort((a, b) => a.conditionValue(main?.name).compareTo(b.conditionValue(main?.name)));
-          final done = items.where((a) => firstUnlock.containsKey(a.id)).length;
-          return [
-            SliverPadding(
-              padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
-              sliver: SliverToBoxAdapter(
-                child: _Progress(
-                  title: Row(
-                    spacing: 8,
-                    children: [
-                      Icon(_groupIcon(group), color: theme.colorScheme.primary),
-                      Expanded(
-                        child: Text(
-                          l.achGroup(group),
-                          style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+        for (final group in Achievement.groups)
+          ...() {
+            // Easiest first within a group.
+            final items = content.achievements.where((a) => a.group == group).toList()
+              ..sort((a, b) => a.conditionValue(main?.name).compareTo(b.conditionValue(main?.name)));
+            final done = items.where((a) => firstUnlock.containsKey(a.id)).length;
+            return [
+              SliverPadding(
+                padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
+                sliver: SliverToBoxAdapter(
+                  child: _Progress(
+                    title: Row(
+                      spacing: 8,
+                      children: [
+                        Icon(_groupIcon(group), color: theme.colorScheme.primary),
+                        Expanded(
+                          child: Text(
+                            l.achGroup(group),
+                            style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                          ),
                         ),
-                      ),
-                      Text(l.achGroupProgress(done, items.length), style: theme.textTheme.labelLarge),
-                    ],
+                        Text(l.achGroupProgress(done, items.length), style: theme.textTheme.labelLarge),
+                      ],
+                    ),
+                    value: done / items.length,
                   ),
-                  value: done / items.length,
                 ),
               ),
-            ),
-            SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              sliver: SliverGrid.builder(
-                gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                  // Wider tiles (fewer columns) with a large system font, so titles do not break mid-word.
-                  maxCrossAxisExtent: 140 * textScale.clamp(1.0, 2.0),
-                  mainAxisExtent: tileHeight,
+              SliverPadding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                sliver: SliverGrid.builder(
+                  gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                    // Wider tiles (fewer columns) with a large system font, so titles do not break mid-word.
+                    maxCrossAxisExtent: 140 * textScale.clamp(1.0, 2.0),
+                    mainAxisExtent: tileHeight,
+                  ),
+                  itemCount: items.length,
+                  itemBuilder: (context, i) => _BadgeTile(achievement: items[i], unlocked: firstUnlock[items[i].id]),
                 ),
-                itemCount: items.length,
-                itemBuilder: (context, i) => _BadgeTile(achievement: items[i], unlocked: firstUnlock[items[i].id]),
               ),
-            ),
-          ];
-        }(),
+            ];
+          }(),
         const SliverPadding(padding: EdgeInsets.only(bottom: 96)),
       ],
     );
