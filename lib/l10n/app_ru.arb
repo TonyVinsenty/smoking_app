@@ -78,6 +78,8 @@
   "homeNotSmoked": "Не выкурено",
   "money": "{amount} ₽",
   "@money": {"placeholders": {"amount": {"type": "String"}}},
+  "unitsDisposableShort": "{n, plural, one{{count} одноразка} few{{count} одноразки} other{{count} одноразок}}",
+  "@unitsDisposableShort": {"placeholders": {"n": {"type": "int"}, "count": {"type": "String"}}},
   "unitsAvoided": "{type, select, cigarettes{{count} сиг.} sticks{{count} стик.} disposable{{count} одноразок} liquid{{count} флак.} other{{count}}}",
   "@unitsAvoided": {"placeholders": {"type": {"type": "String"}, "count": {"type": "String"}}},
   "homeNoAttemptTitle": "Новая попытка",

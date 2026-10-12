@@ -280,6 +280,18 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
+  String unitsDisposableShort(int n, String count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$count одноразок',
+      few: '$count одноразки',
+      one: '$count одноразка',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String unitsAvoided(String type, String count) {
     String _temp0 = intl.Intl.selectLogic(type, {
       'cigarettes': '$count сиг.',

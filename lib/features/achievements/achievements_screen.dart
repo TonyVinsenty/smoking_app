@@ -341,5 +341,5 @@ class _BadgeTile extends ConsumerWidget {
   }
 }
 
-/// Whole percent, never rounded up to 100 before everything is done.
-int percentOf(int done, int total) => total == 0 ? 0 : done * 100 ~/ total;
+/// Whole percent, rounded as usual (16.7 → 17), but 100 only once everything is done.
+int percentOf(int done, int total) => total == 0 ? 0 : (done < total ? (done * 100 / total).round().clamp(0, 99) : 100);

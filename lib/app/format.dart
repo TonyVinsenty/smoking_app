@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../content/content.dart';
 import '../data/database.dart';
@@ -66,6 +67,13 @@ Color tierColor(String tier) => switch (tier) {
   'epic' => const Color(0xFF8155C2), // violet
   _ => const Color(0xFFD08A1E), // legendary: gold
 };
+
+/// "180 сиг.", "2 одноразки": units of a product not smoked, with a thousands separator.
+String avoidedText(AppLocalizations l, ProductType type, num count) {
+  final n = count.floor();
+  final s = NumberFormat('#,##0', 'ru').format(n);
+  return type == ProductType.disposable ? l.unitsDisposableShort(n, s) : l.unitsAvoided(type.name, s);
+}
 
 /// "10 сигарет", "1 одноразка", "2 флакона жидкости".
 String unitsText(AppLocalizations l, ProductType type, int count) => switch (type) {

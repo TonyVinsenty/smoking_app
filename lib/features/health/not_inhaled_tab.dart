@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../app/format.dart';
 import '../../app/widgets/cards.dart';
 import '../../app/widgets/metric_text.dart';
 import '../../content/content.dart';
@@ -99,7 +100,7 @@ class NotInhaledTab extends ConsumerWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         spacing: 4,
                         children: [
-                          MetricText(l.unitsAvoided(e.key.name, fmt.format(e.value.floor())), color: onCard),
+                          MetricText(avoidedText(l, e.key, e.value), color: onCard),
                           for (final line in _details(l, fmt, e.key, e.value.floor(), mine))
                             Text(line, style: theme.textTheme.bodyMedium?.copyWith(color: onCard)),
                         ],
@@ -123,7 +124,7 @@ class NotInhaledTab extends ConsumerWidget {
                 for (final e in allTime.entries)
                   Text(
                     [
-                      l.unitsAvoided(e.key.name, fmt.format(e.value.floor())),
+                      avoidedText(l, e.key, e.value),
                       if (e.key == ProductType.cigarettes || e.key == ProductType.sticks)
                         _puffs(l, fmt, e.key, e.value.floor()),
                     ].join(' · '),

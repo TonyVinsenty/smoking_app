@@ -436,6 +436,12 @@ abstract class AppLocalizations {
   /// **'{amount} ₽'**
   String money(String amount);
 
+  /// No description provided for @unitsDisposableShort.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n, plural, one{{count} одноразка} few{{count} одноразки} other{{count} одноразок}}'**
+  String unitsDisposableShort(int n, String count);
+
   /// No description provided for @unitsAvoided.
   ///
   /// In ru, this message translates to:

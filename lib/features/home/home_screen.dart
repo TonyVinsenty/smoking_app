@@ -275,7 +275,7 @@ class _SavingsCard extends StatelessWidget {
       ),
     );
     final avoided = cell(Icons.smoke_free, l.homeNotSmoked, [
-      for (final e in units.entries) l.unitsAvoided(e.key.name, fmt.format(e.value.floor())),
+      for (final e in units.entries) avoidedText(l, e.key, e.value),
     ]);
     // With a large system font two columns would break words mid-way, so stack them.
     final stacked = MediaQuery.textScalerOf(context).scale(10) > 13;
