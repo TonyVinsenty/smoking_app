@@ -115,8 +115,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get onbConsumptionTitle => 'Сколько и почём';
 
   @override
-  String get onbConsumptionHint =>
-      'Это нужно, чтобы считать сэкономленные деньги. Примерно — тоже хорошо.';
+  String get onbConsumptionHint => 'Это нужно, чтобы считать сэкономленные деньги. Примерно — тоже хорошо.';
 
   @override
   String get onbQuitTitle => 'Когда вы бросили?';
@@ -220,6 +219,16 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
+  String homeAchievementsCount(int count) {
+    return 'Достижения · $count';
+  }
+
+  @override
+  String homeNextMilestone(String title) {
+    return 'До этапа «$title»';
+  }
+
+  @override
   String homeXpToNext(int xp) {
     return '$xp XP до следующего уровня';
   }
@@ -246,8 +255,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get savingsTotal => 'Всего';
 
   @override
-  String get savingsPeriodsHint =>
-      'Неделя считается с понедельника, месяц — с 1-го числа.';
+  String get savingsPeriodsHint => 'Неделя считается с понедельника, месяц — с 1-го числа.';
 
   @override
   String savingsForecast(String perMonth, String perYear) {
@@ -278,8 +286,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get homeNoAttemptTitle => 'Новая попытка';
 
   @override
-  String get homeNoAttemptText =>
-      'Каждая попытка делает вас сильнее. Опыт и значки остаются с вами.';
+  String get homeNoAttemptText => 'Каждая попытка делает вас сильнее. Опыт и значки остаются с вами.';
 
   @override
   String get homeStartAttempt => 'Начать с этой минуты';
@@ -294,8 +301,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get sosTriggerTitle => 'Что сейчас происходит?';
 
   @override
-  String get sosTriggerHint =>
-      'Один тап — и я запомню, когда вас тянет сильнее всего';
+  String get sosTriggerHint => 'Один тап — и я запомню, когда вас тянет сильнее всего';
 
   @override
   String get sosSkip => 'Пропустить';
@@ -342,8 +348,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String sosExerciseDesc(String exercise) {
     String _temp0 = intl.Intl.selectLogic(exercise, {
       'breathing': 'Вдох на 4 счёта, выдох на 6. Без задержек — просто следите за кругом.',
-      'countdown':
-          'Крупные числа от 10 до 0. Ничего делать не нужно — просто смотрите.',
+      'countdown': 'Крупные числа от 10 до 0. Ничего делать не нужно — просто смотрите.',
       'grounding': 'Пять простых шагов, чтобы вернуться в «здесь и сейчас».',
       'other': '',
     });
@@ -382,8 +387,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get sosGroundDone => 'Вы здесь и сейчас. Вы справляетесь.';
 
   @override
-  String get sosWaveHint =>
-      'Тяга — как волна: она нарастает и спадает за 3–5 минут. Просто продержитесь.';
+  String get sosWaveHint => 'Тяга — как волна: она нарастает и спадает за 3–5 минут. Просто продержитесь.';
 
   @override
   String get sosAnotherTip => 'Другой совет';
@@ -490,8 +494,7 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get healthNoAttempt =>
-      'Начните новую попытку на главном экране — и отсчёт восстановления пойдёт заново.';
+  String get healthNoAttempt => 'Начните новую попытку на главном экране — и отсчёт восстановления пойдёт заново.';
 
   @override
   String healthSource(String source) {
@@ -523,8 +526,7 @@ class AppLocalizationsRu extends AppLocalizations {
       'Сейчас идут первые 8 дней: на них приходится больше всего срывов. Если тянет — нажмите SOS.';
 
   @override
-  String get healthFirstDaysDone =>
-      'Первые 8 дней позади, а на них приходится больше всего срывов.';
+  String get healthFirstDaysDone => 'Первые 8 дней позади, а на них приходится больше всего срывов.';
 
   @override
   String get healthYouAreHere => 'Вы здесь';
@@ -535,8 +537,7 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get healthNonePassed =>
-      'Первый этап совсем скоро — загляните в «Ближайшие».';
+  String get healthNonePassed => 'Первый этап совсем скоро — загляните в «Ближайшие».';
 
   @override
   String get healthFactsTitle => 'Факты из исследований';
@@ -581,8 +582,7 @@ class AppLocalizationsRu extends AppLocalizations {
       'Сроки — по таблице симптомов отмены MSD Manual (материалы программы Rx for Change, Калифорнийский университет); совет про кашель — NHS.';
 
   @override
-  String get bodyIntro =>
-      'Пройденные этапы заполняют карту. Нажмите на плитку, чтобы увидеть её этапы.';
+  String get bodyIntro => 'Пройденные этапы заполняют карту. Нажмите на плитку, чтобы увидеть её этапы.';
 
   @override
   String bodyArea(String area) {
@@ -608,13 +608,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String notInhaledPuffsCig(String count, int n) {
-    String _temp0 = intl.Intl.pluralLogic(
-      n,
-      locale: localeName,
-      other: 'затяжек',
-      few: 'затяжки',
-      one: 'затяжка',
-    );
+    String _temp0 = intl.Intl.pluralLogic(n, locale: localeName, other: 'затяжек', few: 'затяжки', one: 'затяжка');
     return '≈ $count $_temp0 дымом';
   }
 
@@ -624,12 +618,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String notInhaledPuffsSticks(String count, int n) {
-    String _temp0 = intl.Intl.pluralLogic(
-      n,
-      locale: localeName,
-      other: 'затяжек',
-      one: 'затяжки',
-    );
+    String _temp0 = intl.Intl.pluralLogic(n, locale: localeName, other: 'затяжек', one: 'затяжки');
     return 'до $count $_temp0 аэрозолем';
   }
 
@@ -646,18 +635,11 @@ class AppLocalizationsRu extends AppLocalizations {
       'Смолы и угарный газ мы не считаем: их количество сильно зависит от марки и того, как человек курит, а надёжных данных для точного расчёта нет.';
 
   @override
-  String get notInhaledNoAttempt =>
-      'Начните новую попытку на главном экране — и здесь появится счёт.';
+  String get notInhaledNoAttempt => 'Начните новую попытку на главном экране — и здесь появится счёт.';
 
   @override
   String notInhaledPacks(String count, int n) {
-    String _temp0 = intl.Intl.pluralLogic(
-      n,
-      locale: localeName,
-      other: 'пачек',
-      few: 'пачки',
-      one: 'пачка',
-    );
+    String _temp0 = intl.Intl.pluralLogic(n, locale: localeName, other: 'пачек', few: 'пачки', one: 'пачка');
     return '≈ $count $_temp0';
   }
 
@@ -667,8 +649,7 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get notInhaledTimeNote =>
-      'Время перекуров — наша прикидка: около 5 минут на сигарету и до 6 минут на стик.';
+  String get notInhaledTimeNote => 'Время перекуров — наша прикидка: около 5 минут на сигарету и до 6 минут на стик.';
 
   @override
   String get notInhaledAllTime => 'За все попытки';
@@ -686,15 +667,13 @@ class AppLocalizationsRu extends AppLocalizations {
   String get diaryNotificationTitle => 'Как вы себя чувствуете?';
 
   @override
-  String get diaryNotificationBody =>
-      'Пара отметок в дневнике самочувствия — и будет видно, как становится лучше.';
+  String get diaryNotificationBody => 'Пара отметок в дневнике самочувствия — и будет видно, как становится лучше.';
 
   @override
   String get settingsDiaryReminder => 'Напоминать о Дневнике самочувствия';
 
   @override
-  String get settingsDiaryReminderHint =>
-      'Красная точка на «Здоровье», когда пора заполнить';
+  String get settingsDiaryReminderHint => 'Красная точка на «Здоровье», когда пора заполнить';
 
   @override
   String get settingsDiaryPeriod => 'Как часто';
@@ -704,11 +683,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String diaryPeriod(String days) {
-    String _temp0 = intl.Intl.selectLogic(days, {
-      '1': 'Каждый день',
-      '3': 'Раз в 3 дня',
-      'other': 'Раз в неделю',
-    });
+    String _temp0 = intl.Intl.selectLogic(days, {'1': 'Каждый день', '3': 'Раз в 3 дня', 'other': 'Раз в неделю'});
     return '$_temp0';
   }
 
@@ -771,8 +746,7 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get diaryRemindHint =>
-      'Напоминания можно включить в Настройках → Уведомления.';
+  String get diaryRemindHint => 'Напоминания можно включить в Настройках → Уведомления.';
 
   @override
   String get diaryLocalNote => 'Дневник хранится только на этом телефоне.';
@@ -993,8 +967,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get notificationChannel => 'Этапы восстановления';
 
   @override
-  String get notificationChannelHint =>
-      'Редкие уведомления, когда здоровье делает очередной шаг';
+  String get notificationChannelHint => 'Редкие уведомления, когда здоровье делает очередной шаг';
 
   @override
   String get settingsNotificationsHint =>
@@ -1024,8 +997,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get relapseConfirmTitle => 'Отметить срыв?';
 
   @override
-  String get relapseConfirmText =>
-      'Текущий отсчёт остановится. Опыт, уровень и награды останутся с вами.';
+  String get relapseConfirmText => 'Текущий отсчёт остановится. Опыт, уровень и награды останутся с вами.';
 
   @override
   String get relapseConfirm => 'Да, отметить';
@@ -1118,8 +1090,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get settingsHabits => 'Мои привычки';
 
   @override
-  String get settingsHabitsHint =>
-      'Что и сколько вы курили, цены. По ним считается экономия текущей попытки';
+  String get settingsHabitsHint => 'Что и сколько вы курили, цены. По ним считается экономия текущей попытки';
 
   @override
   String get settingsHabitsSaved => 'Сохранено. Экономия пересчитана';
@@ -1128,8 +1099,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get settingsReset => 'Полный сброс';
 
   @override
-  String get settingsResetHint =>
-      'Удалить все данные и начать с первого экрана';
+  String get settingsResetHint => 'Удалить все данные и начать с первого экрана';
 
   @override
   String get settingsResetConfirmTitle => 'Удалить все данные?';
@@ -1158,12 +1128,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get newAttemptChange => 'Изменить';
 
   @override
-  String productSummary(
-    String amount,
-    String period,
-    String price,
-    String type,
-  ) {
+  String productSummary(String amount, String period, String price, String type) {
     String _temp0 = intl.Intl.selectLogic(type, {
       'cigarettes': 'за пачку',
       'sticks': 'за пачку',
@@ -1217,8 +1182,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get articleNext => 'Следующая статья';
 
   @override
-  String get articleDisclaimer =>
-      'Статья носит справочный характер и не заменяет консультацию врача.';
+  String get articleDisclaimer => 'Статья носит справочный характер и не заменяет консультацию врача.';
 
   @override
   String get cravingTitle => 'Карта тяги';

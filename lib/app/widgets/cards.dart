@@ -170,3 +170,22 @@ class RewardPill extends StatelessWidget {
     );
   }
 }
+
+/// Icon on a soft rounded square, as at the top of the home cards.
+class IconBubble extends StatelessWidget {
+  const IconBubble(this.icon, {super.key, this.size = 40});
+
+  final IconData icon;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(color: scheme.secondaryContainer, borderRadius: BorderRadius.circular(size * 0.3)),
+      child: Icon(icon, size: size * 0.55, color: scheme.onSecondaryContainer),
+    );
+  }
+}

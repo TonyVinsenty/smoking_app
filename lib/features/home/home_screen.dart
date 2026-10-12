@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../app/widgets/level_ring.dart';
+import '../../app/format.dart';
 import '../../app/widgets/sos_fab.dart';
 import '../../app/widgets/cards.dart';
 import '../../app/widgets/metric_text.dart';
@@ -40,17 +43,38 @@ class HomeScreen extends ConsumerWidget {
       achievementXp: unlocked.map((u) => u.achievementId).toSet().map((id) => xpById[id] ?? 0),
       now: now,
     );
+    // Badges earned at least once (some may have been removed from the content since).
+    final badges = unlocked.map((u) => u.achievementId).toSet().where(xpById.containsKey).length;
+    final scheme = Theme.of(context).colorScheme;
     // Quote of the day; tapping the card shows the next one.
     final quoteOfDay = now.difference(DateTime(2026)).inDays % content.quotes.length;
 
     return Scaffold(
+      // Cards scroll under the button and fade out softly instead of being cut by a hard edge.
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        systemOverlayStyle: Theme.of(context).brightness == Brightness.light
+            ? SystemUiOverlayStyle.dark
+            : SystemUiOverlayStyle.light,
+        flexibleSpace: SizedBox.expand(
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [scheme.surface, scheme.surface, scheme.surface.withValues(alpha: 0)],
+                stops: const [0, 0.62, 1],
+              ),
+            ),
+          ),
+        ),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 12),
             child: FilledButton.tonalIcon(
               icon: const Icon(Icons.emoji_events_outlined, size: 26),
-              label: Text(l.healthTabAchievements),
+              label: Text(l.homeAchievementsCount(badges)),
               style: FilledButton.styleFrom(
                 padding: const EdgeInsets.fromLTRB(14, 8, 18, 8),
                 textStyle: Theme.of(context).textTheme.titleSmall,
@@ -62,10 +86,10 @@ class HomeScreen extends ConsumerWidget {
       ),
       body: ListView(
         // Room below the last card so it can scroll clear of the SOS button.
-        padding: const EdgeInsets.fromLTRB(16, 8, 16, sosClearance),
+        padding: EdgeInsets.fromLTRB(16, MediaQuery.paddingOf(context).top + kToolbarHeight + 8, 16, sosClearance),
         children: [
           if (current != null) ...[
-            _TimerCard(attempt: current, now: now),
+            _TimerCard(attempt: current, now: now, milestones: content.milestones),
             const SizedBox(height: 12),
             _SavingsCard(products: productsOf(products, current.id), attempt: current, now: now),
           ] else
@@ -83,10 +107,11 @@ class HomeScreen extends ConsumerWidget {
 }
 
 class _TimerCard extends StatelessWidget {
-  const _TimerCard({required this.attempt, required this.now});
+  const _TimerCard({required this.attempt, required this.now, required this.milestones});
 
   final Attempt attempt;
   final DateTime now;
+  final List<HealthMilestone> milestones;
 
   @override
   Widget build(BuildContext context) {
@@ -160,9 +185,45 @@ class _TimerCard extends StatelessWidget {
             textAlign: TextAlign.center,
             style: theme.textTheme.bodyMedium?.copyWith(color: color),
           ),
+          ..._nextMilestone(context, d, color),
         ],
       ),
     );
+  }
+
+  /// How far it is to the next recovery milestone: links the timer with the trail in «Здоровье».
+  List<Widget> _nextMilestone(BuildContext context, Duration elapsed, Color color) {
+    final l = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    final minutes = elapsed.inSeconds / 60;
+    final next = milestones.where((m) => m.afterMinutes > minutes).firstOrNull;
+    if (next == null) return const [];
+    // Counted from the previous milestone with an earlier time.
+    final start = milestones.map((m) => m.afterMinutes).where((t) => t < next.afterMinutes).lastOrNull ?? 0;
+    final progress = ((minutes - start) / (next.afterMinutes - start)).clamp(0.0, 1.0);
+    final style = theme.textTheme.labelMedium?.copyWith(color: color);
+    return [
+      const SizedBox(height: 16),
+      Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        spacing: 12,
+        children: [
+          Expanded(child: Text(l.homeNextMilestone(next.title), style: style)),
+          Text(
+            formatRemaining(l, Duration(seconds: ((next.afterMinutes - minutes) * 60).ceil())),
+            style: style?.copyWith(fontWeight: FontWeight.w700),
+          ),
+        ],
+      ),
+      const SizedBox(height: 6),
+      LinearProgressIndicator(
+        value: progress,
+        minHeight: 6,
+        borderRadius: BorderRadius.circular(3),
+        color: theme.colorScheme.primary,
+        backgroundColor: color.withValues(alpha: 0.14),
+      ),
+    ];
   }
 }
 
@@ -177,84 +238,59 @@ class _SavingsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
     final fmt = NumberFormat('#,##0', 'ru');
     final duration = attemptDuration(attempt, now);
     final units = unitsAvoided(products, duration);
-    Widget infoButton(VoidCallback onTap) => InkWell(
-      customBorder: const CircleBorder(),
-      onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.all(4),
-        child: Icon(Icons.info_outline, size: 20, color: theme.colorScheme.primary),
-      ),
-    );
-    Widget cell(IconData icon, String title, List<String> values, {VoidCallback? onInfo, VoidCallback? onMore}) =>
-        InkWell(
-          borderRadius: BorderRadius.circular(12),
-          onTap: onMore,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Icon(icon, color: theme.colorScheme.primary),
-                  if (onInfo != null) ...[const SizedBox(width: 4), infoButton(onInfo)],
-                ],
-              ),
-              const SizedBox(height: 8),
-              Text(title, style: theme.textTheme.labelLarge),
-              for (final v in values) MetricText(v),
-              if (onMore != null)
-                Padding(
-                  padding: const EdgeInsets.only(top: 4),
-                  child: Text(
-                    '${l.homeSavingsMore} ›',
-                    style: theme.textTheme.labelLarge?.copyWith(color: theme.colorScheme.primary),
-                  ),
-                ),
-            ],
-          ),
-        );
-    final cells = [
-      cell(
-        Icons.savings_outlined,
-        l.homeMoneySaved,
-        [l.money(fmt.format(moneySaved(products, duration)))],
-        onInfo: () => showDialog<void>(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text(l.homeSavingsInfoTitle),
-            content: Text(
-              l.homeSavingsInfo(
-                fmt.format(dailyCost(products)),
-                NumberFormat('#,##0.#', 'ru').format(dailyCost(products) / 24),
+    Widget cell(IconData icon, String title, List<String> values, {bool more = false}) => Padding(
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          IconBubble(icon),
+          const SizedBox(height: 12),
+          Text(title, style: theme.textTheme.labelMedium?.copyWith(color: scheme.onSurfaceVariant)),
+          for (final v in values) MetricText(v),
+          if (more)
+            Padding(
+              padding: const EdgeInsets.only(top: 4),
+              child: Text(
+                '${l.homeSavingsMore} ›',
+                style: theme.textTheme.labelLarge?.copyWith(color: scheme.primary, fontWeight: FontWeight.w600),
               ),
             ),
-            actions: [TextButton(onPressed: () => Navigator.pop(context), child: Text(l.done))],
-          ),
-        ),
-        onMore: () =>
-            showModalBottomSheet<void>(context: context, showDragHandle: true, builder: (_) => const _SavingsDetails()),
+        ],
       ),
-      cell(Icons.smoke_free, l.homeNotSmoked, [
-        for (final e in units.entries) l.unitsAvoided(e.key.name, fmt.format(e.value.floor())),
-      ]),
-    ];
+    );
+    // The whole «Сэкономлено» half opens the details: a big target instead of a small link.
+    final saved = Material(
+      type: MaterialType.transparency,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(20),
+        onTap: () =>
+            showModalBottomSheet<void>(context: context, showDragHandle: true, builder: (_) => const _SavingsDetails()),
+        child: cell(Icons.savings_outlined, l.homeMoneySaved, [
+          l.money(fmt.format(moneySaved(products, duration))),
+        ], more: true),
+      ),
+    );
+    final avoided = cell(Icons.smoke_free, l.homeNotSmoked, [
+      for (final e in units.entries) l.unitsAvoided(e.key.name, fmt.format(e.value.floor())),
+    ]);
     // With a large system font two columns would break words mid-way, so stack them.
     final stacked = MediaQuery.textScalerOf(context).scale(10) > 13;
     return AppCard(
+      padding: EdgeInsets.zero,
       child: stacked
-          ? Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [cells[0], const SizedBox(height: 16), cells[1]],
-            )
-          : Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(child: cells[0]),
-                const SizedBox(width: 16),
-                Expanded(child: cells[1]),
-              ],
+          ? Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [saved, avoided])
+          : IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(child: saved),
+                  Expanded(child: avoided),
+                ],
+              ),
             ),
     );
   }
@@ -283,7 +319,7 @@ class _SavingsDetails extends ConsumerWidget {
     ];
     final perDay = dailyCost(products);
     return SafeArea(
-      child: Padding(
+      child: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -308,6 +344,13 @@ class _SavingsDetails extends ConsumerWidget {
             Text(l.savingsForecast(money(perDay * 30.4), money(perDay * 365)), style: theme.textTheme.bodyLarge),
             const SizedBox(height: 8),
             Text(l.savingsPeriodsHint, style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.outline)),
+            const SizedBox(height: 16),
+            Text(l.homeSavingsInfoTitle, style: theme.textTheme.titleSmall),
+            const SizedBox(height: 4),
+            Text(
+              l.homeSavingsInfo(fmt.format(perDay), NumberFormat('#,##0.#', 'ru').format(perDay / 24)),
+              style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+            ),
           ],
         ),
       ),
@@ -328,35 +371,27 @@ class _LevelCard extends StatelessWidget {
     final (level, next) = content.levelFor(xp);
     final progress = next == null ? 1.0 : (xp - level.xpRequired) / (next.xpRequired - level.xpRequired);
     return AppCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
+        spacing: 16,
         children: [
-          Row(
-            children: [
-              CircleAvatar(
-                backgroundColor: theme.colorScheme.primary,
-                foregroundColor: theme.colorScheme.onPrimary,
-                child: Text('${level.level}'),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      l.homeLevel(level.level, NumberFormat('#,##0', 'ru').format(xp)),
-                      style: theme.textTheme.labelMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant),
-                    ),
-                    Text(level.title, style: theme.textTheme.titleMedium),
-                  ],
+          LevelRing(level: level.level, progress: progress),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 2,
+              children: [
+                Text(
+                  l.homeLevel(level.level, NumberFormat('#,##0', 'ru').format(xp)),
+                  style: theme.textTheme.labelMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant),
                 ),
-              ),
-            ],
+                Text(level.title, style: theme.textTheme.titleMedium),
+                Text(
+                  next == null ? l.homeMaxLevel : l.homeXpToNext(next.xpRequired - xp),
+                  style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+                ),
+              ],
+            ),
           ),
-          const SizedBox(height: 12),
-          LinearProgressIndicator(value: progress, minHeight: 8, borderRadius: BorderRadius.circular(4)),
-          const SizedBox(height: 8),
-          Text(next == null ? l.homeMaxLevel : l.homeXpToNext(next.xpRequired - xp), style: theme.textTheme.bodyMedium),
         ],
       ),
     );
@@ -472,9 +507,14 @@ class _CravingCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(Icons.bar_chart_rounded, color: theme.colorScheme.primary),
-              const SizedBox(width: 8),
-              Expanded(child: Text(l.cravingTitle, style: theme.textTheme.labelLarge)),
+              const IconBubble(Icons.bar_chart_rounded),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  l.cravingTitle,
+                  style: theme.textTheme.labelMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+                ),
+              ),
               Icon(Icons.chevron_right, color: theme.colorScheme.primary),
             ],
           ),
