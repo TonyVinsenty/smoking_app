@@ -74,7 +74,6 @@ class _SosScreenState extends ConsumerState<SosScreen> {
   Trigger? _trigger;
 
   Future<void> _resisted() async {
-    HapticFeedback.mediumImpact();
     final attempt = ref.read(currentAttemptProvider).value;
     if (attempt != null) {
       await ref.read(databaseProvider).logCraving(attemptId: attempt.id, resisted: true, trigger: _trigger);
@@ -216,18 +215,7 @@ class _ExerciseStepState extends ConsumerState<_ExerciseStep> {
               ],
             ),
           );
-    final resisted = SizedBox(
-      width: double.infinity,
-      child: FilledButton.icon(
-        style: FilledButton.styleFrom(
-          minimumSize: const Size.fromHeight(60),
-          textStyle: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
-        ),
-        icon: const Icon(Icons.check_rounded, size: 26),
-        label: Text(l.sosResisted),
-        onPressed: widget.onResisted,
-      ),
-    );
+    final resisted = _ResistedButton(label: l.sosResisted, onDone: widget.onResisted);
 
     // With a large system font everything above the main button scrolls instead of overflowing.
     final roomy = MediaQuery.textScalerOf(context).scale(10) <= 13;
@@ -578,4 +566,119 @@ class _GroundingState extends State<_Grounding> {
       ],
     );
   }
+}
+
+/// «Тяга прошла!»: the check draws itself, the button takes a soft breath and «+10 XP» floats up,
+/// then [onDone] saves the craving and closes the screen.
+class _ResistedButton extends StatefulWidget {
+  const _ResistedButton({required this.label, required this.onDone});
+
+  final String label;
+  final VoidCallback onDone;
+
+  @override
+  State<_ResistedButton> createState() => _ResistedButtonState();
+}
+
+class _ResistedButtonState extends State<_ResistedButton> with SingleTickerProviderStateMixin {
+  late final _c = AnimationController(vsync: this, duration: const Duration(milliseconds: 1200));
+
+  @override
+  void dispose() {
+    _c.dispose();
+    super.dispose();
+  }
+
+  Future<void> _press() async {
+    if (_c.isAnimating || _c.isCompleted) return;
+    HapticFeedback.mediumImpact();
+    _c.duration = motion(context, const Duration(milliseconds: 1200));
+    await _c.forward();
+    if (mounted) widget.onDone();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    final reward = AppColors.of(context).reward;
+    final check = CurvedAnimation(
+      parent: _c,
+      curve: const Interval(0, 0.4, curve: Curves.easeOut),
+    );
+    final breath = CurvedAnimation(parent: _c, curve: const Interval(0.1, 0.5));
+    final xp = CurvedAnimation(
+      parent: _c,
+      curve: const Interval(0.25, 1, curve: Curves.easeOut),
+    );
+    return AnimatedBuilder(
+      animation: _c,
+      builder: (context, _) => Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Transform.scale(
+            // A soft breath: up and back.
+            scale: 1 + 0.04 * Curves.easeInOut.transform(breath.value < 0.5 ? breath.value * 2 : 2 - breath.value * 2),
+            child: SizedBox(
+              width: double.infinity,
+              child: FilledButton.icon(
+                style: FilledButton.styleFrom(
+                  minimumSize: const Size.fromHeight(60),
+                  textStyle: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
+                ),
+                icon: SizedBox.square(
+                  dimension: 26,
+                  child: _c.value == 0
+                      ? const Icon(Icons.check_rounded, size: 26)
+                      : CustomPaint(painter: _CheckPainter(check.value, scheme.onPrimary)),
+                ),
+                label: Text(widget.label),
+                onPressed: _press,
+              ),
+            ),
+          ),
+          if (_c.value > 0)
+            Positioned(
+              right: 24,
+              top: -8 - 36 * xp.value,
+              child: Opacity(
+                opacity: (xp.value < 0.7 ? 1.0 : (1 - xp.value) / 0.3).clamp(0.0, 1.0),
+                child: Text(
+                  '+$xpPerResistedCraving XP',
+                  style: theme.textTheme.titleMedium?.copyWith(color: reward, fontWeight: FontWeight.w800),
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+/// A check mark drawn up to [progress] (0…1) of its length.
+class _CheckPainter extends CustomPainter {
+  _CheckPainter(this.progress, this.color);
+
+  final double progress;
+  final Color color;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final path = Path()
+      ..moveTo(size.width * 0.18, size.height * 0.52)
+      ..lineTo(size.width * 0.42, size.height * 0.74)
+      ..lineTo(size.width * 0.84, size.height * 0.28);
+    final paint = Paint()
+      ..color = color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = size.width * 0.12
+      ..strokeCap = StrokeCap.round
+      ..strokeJoin = StrokeJoin.round;
+    for (final metric in path.computeMetrics()) {
+      canvas.drawPath(metric.extractPath(0, metric.length * progress), paint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(_CheckPainter old) => old.progress != progress || old.color != color;
 }
