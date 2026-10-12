@@ -198,5 +198,101 @@
     "category": "myths",
     "readMinutes": 4,
     "file": "articles/vaping_to_quit_myth.md"
+  },
+  {
+    "id": "one_cigarette_trap",
+    "title": "«Всего одна»: почему одна сигарета редко остаётся одной",
+    "summary": "Чем оплошность отличается от срыва и что делать, если «одна» уже случилась.",
+    "category": "addiction",
+    "readMinutes": 4,
+    "file": "articles/one_cigarette_trap.md"
+  },
+  {
+    "id": "brain_recovery",
+    "title": "Как мозг восстанавливается после отказа",
+    "summary": "Что происходит с никотиновыми рецепторами и когда становится легче.",
+    "category": "addiction",
+    "readMinutes": 4,
+    "file": "articles/brain_recovery.md"
+  },
+  {
+    "id": "hidden_costs",
+    "title": "Неочевидные расходы курения",
+    "summary": "Траты, которые мы не связываем с сигаретами: от зажигалок до стоматолога.",
+    "category": "money",
+    "readMinutes": 4,
+    "file": "articles/hidden_costs.md"
+  },
+  {
+    "id": "spend_savings",
+    "title": "Как сделать сэкономленные деньги наглядными",
+    "summary": "Цель-мечта, отдельный счёт и маленькие награды по пути.",
+    "category": "money",
+    "readMinutes": 4,
+    "file": "articles/spend_savings.md"
+  },
+  {
+    "id": "quitting_vape",
+    "title": "Как бросить вейп: особенности и шаги",
+    "summary": "Почему отказ от вейпа имеет свои трудности и как с ними справиться.",
+    "category": "vape",
+    "readMinutes": 4,
+    "file": "articles/quitting_vape.md"
+  },
+  {
+    "id": "nicotine_salts",
+    "title": "Солевой никотин в одноразках",
+    "summary": "Почему такой пар мягче на вкус, но сильнее затягивает.",
+    "category": "vape",
+    "readMinutes": 4,
+    "file": "articles/nicotine_salts.md"
+  },
+  {
+    "id": "quit_medications",
+    "title": "Лекарства для отказа от курения",
+    "summary": "Варениклин, цитизин, бупропион: что известно об эффективности и почему нужен врач.",
+    "category": "therapy",
+    "readMinutes": 4,
+    "file": "articles/quit_medications.md"
+  },
+  {
+    "id": "help_lines",
+    "title": "Где получить помощь при отказе от курения",
+    "summary": "Врач, фармацевт, горячая линия и поддержка близких.",
+    "category": "therapy",
+    "readMinutes": 3,
+    "file": "articles/help_lines.md"
+  },
+  {
+    "id": "gradual_vs_abrupt",
+    "title": "Бросать постепенно или сразу?",
+    "summary": "Что говорят исследования и как выбрать способ, который подойдёт именно вам.",
+    "category": "myths",
+    "readMinutes": 4,
+    "file": "articles/gradual_vs_abrupt.md"
+  },
+  {
+    "id": "never_too_late",
+    "title": "«Уже поздно бросать»: почему это не так",
+    "summary": "Сколько лет жизни возвращает отказ в 30, 40, 50 и 60 лет.",
+    "category": "myths",
+    "readMinutes": 4,
+    "file": "articles/never_too_late.md"
+  },
+  {
+    "id": "taste_and_smell",
+    "title": "Возвращение вкуса и обоняния",
+    "summary": "Когда еда и запахи становятся ярче и как не переесть.",
+    "category": "health",
+    "readMinutes": 3,
+    "file": "articles/taste_and_smell.md"
+  },
+  {
+    "id": "hands_and_mouth",
+    "title": "Чем занять руки и рот",
+    "summary": "Идеи замен и ритуал перерыва без сигареты.",
+    "category": "practice",
+    "readMinutes": 3,
+    "file": "articles/hands_and_mouth.md"
   }
 ]

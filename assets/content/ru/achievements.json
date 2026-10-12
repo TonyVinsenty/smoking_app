@@ -95,7 +95,7 @@
   { "id": "ach_a_10", "title": "Глубокое погружение", "description": "Десять статей — вы знаете о курении и отказе от него больше многих.", "icon": "menu_book", "tier": "rare", "xp": 200, "condition": { "type": "articlesRead", "value": 10 } },
   { "id": "ach_a_15", "title": "Знаток темы", "description": "Вы изучили немало материалов. Теперь у вас есть не только воля, но и знания.", "icon": "menu_book", "tier": "rare", "xp": 400, "condition": { "type": "articlesRead", "value": 15 } },
   { "id": "ach_a_20", "title": "Книжный червь", "description": "20 статей прочитано — вы разбираетесь в теме лучше многих специалистов-любителей.", "icon": "menu_book", "tier": "epic", "xp": 500, "condition": { "type": "articlesRead", "value": 20 } },
-  { "id": "ach_a_25", "title": "Вся библиотека", "description": "25 статей прочитано — вы изучили всю базу знаний.", "icon": "menu_book", "tier": "epic", "xp": 700, "condition": { "type": "articlesRead", "value": 25 } },
+  { "id": "ach_a_25", "title": "Вся библиотека", "description": "25 статей прочитано — у вас за плечами целая библиотека.", "icon": "menu_book", "tier": "epic", "xp": 700, "condition": { "type": "articlesRead", "value": 25 } },
 
   { "id": "ach_attempt_1", "title": "Путь начат", "description": "Вы начали отсчёт — это уже смелый шаг.", "icon": "star", "tier": "common", "xp": 25, "condition": { "type": "attemptsStarted", "value": 1 } },
   { "id": "ach_comeback_1", "title": "С возвращением", "description": "Вы вернулись после срыва — это гораздо важнее, чем не срываться никогда.", "icon": "spa", "tier": "uncommon", "xp": 100, "condition": { "type": "comebackAfterRelapse", "value": 1 } },
