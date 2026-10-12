@@ -1,4 +1,4 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="-256 -256 1536 1536" width="1536" height="1536">
-<defs><linearGradient id="v9b-bg" x1="0" y1="0" x2="0" y2="1024" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#EDFCF8"/><stop offset="1" stop-color="#C2EFE4"/></linearGradient></defs>
+<defs><linearGradient id="v9b-bg" x1="0" y1="0" x2="0" y2="1024" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#CFF3EA"/><stop offset="1" stop-color="#9FE2D3"/></linearGradient></defs>
 <rect x="-256" y="-256" width="1536" height="1536" fill="url(#v9b-bg)"/>
 </svg>

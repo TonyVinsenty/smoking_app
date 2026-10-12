@@ -57,13 +57,14 @@ IconData contentIcon(String name, {bool filled = true}) {
   return filled ? on : off;
 }
 
-/// WoW-style rarity colours (achievements.json "tier").
+/// Rarity colours (achievements.json "tier"), WoW order but softened towards the app's teal, without neon;
+/// only legendary is warm gold.
 Color tierColor(String tier) => switch (tier) {
-  'common' => const Color(0xFFA5ADB5), // grey-white
-  'uncommon' => const Color(0xFF2FA84F), // green
-  'rare' => const Color(0xFF2F7FD9), // blue
-  'epic' => const Color(0xFF9B4DDB), // purple
-  _ => const Color(0xFFF08A1C), // legendary: orange
+  'common' => const Color(0xFF6E8C86), // grey-green
+  'uncommon' => const Color(0xFF2E9A68), // green
+  'rare' => const Color(0xFF2F7DB8), // blue
+  'epic' => const Color(0xFF8155C2), // violet
+  _ => const Color(0xFFD08A1E), // legendary: gold
 };
 
 /// "10 сигарет", "1 одноразка", "2 флакона жидкости".

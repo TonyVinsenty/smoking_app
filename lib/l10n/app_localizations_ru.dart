@@ -752,6 +752,65 @@ class AppLocalizationsRu extends AppLocalizations {
   String get diaryLocalNote => 'Дневник хранится только на этом телефоне.';
 
   @override
+  String achProgress(String current, String total) {
+    return '$current из $total';
+  }
+
+  @override
+  String achOfDays(int count) {
+    final intl.NumberFormat countNumberFormat = intl.NumberFormat.decimalPattern(localeName);
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countString дней',
+      one: '$countString дня',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String achOfHours(int count) {
+    final intl.NumberFormat countNumberFormat = intl.NumberFormat.decimalPattern(localeName);
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countString часов',
+      one: '$countString часа',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String achOfMinutes(int count) {
+    final intl.NumberFormat countNumberFormat = intl.NumberFormat.decimalPattern(localeName);
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countString минут',
+      one: '$countString минуты',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String achOfUnits(String type) {
+    String _temp0 = intl.Intl.selectLogic(type, {
+      'cigarettes': 'сигарет',
+      'sticks': 'стиков',
+      'disposable': 'одноразок',
+      'liquid': 'флаконов',
+      'other': '',
+    });
+    return '$_temp0';
+  }
+
+  @override
   String achUnlockedCount(int unlocked, int total, int percent) {
     return 'Открыто $unlocked из $total ($percent%)';
   }
@@ -925,7 +984,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get achCelebrateTitle => 'Новое достижение!';
 
   @override
-  String get achCelebrateOk => 'Ура!';
+  String get achCelebrateOk => 'Забрать';
 
   @override
   String achNewMany(int count) {

@@ -1009,6 +1009,36 @@ abstract class AppLocalizations {
   /// **'Дневник хранится только на этом телефоне.'**
   String get diaryLocalNote;
 
+  /// No description provided for @achProgress.
+  ///
+  /// In ru, this message translates to:
+  /// **'{current} из {total}'**
+  String achProgress(String current, String total);
+
+  /// No description provided for @achOfDays.
+  ///
+  /// In ru, this message translates to:
+  /// **'{count, plural, one{{count} дня} other{{count} дней}}'**
+  String achOfDays(int count);
+
+  /// No description provided for @achOfHours.
+  ///
+  /// In ru, this message translates to:
+  /// **'{count, plural, one{{count} часа} other{{count} часов}}'**
+  String achOfHours(int count);
+
+  /// No description provided for @achOfMinutes.
+  ///
+  /// In ru, this message translates to:
+  /// **'{count, plural, one{{count} минуты} other{{count} минут}}'**
+  String achOfMinutes(int count);
+
+  /// No description provided for @achOfUnits.
+  ///
+  /// In ru, this message translates to:
+  /// **'{type, select, cigarettes{сигарет} sticks{стиков} disposable{одноразок} liquid{флаконов} other{}}'**
+  String achOfUnits(String type);
+
   /// No description provided for @achUnlockedCount.
   ///
   /// In ru, this message translates to:
@@ -1132,7 +1162,7 @@ abstract class AppLocalizations {
   /// No description provided for @achCelebrateOk.
   ///
   /// In ru, this message translates to:
-  /// **'Ура!'**
+  /// **'Забрать'**
   String get achCelebrateOk;
 
   /// No description provided for @achNewMany.

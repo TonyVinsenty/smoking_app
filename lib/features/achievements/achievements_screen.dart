@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import '../../app/widgets/cards.dart';
 import '../../app/format.dart';
 import '../../app/widgets/badge_icon.dart';
+import '../../domain/achievements.dart';
 import '../../content/content.dart';
 import '../../data/database.dart';
 import '../../data/providers.dart';
@@ -56,10 +57,19 @@ class _AchievementsList extends ConsumerWidget {
       final prev = firstUnlock[u.achievementId];
       if (prev == null || u.unlockedAt.isBefore(prev.unlockedAt)) firstUnlock[u.achievementId] = u;
     }
-    // Icon + two lines of title, whatever the text size.
+    // How far each condition is now (read once: the screen does not need to tick every second).
+    final progress = conditionProgress(
+      attempts: ref.watch(attemptsProvider).value ?? const [],
+      products: ref.watch(productsProvider).value ?? const [],
+      cravings: ref.watch(cravingsProvider).value ?? const [],
+      articlesReadAt: [for (final r in ref.watch(articlesReadProvider).value ?? const []) r.readAt],
+      now: DateTime.now(),
+    );
+    // Icon + two lines of title + one small line (rarity or progress), whatever the text size.
     final line = MediaQuery.textScalerOf(context).scale(theme.textTheme.labelMedium!.fontSize!) * 1.4;
     final textScale = line / (theme.textTheme.labelMedium!.fontSize! * 1.4);
-    final tileHeight = 64 + 8 + 2 * line + 16;
+    final small = MediaQuery.textScalerOf(context).scale(theme.textTheme.labelSmall!.fontSize!) * 1.35;
+    final tileHeight = 64 + 8 + 2 * line + small + 16;
     final total = content.achievements.length;
     return CustomScrollView(
       slivers: [
@@ -147,7 +157,11 @@ class _AchievementsList extends ConsumerWidget {
                       mainAxisExtent: tileHeight,
                     ),
                     itemCount: items.length,
-                    itemBuilder: (context, i) => _BadgeTile(achievement: items[i], unlocked: firstUnlock[items[i].id]),
+                    itemBuilder: (context, i) => _BadgeTile(
+                      achievement: items[i],
+                      unlocked: firstUnlock[items[i].id],
+                      current: progress?[items[i].conditionType],
+                    ),
                   ),
                 ),
             ];
@@ -180,21 +194,22 @@ class _Progress extends StatelessWidget {
 }
 
 class _BadgeTile extends ConsumerWidget {
-  const _BadgeTile({required this.achievement, required this.unlocked});
+  const _BadgeTile({required this.achievement, required this.unlocked, required this.current});
 
   final Achievement achievement;
+
+  /// Current value of the badge's condition (null without a current attempt).
+  final num? current;
   final UnlockedAchievement? unlocked;
 
   /// Earned titles take their rarity colour, like item names in RPGs (grey "common" stays plain).
-  static Color? titleColor(ThemeData theme, Achievement a, bool earned) => !earned
-      ? theme.colorScheme.onSurfaceVariant
-      : a.tier == 'common'
-      ? null
-      : Color.lerp(tierColor(a.tier), theme.colorScheme.onSurface, theme.brightness == Brightness.dark ? 0.1 : 0.25);
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context);
     final theme = Theme.of(context);
+    final main = ref.watch(mainProductProvider);
+    final earned = unlocked != null;
+    final target = achievement.conditionValue(main?.name);
     return InkWell(
       borderRadius: BorderRadius.circular(16),
       onTap: () => _showDetails(context, ref.read(mainProductProvider)),
@@ -202,7 +217,12 @@ class _BadgeTile extends ConsumerWidget {
         padding: const EdgeInsets.all(4),
         child: Column(
           children: [
-            BadgeIcon(achievement: achievement, unlocked: unlocked != null, size: 64),
+            BadgeIcon(
+              achievement: achievement,
+              unlocked: earned,
+              size: 64,
+              progress: current == null || target <= 0 ? null : current! / target,
+            ),
             const SizedBox(height: 8),
             Text(
               achievement.title,
@@ -210,9 +230,16 @@ class _BadgeTile extends ConsumerWidget {
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: theme.textTheme.labelMedium?.copyWith(
-                color: titleColor(theme, achievement, unlocked != null),
-                fontWeight: unlocked != null ? FontWeight.w600 : null,
+                color: earned ? theme.colorScheme.onSurface : theme.colorScheme.onSurfaceVariant,
+                fontWeight: earned ? FontWeight.w600 : null,
               ),
+            ),
+            Text(
+              earned ? l.tierName(achievement.tier) : progressText(l, achievement, main, current),
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: theme.textTheme.labelSmall?.copyWith(color: theme.colorScheme.onSurfaceVariant),
             ),
           ],
         ),
@@ -236,13 +263,15 @@ class _BadgeTile extends ConsumerWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              BadgeIcon(achievement: a, unlocked: at != null, size: 96, pulse: true),
-              const SizedBox(height: 16),
-              Text(
-                a.title,
-                textAlign: TextAlign.center,
-                style: theme.textTheme.headlineSmall?.copyWith(color: titleColor(theme, a, true)),
+              BadgeIcon(
+                achievement: a,
+                unlocked: at != null,
+                size: 96,
+                pulse: true,
+                progress: current == null ? null : current! / a.conditionValue(main?.name),
               ),
+              const SizedBox(height: 16),
+              Text(a.title, textAlign: TextAlign.center, style: theme.textTheme.headlineSmall),
               const SizedBox(height: 8),
               Text(achievementDescription(l, a, main), textAlign: TextAlign.center, style: theme.textTheme.bodyLarge),
               const SizedBox(height: 16),
@@ -253,6 +282,12 @@ class _BadgeTile extends ConsumerWidget {
                 textAlign: TextAlign.center,
                 style: theme.textTheme.bodyMedium,
               ),
+              if (at == null && current != null)
+                Text(
+                  progressText(l, a, main, current),
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.titleMedium?.copyWith(color: rarity),
+                ),
               const SizedBox(height: 8),
               Wrap(
                 alignment: WrapAlignment.center,
@@ -271,6 +306,24 @@ class _BadgeTile extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  /// "18 из 200 дней", "1 200 из 5 000 ₽": progress towards a badge not earned yet, in the badge's units.
+  static String progressText(AppLocalizations l, Achievement a, ProductType? main, num? current) {
+    if (current == null) return '';
+    final fmt = NumberFormat('#,##0', 'ru');
+    final target = a.conditionValue(main?.name).toInt();
+    final now = current.floor().clamp(0, target);
+    String of(String total, int Function(int) unit) => l.achProgress(fmt.format(unit(now)), total);
+    return switch (a.conditionType) {
+      // After «из» the unit takes the genitive: «из 21 дня», «из 200 дней».
+      'smokeFreeMinutes' when target >= 1440 => of(l.achOfDays(target ~/ 1440), (m) => m ~/ 1440),
+      'smokeFreeMinutes' when target >= 60 => of(l.achOfHours(target ~/ 60), (m) => m ~/ 60),
+      'smokeFreeMinutes' => of(l.achOfMinutes(target), (m) => m),
+      'moneySavedRub' => of(l.money(fmt.format(target)), (v) => v),
+      'unitsAvoided' => of('${fmt.format(target)} ${l.achOfUnits((main ?? ProductType.cigarettes).name)}', (v) => v),
+      _ => l.achProgress(fmt.format(now), fmt.format(target)),
+    };
   }
 
   static String _conditionText(AppLocalizations l, Achievement a, ProductType? main) {
