@@ -55,7 +55,7 @@ class _BadgeIconState extends State<BadgeIcon> with SingleTickerProviderStateMix
           border: Border.all(color: tierColor(widget.achievement.tier).withValues(alpha: 0.55), width: 2),
         ),
         child: Icon(
-          contentIcon(widget.achievement.icon),
+          contentIcon(widget.achievement.icon, filled: false),
           size: size * 0.45,
           color: scheme.outline.withValues(alpha: 0.5),
         ),

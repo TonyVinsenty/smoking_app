@@ -33,20 +33,29 @@ String formatElapsed(AppLocalizations l, Duration d) {
   return l.durMinutes(d.inMinutes);
 }
 
-/// Icon names used in content JSON (achievements.json).
-IconData contentIcon(String name) => switch (name) {
-  'bolt' => Icons.bolt,
-  'air' => Icons.air,
-  'local_fire_department' => Icons.local_fire_department,
-  'favorite' => Icons.favorite,
-  'emoji_events' => Icons.emoji_events,
-  'self_improvement' => Icons.self_improvement,
-  'spa' => Icons.spa,
-  'military_tech' => Icons.military_tech,
-  'savings' => Icons.savings,
-  'menu_book' => Icons.menu_book,
-  _ => Icons.star,
-};
+/// Icon names used in content JSON (achievements.json). Filled for an earned badge, outlined otherwise.
+IconData contentIcon(String name, {bool filled = true}) {
+  final (on, off) = switch (name) {
+    'air' => (Icons.air, Icons.air),
+    'bolt' => (Icons.bolt, Icons.bolt_outlined),
+    'diamond' => (Icons.diamond, Icons.diamond_outlined),
+    'emoji_events' => (Icons.emoji_events, Icons.emoji_events_outlined),
+    'favorite' => (Icons.favorite, Icons.favorite_border),
+    'local_fire_department' => (Icons.local_fire_department, Icons.local_fire_department_outlined),
+    'menu_book' => (Icons.menu_book, Icons.menu_book_outlined),
+    'military_tech' => (Icons.military_tech, Icons.military_tech_outlined),
+    'park' => (Icons.park, Icons.park_outlined),
+    'rocket_launch' => (Icons.rocket_launch, Icons.rocket_launch_outlined),
+    'savings' => (Icons.savings, Icons.savings_outlined),
+    'self_improvement' => (Icons.self_improvement, Icons.self_improvement),
+    'smoke_free' => (Icons.smoke_free, Icons.smoke_free),
+    'spa' => (Icons.spa, Icons.spa_outlined),
+    'timer' => (Icons.timer, Icons.timer_outlined),
+    'workspace_premium' => (Icons.workspace_premium, Icons.workspace_premium_outlined),
+    _ => (Icons.star, Icons.star_border),
+  };
+  return filled ? on : off;
+}
 
 /// WoW-style rarity colours (achievements.json "tier").
 Color tierColor(String tier) => switch (tier) {
@@ -71,13 +80,16 @@ String achievementDescription(AppLocalizations l, Achievement a, ProductType? ma
   return a.description.replaceAll('{units}', unitsText(l, type, a.conditionValue(type.name).toInt()));
 }
 
-/// Health milestone category (health_milestones.json).
-IconData categoryIcon(String category) => switch (category) {
-  'heart' => Icons.favorite,
-  'circulation' => Icons.water_drop,
-  'lungs' => Icons.air,
-  'energy' => Icons.bolt,
-  'mind' => Icons.psychology,
-  'taste_smell' => Icons.restaurant,
-  _ => Icons.shield,
-};
+/// Health milestone category (health_milestones.json). Outlined by default, filled once passed.
+IconData categoryIcon(String category, {bool filled = false}) {
+  final (on, off) = switch (category) {
+    'heart' => (Icons.favorite, Icons.favorite_border),
+    'circulation' => (Icons.water_drop, Icons.water_drop_outlined),
+    'lungs' => (Icons.air, Icons.air),
+    'energy' => (Icons.bolt, Icons.bolt_outlined),
+    'mind' => (Icons.psychology, Icons.psychology_outlined),
+    'taste_smell' => (Icons.restaurant, Icons.restaurant_outlined),
+    _ => (Icons.shield, Icons.shield_outlined),
+  };
+  return filled ? on : off;
+}

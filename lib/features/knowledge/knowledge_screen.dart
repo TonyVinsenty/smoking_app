@@ -48,7 +48,7 @@ class _KnowledgeScreenState extends ConsumerState<KnowledgeScreen> {
               children: [
                 Row(
                   children: [
-                    Icon(Icons.menu_book, color: theme.colorScheme.onPrimaryContainer),
+                    Icon(Icons.menu_book_outlined, color: theme.colorScheme.onPrimaryContainer),
                     const SizedBox(width: 12),
                     Text(l.knowledgeProgress(readCount, articles.length), style: theme.textTheme.titleMedium),
                   ],

@@ -30,12 +30,12 @@ class _AchievementsList extends ConsumerWidget {
   static const _screen = 'achievements';
 
   static IconData _groupIcon(String group) => switch (group) {
-    'streak' => Icons.timer,
+    'streak' => Icons.timer_outlined,
     'cravings' => Icons.self_improvement,
-    'money' => Icons.savings,
+    'money' => Icons.savings_outlined,
     'units' => Icons.smoke_free,
-    'articles' => Icons.menu_book,
-    _ => Icons.flag,
+    'articles' => Icons.menu_book_outlined,
+    _ => Icons.flag_outlined,
   };
 
   @override

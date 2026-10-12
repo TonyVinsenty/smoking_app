@@ -128,7 +128,7 @@ class _AttemptCard extends StatelessWidget {
               runSpacing: 8,
               children: [
                 if (badges > 0)
-                  Chip(avatar: const Icon(Icons.military_tech, size: 18), label: Text(l.historyBadges(badges))),
+                  Chip(avatar: const Icon(Icons.military_tech_outlined, size: 18), label: Text(l.historyBadges(badges))),
                 if (attempt.trigger != null) Chip(label: Text(l.triggerName(attempt.trigger!.name))),
               ],
             ),

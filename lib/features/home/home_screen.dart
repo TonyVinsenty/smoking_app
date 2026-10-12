@@ -48,7 +48,7 @@ class HomeScreen extends ConsumerWidget {
           Padding(
             padding: const EdgeInsets.only(right: 12),
             child: FilledButton.tonalIcon(
-              icon: const Icon(Icons.emoji_events, size: 28),
+              icon: const Icon(Icons.emoji_events_outlined, size: 26),
               label: Text(l.healthTabAchievements),
               style: FilledButton.styleFrom(
                 padding: const EdgeInsets.fromLTRB(14, 8, 18, 8),
@@ -468,7 +468,7 @@ class _CravingCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(Icons.insights, color: theme.colorScheme.primary),
+              Icon(Icons.bar_chart_rounded, color: theme.colorScheme.primary),
               const SizedBox(width: 8),
               Expanded(child: Text(l.cravingTitle, style: theme.textTheme.labelLarge)),
               Icon(Icons.chevron_right, color: theme.colorScheme.primary),

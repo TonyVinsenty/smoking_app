@@ -28,7 +28,7 @@ class NotInhaledTab extends ConsumerWidget {
   static IconData _productIcon(ProductType t) => switch (t) {
     ProductType.cigarettes => Icons.smoke_free,
     ProductType.sticks => Icons.whatshot_outlined,
-    ProductType.disposable || ProductType.liquid => Icons.cloud_off_outlined,
+    ProductType.disposable || ProductType.liquid => Icons.vape_free,
   };
 
   static IconData _factIcon(String name) => switch (name) {

@@ -102,7 +102,7 @@ class _AreaTile extends StatelessWidget {
                       CircleAvatar(
                         radius: 16,
                         backgroundColor: full ? scheme.primary : scheme.surface,
-                        child: Icon(categoryIcon(area), size: 18, color: full ? scheme.onPrimary : scheme.primary),
+                        child: Icon(categoryIcon(area, filled: full), size: 18, color: full ? scheme.onPrimary : scheme.primary),
                       ),
                       const Spacer(),
                       Text(l.bodyProgress(done, milestones.length), style: theme.textTheme.labelLarge),
