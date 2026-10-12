@@ -309,35 +309,73 @@ class _CalmBreathingState extends State<_CalmBreathing> with SingleTickerProvide
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    final on = scheme.onPrimaryContainer;
+    // Shrinks as a whole on short screens.
     return Center(
-      child: AnimatedBuilder(
-        animation: _controller,
-        builder: (context, _) {
-          final t = _controller.value * _cycle;
-          final inhale = t < _inSec;
-          final scale = inhale
-              ? 0.55 + 0.45 * Curves.easeInOut.transform(t / _inSec)
-              : 1.0 - 0.45 * Curves.easeInOut.transform((t - _inSec) / _outSec);
-          final color = theme.colorScheme.primaryContainer;
-          return Container(
-            width: 240 * scale,
-            height: 240 * scale,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              // Soft edge instead of a hard circle.
-              gradient: RadialGradient(colors: [color, color, color.withValues(alpha: 0)], stops: const [0, 0.7, 1]),
-            ),
-            child: AnimatedSwitcher(
-              duration: const Duration(milliseconds: 400),
-              child: Text(
-                inhale ? l.sosBreatheIn : l.sosBreatheOut,
-                key: ValueKey(inhale),
-                style: theme.textTheme.headlineSmall?.copyWith(color: theme.colorScheme.onPrimaryContainer),
-              ),
-            ),
-          );
-        },
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: SizedBox.square(
+          dimension: 260,
+          child: AnimatedBuilder(
+            animation: _controller,
+            builder: (context, _) {
+              final t = _controller.value * _cycle;
+              final inhale = t < _inSec;
+              final phase = inhale ? t / _inSec : (t - _inSec) / _outSec;
+              final scale = inhale
+                  ? 0.55 + 0.45 * Curves.easeInOut.transform(phase)
+                  : 1.0 - 0.45 * Curves.easeInOut.transform(phase);
+              // Seconds left in this phase: 4…1 breathing in, 6…1 breathing out.
+              final left = (inhale ? _inSec - t : _cycle - t).ceil().clamp(1, _outSec);
+              final color = scheme.primaryContainer;
+              return Stack(
+                alignment: Alignment.center,
+                children: [
+                  Container(
+                    width: 236 * scale,
+                    height: 236 * scale,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      // Soft edge instead of a hard circle.
+                      gradient: RadialGradient(
+                        colors: [color, color, color.withValues(alpha: 0)],
+                        stops: const [0, 0.7, 1],
+                      ),
+                    ),
+                  ),
+                  // A thin ring around the circle fills up during each phase: how long until the switch.
+                  SizedBox.expand(
+                    child: CircularProgressIndicator(
+                      value: phase,
+                      strokeWidth: 4,
+                      strokeCap: StrokeCap.round,
+                      color: scheme.primary,
+                      backgroundColor: scheme.primary.withValues(alpha: 0.12),
+                    ),
+                  ),
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 300),
+                        child: Text(
+                          inhale ? l.sosBreatheIn : l.sosBreatheOut,
+                          key: ValueKey(inhale),
+                          style: theme.textTheme.headlineSmall?.copyWith(color: on),
+                        ),
+                      ),
+                      Text(
+                        '$left',
+                        style: theme.textTheme.displaySmall?.copyWith(color: on, fontFeatures: tabular),
+                      ),
+                    ],
+                  ),
+                ],
+              );
+            },
+          ),
+        ),
       ),
     );
   }
