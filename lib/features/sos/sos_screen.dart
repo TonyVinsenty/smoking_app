@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/widgets/cards.dart';
@@ -71,6 +72,7 @@ class _SosScreenState extends ConsumerState<SosScreen> {
   Trigger? _trigger;
 
   Future<void> _resisted() async {
+    HapticFeedback.mediumImpact();
     final attempt = ref.read(currentAttemptProvider).value;
     if (attempt != null) {
       await ref.read(databaseProvider).logCraving(attemptId: attempt.id, resisted: true, trigger: _trigger);
@@ -113,6 +115,7 @@ class _SosScreenState extends ConsumerState<SosScreen> {
                     ActionChip(
                       label: Text(l.triggerName(t.name)),
                       onPressed: () => setState(() {
+                        HapticFeedback.selectionClick();
                         _trigger = t;
                         _askTrigger = false;
                       }),
@@ -278,6 +281,21 @@ class _CalmBreathingState extends State<_CalmBreathing> with SingleTickerProvide
     vsync: this,
     duration: const Duration(seconds: _cycle),
   )..repeat();
+
+  /// A soft tap on every switch between breathing in and out, so one can follow with closed eyes.
+  bool _inhale = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.addListener(() {
+      final inhale = _controller.value * _cycle < _inSec;
+      if (inhale != _inhale) {
+        _inhale = inhale;
+        inhale ? HapticFeedback.mediumImpact() : HapticFeedback.lightImpact();
+      }
+    });
+  }
 
   @override
   void dispose() {

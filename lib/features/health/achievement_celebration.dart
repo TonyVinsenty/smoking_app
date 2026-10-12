@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/widgets/cards.dart';
@@ -38,6 +39,14 @@ class _Celebration extends StatefulWidget {
 
 class _CelebrationState extends State<_Celebration> with TickerProviderStateMixin {
   late final _pop = AnimationController(vsync: this, duration: const Duration(milliseconds: 1400))..forward();
+
+  @override
+  void initState() {
+    super.initState();
+    // Felt in the hand together with the medal popping in.
+    Future.delayed(const Duration(milliseconds: 250), HapticFeedback.mediumImpact);
+  }
+
   late final _spin = AnimationController(vsync: this, duration: const Duration(seconds: 12))..repeat();
 
   late final _badgeScale = CurvedAnimation(
