@@ -23,8 +23,15 @@ class AchievementsScreen extends StatelessWidget {
   );
 }
 
-class _AchievementsList extends ConsumerWidget {
+class _AchievementsList extends ConsumerStatefulWidget {
   const _AchievementsList();
+
+  @override
+  ConsumerState<_AchievementsList> createState() => _AchievementsListState();
+}
+
+class _AchievementsListState extends ConsumerState<_AchievementsList> {
+  final _collapsed = <String>{};
 
   static IconData _groupIcon(String group) => switch (group) {
     'streak' => Icons.timer,
@@ -36,7 +43,7 @@ class _AchievementsList extends ConsumerWidget {
   };
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final content = ref.watch(contentProvider).value;
@@ -62,7 +69,10 @@ class _AchievementsList extends ConsumerWidget {
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
           sliver: SliverToBoxAdapter(
             child: _Progress(
-              title: Text(l.achUnlockedCount(firstUnlock.length, total), style: theme.textTheme.titleMedium),
+              title: Text(
+                l.achUnlockedCount(firstUnlock.length, total, percentOf(firstUnlock.length, total)),
+                style: theme.textTheme.titleMedium,
+              ),
               value: firstUnlock.length / total,
             ),
           ),
@@ -73,40 +83,57 @@ class _AchievementsList extends ConsumerWidget {
             final items = content.achievements.where((a) => a.group == group).toList()
               ..sort((a, b) => a.conditionValue(main?.name).compareTo(b.conditionValue(main?.name)));
             final done = items.where((a) => firstUnlock.containsKey(a.id)).length;
+            final open = !_collapsed.contains(group);
             return [
               SliverPadding(
-                padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
+                padding: const EdgeInsets.fromLTRB(4, 12, 4, 0),
                 sliver: SliverToBoxAdapter(
-                  child: _Progress(
-                    title: Row(
-                      spacing: 8,
-                      children: [
-                        Icon(_groupIcon(group), color: theme.colorScheme.primary),
-                        Expanded(
-                          child: Text(
-                            l.achGroup(group),
-                            style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-                          ),
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(12),
+                    onTap: () => setState(() => open ? _collapsed.add(group) : _collapsed.remove(group)),
+                    child: Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: _Progress(
+                        title: Row(
+                          spacing: 8,
+                          children: [
+                            Icon(_groupIcon(group), color: theme.colorScheme.primary),
+                            Expanded(
+                              child: Text(
+                                l.achGroup(group),
+                                style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            Text(
+                              l.achGroupProgress(done, items.length, percentOf(done, items.length)),
+                              style: theme.textTheme.labelLarge,
+                            ),
+                            AnimatedRotation(
+                              turns: open ? 0.5 : 0,
+                              duration: const Duration(milliseconds: 200),
+                              child: const Icon(Icons.expand_more),
+                            ),
+                          ],
                         ),
-                        Text(l.achGroupProgress(done, items.length), style: theme.textTheme.labelLarge),
-                      ],
+                        value: done / items.length,
+                      ),
                     ),
-                    value: done / items.length,
                   ),
                 ),
               ),
-              SliverPadding(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                sliver: SliverGrid.builder(
-                  gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                    // Wider tiles (fewer columns) with a large system font, so titles do not break mid-word.
-                    maxCrossAxisExtent: 140 * textScale.clamp(1.0, 2.0),
-                    mainAxisExtent: tileHeight,
+              if (open)
+                SliverPadding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  sliver: SliverGrid.builder(
+                    gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                      // Wider tiles (fewer columns) with a large system font, so titles do not break mid-word.
+                      maxCrossAxisExtent: 140 * textScale.clamp(1.0, 2.0),
+                      mainAxisExtent: tileHeight,
+                    ),
+                    itemCount: items.length,
+                    itemBuilder: (context, i) => _BadgeTile(achievement: items[i], unlocked: firstUnlock[items[i].id]),
                   ),
-                  itemCount: items.length,
-                  itemBuilder: (context, i) => _BadgeTile(achievement: items[i], unlocked: firstUnlock[items[i].id]),
                 ),
-              ),
             ];
           }(),
         const SliverPadding(padding: EdgeInsets.only(bottom: 96)),
@@ -244,3 +271,6 @@ class _BadgeTile extends ConsumerWidget {
     };
   }
 }
+
+/// Whole percent, never rounded up to 100 before everything is done.
+int percentOf(int done, int total) => total == 0 ? 0 : done * 100 ~/ total;

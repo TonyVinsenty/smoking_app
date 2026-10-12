@@ -502,8 +502,8 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String achUnlockedCount(int unlocked, int total) {
-    return 'Открыто $unlocked из $total';
+  String achUnlockedCount(int unlocked, int total, int percent) {
+    return 'Открыто $unlocked из $total ($percent%)';
   }
 
   @override
@@ -649,8 +649,8 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String achGroupProgress(int unlocked, int total) {
-    return '$unlocked из $total';
+  String achGroupProgress(int unlocked, int total, int percent) {
+    return '$unlocked из $total ($percent%)';
   }
 
   @override

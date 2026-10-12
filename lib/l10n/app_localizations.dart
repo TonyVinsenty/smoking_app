@@ -655,8 +655,8 @@ abstract class AppLocalizations {
   /// No description provided for @achUnlockedCount.
   ///
   /// In ru, this message translates to:
-  /// **'Открыто {unlocked} из {total}'**
-  String achUnlockedCount(int unlocked, int total);
+  /// **'Открыто {unlocked} из {total} ({percent}%)'**
+  String achUnlockedCount(int unlocked, int total, int percent);
 
   /// No description provided for @achUnlockedAt.
   ///
@@ -745,8 +745,8 @@ abstract class AppLocalizations {
   /// No description provided for @achGroupProgress.
   ///
   /// In ru, this message translates to:
-  /// **'{unlocked} из {total}'**
-  String achGroupProgress(int unlocked, int total);
+  /// **'{unlocked} из {total} ({percent}%)'**
+  String achGroupProgress(int unlocked, int total, int percent);
 
   /// No description provided for @tierName.
   ///
