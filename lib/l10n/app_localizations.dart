@@ -718,6 +718,120 @@ abstract class AppLocalizations {
   /// **'Факты из исследований'**
   String get healthFactsTitle;
 
+  /// No description provided for @healthSub.
+  ///
+  /// In ru, this message translates to:
+  /// **'{tab, select, stages{Этапы} facts{Факты} normal{Что сейчас нормально} body{Карта тела} notInhaled{Не попало в организм} other{Дневник}}'**
+  String healthSub(String tab);
+
+  /// No description provided for @normalIntro.
+  ///
+  /// In ru, this message translates to:
+  /// **'Симптомы отмены — знак того, что организм перестраивается. Они временные и проходят сами. Не у всех бывают все симптомы.'**
+  String get normalIntro;
+
+  /// No description provided for @normalNow.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сейчас это нормально'**
+  String get normalNow;
+
+  /// No description provided for @normalPast.
+  ///
+  /// In ru, this message translates to:
+  /// **'Обычно уже позади'**
+  String get normalPast;
+
+  /// No description provided for @normalPastHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Если что-то из этого всё ещё беспокоит — так тоже бывает. Если сильно мешает, посоветуйтесь с врачом.'**
+  String get normalPastHint;
+
+  /// No description provided for @normalLasts.
+  ///
+  /// In ru, this message translates to:
+  /// **'Обычно: {duration}'**
+  String normalLasts(String duration);
+
+  /// No description provided for @normalHelps.
+  ///
+  /// In ru, this message translates to:
+  /// **'Что помогает'**
+  String get normalHelps;
+
+  /// No description provided for @normalSources.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сроки — по таблице симптомов отмены MSD Manual (материалы программы Rx for Change, Калифорнийский университет); совет про кашель — NHS.'**
+  String get normalSources;
+
+  /// No description provided for @bodyIntro.
+  ///
+  /// In ru, this message translates to:
+  /// **'Каждый пройденный этап восстановления заполняет свою часть карты. Нажмите на плитку, чтобы увидеть её этапы.'**
+  String get bodyIntro;
+
+  /// No description provided for @bodyArea.
+  ///
+  /// In ru, this message translates to:
+  /// **'{area, select, heart{Сердце} lungs{Лёгкие} circulation{Кровообращение} energy{Энергия} mind{Голова и настроение} taste_smell{Вкус и запах} other{Защита от болезней}}'**
+  String bodyArea(String area);
+
+  /// No description provided for @bodyProgress.
+  ///
+  /// In ru, this message translates to:
+  /// **'{done} из {total}'**
+  String bodyProgress(int done, int total);
+
+  /// No description provided for @notInhaledTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'За эту попытку не попало в организм'**
+  String get notInhaledTitle;
+
+  /// No description provided for @notInhaledPuffsCig.
+  ///
+  /// In ru, this message translates to:
+  /// **'≈ {count} {n, plural, one{затяжка} few{затяжки} other{затяжек}} дымом'**
+  String notInhaledPuffsCig(String count, int n);
+
+  /// No description provided for @notInhaledPuffsCigNote.
+  ///
+  /// In ru, this message translates to:
+  /// **'В среднем на одну сигарету приходится около 12 затяжек (Pennsylvania Adult Smoking Study, Drug and Alcohol Dependence, 2018).'**
+  String get notInhaledPuffsCigNote;
+
+  /// No description provided for @notInhaledPuffsSticks.
+  ///
+  /// In ru, this message translates to:
+  /// **'до {count} {n, plural, one{затяжки} other{затяжек}} аэрозолем'**
+  String notInhaledPuffsSticks(String count, int n);
+
+  /// No description provided for @notInhaledPuffsSticksNote.
+  ///
+  /// In ru, this message translates to:
+  /// **'Устройство IQOS отключает нагрев стика после 14 затяжек или 6 минут — это верхняя граница.'**
+  String get notInhaledPuffsSticksNote;
+
+  /// No description provided for @notInhaledVape.
+  ///
+  /// In ru, this message translates to:
+  /// **'Для вейпов считаем только единицы: число затяжек слишком зависит от устройства и манеры.'**
+  String get notInhaledVape;
+
+  /// No description provided for @notInhaledHonest.
+  ///
+  /// In ru, this message translates to:
+  /// **'Смолы и угарный газ мы не считаем: их количество сильно зависит от марки и того, как человек курит, а надёжных данных для точного расчёта нет.'**
+  String get notInhaledHonest;
+
+  /// No description provided for @notInhaledNoAttempt.
+  ///
+  /// In ru, this message translates to:
+  /// **'Начните новую попытку на главном экране — и здесь появится счёт.'**
+  String get notInhaledNoAttempt;
+
   /// No description provided for @achUnlockedCount.
   ///
   /// In ru, this message translates to:

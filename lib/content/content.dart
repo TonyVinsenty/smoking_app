@@ -91,12 +91,36 @@ class HealthMilestone {
 
 /// A real research number for the Здоровье tab.
 class HealthFact {
-  HealthFact.fromJson(Map<String, dynamic> j) : id = j['id'], value = j['value'], text = j['text'], source = j['source'];
+  HealthFact.fromJson(Map<String, dynamic> j)
+    : id = j['id'],
+      value = j['value'],
+      text = j['text'],
+      source = j['source'];
 
   final String id;
   final String value;
   final String text;
   final String source;
+}
+
+/// A usual nicotine withdrawal symptom and how long it typically lasts.
+class WithdrawalSymptom {
+  WithdrawalSymptom.fromJson(Map<String, dynamic> j)
+    : id = j['id'],
+      title = j['title'],
+      untilHours = j['untilHours'],
+      duration = j['duration'],
+      text = j['text'],
+      tips = (j['tips'] as List).cast<String>();
+
+  final String id;
+  final String title;
+
+  /// End of the typical period, counted from the quit time.
+  final int untilHours;
+  final String duration;
+  final String text;
+  final List<String> tips;
 }
 
 class Quote {
@@ -133,6 +157,7 @@ class AppContent {
     required this.achievements,
     required this.milestones,
     required this.healthFacts,
+    required this.withdrawal,
     required this.quotes,
     required this.sosTips,
     required this.triggerTips,
@@ -143,6 +168,7 @@ class AppContent {
   final List<Achievement> achievements;
   final List<HealthMilestone> milestones;
   final List<HealthFact> healthFacts;
+  final List<WithdrawalSymptom> withdrawal;
   final List<Quote> quotes;
   final List<String> sosTips;
 
@@ -170,6 +196,7 @@ final contentProvider = FutureProvider<AppContent>((ref) async {
     _loadList('articles/index.json'),
     _loadList('trigger_tips.json'),
     _loadList('health_facts.json'),
+    _loadList('withdrawal_symptoms.json'),
   ]);
   return AppContent(
     levels: results[0].map(Level.fromJson).toList()..sort((a, b) => a.level.compareTo(b.level)),
@@ -178,9 +205,13 @@ final contentProvider = FutureProvider<AppContent>((ref) async {
       ..sort((a, b) => a.afterMinutes.compareTo(b.afterMinutes)),
     quotes: results[3].map(Quote.fromJson).toList(),
     sosTips: [for (final t in results[4]) t['text'] as String],
-    articles: [for (final a in results[5].map(Article.fromJson)) if (a.file != null) a],
+    articles: [
+      for (final a in results[5].map(Article.fromJson))
+        if (a.file != null) a,
+    ],
     triggerTips: {for (final t in results[6]) t['trigger'] as String: t['text'] as String},
     healthFacts: results[7].map(HealthFact.fromJson).toList(),
+    withdrawal: results[8].map(WithdrawalSymptom.fromJson).toList(),
   );
 });
 

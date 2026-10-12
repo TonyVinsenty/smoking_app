@@ -78,5 +78,6 @@ IconData categoryIcon(String category) => switch (category) {
   'lungs' => Icons.air,
   'energy' => Icons.bolt,
   'mind' => Icons.psychology,
+  'taste_smell' => Icons.restaurant,
   _ => Icons.shield,
 };

@@ -544,6 +544,114 @@ class AppLocalizationsRu extends AppLocalizations {
   String get healthFactsTitle => 'Факты из исследований';
 
   @override
+  String healthSub(String tab) {
+    String _temp0 = intl.Intl.selectLogic(tab, {
+      'stages': 'Этапы',
+      'facts': 'Факты',
+      'normal': 'Что сейчас нормально',
+      'body': 'Карта тела',
+      'notInhaled': 'Не попало в организм',
+      'other': 'Дневник',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String get normalIntro =>
+      'Симптомы отмены — знак того, что организм перестраивается. Они временные и проходят сами. Не у всех бывают все симптомы.';
+
+  @override
+  String get normalNow => 'Сейчас это нормально';
+
+  @override
+  String get normalPast => 'Обычно уже позади';
+
+  @override
+  String get normalPastHint =>
+      'Если что-то из этого всё ещё беспокоит — так тоже бывает. Если сильно мешает, посоветуйтесь с врачом.';
+
+  @override
+  String normalLasts(String duration) {
+    return 'Обычно: $duration';
+  }
+
+  @override
+  String get normalHelps => 'Что помогает';
+
+  @override
+  String get normalSources =>
+      'Сроки — по таблице симптомов отмены MSD Manual (материалы программы Rx for Change, Калифорнийский университет); совет про кашель — NHS.';
+
+  @override
+  String get bodyIntro =>
+      'Каждый пройденный этап восстановления заполняет свою часть карты. Нажмите на плитку, чтобы увидеть её этапы.';
+
+  @override
+  String bodyArea(String area) {
+    String _temp0 = intl.Intl.selectLogic(area, {
+      'heart': 'Сердце',
+      'lungs': 'Лёгкие',
+      'circulation': 'Кровообращение',
+      'energy': 'Энергия',
+      'mind': 'Голова и настроение',
+      'taste_smell': 'Вкус и запах',
+      'other': 'Защита от болезней',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String bodyProgress(int done, int total) {
+    return '$done из $total';
+  }
+
+  @override
+  String get notInhaledTitle => 'За эту попытку не попало в организм';
+
+  @override
+  String notInhaledPuffsCig(String count, int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'затяжек',
+      few: 'затяжки',
+      one: 'затяжка',
+    );
+    return '≈ $count $_temp0 дымом';
+  }
+
+  @override
+  String get notInhaledPuffsCigNote =>
+      'В среднем на одну сигарету приходится около 12 затяжек (Pennsylvania Adult Smoking Study, Drug and Alcohol Dependence, 2018).';
+
+  @override
+  String notInhaledPuffsSticks(String count, int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'затяжек',
+      one: 'затяжки',
+    );
+    return 'до $count $_temp0 аэрозолем';
+  }
+
+  @override
+  String get notInhaledPuffsSticksNote =>
+      'Устройство IQOS отключает нагрев стика после 14 затяжек или 6 минут — это верхняя граница.';
+
+  @override
+  String get notInhaledVape =>
+      'Для вейпов считаем только единицы: число затяжек слишком зависит от устройства и манеры.';
+
+  @override
+  String get notInhaledHonest =>
+      'Смолы и угарный газ мы не считаем: их количество сильно зависит от марки и того, как человек курит, а надёжных данных для точного расчёта нет.';
+
+  @override
+  String get notInhaledNoAttempt =>
+      'Начните новую попытку на главном экране — и здесь появится счёт.';
+
+  @override
   String achUnlockedCount(int unlocked, int total, int percent) {
     return 'Открыто $unlocked из $total ($percent%)';
   }

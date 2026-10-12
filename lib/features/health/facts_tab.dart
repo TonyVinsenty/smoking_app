@@ -1,0 +1,60 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../content/content.dart';
+import '../../l10n/app_localizations.dart';
+import 'health_common.dart';
+
+/// «Факты»: real numbers from research, each with its source.
+class FactsTab extends ConsumerWidget {
+  const FactsTab({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final facts = ref.watch(contentProvider).value?.healthFacts;
+    if (facts == null) return const Center(child: CircularProgressIndicator());
+    return ListView(
+      padding: healthTabPadding,
+      children: [
+        for (final f in facts) ...[_FactCard(fact: f), const SizedBox(height: 12)],
+        const SizedBox(height: 12),
+        const HealthDisclaimer(),
+      ],
+    );
+  }
+}
+
+class _FactCard extends StatelessWidget {
+  const _FactCard({required this.fact});
+
+  final HealthFact fact;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    return Card(
+      color: scheme.surfaceContainerHigh,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              fact.value,
+              style: theme.textTheme.headlineMedium?.copyWith(color: scheme.primary, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 4),
+            Text(fact.text, style: theme.textTheme.bodyMedium),
+            const SizedBox(height: 8),
+            Text(
+              l.healthSource(fact.source),
+              style: theme.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
