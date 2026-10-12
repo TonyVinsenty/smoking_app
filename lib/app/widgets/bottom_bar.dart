@@ -88,6 +88,7 @@ class _BarButton extends StatelessWidget {
                       isLabelVisible: item.dot,
                       child: Icon(
                         selected ? item.selectedIcon : item.icon,
+                        size: 24,
                         color: selected ? scheme.onSecondaryContainer : scheme.onSurfaceVariant,
                       ),
                     ),

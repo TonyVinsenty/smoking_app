@@ -278,7 +278,7 @@ class _MilestoneRow extends StatelessWidget {
                         style: theme.textTheme.labelLarge?.copyWith(color: scheme.primary),
                       ),
                       const SizedBox(height: 2),
-                      Text(m.title, style: theme.textTheme.titleMedium),
+                      WordFitText(m.title, style: theme.textTheme.titleMedium),
                       const SizedBox(height: 4),
                       Text(m.description, style: theme.textTheme.bodyMedium),
                       const SizedBox(height: 8),

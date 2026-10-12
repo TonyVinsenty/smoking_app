@@ -156,6 +156,7 @@ class _TimerCard extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             l.homeSmokeFreeSince(DateFormat('d MMMM yyyy', 'ru').format(attempt.startedAt)),
+            textAlign: TextAlign.center,
             style: theme.textTheme.bodyMedium?.copyWith(color: color),
           ),
         ],
@@ -341,12 +342,14 @@ class _LevelCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(l.homeLevel(level.level), style: theme.textTheme.labelLarge),
+                    Text(
+                      l.homeLevel(level.level, NumberFormat('#,##0', 'ru').format(xp)),
+                      style: theme.textTheme.labelMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+                    ),
                     Text(level.title, style: theme.textTheme.titleMedium),
                   ],
                 ),
               ),
-              Text('$xp XP', style: theme.textTheme.labelLarge),
             ],
           ),
           const SizedBox(height: 12),

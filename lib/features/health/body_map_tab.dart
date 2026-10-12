@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../app/widgets/choice.dart';
 import '../../app/format.dart';
 import '../../content/content.dart';
 import '../../data/providers.dart';
@@ -34,21 +35,38 @@ class BodyMapTab extends ConsumerWidget {
       children: [
         Text(l.bodyIntro, style: theme.textTheme.bodyLarge),
         const SizedBox(height: 16),
-        // Rows of two equal-height tiles; they grow with a large system font.
-        for (var i = 0; i < tiles.length; i += 2)
-          Padding(
-            padding: const EdgeInsets.only(bottom: 10),
-            child: IntrinsicHeight(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                spacing: 12,
-                children: [
-                  Expanded(child: tiles[i]),
-                  Expanded(child: i + 1 < tiles.length ? tiles[i + 1] : const SizedBox()),
-                ],
-              ),
-            ),
-          ),
+        // Rows of two equal-height tiles; one per row when a name would not fit whole (large system font).
+        LayoutBuilder(
+          builder: (context, box) {
+            final perRow =
+                wordsFit(
+                  context,
+                  [for (final a in _areas) l.bodyArea(a)],
+                  theme.textTheme.titleSmall,
+                  (box.maxWidth - 12) / 2 - 24,
+                )
+                ? 2
+                : 1;
+            return Column(
+              children: [
+                for (var i = 0; i < tiles.length; i += perRow)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: IntrinsicHeight(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        spacing: 12,
+                        children: [
+                          for (var j = i; j < i + perRow; j++)
+                            Expanded(child: j < tiles.length ? tiles[j] : const SizedBox()),
+                        ],
+                      ),
+                    ),
+                  ),
+              ],
+            );
+          },
+        ),
         const SizedBox(height: 12),
         const HealthDisclaimer(),
       ],
@@ -113,7 +131,7 @@ class _AreaTile extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 8),
-                  Text(l.bodyArea(area), maxLines: 2, style: theme.textTheme.titleSmall),
+                  Text(l.bodyArea(area), style: theme.textTheme.titleSmall),
                 ],
               ),
             ),

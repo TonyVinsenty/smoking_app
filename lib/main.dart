@@ -28,6 +28,15 @@ class SmokingApp extends ConsumerWidget {
       theme: buildTheme(Brightness.light),
       darkTheme: buildTheme(Brightness.dark),
       themeMode: ref.watch(themeModeProvider),
+      // Icons grow a little with a large system font (half as fast as text, up to 34 dp).
+      builder: (context, child) {
+        final scale = MediaQuery.textScalerOf(context).scale(1);
+        final size = (24 * (1 + (scale - 1) / 2)).clamp(24.0, 34.0);
+        return IconTheme.merge(
+          data: IconThemeData(size: size),
+          child: child!,
+        );
+      },
       locale: const Locale('ru'),
       supportedLocales: AppLocalizations.supportedLocales,
       localizationsDelegates: const [

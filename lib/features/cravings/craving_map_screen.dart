@@ -211,6 +211,31 @@ class _Columns extends StatelessWidget {
     final theme = Theme.of(context);
     const height = 120.0;
     final max = items.fold(1, (m, e) => e.$3.total > m ? e.$3.total : m);
+    return LayoutBuilder(
+      builder: (context, box) {
+        // With a large system font the labels do not fit under narrow columns: show rows instead.
+        final fits = wordsFit(
+          context,
+          [
+            for (final (label, hint, _) in items) ...[label, ?hint],
+          ],
+          theme.textTheme.labelLarge,
+          box.maxWidth / items.length - 8,
+        );
+        if (!fits) {
+          return Column(
+            children: [
+              for (final (label, hint, count) in items)
+                _Row(label: hint == null ? label : '$label · $hint', count: count, max: max),
+            ],
+          );
+        }
+        return _bars(theme, height, max);
+      },
+    );
+  }
+
+  Widget _bars(ThemeData theme, double height, int max) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
