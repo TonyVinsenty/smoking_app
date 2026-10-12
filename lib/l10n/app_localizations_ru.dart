@@ -1039,7 +1039,10 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get settingsAppearance => 'Цветовой тон';
+  String get settingsAppearance => 'Оформление';
+
+  @override
+  String get settingsThemeMode => 'Тема оформления';
 
   @override
   String themeModeName(String mode) {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../app/widgets/cards.dart';
 import '../../app/widgets/sos_fab.dart';
 import '../../app/widgets/choice.dart';
 import '../../app/widgets/toast.dart';
@@ -26,82 +27,114 @@ class SettingsScreen extends ConsumerWidget {
     final theme = Theme.of(context);
     final attempts = ref.watch(attemptsProvider).value ?? const [];
     final current = attempts.where((a) => a.endedAt == null).firstOrNull;
-    Widget header(String text) => Padding(
-      padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
-      child: Text(text, style: theme.textTheme.titleSmall?.copyWith(color: theme.colorScheme.primary)),
-    );
     return TabPage(
       body: ListView(
-        padding: const EdgeInsets.only(bottom: sosClearance),
+        padding: const EdgeInsets.fromLTRB(16, 8, 16, sosClearance),
         children: [
-          header(l.settingsAppearance),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: AppSegments<ThemeMode>(
-              options: [
-                for (final m in const [ThemeMode.system, ThemeMode.dark, ThemeMode.light]) (m, l.themeModeName(m.name)),
-              ],
-              selected: ref.watch(themeModeProvider),
-              onChanged: (m) => ref.read(themeModeProvider.notifier).set(m),
-            ),
+          _Group(
+            title: l.settingsAttempt,
+            children: [
+              if (current != null)
+                ListTile(
+                  leading: const Icon(Icons.edit_note),
+                  title: Text(l.relapseButton),
+                  subtitle: Text(l.relapseButtonHint),
+                  onTap: () => RelapseScreen.start(context, current),
+                ),
+              ListTile(
+                leading: const Icon(Icons.history),
+                title: Text(l.historyButton),
+                subtitle: Text(l.historyButtonHint(formatElapsed(l, bestAttempt(attempts, DateTime.now())))),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => HistoryScreen.open(context),
+              ),
+              if (current != null)
+                ListTile(
+                  leading: const Icon(Icons.tune),
+                  title: Text(l.settingsHabits),
+                  subtitle: Text(l.settingsHabitsHint),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => _editHabits(context, ref, current),
+                ),
+            ],
           ),
-          const SizedBox(height: 8),
-          header(l.settingsAttempt),
-          if (current != null)
-            ListTile(
-              leading: const Icon(Icons.edit_note),
-              title: Text(l.relapseButton),
-              subtitle: Text(l.relapseButtonHint),
-              onTap: () => RelapseScreen.start(context, current),
-            ),
-          ListTile(
-            leading: const Icon(Icons.history),
-            title: Text(l.historyButton),
-            subtitle: Text(l.historyButtonHint(formatElapsed(l, bestAttempt(attempts, DateTime.now())))),
-            onTap: () => HistoryScreen.open(context),
+          _Group(
+            title: l.settingsSos,
+            children: [
+              ListTile(
+                leading: const Icon(Icons.air),
+                title: Text(l.settingsSosExercise),
+                subtitle: Text(l.sosExerciseName(ref.watch(sosExerciseProvider).name)),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => showSosExercisePicker(context, ref),
+              ),
+            ],
           ),
-          header(l.settingsSos),
-          ListTile(
-            leading: const Icon(Icons.air),
-            title: Text(l.settingsSosExercise),
-            subtitle: Text(l.sosExerciseName(ref.watch(sosExerciseProvider).name)),
-            onTap: () => showSosExercisePicker(context, ref),
+          _Group(
+            title: l.settingsNotifications,
+            children: [
+              SwitchListTile(
+                secondary: const Icon(Icons.notifications_none),
+                title: Text(l.settingsNotificationsMilestones),
+                subtitle: Text(l.settingsNotificationsHint),
+                value: ref.watch(notificationsEnabledProvider),
+                onChanged: (on) => ref.read(notificationsEnabledProvider.notifier).set(on),
+              ),
+              ..._diaryReminder(context, ref),
+            ],
           ),
-          header(l.settingsNotifications),
-          SwitchListTile(
-            secondary: const Icon(Icons.notifications_none),
-            title: Text(l.settingsNotificationsMilestones),
-            subtitle: Text(l.settingsNotificationsHint),
-            value: ref.watch(notificationsEnabledProvider),
-            onChanged: (on) => ref.read(notificationsEnabledProvider.notifier).set(on),
+          _Group(
+            title: l.settingsAppearance,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  spacing: 10,
+                  children: [
+                    Row(
+                      spacing: 16,
+                      children: [
+                        Icon(Icons.palette_outlined, color: theme.colorScheme.onSurfaceVariant),
+                        Expanded(child: Text(l.settingsThemeMode, style: theme.textTheme.bodyLarge)),
+                      ],
+                    ),
+                    AppSegments<ThemeMode>(
+                      options: [
+                        for (final m in const [ThemeMode.system, ThemeMode.dark, ThemeMode.light])
+                          (m, l.themeModeName(m.name)),
+                      ],
+                      selected: ref.watch(themeModeProvider),
+                      onChanged: (m) => ref.read(themeModeProvider.notifier).set(m),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-          ..._diaryReminder(context, ref),
-          header(l.settingsData),
-          if (current != null)
-            ListTile(
-              leading: const Icon(Icons.tune),
-              title: Text(l.settingsHabits),
-              subtitle: Text(l.settingsHabitsHint),
-              onTap: () => _editHabits(context, ref, current),
-            ),
-          ListTile(
-            leading: Icon(Icons.delete_forever_outlined, color: theme.colorScheme.error),
-            title: Text(l.settingsReset, style: TextStyle(color: theme.colorScheme.error)),
-            subtitle: Text(l.settingsResetHint),
-            onTap: () => _confirmReset(context, ref),
+          _Group(
+            title: l.settingsData,
+            children: [
+              ListTile(
+                leading: Icon(Icons.delete_forever_outlined, color: theme.colorScheme.error),
+                title: Text(l.settingsReset, style: TextStyle(color: theme.colorScheme.error)),
+                subtitle: Text(l.settingsResetHint),
+                onTap: () => _confirmReset(context, ref),
+              ),
+            ],
           ),
         ],
       ),
     );
   }
 
-  /// Checkbox for «Дневник самочувствия» reminders; once on, how often and at what time.
+  /// Switch for «Дневник самочувствия» reminders; once on, how often and at what time.
   List<Widget> _diaryReminder(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context);
     final r = ref.watch(diaryReminderProvider);
     void set(DiaryReminder value) => ref.read(diaryReminderProvider.notifier).set(value);
     return [
-      CheckboxListTile(
+      SwitchListTile(
         secondary: const Icon(Icons.edit_calendar_outlined),
         title: Text(l.settingsDiaryReminder),
         subtitle: Text(l.settingsDiaryReminderHint),
@@ -110,7 +143,7 @@ class SettingsScreen extends ConsumerWidget {
       ),
       if (r.enabled) ...[
         ListTile(
-          contentPadding: const EdgeInsets.only(left: 72, right: 16),
+          contentPadding: const EdgeInsets.only(left: 56, right: 16),
           title: Text(l.settingsDiaryPeriod),
           subtitle: Text(l.diaryPeriod('${r.periodDays}')),
           onTap: () async {
@@ -137,7 +170,7 @@ class SettingsScreen extends ConsumerWidget {
           },
         ),
         ListTile(
-          contentPadding: const EdgeInsets.only(left: 72, right: 16),
+          contentPadding: const EdgeInsets.only(left: 56, right: 16),
           title: Text(l.settingsDiaryTime),
           subtitle: Text(r.time.format(context)),
           onTap: () async {
@@ -181,5 +214,46 @@ class SettingsScreen extends ConsumerWidget {
       ),
     );
     if (ok == true) await ref.read(databaseProvider).resetAll();
+  }
+}
+
+/// A titled group of settings on one card, rows separated by thin lines.
+class _Group extends StatelessWidget {
+  const _Group({required this.title, required this.children});
+
+  final String title;
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(4, 20, 4, 8),
+          child: Text(title, style: theme.textTheme.titleSmall?.copyWith(color: theme.colorScheme.primary)),
+        ),
+        AppCard(
+          padding: EdgeInsets.zero,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            // Rows paint their ripple on this layer, above the card colour.
+            child: Material(
+              type: MaterialType.transparency,
+              child: Column(
+                children: [
+                  for (final (i, c) in children.indexed) ...[
+                    if (i > 0)
+                      Divider(height: 1, indent: 56, color: theme.colorScheme.outlineVariant.withValues(alpha: 0.6)),
+                    c,
+                  ],
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }

@@ -129,6 +129,11 @@ ThemeData buildTheme(Brightness brightness) {
         side: WidgetStatePropertyAll(BorderSide(color: scheme.outlineVariant)),
       ),
     ),
+    // Icons sit level with the first line of a row; hints under it are a step smaller.
+    listTileTheme: ListTileThemeData(
+      titleAlignment: ListTileTitleAlignment.titleHeight,
+      subtitleTextStyle: text.bodyMedium?.copyWith(fontSize: 14.5, color: scheme.onSurfaceVariant),
+    ),
     navigationBarTheme: NavigationBarThemeData(indicatorColor: scheme.primaryContainer),
     // A soft tinted card instead of the default inverse (white in dark mode) block.
     snackBarTheme: SnackBarThemeData(

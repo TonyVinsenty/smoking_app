@@ -1177,8 +1177,14 @@ abstract class AppLocalizations {
   /// No description provided for @settingsAppearance.
   ///
   /// In ru, this message translates to:
-  /// **'Цветовой тон'**
+  /// **'Оформление'**
   String get settingsAppearance;
+
+  /// No description provided for @settingsThemeMode.
+  ///
+  /// In ru, this message translates to:
+  /// **'Тема оформления'**
+  String get settingsThemeMode;
 
   /// No description provided for @themeModeName.
   ///
