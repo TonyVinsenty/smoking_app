@@ -1,56 +1,64 @@
-# SmokingAPP — quit-smoking helper (Flutter, Android + iOS)
+# SmokingAPP — помощник для отказа от курения (Flutter, Android + iOS)
 
-Owner is a non-coder: keep explanations non-technical (in Russian), ask only on important decisions or when device testing is needed. Economize tokens ($10 plan): few subagents, cheap models (content → Sonnet low, checks → Haiku). Give a rough context-size estimate each session and say when to start a new one. Commit regularly; repo: https://github.com/TonyVinsenty/smoking_app (public). Independent from sister project MoneyAPP (D:\Projects\Claude\MoneyAPP).
+Владелец не программист: объяснять просто, без техники, по-русски; спрашивать только о важных решениях или когда нужен тест на устройстве. Экономить токены (тариф $10): мало субагентов, дешёвые модели (контент → Sonnet low, проверки → Haiku). В каждой сессии давать примерную оценку размера контекста и говорить, когда пора начать новую. Регулярно коммитить; репозиторий: https://github.com/TonyVinsenty/smoking_app (публичный). Не зависит от соседнего проекта MoneyAPP (D:\Projects\Claude\MoneyAPP).
 
-App name: **Zero** (may change later; package name stays `smoking_app`).
+Название приложения: **Zero** (может поменяться; имя пакета остаётся `smoking_app`).
 
-## Stack
-Flutter (Dart 3.13), local-first: drift (SQLite) for data, flutter_riverpod for state, gen-l10n (ARB) for UI strings, flutter_local_notifications. No backend until phase 3.
+## Технологии
+Flutter (Dart 3.13), всё хранится на телефоне: drift (SQLite) — данные, flutter_riverpod — состояние, gen-l10n (ARB) — строки интерфейса, flutter_local_notifications. Сервера нет до фазы 3.
 
-## Localization
-Russian only for now, but everything is translatable: UI strings in `lib/l10n/app_ru.arb` (never hardcode user-facing text), content in `assets/content/<locale>/` (JSON + markdown articles).
+## Локализация
+Пока только русский, но всё переводимо: строки интерфейса в `lib/l10n/app_ru.arb` (никогда не писать текст для пользователя прямо в коде), контент в `assets/content/<locale>/` (JSON + статьи в markdown).
 
-## Product decisions
-- Tabs: Главная · Здоровье · Знания · Рейтинг · Настройки.
-- Onboarding: what the user smokes (cigarettes / heated sticks / disposable vape / refillable vape liquid — several allowed), consumption per day/week/month, price per unit (pack / pack of sticks / disposable / liquid bottle), quit date (can be in the past). Used for money-saved stats.
-- Home: smoke-free timer, level + XP bar, money saved, units not consumed, motivational quote.
-- **SOS «Хочу курить»**: floating button on every screen (+ home-screen widget later). Flow: one tap "what's happening" (trigger → craving map) → breathing exercise + quick tips → "справился" (logged, gives XP). Craving map shows personal patterns (time of day / trigger).
-- Health: recovery milestones timeline with progress + achievements/badges. Medical disclaimer required.
-- Levels: XP = 1/smoke-free hour (cumulative across attempts, never lost) + 10/resisted craving + achievement xp. Owner wants progress to feel tangible, not stingy: 50 levels (level-ups ~daily in week 1, ~monthly after a year), 70 achievements with generous XP (thresholds modelled on a typical user).
-- Content voice: «вы», gender-neutral, never shaming. Labels use gender-neutral forms («Я закурил(а)», «Тяга прошла!»).
-- New-badge celebration animation for 1–3 live unlocks; retroactive batches just get a snackbar. Owner wants more smoothness/animations overall — phase 2 polish.
-- «Я закурил» lives in Настройки only. One confirmation against accidental tap, then kind "no-guilt diary": trigger (stress, alcohol, company, coffee, after meal, boredom, ritual, other) + 3 short optional questions (what happened / what would have helped / what I'll try next time). Ends current attempt; badges stay in attempt history; best record kept. Never shaming.
-- Notifications in MVP: rare, only supportive, never annoying.
-- Accessibility: dark theme + large-font option.
-- Premium subscription (later, near release): all core features free; premium = theme customization, special leaderboard badge, special achievement, extra fun features.
-- Visual style: calm, "healthy" (green/teal), light + dark theme.
+## Продуктовые решения
+- Вкладки: Главная · Здоровье · Знания · Рейтинг · Настройки.
+- Онбординг: что курит пользователь (сигареты / стики для нагревания / одноразовый вейп / жидкость для многоразового — можно несколько), расход в день/неделю/месяц, цена за единицу (пачка / пачка стиков / одноразка / флакон жидкости), дата отказа (может быть в прошлом). Нужно для подсчёта сэкономленных денег.
+- Главная: таймер без курения, уровень + полоса опыта (XP), сэкономленные деньги, невыкуренные единицы, мотивирующая цитата.
+- **SOS «Хочу курить»**: плавающая кнопка на каждом экране (+ позже виджет на рабочем столе). Сценарий: один тап «что происходит» (повод → карта тяги) → дыхательное упражнение + быстрые советы → «Тяга прошла!» (записывается, даёт XP). Карта тяги показывает личные закономерности (время суток / повод).
+- Здоровье: лента этапов восстановления с прогрессом. Медицинский дисклеймер обязателен. (Достижения отсюда уходят — см. «Дальше», пункт a.)
+- Уровни: XP = 1 за каждый час без курения (копится по всем попыткам, никогда не теряется) + 10 за преодолённую тягу + XP за достижения. Владелец хочет ощутимый, не скупой прогресс: 50 уровней (в первую неделю повышение ~раз в день, после года ~раз в месяц), 97 достижений с щедрым XP (пороги рассчитаны на типичного пользователя).
+- Тон текстов: на «вы», гендерно-нейтрально, никогда не стыдить. Подписи в нейтральной форме («Я закурил(а)», «Тяга прошла!»).
+- Анимация празднования нового значка при 1–3 открытиях «вживую»; пачка открытий задним числом — просто всплывающее сообщение. Владелец хочет больше плавности и анимаций — это полировка фазы 2.
+- «Я закурил(а)» есть только в Настройках. Одно подтверждение от случайного нажатия, затем добрый «дневник без упрёков»: повод (стресс, алкоголь, компания, кофе, после еды, скука, привычный момент, другое) + 3 коротких необязательных вопроса (что случилось / что бы помогло / что попробую в следующий раз). Завершает текущую попытку; значки остаются в истории попыток; рекорд сохраняется. Никаких упрёков.
+- Уведомления в MVP: редкие, только поддерживающие, никогда не надоедливые.
+- Доступность: тёмная тема; размер шрифта следует системной настройке телефона (своей опции «Крупный текст» нет).
+- Премиум-подписка (позже, ближе к релизу): все основные функции бесплатны; премиум = настройка тем, особый значок в рейтинге, особое достижение, дополнительные приятные функции.
+- Визуальный стиль: спокойный, «здоровый» (зелёный/бирюзовый), светлая и тёмная темы.
 
-## Phases
-1. MVP offline (current): skeleton → onboarding → home/money/levels → health/achievements → SOS → relapse + triggers + history → knowledge base → notifications → settings (theme, my data, full reset) → device test.
-2. Polish: animations, craving-map stats, more articles, icon; content/SOS tips tailored to product type (vape/IQOS); home-screen widget (timer/money) + shareable milestone cards; weekly light challenges (+XP); badge showcase ("shelf"); "what kind of smoker am I" test at onboarding; honest vape/IQOS article series; anonymized user stories.
-3. Leaderboard & friends (friend code) on Firebase/Supabase free tier; anonymous opt-in "relays"; "second pilot" (opt-in support contact gets kind notifications); then premium (themes, icon packs, badge frames, premium badge, extended stats/export, share-card templates), store release.
-Open question for later: a growing tree / pet as a progress metaphor (owner unsure — discuss).
+## Фазы (план развития)
+1. MVP без интернета (сейчас): каркас → онбординг → главная/деньги/уровни → здоровье/достижения → SOS → срыв + поводы + история → база знаний → уведомления → настройки (тема, мои данные, полный сброс) → тест на устройстве.
+2. Полировка: анимации, статистика карты тяги, больше статей, иконка; контент и советы SOS под тип продукта (вейп/IQOS); виджет на рабочем столе (таймер/деньги) + карточки этапов, которыми можно поделиться; лёгкие еженедельные челленджи (+XP); витрина значков («полка»); тест «какой я курильщик» в онбординге; честная серия статей про вейпы/IQOS; анонимные истории пользователей.
+3. Рейтинг и друзья (код друга) на бесплатном тарифе Firebase/Supabase; анонимные добровольные «эстафеты»; «второй пилот» (по желанию: близкий человек получает добрые уведомления); затем премиум (темы, наборы иконок, рамки значков, премиум-значок, расширенная статистика/экспорт, шаблоны карточек), публикация в магазинах.
+Открытый вопрос на потом: растущее дерево / питомец как метафора прогресса (владелец не уверен — обсудить).
 
-## Progress (MVP)
-Done: skeleton, onboarding, home (timer, savings, level/XP, quote — tap for next), SOS (trigger → breathing → resisted, FAB on all tabs), app name Zero, dynamic calendar timer (years/months/weeks/days + clock + total days), savings ⓘ explanation, larger text app-wide (follows system font size; no in-app option), Settings (theme mode, «Полный сброс»), achievement unlocking (HomeShell checks every second; time badges per attempt, others cumulative) + Health tab (recovery timeline, badge grid), onboarding quit time «Не помню» = 10:00, Settings «Цветовой тон» (Системный · Тёмный · Светлый), SOS FAB 75% opaque, timer dividers, savings «Подробнее» sheet (today / calendar week / calendar month / total + forecast; ⓘ «Как считаем» next to piggy icon), SOS rework (quotes rewritten to «вы»; 3 exercises: calm breathing 4/6 no hold, countdown 10→0, grounding 5-4-3-2-1; picker in SOS + Settings, remembered in prefs; tips in «вы»; button «Тяга прошла!»), «Я закурил(а)» in Settings → «Моя попытка» (confirm → no-guilt diary: time, trigger, 3 questions; relapse also logged as unresisted craving; then «Начать новую попытку сейчас» / «Начну позже») + «История попыток» (record, total, count, per-attempt badges, trigger, diary), per-attempt smoking habits (schema v2: products.attemptId; new attempt asks «Оставить / Изменить» and reuses onboarding product steps via `OnboardingScreen.editProducts`; `productsOf`/`latestProducts` in stats.dart), Knowledge tab (25 articles incl. new category «Помощь и лечение» (therapy), category chips, «Прочитано X из N», article counts as read when scrolled to the end, «Следующая статья», disclaimer). Runs on emulator `Pixel_8` (`flutter emulators --launch Pixel_8`).
-Settings «Мои данные» → «Мои привычки» (edit products of current attempt via `db.replaceProducts`, snackbar).
-Notifications: health milestones ≥1 day scheduled ahead (lib/app/notifications.dart, one per moment, quiet hours 21–10 → 10:00, from 20:00 since Android may deliver ~1h late), Settings switch «Этапы восстановления» (on by default), permission asked on first home screen.
-Craving map («Карта тяги»): home card (resisted X of Y, most often part of day · trigger) → full screen (period 7d/30d/all, summary, time-of-day bars + peak hour, triggers, tip for top trigger from trigger_tips.json, weekdays; bars split resisted/smoked); logic in lib/domain/craving_stats.dart.
-Release prep (like MoneyAPP, see D:/Projects/Claude/MoneyAPP/docs/how-to-iphone.md): version 0.1.0; Android release signed with own key (D:/Android/keys/zero-release.jks, env ZERO_KEYSTORE_PROPERTIES, build fails without it; owner must back up D:/Android/keys); iOS unsigned .ipa via GitHub Actions «iOS build» (manual run) → Sideloadly, bundle id com.tonyvinsenty.smokingApp (never change).
-Installed 0.1.0+1 on owner's Android (APK) + iPhone (Sideloadly, same Apple ID as Zuno) — works. Each new build: bump build number in pubspec.
-Next — owner feedback after device test (2026-10-12), do in this order:
-1) DONE (owner OK 2026-10-12, with 7 and 8): 97 badges, WoW rarity (common…legendary), groups in Health tab (Achievement.groups), units badges by main product (`mainProduct`, per-product thresholds in achievements.json, `{units}` in descriptions → `achievementDescription`), neutral texts, levels 15–50 fitted by `dart run tool/xp_simulation.dart --fit` (lvl 50 ≈ 3.4 years). After content changes re-run the simulation.
-2–6, 9) DONE 2026-10-12 (build 0.1.0+2): wheel time picker (lib/app/widgets/wheel_time_picker.dart), SOS «Сменить» button, fixed-size grounding card, «Крупный текст» removed (large-font layouts: savings stacks, badge grid wider tiles, SOS step scrolls; test with `adb shell settings put system font_scale 2.0`), home trophy → Здоровье/Достижения (showAchievementsProvider; Рейтинг icon = podium), Knowledge cards + topic groups.
-Owner OK on build 2 changes (2026-10-12). Next — owner ideas round 2, do in this order (each: emulator check + own commit):
-a) Achievements leave the Health tab → own screen opened only from Home. Home button: bigger trophy + label «Достижения» (obvious). Remove «Zero» title from Home app bar.
-b) Achievements screen: collapsible groups; header shows «N из M (P%)», P rounded to integer.
-c) Knowledge: collapsible topic groups (when «Все").
-d) Fixed heights: SOS tip card must not resize when tips change (breathing circle «Вдох/Выдох» must not move); home quote card same (reserve height of the longest quote, like the grounding card trick).
-e) Popups (SnackBars, e.g. badge unlocked) look out of place, thick white frame, worse in dark theme: dismiss on tap + restyle (ask designer agent, cheap model).
-f) Bottom nav looks off-centre: gap from «Главная» to left edge > from «Настройки» to right edge — make visually even.
-g) Health tab redesign (with designer agent): categories instead of Восстановление/Достижения — recovery facts (filter chips: пройденные / ближайшие / все; visual «Вы здесь» marker on a timeline/path, not a dry chart), motivating stats (e.g. how many people relapse at a given stage — ONLY real sourced numbers, never invented), maybe more. More joyful, less dry.
-Then: build 3 (APK + iOS), owner re-tests; then designer pass (screens, animations, ~10 icon options) → polish + icon.
-Dev notes: adb at D:/Android/Sdk/platform-tools/adb.exe (screenshots: `adb exec-out screencap -p`); run `flutter gen-l10n` after editing ARB, `dart run build_runner build` after DB changes; no Python on this machine; `kotlin.incremental=false` needed (C:/D: drives).
+## Прогресс (MVP)
+Сделано: каркас, онбординг, главная (таймер, экономия, уровень/XP, цитата — тап показывает следующую), SOS (повод → дыхание → справился, кнопка на всех вкладках), название Zero, календарный таймер (годы/месяцы/недели/дни + часы + всего дней), пояснение ⓘ к экономии, увеличенный текст во всём приложении (следует системному размеру шрифта), Настройки (тема, «Полный сброс»), открытие достижений (HomeShell проверяет каждую секунду; значки за время — в рамках попытки, остальные — накопительно) + вкладка Здоровье (лента восстановления, сетка значков), время отказа в онбординге «Не помню» = 10:00, Настройки «Цветовой тон» (Системный · Тёмный · Светлый), кнопка SOS непрозрачна на 75%, разделители в таймере, окно «Подробнее» об экономии (сегодня / календарная неделя / календарный месяц / всего + прогноз; ⓘ «Как считаем» рядом с копилкой), переработка SOS (цитаты на «вы»; 3 упражнения: спокойное дыхание 4/6 без задержки, отсчёт 10→0, заземление 5-4-3-2-1; выбор в SOS и в Настройках, запоминается; советы на «вы»; кнопка «Тяга прошла!»), «Я закурил(а)» в Настройках → «Моя попытка» (подтверждение → дневник без упрёков: время, повод, 3 вопроса; срыв также записывается как непреодолённая тяга; затем «Начать новую попытку сейчас» / «Начну позже») + «История попыток» (рекорд, всего, количество, значки по попыткам, повод, дневник), привычки по попыткам (схема БД v2: products.attemptId; новая попытка спрашивает «Оставить / Изменить» и использует шаги онбординга через `OnboardingScreen.editProducts`; `productsOf`/`latestProducts` в stats.dart), вкладка Знания (25 статей, включая категорию «Помощь и лечение» (therapy), фильтр по темам, «Прочитано X из N», статья считается прочитанной при прокрутке до конца, «Следующая статья», дисклеймер). Работает на эмуляторе `Pixel_8` (`flutter emulators --launch Pixel_8`).
+Настройки «Мои данные» → «Мои привычки» (правка продуктов текущей попытки через `db.replaceProducts`, всплывающее сообщение).
+Уведомления: этапы здоровья от 1 дня планируются заранее (lib/app/notifications.dart, одно на момент, тихие часы 21–10 → переносится на 10:00, начиная с 20:00, т.к. Android может доставить ~на час позже), переключатель в Настройках «Этапы восстановления» (включён по умолчанию), разрешение спрашивается при первом открытии главной.
+Карта тяги: карточка на главной (справились X из Y, чаще всего — часть дня · повод) → полный экран (период 7д/30д/всё, сводка, столбцы по времени суток + пиковый час, поводы, совет для главного повода из trigger_tips.json, дни недели; столбцы делятся на «справились/закурили»); логика в lib/domain/craving_stats.dart.
+Подготовка к выпуску (как в MoneyAPP, см. D:/Projects/Claude/MoneyAPP/docs/how-to-iphone.md): версия 0.1.0; Android-сборка подписана своим ключом (D:/Android/keys/zero-release.jks, переменная окружения ZERO_KEYSTORE_PROPERTIES = D:\Android\keys\zero-keystore.properties — в Bash её надо задать вручную через export, без неё сборка падает; владелец должен хранить резервную копию D:/Android/keys); iOS — неподписанный .ipa через GitHub Actions «iOS build» (запуск вручную) → Sideloadly, bundle id com.tonyvinsenty.smokingApp (никогда не менять).
+Установлено на телефоны владельца (Android — APK, iPhone — Sideloadly, тот же Apple ID, что для Zuno), работает. Для каждой новой сборки — поднять номер сборки в pubspec. Обновлять всегда поверх, не удаляя (иначе пропадут данные).
 
-## Content
-`assets/content/ru/`: health_milestones.json, achievements.json, levels.json, quotes.json, sos_tips.json, trigger_tips.json, articles/index.json + *.md. Ideas backlog: docs/content-ideas.md.
+### Сделано по отзывам владельца (2026-10-12)
+- Раунд 1, пункт 1 (+7, 8) — одобрено: 97 значков, редкость как в WoW (обычный…легендарный), группы (Achievement.groups), значки за единицы по главному продукту (`mainProduct`, пороги по продуктам в achievements.json, `{units}` в описаниях → `achievementDescription`), нейтральные тексты, уровни 15–50 подобраны `dart run tool/xp_simulation.dart --fit` (50-й уровень ≈ 3,4 года). После изменений контента — перезапустить симуляцию.
+- Раунд 1, пункты 2–6, 9 — сборка 0.1.0+2, одобрено: барабан выбора времени (lib/app/widgets/wheel_time_picker.dart), кнопка «Сменить» в SOS, рамка заземления постоянного размера, убран «Крупный текст» (при крупном шрифте: экономия в столбик, значки в 2 колонки, экран упражнения SOS прокручивается; проверка: `adb shell settings put system font_scale 2.0`, потом вернуть 1.0), кубок на главной → Здоровье/Достижения (showAchievementsProvider; иконка Рейтинга — пьедестал), карточки статей + группы по темам в Знаниях.
+
+### Дальше — идеи владельца, раунд 2 (делать по порядку; каждый пункт — проверка на эмуляторе + отдельный коммит)
+a) Достижения уходят из вкладки Здоровье → отдельный экран, открывается только с главной. Кнопка на главной: крупнее, кубок + подпись «Достижения» (чтобы было очевидно). Убрать заголовок «Zero» с главной.
+b) Экран достижений: группы сворачиваются; в заголовке группы «N из M (P%)», P округлён до целого.
+c) Знания: темы сворачиваются (при фильтре «Все»).
+d) Постоянная высота: рамка совета в SOS не меняет размер при смене совета (круг «Вдох/Выдох» не должен сдвигаться); карточка цитаты на главной — так же (резервировать высоту самой длинной цитаты — тот же приём, что у рамки заземления).
+e) Всплывающие сообщения (SnackBar, напр. «значок открыт») выглядят чужеродно: толстая белая рамка, особенно плохо в тёмной теме. Закрываться по нажатию + новый вид (посоветоваться с агентом-дизайнером на дешёвой модели).
+f) Нижняя панель выглядит несимметрично: от «Главная» до левого края дальше, чем от «Настройки» до правого — выровнять визуально.
+g) Переделка вкладки Здоровье (с агентом-дизайнером): разделы вместо «Восстановление/Достижения» — факты о восстановлении (фильтры: пройденные / ближайшие / все; наглядная отметка «Вы здесь» на ленте/пути, не сухой график), мотивирующая статистика (напр. сколько людей срываются на каком этапе — ТОЛЬКО реальные цифры с источниками, никогда не выдумывать), возможно что-то ещё. Радостнее, меньше сухости.
+Затем: сборка 3 (APK + iOS), владелец проверяет; затем проход дизайнера (все экраны, анимации, ~10 вариантов иконки) → полировка + иконка.
+
+### Заметки для разработки
+- adb: D:/Android/Sdk/platform-tools/adb.exe. Скриншоты: `adb exec-out screencap -p > файл.png` (в Git Bash задать `MSYS_NO_PATHCONV=1`, иначе пути вида /sdcard ломаются).
+- Экономия токенов при проверке: искать кнопки и тапать по ним через `adb shell uiautomator dump` (у Flutter-виджетов текст лежит в content-desc, есть координаты bounds), скриншоты — только чтобы оценить вид. Ошибки «налезания» в логах ловятся ненадёжно — смотреть глазами.
+- Быстрая проверка: `flutter build apk --debug` + `adb install -r` (`flutter run` в фоне не держится). Отладочная сборка стартует ~10 с — ждать появления элементов, а не делать скриншот сразу.
+- На эмуляторе стоит ещё Zuno: кнопка «Назад» с главной закрывает Zero, и следующий тап может попасть в другое приложение.
+- После правки ARB — `flutter gen-l10n`; после изменений БД — `dart run build_runner build`; Python на машине нет; нужен `kotlin.incremental=false` (диски C:/D:).
+
+## Контент
+`assets/content/ru/`: health_milestones.json, achievements.json, levels.json, quotes.json, sos_tips.json, trigger_tips.json, articles/index.json + *.md. Копилка идей: docs/content-ideas.md.
