@@ -101,7 +101,6 @@ class _HomeShellState extends ConsumerState<HomeShell> {
     ref.listen(articlesReadProvider, (_, _) => _checkAchievements());
     ref.listen(unlockedAchievementsProvider, (_, _) => _checkAchievements());
     ref.listen(contentProvider, (_, _) => _checkAchievements());
-    ref.listen(showAchievementsProvider, (_, _) => setState(() => _index = 1));
     ref.watch(notificationSchedulerProvider);
     final l = AppLocalizations.of(context);
     return Scaffold(

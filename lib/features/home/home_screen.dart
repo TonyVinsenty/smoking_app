@@ -9,7 +9,7 @@ import '../../domain/craving_stats.dart';
 import '../../domain/stats.dart';
 import '../../l10n/app_localizations.dart';
 import '../cravings/craving_map_screen.dart';
-import '../health/health_screen.dart';
+import '../achievements/achievements_screen.dart';
 import '../relapse/new_attempt.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -41,12 +41,18 @@ class HomeScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(l.appTitle),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.emoji_events_outlined),
-            tooltip: l.healthTabAchievements,
-            onPressed: () => ref.read(showAchievementsProvider.notifier).show(),
+          Padding(
+            padding: const EdgeInsets.only(right: 12),
+            child: FilledButton.tonalIcon(
+              icon: const Icon(Icons.emoji_events, size: 28),
+              label: Text(l.healthTabAchievements),
+              style: FilledButton.styleFrom(
+                padding: const EdgeInsets.fromLTRB(14, 8, 18, 8),
+                textStyle: Theme.of(context).textTheme.titleSmall,
+              ),
+              onPressed: () => AchievementsScreen.open(context),
+            ),
           ),
         ],
       ),
