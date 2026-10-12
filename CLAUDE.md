@@ -37,7 +37,17 @@ Settings «Мои данные» → «Мои привычки» (edit products 
 Notifications: health milestones ≥1 day scheduled ahead (lib/app/notifications.dart, one per moment, quiet hours 21–10 → 10:00, from 20:00 since Android may deliver ~1h late), Settings switch «Этапы восстановления» (on by default), permission asked on first home screen.
 Craving map («Карта тяги»): home card (resisted X of Y, most often part of day · trigger) → full screen (period 7d/30d/all, summary, time-of-day bars + peak hour, triggers, tip for top trigger from trigger_tips.json, weekdays; bars split resisted/smoked); logic in lib/domain/craving_stats.dart.
 Release prep (like MoneyAPP, see D:/Projects/Claude/MoneyAPP/docs/how-to-iphone.md): version 0.1.0; Android release signed with own key (D:/Android/keys/zero-release.jks, env ZERO_KEYSTORE_PROPERTIES, build fails without it; owner must back up D:/Android/keys); iOS unsigned .ipa via GitHub Actions «iOS build» (manual run) → Sideloadly, bundle id com.tonyvinsenty.smokingApp (never change).
-Next: 1) push + first cloud iOS build; 2) short docs/how-to-install.md; 3) install on owner's Android + iPhone, fix findings; 4) designer agent (screenshots of all screens, beauty review, animation ideas, look at similar apps, ~10 icon options) → polish + icon. Labels use gender-neutral forms («Я закурил(а)», «Тяга прошла!»).
+Installed 0.1.0+1 on owner's Android (APK) + iPhone (Sideloadly, same Apple ID as Zuno) — works. Each new build: bump build number in pubspec.
+Next — owner feedback after device test (2026-10-12), do in this order:
+1) Quit-time picker: replace circular clock dial with iOS-style wheel (CupertinoDatePicker time mode) on both platforms.
+2) SOS: «Упражнение можно сменить» isn't obviously tappable — make a clear button (icon + label) to switch exercise.
+3) SOS grounding 5-4-3-2-1: instruction card changes size while swiping (step 2, «Вы здесь и сейчас», «Ещё раз») — fixed height.
+4) Remove «Крупный текст» from Settings (and its pref); app must adapt to system font size instead (check overflows at large system scale).
+5) Home: trophy button → opens Здоровье tab scrolled to Достижения.
+6) Achievements: group by category (time / units / cravings / money / articles / attempts…), sort by difficulty inside group, more "gamer" look. Replace bronze–platinum with WoW-style rarity (ru WoW names): Обычное (grey-white) · Необычное (green) · Редкое (blue) · Эпическое (purple) · Легендарное (orange) — 5 tiers, redistribute.
+7) unitsAvoided achievements: adapt to the user's MAIN product (largest spend): cigarettes / sticks / disposables / liquid bottles with thresholds scaled so unlock time is similar for a typical user. Also make all achievement texts product-neutral («без курения», not «без сигареты»).
+8) Knowledge tab: articles poorly separated visually — clearer cards; when filter = «Все», group by category with headers.
+Then: new APK + iOS build (build 2), owner re-tests; then designer agent (screenshots of all screens, beauty review, animation ideas, look at similar apps, ~10 icon options) → polish + icon.
 Dev notes: adb at D:/Android/Sdk/platform-tools/adb.exe (screenshots: `adb exec-out screencap -p`); run `flutter gen-l10n` after editing ARB, `dart run build_runner build` after DB changes; no Python on this machine; `kotlin.incremental=false` needed (C:/D: drives).
 
 ## Content
