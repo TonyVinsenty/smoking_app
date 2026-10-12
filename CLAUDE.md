@@ -41,7 +41,15 @@ Installed 0.1.0+1 on owner's Android (APK) + iPhone (Sideloadly, same Apple ID a
 Next — owner feedback after device test (2026-10-12), do in this order:
 1) DONE (owner OK 2026-10-12, with 7 and 8): 97 badges, WoW rarity (common…legendary), groups in Health tab (Achievement.groups), units badges by main product (`mainProduct`, per-product thresholds in achievements.json, `{units}` in descriptions → `achievementDescription`), neutral texts, levels 15–50 fitted by `dart run tool/xp_simulation.dart --fit` (lvl 50 ≈ 3.4 years). After content changes re-run the simulation.
 2–6, 9) DONE 2026-10-12 (build 0.1.0+2): wheel time picker (lib/app/widgets/wheel_time_picker.dart), SOS «Сменить» button, fixed-size grounding card, «Крупный текст» removed (large-font layouts: savings stacks, badge grid wider tiles, SOS step scrolls; test with `adb shell settings put system font_scale 2.0`), home trophy → Здоровье/Достижения (showAchievementsProvider; Рейтинг icon = podium), Knowledge cards + topic groups.
-Now: owner re-tests build 2 (APK + iOS via GitHub Actions); then designer agent (screenshots of all screens, beauty review, animation ideas, look at similar apps, ~10 icon options) → polish + icon.
+Owner OK on build 2 changes (2026-10-12). Next — owner ideas round 2, do in this order (each: emulator check + own commit):
+a) Achievements leave the Health tab → own screen opened only from Home. Home button: bigger trophy + label «Достижения» (obvious). Remove «Zero» title from Home app bar.
+b) Achievements screen: collapsible groups; header shows «N из M (P%)», P rounded to integer.
+c) Knowledge: collapsible topic groups (when «Все").
+d) Fixed heights: SOS tip card must not resize when tips change (breathing circle «Вдох/Выдох» must not move); home quote card same (reserve height of the longest quote, like the grounding card trick).
+e) Popups (SnackBars, e.g. badge unlocked) look out of place, thick white frame, worse in dark theme: dismiss on tap + restyle (ask designer agent, cheap model).
+f) Bottom nav looks off-centre: gap from «Главная» to left edge > from «Настройки» to right edge — make visually even.
+g) Health tab redesign (with designer agent): categories instead of Восстановление/Достижения — recovery facts (filter chips: пройденные / ближайшие / все; visual «Вы здесь» marker on a timeline/path, not a dry chart), motivating stats (e.g. how many people relapse at a given stage — ONLY real sourced numbers, never invented), maybe more. More joyful, less dry.
+Then: build 3 (APK + iOS), owner re-tests; then designer pass (screens, animations, ~10 icon options) → polish + icon.
 Dev notes: adb at D:/Android/Sdk/platform-tools/adb.exe (screenshots: `adb exec-out screencap -p`); run `flutter gen-l10n` after editing ARB, `dart run build_runner build` after DB changes; no Python on this machine; `kotlin.incremental=false` needed (C:/D: drives).
 
 ## Content
