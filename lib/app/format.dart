@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../content/content.dart';
+import '../data/database.dart';
 import '../l10n/app_localizations.dart';
 
 /// "20 минут", "3 дня", "2 недели", "6 месяцев", "1 год": the largest unit that divides [minutes] exactly.
@@ -46,12 +48,28 @@ IconData contentIcon(String name) => switch (name) {
   _ => Icons.star,
 };
 
+/// WoW-style rarity colours (achievements.json "tier").
 Color tierColor(String tier) => switch (tier) {
-  'bronze' => const Color(0xFFC77B3A),
-  'silver' => const Color(0xFF8E9AA6),
-  'gold' => const Color(0xFFE0A800),
-  _ => const Color(0xFF5E8FD6), // platinum
+  'common' => const Color(0xFFA5ADB5), // grey-white
+  'uncommon' => const Color(0xFF2FA84F), // green
+  'rare' => const Color(0xFF2F7FD9), // blue
+  'epic' => const Color(0xFF9B4DDB), // purple
+  _ => const Color(0xFFF08A1C), // legendary: orange
 };
+
+/// "10 сигарет", "1 одноразка", "2 флакона жидкости".
+String unitsText(AppLocalizations l, ProductType type, int count) => switch (type) {
+  ProductType.cigarettes => l.unitsCigarettes(count),
+  ProductType.sticks => l.unitsSticks(count),
+  ProductType.disposable => l.unitsDisposable(count),
+  ProductType.liquid => l.unitsLiquid(count),
+};
+
+/// Achievement description with `{units}` filled in for the user's [main] product.
+String achievementDescription(AppLocalizations l, Achievement a, ProductType? main) {
+  final type = main ?? ProductType.cigarettes;
+  return a.description.replaceAll('{units}', unitsText(l, type, a.conditionValue(type.name).toInt()));
+}
 
 /// Health milestone category (health_milestones.json).
 IconData categoryIcon(String category) => switch (category) {

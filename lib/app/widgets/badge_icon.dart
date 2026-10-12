@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import '../../content/content.dart';
 import '../format.dart';
 
-/// Round achievement badge: a solid metallic medal when earned, a faded lock otherwise.
+/// Round achievement badge: a solid medal in its rarity colour when earned; otherwise a faded icon
+/// with a thin rarity-coloured ring, so the player sees what kind of reward is ahead.
 /// With [pulse] an earned badge softly breathes with its glow (used in the details sheet).
 class BadgeIcon extends StatefulWidget {
   const BadgeIcon({
@@ -51,9 +52,9 @@ class _BadgeIconState extends State<BadgeIcon> with SingleTickerProviderStateMix
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: scheme.surfaceContainerHighest.withValues(alpha: 0.6),
-          border: Border.all(color: scheme.outlineVariant.withValues(alpha: 0.6), width: 2),
+          border: Border.all(color: tierColor(widget.achievement.tier).withValues(alpha: 0.55), width: 2),
         ),
-        child: Icon(Icons.lock_outline, size: size * 0.4, color: scheme.outline.withValues(alpha: 0.6)),
+        child: Icon(contentIcon(widget.achievement.icon), size: size * 0.45, color: scheme.outline.withValues(alpha: 0.5)),
       );
     }
     final color = tierColor(widget.achievement.tier);

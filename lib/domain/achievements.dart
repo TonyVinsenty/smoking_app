@@ -6,6 +6,8 @@ import 'stats.dart';
 ///
 /// Time-based badges belong to an attempt and are earned again in each new attempt
 /// (they stay in the attempt history); all other badges are cumulative and earned once.
+/// unitsAvoided counts units of the main product (largest spend) of the current attempt, over all
+/// attempts, with thresholds per product.
 /// Only events up to [now] count, so the same data can be evaluated "a few minutes ago".
 List<Achievement> dueAchievements({
   required List<Achievement> achievements,
@@ -21,10 +23,11 @@ List<Achievement> dueAchievements({
   if (current == null) return [];
   final everUnlocked = unlocked.map((u) => u.achievementId).toSet();
   final unlockedNow = unlocked.where((u) => u.attemptId == current.id).map((u) => u.achievementId).toSet();
+  final main = mainProduct(productsOf(products, current.id));
   final money = attempts.fold<double>(0, (sum, a) => sum + moneySaved(productsOf(products, a.id), attemptDuration(a, now)));
   final units = attempts.fold<double>(
     0,
-    (sum, a) => sum + unitsAvoided(productsOf(products, a.id), attemptDuration(a, now)).values.fold(0.0, (s, v) => s + v),
+    (sum, a) => sum + (unitsAvoided(productsOf(products, a.id), attemptDuration(a, now))[main] ?? 0),
   );
 
   num? progress(Achievement a) => switch (a.conditionType) {
@@ -41,7 +44,7 @@ List<Achievement> dueAchievements({
   return [
     for (final a in achievements)
       if (!(a.conditionType == 'smokeFreeMinutes' ? unlockedNow : everUnlocked).contains(a.id) &&
-          (progress(a) ?? -1) >= a.conditionValue)
+          (progress(a) ?? -1) >= a.conditionValue(main?.name))
         a,
   ];
 }

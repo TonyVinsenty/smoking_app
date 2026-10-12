@@ -709,13 +709,49 @@ abstract class AppLocalizations {
   /// No description provided for @achCondUnits.
   ///
   /// In ru, this message translates to:
-  /// **'не выкурить {count} шт.'**
-  String achCondUnits(String count);
+  /// **'не использовано — {units}'**
+  String achCondUnits(String units);
+
+  /// No description provided for @unitsCigarettes.
+  ///
+  /// In ru, this message translates to:
+  /// **'{count, plural, one{{count} сигарета} few{{count} сигареты} many{{count} сигарет} other{{count} сигареты}}'**
+  String unitsCigarettes(int count);
+
+  /// No description provided for @unitsSticks.
+  ///
+  /// In ru, this message translates to:
+  /// **'{count, plural, one{{count} стик} few{{count} стика} many{{count} стиков} other{{count} стика}}'**
+  String unitsSticks(int count);
+
+  /// No description provided for @unitsDisposable.
+  ///
+  /// In ru, this message translates to:
+  /// **'{count, plural, one{{count} одноразка} few{{count} одноразки} many{{count} одноразок} other{{count} одноразки}}'**
+  String unitsDisposable(int count);
+
+  /// No description provided for @unitsLiquid.
+  ///
+  /// In ru, this message translates to:
+  /// **'{count, plural, one{{count} флакон жидкости} few{{count} флакона жидкости} many{{count} флаконов жидкости} other{{count} флакона жидкости}}'**
+  String unitsLiquid(int count);
+
+  /// No description provided for @achGroup.
+  ///
+  /// In ru, this message translates to:
+  /// **'{name, select, streak{Без курения} cravings{Победы над тягой} money{Сбережения} units{Не использовано} articles{Знания} other{Путь}}'**
+  String achGroup(String name);
+
+  /// No description provided for @achGroupProgress.
+  ///
+  /// In ru, this message translates to:
+  /// **'{unlocked} из {total}'**
+  String achGroupProgress(int unlocked, int total);
 
   /// No description provided for @tierName.
   ///
   /// In ru, this message translates to:
-  /// **'{tier, select, bronze{Бронза} silver{Серебро} gold{Золото} other{Платина}}'**
+  /// **'{tier, select, common{Обычное} uncommon{Необычное} rare{Редкое} epic{Эпическое} other{Легендарное}}'**
   String tierName(String tier);
 
   /// No description provided for @achCelebrateTitle.

@@ -579,17 +579,88 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String achCondUnits(String count) {
-    return 'не выкурить $count шт.';
+  String achCondUnits(String units) {
+    return 'не использовано — $units';
+  }
+
+  @override
+  String unitsCigarettes(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count сигареты',
+      many: '$count сигарет',
+      few: '$count сигареты',
+      one: '$count сигарета',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String unitsSticks(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count стика',
+      many: '$count стиков',
+      few: '$count стика',
+      one: '$count стик',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String unitsDisposable(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count одноразки',
+      many: '$count одноразок',
+      few: '$count одноразки',
+      one: '$count одноразка',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String unitsLiquid(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count флакона жидкости',
+      many: '$count флаконов жидкости',
+      few: '$count флакона жидкости',
+      one: '$count флакон жидкости',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String achGroup(String name) {
+    String _temp0 = intl.Intl.selectLogic(name, {
+      'streak': 'Без курения',
+      'cravings': 'Победы над тягой',
+      'money': 'Сбережения',
+      'units': 'Не использовано',
+      'articles': 'Знания',
+      'other': 'Путь',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String achGroupProgress(int unlocked, int total) {
+    return '$unlocked из $total';
   }
 
   @override
   String tierName(String tier) {
     String _temp0 = intl.Intl.selectLogic(tier, {
-      'bronze': 'Бронза',
-      'silver': 'Серебро',
-      'gold': 'Золото',
-      'other': 'Платина',
+      'common': 'Обычное',
+      'uncommon': 'Необычное',
+      'rare': 'Редкое',
+      'epic': 'Эпическое',
+      'other': 'Легендарное',
     });
     return '$_temp0';
   }

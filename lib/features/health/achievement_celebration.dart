@@ -1,10 +1,12 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/format.dart';
 import '../../app/widgets/badge_icon.dart';
 import '../../content/content.dart';
+import '../../data/providers.dart';
 import '../../l10n/app_localizations.dart';
 
 /// Full-screen "new badge" moment: the medal pops in, rays spin behind it, sparkles fly out.
@@ -142,7 +144,15 @@ class _CelebrationState extends State<_Celebration> with TickerProviderStateMixi
                     children: [
                       Text(a.title, textAlign: TextAlign.center, style: theme.textTheme.headlineSmall),
                       const SizedBox(height: 8),
-                      Text(a.description, textAlign: TextAlign.center, style: theme.textTheme.bodyLarge),
+                      Text(
+                        achievementDescription(
+                          l,
+                          a,
+                          ProviderScope.containerOf(context, listen: false).read(mainProductProvider),
+                        ),
+                        textAlign: TextAlign.center,
+                        style: theme.textTheme.bodyLarge,
+                      ),
                       const SizedBox(height: 12),
                       Chip(label: Text('+${a.xp} XP')),
                       const SizedBox(height: 8),

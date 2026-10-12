@@ -1,6 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:smoking_app/content/content.dart';
 import 'package:smoking_app/data/database.dart';
+import 'package:smoking_app/domain/achievements.dart';
 import 'package:smoking_app/domain/stats.dart';
 
 void main() {
@@ -27,5 +29,26 @@ void main() {
       now: start.add(const Duration(hours: 25)),
     );
     expect(xp, 10 + 5 + xpPerResistedCraving + 25);
+  });
+
+  test('units badges count the main product with its own threshold', () {
+    final start = DateTime(2026, 1, 1);
+    // Main product = largest spend: disposables (175 ₽/day) over a few cigarettes (28 ₽/day).
+    final products = [
+      SmokingProduct(id: 1, attemptId: 1, type: ProductType.disposable, amount: 1, period: ConsumptionPeriod.day,
+          unitsPerPack: 1, packPrice: 175),
+      SmokingProduct(id: 2, attemptId: 1, type: ProductType.cigarettes, amount: 2, period: ConsumptionPeriod.day,
+          unitsPerPack: 20, packPrice: 280),
+    ];
+    expect(mainProduct(products), ProductType.disposable);
+    final badge = Achievement.fromJson({
+      'id': 'u', 'title': '', 'description': '', 'icon': '', 'tier': 'common', 'xp': 30,
+      'condition': {'type': 'unitsAvoided', 'value': {'cigarettes': 10, 'sticks': 10, 'disposable': 2, 'liquid': 1}},
+    });
+    List<Achievement> dueAfter(int hours) => dueAchievements(
+      achievements: [badge], attempts: [Attempt(id: 1, startedAt: start)], products: products, cravings: const [],
+      articlesReadAt: const [], unlocked: const [], now: start.add(Duration(hours: hours)));
+    expect(dueAfter(47), isEmpty); // 1.96 disposables (and 3.9 cigarettes, which do not count)
+    expect(dueAfter(48), [badge]);
   });
 }

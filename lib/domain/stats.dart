@@ -76,3 +76,8 @@ List<SmokingProduct> latestProducts(List<SmokingProduct> all, List<Attempt> atte
   }
   return const [];
 }
+
+/// The product the user spent most on: unitsAvoided badges count its units.
+ProductType? mainProduct(List<SmokingProduct> products) => products.isEmpty
+    ? null
+    : (products.toList()..sort((a, b) => dailyCost([b]).compareTo(dailyCost([a])))).first.type;

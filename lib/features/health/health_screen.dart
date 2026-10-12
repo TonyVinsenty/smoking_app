@@ -162,12 +162,22 @@ class _MilestoneCard extends StatelessWidget {
 class _AchievementsTab extends ConsumerWidget {
   const _AchievementsTab();
 
+  static IconData _groupIcon(String group) => switch (group) {
+    'streak' => Icons.timer,
+    'cravings' => Icons.self_improvement,
+    'money' => Icons.savings,
+    'units' => Icons.smoke_free,
+    'articles' => Icons.menu_book,
+    _ => Icons.flag,
+  };
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final content = ref.watch(contentProvider).value;
     final unlocked = ref.watch(unlockedAchievementsProvider).value;
+    final main = ref.watch(mainProductProvider);
     if (content == null || unlocked == null) return const Center(child: CircularProgressIndicator());
 
     // First time each badge was earned.
@@ -177,47 +187,107 @@ class _AchievementsTab extends ConsumerWidget {
       final prev = firstUnlock[u.achievementId];
       if (prev == null || u.unlockedAt.isBefore(prev.unlockedAt)) firstUnlock[u.achievementId] = u;
     }
-    // Earned badges first, then the rest in content order.
-    final all = [
-      ...content.achievements.where((a) => firstUnlock.containsKey(a.id)),
-      ...content.achievements.where((a) => !firstUnlock.containsKey(a.id)),
-    ];
     // Icon + two lines of title, whatever the text size.
     final line = MediaQuery.textScalerOf(context).scale(theme.textTheme.labelMedium!.fontSize!) * 1.4;
     final tileHeight = 64 + 8 + 2 * line + 16;
+    final total = content.achievements.length;
     return CustomScrollView(
       slivers: [
         SliverPadding(
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
           sliver: SliverToBoxAdapter(
-            child: Text(l.achUnlockedCount(firstUnlock.length, all.length), style: theme.textTheme.titleMedium),
+            child: _Progress(
+              title: Text(l.achUnlockedCount(firstUnlock.length, total), style: theme.textTheme.titleMedium),
+              value: firstUnlock.length / total,
+            ),
           ),
         ),
-        SliverPadding(
-          padding: const EdgeInsets.fromLTRB(12, 0, 12, 96),
-          sliver: SliverGrid.builder(
-            gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 140, mainAxisExtent: tileHeight),
-            itemCount: all.length,
-            itemBuilder: (context, i) => _BadgeTile(achievement: all[i], unlocked: firstUnlock[all[i].id]),
-          ),
-        ),
+        for (final group in Achievement.groups) ...() {
+          // Easiest first within a group.
+          final items = content.achievements.where((a) => a.group == group).toList()
+            ..sort((a, b) => a.conditionValue(main?.name).compareTo(b.conditionValue(main?.name)));
+          final done = items.where((a) => firstUnlock.containsKey(a.id)).length;
+          return [
+            SliverPadding(
+              padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
+              sliver: SliverToBoxAdapter(
+                child: _Progress(
+                  title: Row(
+                    spacing: 8,
+                    children: [
+                      Icon(_groupIcon(group), color: theme.colorScheme.primary),
+                      Expanded(
+                        child: Text(
+                          l.achGroup(group),
+                          style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      Text(l.achGroupProgress(done, items.length), style: theme.textTheme.labelLarge),
+                    ],
+                  ),
+                  value: done / items.length,
+                ),
+              ),
+            ),
+            SliverPadding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              sliver: SliverGrid.builder(
+                gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                  maxCrossAxisExtent: 140,
+                  mainAxisExtent: tileHeight,
+                ),
+                itemCount: items.length,
+                itemBuilder: (context, i) => _BadgeTile(achievement: items[i], unlocked: firstUnlock[items[i].id]),
+              ),
+            ),
+          ];
+        }(),
+        const SliverPadding(padding: EdgeInsets.only(bottom: 96)),
       ],
     );
   }
 }
 
-class _BadgeTile extends StatelessWidget {
+/// Title above a thin progress bar.
+class _Progress extends StatelessWidget {
+  const _Progress({required this.title, required this.value});
+
+  final Widget title;
+  final double value;
+
+  @override
+  Widget build(BuildContext context) => Column(
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    spacing: 6,
+    children: [
+      title,
+      ClipRRect(
+        borderRadius: BorderRadius.circular(4),
+        child: LinearProgressIndicator(value: value, minHeight: 6),
+      ),
+    ],
+  );
+}
+
+class _BadgeTile extends ConsumerWidget {
   const _BadgeTile({required this.achievement, required this.unlocked});
 
   final Achievement achievement;
   final UnlockedAchievement? unlocked;
 
+  /// Earned titles take their rarity colour, like item names in RPGs (grey "common" stays plain).
+  static Color? titleColor(ThemeData theme, Achievement a, bool earned) => !earned
+      ? theme.colorScheme.onSurfaceVariant
+      : a.tier == 'common'
+      ? null
+      : Color.lerp(tierColor(a.tier), theme.colorScheme.onSurface, theme.brightness == Brightness.dark ? 0.1 : 0.25);
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     return InkWell(
       borderRadius: BorderRadius.circular(16),
-      onTap: () => _showDetails(context),
+      onTap: () => _showDetails(context, ref.read(mainProductProvider)),
       child: Padding(
         padding: const EdgeInsets.all(4),
         child: Column(
@@ -230,7 +300,8 @@ class _BadgeTile extends StatelessWidget {
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: theme.textTheme.labelMedium?.copyWith(
-                color: unlocked != null ? null : theme.colorScheme.onSurfaceVariant,
+                color: titleColor(theme, achievement, unlocked != null),
+                fontWeight: unlocked != null ? FontWeight.w600 : null,
               ),
             ),
           ],
@@ -239,39 +310,49 @@ class _BadgeTile extends StatelessWidget {
     );
   }
 
-  void _showDetails(BuildContext context) {
+  void _showDetails(BuildContext context, ProductType? main) {
     final l = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final a = achievement;
     final at = unlocked?.unlockedAt;
+    final rarity = tierColor(a.tier);
     showModalBottomSheet<void>(
       context: context,
       showDragHandle: true,
+      isScrollControlled: true,
       builder: (context) => SafeArea(
-        child: Padding(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               BadgeIcon(achievement: a, unlocked: at != null, size: 96, pulse: true),
               const SizedBox(height: 16),
-              Text(a.title, textAlign: TextAlign.center, style: theme.textTheme.headlineSmall),
+              Text(
+                a.title,
+                textAlign: TextAlign.center,
+                style: theme.textTheme.headlineSmall?.copyWith(color: titleColor(theme, a, true)),
+              ),
               const SizedBox(height: 8),
-              Text(a.description, textAlign: TextAlign.center, style: theme.textTheme.bodyLarge),
+              Text(achievementDescription(l, a, main), textAlign: TextAlign.center, style: theme.textTheme.bodyLarge),
               const SizedBox(height: 16),
               Text(
                 at != null
                     ? l.achUnlockedAt(DateFormat('d MMMM yyyy', 'ru').format(at))
-                    : l.achHowTo(_conditionText(l, a)),
+                    : l.achHowTo(_conditionText(l, a, main)),
                 textAlign: TextAlign.center,
                 style: theme.textTheme.bodyMedium,
               ),
               const SizedBox(height: 8),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+              Wrap(
+                alignment: WrapAlignment.center,
                 spacing: 8,
                 children: [
-                  Chip(label: Text(l.tierName(a.tier))),
+                  Chip(
+                    avatar: Icon(Icons.diamond, color: rarity, size: 18),
+                    label: Text(l.tierName(a.tier)),
+                    side: BorderSide(color: rarity),
+                  ),
                   Chip(label: Text('+${a.xp} XP')),
                 ],
               ),
@@ -282,12 +363,12 @@ class _BadgeTile extends StatelessWidget {
     );
   }
 
-  static String _conditionText(AppLocalizations l, Achievement a) {
-    final v = a.conditionValue.toInt();
+  static String _conditionText(AppLocalizations l, Achievement a, ProductType? main) {
+    final v = a.conditionValue(main?.name).toInt();
     return switch (a.conditionType) {
       'smokeFreeMinutes' => l.achCondSmokeFree(formatPeriod(l, v)),
       'moneySavedRub' => l.achCondMoney(NumberFormat('#,##0', 'ru').format(v)),
-      'unitsAvoided' => l.achCondUnits(NumberFormat('#,##0', 'ru').format(v)),
+      'unitsAvoided' => l.achCondUnits(unitsText(l, main ?? ProductType.cigarettes, v)),
       'cravingsResisted' => l.achCondCravings(v),
       'articlesRead' => l.achCondArticles(v),
       'attemptsStarted' => l.achCondAttempts(v),

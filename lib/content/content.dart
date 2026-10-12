@@ -33,18 +33,43 @@ class Achievement {
       tier = j['tier'],
       xp = j['xp'],
       conditionType = j['condition']['type'],
-      conditionValue = j['condition']['value'];
+      _value = j['condition']['value'];
 
   final String id;
   final String title;
+
+  /// May contain `{units}` (unitsAvoided badges): replaced with e.g. "10 сигарет" for the main product.
   final String description;
   final String icon;
+
+  /// Rarity: common | uncommon | rare | epic | legendary.
   final String tier;
   final int xp;
 
-  /// smokeFreeMinutes | moneySavedRub | cravingsResisted | articlesRead | attemptsStarted | comebackAfterRelapse
+  /// smokeFreeMinutes | moneySavedRub | unitsAvoided | cravingsResisted | articlesRead | attemptsStarted |
+  /// comebackAfterRelapse
   final String conditionType;
-  final num conditionValue;
+
+  /// A number, or for unitsAvoided a map product type name → number of units of that product.
+  final Object _value;
+
+  /// Threshold of the condition; for unitsAvoided, of the user's main [product] (ProductType name).
+  num conditionValue([String? product]) {
+    final v = _value;
+    return v is Map ? v[product ?? 'cigarettes'] as num : v as num;
+  }
+
+  /// Group on the achievements screen, in display order.
+  static const groups = ['streak', 'cravings', 'money', 'units', 'articles', 'path'];
+
+  String get group => switch (conditionType) {
+    'smokeFreeMinutes' => 'streak',
+    'cravingsResisted' => 'cravings',
+    'moneySavedRub' => 'money',
+    'unitsAvoided' => 'units',
+    'articlesRead' => 'articles',
+    _ => 'path',
+  };
 }
 
 class HealthMilestone {

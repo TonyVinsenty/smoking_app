@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../domain/stats.dart';
 import 'database.dart';
 
 final databaseProvider = Provider<AppDatabase>((ref) {
@@ -40,4 +41,12 @@ final articlesReadProvider = StreamProvider<List<ArticlesReadData>>(
 final nowProvider = StreamProvider<DateTime>((ref) async* {
   yield DateTime.now();
   yield* Stream.periodic(const Duration(seconds: 1), (_) => DateTime.now());
+});
+
+/// Main product (largest spend) of the current or latest attempt: unitsAvoided badges count its units.
+final mainProductProvider = Provider<ProductType?>((ref) {
+  final products = ref.watch(productsProvider).value;
+  final attempts = ref.watch(attemptsProvider).value;
+  if (products == null || attempts == null) return null;
+  return mainProduct(latestProducts(products, attempts));
 });
