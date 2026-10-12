@@ -73,9 +73,7 @@ class _CravingMapScreenState extends ConsumerState<CravingMapScreen> {
                       ((s.peakHour! + 1) % 24).toString().padLeft(2, '0'),
                     ),
               child: _Columns(
-                items: [
-                  for (final p in DayPart.values) (l.dayPartName(p.name), l.dayPartHours(p.name), s.byPart[p]!),
-                ],
+                items: [for (final p in DayPart.values) (l.dayPartName(p.name), l.dayPartHours(p.name), s.byPart[p]!)],
               ),
             ),
             const SizedBox(height: 12),
@@ -87,7 +85,8 @@ class _CravingMapScreenState extends ConsumerState<CravingMapScreen> {
                     _Row(
                       label: e.key == null ? l.cravingNoTrigger : l.triggerName(e.key!.name),
                       count: e.value,
-                      max: s.triggersSorted.first.value.total,
+                      max: s.byTrigger.values.fold(1, (m, c) => c.total > m ? c.total : m),
+                      muted: e.key == null,
                     ),
                 ],
               ),
@@ -206,10 +205,7 @@ class _Section extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(title, style: theme.textTheme.titleLarge),
-            if (subtitle != null) ...[
-              const SizedBox(height: 4),
-              Text(subtitle!, style: theme.textTheme.bodyMedium),
-            ],
+            if (subtitle != null) ...[const SizedBox(height: 4), Text(subtitle!, style: theme.textTheme.bodyMedium)],
             const SizedBox(height: 16),
             child,
             const SizedBox(height: 12),
@@ -231,13 +227,14 @@ class _SplitBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    final parts = [
-      (count.total - count.resisted, scheme.outline),
-      (count.resisted, scheme.primary),
-    ];
+    final parts = [(count.total - count.resisted, scheme.outline), (count.resisted, scheme.primary)];
     final children = [
       for (final (n, color) in vertical ? parts : parts.reversed)
-        if (n > 0) Expanded(flex: n, child: Container(color: color)),
+        if (n > 0)
+          Expanded(
+            flex: n,
+            child: Container(color: color),
+          ),
     ];
     return ClipRRect(
       borderRadius: BorderRadius.circular(6),
@@ -306,16 +303,19 @@ class _Columns extends StatelessWidget {
 
 /// Horizontal bar with a label (triggers).
 class _Row extends StatelessWidget {
-  const _Row({required this.label, required this.count, required this.max});
+  const _Row({required this.label, required this.count, required this.max, this.muted = false});
 
   final String label;
   final CravingCount count;
   final int max;
 
+  /// «Trigger not given» is a gap in the data, not a trigger: shown dimmed.
+  final bool muted;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Padding(
+    final row = Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -335,6 +335,7 @@ class _Row extends StatelessWidget {
         ],
       ),
     );
+    return muted ? Opacity(opacity: 0.55, child: row) : row;
   }
 }
 
