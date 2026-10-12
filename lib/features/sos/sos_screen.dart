@@ -6,7 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/widgets/cards.dart';
 import '../../app/widgets/toast.dart';
-import '../../app/widgets/reserve_largest.dart';
 import '../../content/content.dart';
 import '../../data/database.dart';
 import '../../data/providers.dart';
@@ -146,28 +145,24 @@ class _ExerciseStepState extends ConsumerState<_ExerciseStep> {
     final tips = ref.watch(contentProvider).value?.sosTips ?? const [];
     if (_tipIndex < 0 && tips.isNotEmpty) _tipIndex = _random.nextInt(tips.length);
 
-    final header = Wrap(
-      alignment: WrapAlignment.center,
-      crossAxisAlignment: WrapCrossAlignment.center,
-      spacing: 12,
-      runSpacing: 4,
+    // Exercise name on the left, «Сменить» on the right: nothing shifts when the exercise changes.
+    final header = Row(
+      spacing: 8,
       children: [
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(_exerciseIcon(exercise), color: theme.colorScheme.primary),
-            const SizedBox(width: 8),
-            Flexible(child: Text(l.sosExerciseName(exercise.name), style: theme.textTheme.titleMedium)),
-          ],
-        ),
-        OutlinedButton.icon(
+        Icon(_exerciseIcon(exercise), color: theme.colorScheme.primary),
+        Expanded(child: Text(l.sosExerciseName(exercise.name), style: theme.textTheme.titleMedium)),
+        TextButton.icon(
           icon: const Icon(Icons.swap_horiz),
           label: Text(l.sosChangeExercise),
           onPressed: () => showSosExercisePicker(context, ref),
         ),
       ],
     );
-    final hint = Text(l.sosWaveHint, textAlign: TextAlign.center, style: theme.textTheme.bodyLarge);
+    final hint = Text(
+      l.sosWaveHint,
+      textAlign: TextAlign.center,
+      style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+    );
     final exerciseView = AnimatedSwitcher(
       duration: const Duration(milliseconds: 300),
       child: switch (exercise) {
@@ -176,17 +171,27 @@ class _ExerciseStepState extends ConsumerState<_ExerciseStep> {
         SosExercise.grounding => const _Grounding(key: ValueKey(SosExercise.grounding)),
       },
     );
+    final tipStyle = theme.textTheme.bodyLarge?.copyWith(color: AppCard.onColor(context, CardTone.tip));
+    // The frame fits the tip, but keeps room for three lines so the exercise above rarely moves.
+    final tipMinHeight = MediaQuery.textScalerOf(context).scale(tipStyle!.fontSize!) * tipStyle.height! * 3;
     final tip = tips.isEmpty
         ? null
         : AppCard(
             tone: CardTone.tip,
-            padding: const EdgeInsets.fromLTRB(20, 16, 8, 8),
+            padding: const EdgeInsets.fromLTRB(20, 16, 8, 4),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ReserveLargest(
-                  candidates: [for (final t in tips) Text(t, style: theme.textTheme.bodyLarge)],
-                  child: Text(tips[_tipIndex], style: theme.textTheme.bodyLarge),
+                AnimatedSize(
+                  duration: const Duration(milliseconds: 200),
+                  alignment: Alignment.topCenter,
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(minHeight: tipMinHeight, minWidth: double.infinity),
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 12),
+                      child: Text(tips[_tipIndex], style: tipStyle),
+                    ),
+                  ),
                 ),
                 Align(
                   alignment: Alignment.centerRight,
@@ -203,7 +208,11 @@ class _ExerciseStepState extends ConsumerState<_ExerciseStep> {
     final resisted = SizedBox(
       width: double.infinity,
       child: FilledButton.icon(
-        icon: const Icon(Icons.fitness_center),
+        style: FilledButton.styleFrom(
+          minimumSize: const Size.fromHeight(60),
+          textStyle: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
+        ),
+        icon: const Icon(Icons.check_rounded, size: 26),
         label: Text(l.sosResisted),
         onPressed: widget.onResisted,
       ),
