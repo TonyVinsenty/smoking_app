@@ -832,6 +832,36 @@ abstract class AppLocalizations {
   /// **'Начните новую попытку на главном экране — и здесь появится счёт.'**
   String get notInhaledNoAttempt;
 
+  /// No description provided for @notInhaledPacks.
+  ///
+  /// In ru, this message translates to:
+  /// **'≈ {count} {n, plural, one{пачка} few{пачки} other{пачек}}'**
+  String notInhaledPacks(String count, int n);
+
+  /// No description provided for @notInhaledTime.
+  ///
+  /// In ru, this message translates to:
+  /// **'≈ {time} без перекуров'**
+  String notInhaledTime(String time);
+
+  /// No description provided for @notInhaledTimeNote.
+  ///
+  /// In ru, this message translates to:
+  /// **'Время перекуров — наша прикидка: около 5 минут на сигарету и до 6 минут на стик.'**
+  String get notInhaledTimeNote;
+
+  /// No description provided for @notInhaledAllTime.
+  ///
+  /// In ru, this message translates to:
+  /// **'За все попытки'**
+  String get notInhaledAllTime;
+
+  /// No description provided for @notInhaledWhat.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чего вы не вдыхаете'**
+  String get notInhaledWhat;
+
   /// No description provided for @diaryChannel.
   ///
   /// In ru, this message translates to:

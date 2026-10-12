@@ -123,6 +123,26 @@ class WithdrawalSymptom {
   final List<String> tips;
 }
 
+/// What the user no longer breathes in, for the given product types («Не вдохнули»).
+class NotInhaledFact {
+  NotInhaledFact.fromJson(Map<String, dynamic> j)
+    : id = j['id'],
+      products = (j['products'] as List).cast<String>(),
+      icon = j['icon'],
+      value = j['value'],
+      title = j['title'],
+      text = j['text'],
+      source = j['source'];
+
+  final String id;
+  final List<String> products;
+  final String icon;
+  final String value;
+  final String title;
+  final String text;
+  final String source;
+}
+
 class Quote {
   Quote.fromJson(Map<String, dynamic> j) : text = j['text'], author = j['author'];
 
@@ -158,6 +178,7 @@ class AppContent {
     required this.milestones,
     required this.healthFacts,
     required this.withdrawal,
+    required this.notInhaledFacts,
     required this.quotes,
     required this.sosTips,
     required this.triggerTips,
@@ -169,6 +190,7 @@ class AppContent {
   final List<HealthMilestone> milestones;
   final List<HealthFact> healthFacts;
   final List<WithdrawalSymptom> withdrawal;
+  final List<NotInhaledFact> notInhaledFacts;
   final List<Quote> quotes;
   final List<String> sosTips;
 
@@ -197,6 +219,7 @@ final contentProvider = FutureProvider<AppContent>((ref) async {
     _loadList('trigger_tips.json'),
     _loadList('health_facts.json'),
     _loadList('withdrawal_symptoms.json'),
+    _loadList('not_inhaled_facts.json'),
   ]);
   return AppContent(
     levels: results[0].map(Level.fromJson).toList()..sort((a, b) => a.level.compareTo(b.level)),
@@ -212,6 +235,7 @@ final contentProvider = FutureProvider<AppContent>((ref) async {
     triggerTips: {for (final t in results[6]) t['trigger'] as String: t['text'] as String},
     healthFacts: results[7].map(HealthFact.fromJson).toList(),
     withdrawal: results[8].map(WithdrawalSymptom.fromJson).toList(),
+    notInhaledFacts: results[9].map(NotInhaledFact.fromJson).toList(),
   );
 });
 

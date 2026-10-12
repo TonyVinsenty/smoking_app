@@ -652,6 +652,33 @@ class AppLocalizationsRu extends AppLocalizations {
       'Начните новую попытку на главном экране — и здесь появится счёт.';
 
   @override
+  String notInhaledPacks(String count, int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'пачек',
+      few: 'пачки',
+      one: 'пачка',
+    );
+    return '≈ $count $_temp0';
+  }
+
+  @override
+  String notInhaledTime(String time) {
+    return '≈ $time без перекуров';
+  }
+
+  @override
+  String get notInhaledTimeNote =>
+      'Время перекуров — наша прикидка: около 5 минут на сигарету и до 6 минут на стик.';
+
+  @override
+  String get notInhaledAllTime => 'За все попытки';
+
+  @override
+  String get notInhaledWhat => 'Чего вы не вдыхаете';
+
+  @override
   String get diaryChannel => 'Дневник самочувствия';
 
   @override
