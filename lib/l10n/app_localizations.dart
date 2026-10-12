@@ -130,11 +130,23 @@ abstract class AppLocalizations {
   /// **'Настройки'**
   String get tabSettings;
 
-  /// No description provided for @comingSoon.
+  /// No description provided for @leaderboardTitle.
   ///
   /// In ru, this message translates to:
-  /// **'Скоро здесь что-то появится'**
-  String get comingSoon;
+  /// **'Здесь будет рейтинг с друзьями'**
+  String get leaderboardTitle;
+
+  /// No description provided for @leaderboardText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Добавляйте друзей по коду и поддерживайте друг друга. Всё анонимно и только по желанию.'**
+  String get leaderboardText;
+
+  /// No description provided for @leaderboardSoon.
+  ///
+  /// In ru, this message translates to:
+  /// **'Появится в одном из следующих обновлений'**
+  String get leaderboardSoon;
 
   /// No description provided for @next.
   ///

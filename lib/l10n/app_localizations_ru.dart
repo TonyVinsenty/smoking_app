@@ -28,7 +28,14 @@ class AppLocalizationsRu extends AppLocalizations {
   String get tabSettings => 'Настройки';
 
   @override
-  String get comingSoon => 'Скоро здесь что-то появится';
+  String get leaderboardTitle => 'Здесь будет рейтинг с друзьями';
+
+  @override
+  String get leaderboardText =>
+      'Добавляйте друзей по коду и поддерживайте друг друга. Всё анонимно и только по желанию.';
+
+  @override
+  String get leaderboardSoon => 'Появится в одном из следующих обновлений';
 
   @override
   String get next => 'Далее';
