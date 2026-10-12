@@ -92,30 +92,36 @@ class _SosScreenState extends ConsumerState<SosScreen> {
     );
   }
 
+  // The choices scroll with a large system font; «Пропустить» always stays at the bottom.
   Widget _triggerStep(AppLocalizations l) => Padding(
-    padding: const EdgeInsets.all(24),
+    padding: const EdgeInsets.fromLTRB(24, 24, 24, 16),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(l.sosTriggerTitle, style: Theme.of(context).textTheme.headlineSmall),
-        const SizedBox(height: 8),
-        Text(l.sosTriggerHint),
-        const SizedBox(height: 24),
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: [
-            for (final t in Trigger.values)
-              ActionChip(
-                label: Text(l.triggerName(t.name)),
-                onPressed: () => setState(() {
-                  _trigger = t;
-                  _askTrigger = false;
-                }),
+        Expanded(
+          child: ListView(
+            children: [
+              Text(l.sosTriggerTitle, style: Theme.of(context).textTheme.headlineSmall),
+              const SizedBox(height: 8),
+              Text(l.sosTriggerHint),
+              const SizedBox(height: 24),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  for (final t in Trigger.values)
+                    ActionChip(
+                      label: Text(l.triggerName(t.name)),
+                      onPressed: () => setState(() {
+                        _trigger = t;
+                        _askTrigger = false;
+                      }),
+                    ),
+                ],
               ),
-          ],
+            ],
+          ),
         ),
-        const Spacer(),
         Center(
           child: TextButton(onPressed: () => setState(() => _askTrigger = false), child: Text(l.sosSkip)),
         ),

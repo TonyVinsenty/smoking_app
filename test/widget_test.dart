@@ -15,10 +15,12 @@ void main() {
     addTearDown(db.close);
     SharedPreferences.setMockInitialValues({});
     final prefs = await SharedPreferences.getInstance();
-    await tester.pumpWidget(ProviderScope(
-      overrides: [databaseProvider.overrideWithValue(db), prefsProvider.overrideWithValue(prefs)],
-      child: const SmokingApp(),
-    ));
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [databaseProvider.overrideWithValue(db), prefsProvider.overrideWithValue(prefs)],
+        child: const SmokingApp(),
+      ),
+    );
     await tester.pumpAndSettle();
     expect(find.text('Начнём'), findsOneWidget);
 

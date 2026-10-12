@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../app/theme.dart';
 import '../../app/widgets/cards.dart';
 import '../../app/widgets/toast.dart';
 import '../../data/database.dart';
@@ -10,9 +11,8 @@ import '../../data/settings.dart';
 import '../../l10n/app_localizations.dart';
 import 'health_common.dart';
 
-/// Questions of the diary with their chart colors.
+/// Questions of the diary.
 const _questions = ['sleep', 'breathing', 'mood', 'tasteSmell'];
-const _colors = [Color(0xFF2E9E8F), Color(0xFF5C7CFA), Color(0xFFF59F00), Color(0xFFE64980)];
 
 int _answer(WellbeingEntry e, String q) => switch (q) {
   'sleep' => e.sleep,
@@ -125,7 +125,7 @@ class _Form extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(l.diaryHowNow, style: theme.textTheme.titleLarge),
+          Text(l.diaryHowNow, style: theme.textTheme.titleMedium),
           for (final q in _questions) ...[
             const SizedBox(height: 16),
             Row(
@@ -191,6 +191,7 @@ class _ScaleButton extends StatelessWidget {
   }
 }
 
+/// One small chart per question (scale 1–5) with "было → стало"; a hint until there are two entries.
 class _Chart extends StatelessWidget {
   const _Chart({required this.entries});
 
@@ -201,60 +202,82 @@ class _Chart extends StatelessWidget {
     final l = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
+    final muted = theme.textTheme.labelSmall?.copyWith(color: scheme.onSurfaceVariant);
+    // Entries on the same day would sit on top of each other: spread them evenly instead.
+    final byTime = entries.length > 1 && entries.last.at.difference(entries.first.at).inHours >= 24;
     return AppCard(
-      padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(l.diaryChart, style: theme.textTheme.titleLarge),
+          Text(l.diaryChart, style: theme.textTheme.titleMedium),
           const SizedBox(height: 12),
           if (entries.length < 2)
-            Text(l.diaryChartEmpty, style: theme.textTheme.bodyMedium)
+            Text(l.diaryChartEmpty, style: theme.textTheme.bodyMedium?.copyWith(color: scheme.onSurfaceVariant))
           else ...[
-            SizedBox(
-              height: 180,
-              width: double.infinity,
-              child: TweenAnimationBuilder<double>(
-                tween: Tween(begin: 0, end: 1),
-                duration: const Duration(milliseconds: 900),
-                curve: Curves.easeOutCubic,
-                builder: (_, t, _) => CustomPaint(
-                  painter: _ChartPainter(entries: entries, progress: t, grid: scheme.outlineVariant),
-                ),
-              ),
-            ),
-            const SizedBox(height: 4),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                for (final d in [entries.first.at, entries.last.at])
+            for (final (i, q) in _questions.indexed) ...[
+              if (i > 0) const SizedBox(height: 16),
+              Row(
+                children: [
+                  Expanded(child: Text(l.diaryQuestion(q), style: theme.textTheme.labelLarge)),
                   Text(
-                    DateFormat('d MMM', 'ru').format(d),
-                    style: theme.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
+                    l.diaryChange(_answer(entries.first, q), _answer(entries.last, q)),
+                    style: theme.textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w700, fontFeatures: tabular),
                   ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            // Legend with the change from the first entry to the latest.
-            for (final (i, q) in _questions.indexed)
+                ],
+              ),
+              const SizedBox(height: 6),
+              Row(
+                children: [
+                  // Scale: 5 at the top, 1 at the bottom.
+                  SizedBox(
+                    height: 64,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('5', style: muted),
+                        Text('1', style: muted),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: SizedBox(
+                      height: 64,
+                      child: TweenAnimationBuilder<double>(
+                        tween: Tween(begin: 0, end: 1),
+                        duration: MediaQuery.disableAnimationsOf(context)
+                            ? Duration.zero
+                            : const Duration(milliseconds: 900),
+                        curve: Curves.easeOutCubic,
+                        builder: (_, t, _) => CustomPaint(
+                          painter: _ChartPainter(
+                            entries: entries,
+                            question: q,
+                            byTime: byTime,
+                            progress: t,
+                            line: scheme.primary,
+                            grid: scheme.outlineVariant,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+            if (byTime) ...[
+              const SizedBox(height: 4),
               Padding(
-                padding: const EdgeInsets.only(top: 6),
+                padding: const EdgeInsets.only(left: 18),
                 child: Row(
-                  spacing: 8,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Container(
-                      width: 12,
-                      height: 12,
-                      decoration: BoxDecoration(color: _colors[i], shape: BoxShape.circle),
-                    ),
-                    Expanded(child: Text(l.diaryQuestion(q), style: theme.textTheme.bodyMedium)),
-                    Text(
-                      l.diaryChange(_answer(entries.first, q), _answer(entries.last, q)),
-                      style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
-                    ),
+                    for (final d in [entries.first.at, entries.last.at])
+                      Text(DateFormat('d MMM', 'ru').format(d), style: muted),
                   ],
                 ),
               ),
+            ],
           ],
         ],
       ),
@@ -262,17 +285,28 @@ class _Chart extends StatelessWidget {
   }
 }
 
-/// One line per question over time; scale 1 at the bottom, 5 at the top. Lines draw in from the left.
+/// One question over time: faint lines at 1…5, the answers as a line with a soft fill under it.
+/// Draws in from the left.
 class _ChartPainter extends CustomPainter {
-  _ChartPainter({required this.entries, required this.progress, required this.grid});
+  _ChartPainter({
+    required this.entries,
+    required this.question,
+    required this.byTime,
+    required this.progress,
+    required this.line,
+    required this.grid,
+  });
 
   final List<WellbeingEntry> entries;
+  final String question;
+  final bool byTime;
   final double progress;
+  final Color line;
   final Color grid;
 
   @override
   void paint(Canvas canvas, Size size) {
-    const pad = 8.0;
+    const pad = 5.0;
     final h = size.height - 2 * pad;
     double y(int v) => pad + h * (5 - v) / 4;
     final gridPaint = Paint()
@@ -283,36 +317,38 @@ class _ChartPainter extends CustomPainter {
     }
     final start = entries.first.at.millisecondsSinceEpoch;
     final span = (entries.last.at.millisecondsSinceEpoch - start).clamp(1, 1 << 62);
-    // Entries on the same day would sit on top of each other; fall back to even spacing then.
-    final byTime = entries.last.at.difference(entries.first.at).inHours >= 24;
     double x(int i) => byTime
-        ? size.width * (entries[i].at.millisecondsSinceEpoch - start) / span
-        : size.width * i / (entries.length - 1);
+        ? pad + (size.width - 2 * pad) * (entries[i].at.millisecondsSinceEpoch - start) / span
+        : pad + (size.width - 2 * pad) * i / (entries.length - 1);
+    final points = [for (var i = 0; i < entries.length; i++) Offset(x(i), y(_answer(entries[i], question)))];
 
     canvas.save();
     canvas.clipRect(Rect.fromLTWH(0, 0, size.width * progress, size.height));
-    for (final (k, q) in _questions.indexed) {
-      // Lines are nudged apart a little so equal answers stay visible.
-      final dy = (k - 1.5) * 2.5;
-      final path = Path();
-      for (var i = 0; i < entries.length; i++) {
-        final p = Offset(x(i), y(_answer(entries[i], q)) + dy);
-        i == 0 ? path.moveTo(p.dx, p.dy) : path.lineTo(p.dx, p.dy);
-      }
-      final paint = Paint()
-        ..color = _colors[k]
-        ..strokeWidth = 3
+    final path = Path()..moveTo(points.first.dx, points.first.dy);
+    for (final p in points.skip(1)) {
+      path.lineTo(p.dx, p.dy);
+    }
+    final fill = Path.from(path)
+      ..lineTo(points.last.dx, size.height - pad)
+      ..lineTo(points.first.dx, size.height - pad)
+      ..close();
+    canvas.drawPath(fill, Paint()..color = line.withValues(alpha: 0.12));
+    canvas.drawPath(
+      path,
+      Paint()
+        ..color = line
+        ..strokeWidth = 2.5
         ..style = PaintingStyle.stroke
         ..strokeCap = StrokeCap.round
-        ..strokeJoin = StrokeJoin.round;
-      canvas.drawPath(path, paint);
-      for (var i = 0; i < entries.length; i++) {
-        canvas.drawCircle(Offset(x(i), y(_answer(entries[i], q)) + dy), 3.5, Paint()..color = _colors[k]);
-      }
+        ..strokeJoin = StrokeJoin.round,
+    );
+    for (final p in points) {
+      canvas.drawCircle(p, 3, Paint()..color = line);
     }
     canvas.restore();
   }
 
   @override
-  bool shouldRepaint(_ChartPainter old) => old.entries != entries || old.progress != progress || old.grid != grid;
+  bool shouldRepaint(_ChartPainter old) =>
+      old.entries != entries || old.progress != progress || old.line != line || old.grid != grid;
 }
