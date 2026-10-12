@@ -55,4 +55,31 @@ class NotificationsEnabledNotifier extends Notifier<bool> {
 }
 
 /// Health-milestone notifications (on by default; rare and never at night).
-final notificationsEnabledProvider = NotifierProvider<NotificationsEnabledNotifier, bool>(NotificationsEnabledNotifier.new);
+final notificationsEnabledProvider = NotifierProvider<NotificationsEnabledNotifier, bool>(
+  NotificationsEnabledNotifier.new,
+);
+
+/// Which collapsible sections of a screen are open; everything starts collapsed. Keyed by screen.
+class ExpandedSectionsNotifier extends Notifier<Set<String>> {
+  ExpandedSectionsNotifier(this.screen);
+
+  final String screen;
+
+  String get _key => 'expanded.$screen';
+
+  @override
+  Set<String> build() => (ref.watch(prefsProvider).getStringList(_key) ?? const []).toSet();
+
+  void toggle(String section) => _save(state.contains(section) ? ({...state}..remove(section)) : {...state, section});
+
+  void setAll(Iterable<String> sections) => _save(sections.toSet());
+
+  void _save(Set<String> open) {
+    ref.read(prefsProvider).setStringList(_key, open.toList());
+    state = open;
+  }
+}
+
+final expandedSectionsProvider = NotifierProvider.family<ExpandedSectionsNotifier, Set<String>, String>(
+  ExpandedSectionsNotifier.new,
+);

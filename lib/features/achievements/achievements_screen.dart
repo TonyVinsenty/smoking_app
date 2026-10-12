@@ -7,6 +7,7 @@ import '../../app/widgets/badge_icon.dart';
 import '../../content/content.dart';
 import '../../data/database.dart';
 import '../../data/providers.dart';
+import '../../data/settings.dart';
 import '../../l10n/app_localizations.dart';
 
 /// All badges by group; opened from the home screen trophy button.
@@ -23,15 +24,9 @@ class AchievementsScreen extends StatelessWidget {
   );
 }
 
-class _AchievementsList extends ConsumerStatefulWidget {
+class _AchievementsList extends ConsumerWidget {
   const _AchievementsList();
-
-  @override
-  ConsumerState<_AchievementsList> createState() => _AchievementsListState();
-}
-
-class _AchievementsListState extends ConsumerState<_AchievementsList> {
-  final _collapsed = <String>{};
+  static const _screen = 'achievements';
 
   static IconData _groupIcon(String group) => switch (group) {
     'streak' => Icons.timer,
@@ -43,9 +38,11 @@ class _AchievementsListState extends ConsumerState<_AchievementsList> {
   };
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context);
     final theme = Theme.of(context);
+    final expanded = ref.watch(expandedSectionsProvider(_screen));
+    final allOpen = Achievement.groups.every(expanded.contains);
     final content = ref.watch(contentProvider).value;
     final unlocked = ref.watch(unlockedAchievementsProvider).value;
     final main = ref.watch(mainProductProvider);
@@ -77,20 +74,46 @@ class _AchievementsListState extends ConsumerState<_AchievementsList> {
             ),
           ),
         ),
+        SliverPadding(
+          padding: const EdgeInsets.fromLTRB(4, 8, 4, 0),
+          sliver: SliverToBoxAdapter(
+            child: InkWell(
+              borderRadius: BorderRadius.circular(12),
+              onTap: () =>
+                  ref.read(expandedSectionsProvider(_screen).notifier).setAll(allOpen ? const [] : Achievement.groups),
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Row(
+                  spacing: 8,
+                  children: [
+                    Icon(allOpen ? Icons.unfold_less : Icons.unfold_more, color: theme.colorScheme.primary),
+                    Text(
+                      allOpen ? l.collapseAll : l.expandAll,
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        color: theme.colorScheme.primary,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
         for (final group in Achievement.groups)
           ...() {
             // Easiest first within a group.
             final items = content.achievements.where((a) => a.group == group).toList()
               ..sort((a, b) => a.conditionValue(main?.name).compareTo(b.conditionValue(main?.name)));
             final done = items.where((a) => firstUnlock.containsKey(a.id)).length;
-            final open = !_collapsed.contains(group);
+            final open = expanded.contains(group);
             return [
               SliverPadding(
                 padding: const EdgeInsets.fromLTRB(4, 12, 4, 0),
                 sliver: SliverToBoxAdapter(
                   child: InkWell(
                     borderRadius: BorderRadius.circular(12),
-                    onTap: () => setState(() => open ? _collapsed.add(group) : _collapsed.remove(group)),
+                    onTap: () => ref.read(expandedSectionsProvider(_screen).notifier).toggle(group),
                     child: Padding(
                       padding: const EdgeInsets.all(12),
                       child: _Progress(

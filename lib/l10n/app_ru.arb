@@ -175,6 +175,8 @@
   "@achGroup": {"placeholders": {"name": {"type": "String"}}},
   "achGroupProgress": "{unlocked} из {total} ({percent}%)",
   "@achGroupProgress": {"placeholders": {"unlocked": {"type": "int"}, "total": {"type": "int"}, "percent": {"type": "int"}}},
+  "collapseAll": "Свернуть все",
+  "expandAll": "Развернуть все",
   "tierName": "{tier, select, common{Обычное} uncommon{Необычное} rare{Редкое} epic{Эпическое} other{Легендарное}}",
   "@tierName": {"placeholders": {"tier": {"type": "String"}}},
   "achCelebrateTitle": "Новое достижение!",

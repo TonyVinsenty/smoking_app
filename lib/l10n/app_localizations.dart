@@ -814,6 +814,18 @@ abstract class AppLocalizations {
   /// **'{unlocked} из {total} ({percent}%)'**
   String achGroupProgress(int unlocked, int total, int percent);
 
+  /// No description provided for @collapseAll.
+  ///
+  /// In ru, this message translates to:
+  /// **'Свернуть все'**
+  String get collapseAll;
+
+  /// No description provided for @expandAll.
+  ///
+  /// In ru, this message translates to:
+  /// **'Развернуть все'**
+  String get expandAll;
+
   /// No description provided for @tierName.
   ///
   /// In ru, this message translates to:

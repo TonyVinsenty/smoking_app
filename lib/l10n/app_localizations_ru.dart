@@ -696,6 +696,12 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
+  String get collapseAll => 'Свернуть все';
+
+  @override
+  String get expandAll => 'Развернуть все';
+
+  @override
   String tierName(String tier) {
     String _temp0 = intl.Intl.selectLogic(tier, {
       'common': 'Обычное',
