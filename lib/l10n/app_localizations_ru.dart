@@ -548,9 +548,9 @@ class AppLocalizationsRu extends AppLocalizations {
     String _temp0 = intl.Intl.selectLogic(tab, {
       'stages': 'Этапы',
       'facts': 'Факты',
-      'normal': 'Что сейчас нормально',
+      'normal': 'Что нормально',
       'body': 'Карта тела',
-      'notInhaled': 'Не попало в организм',
+      'notInhaled': 'Не вдохнули',
       'other': 'Дневник',
     });
     return '$_temp0';

@@ -143,7 +143,7 @@
   "@healthSmokeFreeFor": {"placeholders": {"time": {"type": "String"}}},
   "healthNonePassed": "Первый этап совсем скоро — загляните в «Ближайшие».",
   "healthFactsTitle": "Факты из исследований",
-  "healthSub": "{tab, select, stages{Этапы} facts{Факты} normal{Что сейчас нормально} body{Карта тела} notInhaled{Не попало в организм} other{Дневник}}",
+  "healthSub": "{tab, select, stages{Этапы} facts{Факты} normal{Что нормально} body{Карта тела} notInhaled{Не вдохнули} other{Дневник}}",
   "@healthSub": {"placeholders": {"tab": {"type": "String"}}},
   "normalIntro": "Симптомы отмены — знак того, что организм перестраивается. Они временные и проходят сами. Не у всех бывают все симптомы.",
   "normalNow": "Сейчас это нормально",

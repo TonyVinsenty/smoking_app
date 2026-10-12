@@ -721,7 +721,7 @@ abstract class AppLocalizations {
   /// No description provided for @healthSub.
   ///
   /// In ru, this message translates to:
-  /// **'{tab, select, stages{Этапы} facts{Факты} normal{Что сейчас нормально} body{Карта тела} notInhaled{Не попало в организм} other{Дневник}}'**
+  /// **'{tab, select, stages{Этапы} facts{Факты} normal{Что нормально} body{Карта тела} notInhaled{Не вдохнули} other{Дневник}}'**
   String healthSub(String tab);
 
   /// No description provided for @normalIntro.
