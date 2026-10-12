@@ -18,6 +18,12 @@ ThemeData buildTheme(Brightness brightness) {
       margin: EdgeInsets.zero,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
     ),
+    // The title bar keeps its color when content scrolls under it.
+    appBarTheme: AppBarTheme(
+      backgroundColor: scheme.surface,
+      scrolledUnderElevation: 0,
+      surfaceTintColor: Colors.transparent,
+    ),
     navigationBarTheme: NavigationBarThemeData(indicatorColor: scheme.primaryContainer),
     // A soft tinted card instead of the default inverse (white in dark mode) block.
     snackBarTheme: SnackBarThemeData(
