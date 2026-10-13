@@ -20,7 +20,7 @@ Flutter (Dart 3.13), всё хранится на телефоне: drift (SQLit
 
 ## Сборка и выпуск
 - Версия 0.1.0; для каждой новой сборки поднимать номер сборки в pubspec (`0.1.0+N`). Владелец ставит новую версию поверх старой, не удаляя (иначе пропадут данные) — напоминать.
-- Android: релизный APK подписан своим ключом (D:/Android/keys/zero-release.jks). Переменная ZERO_KEYSTORE_PROPERTIES = `D:\Android\keys\zero-keystore.properties` — в Bash задать вручную через export, без неё сборка падает. Владелец хранит резервную копию D:/Android/keys. Готовый файл: `build/app/outputs/flutter-apk/app-release.apk` (копировать как `Zero-0.1.0-buildN.apk`).
+- Android: релизный APK подписан своим ключом (D:/Android/keys/zero-release.jks). Переменная ZERO_KEYSTORE_PROPERTIES = `D:\Android\keys\zero-keystore.properties` — в Bash задать вручную через export, без неё сборка падает. Владелец хранит резервную копию D:/Android/keys. Готовый файл: `build/app/outputs/flutter-apk/app-release.apk` → копировать в папку `releases/` (не в git) как `Zero-0.1.0-buildN.apk`.
 - iOS: неподписанный .ipa через GitHub Actions «iOS build» (владелец запускает вручную после push) → Sideloadly (тот же Apple ID, что для Zuno). Bundle id `com.tonyvinsenty.smokingApp` — никогда не менять. Подробности: D:/Projects/Claude/MoneyAPP/docs/how-to-iphone.md.
 
 ## Заметки для разработки

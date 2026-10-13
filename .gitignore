@@ -50,3 +50,6 @@ app.*.map.json
 # Firebase config: not in git (public repo). iOS CI rebuilds it from the FIREBASE_OPTIONS_DART secret.
 /firebase/
 /lib/firebase_options.dart
+
+# Ready APKs for the owner (too big for git)
+/releases/
