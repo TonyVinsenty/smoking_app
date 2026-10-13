@@ -1549,6 +1549,10 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
+  String get socialMeHidden =>
+      'Вы не показываете этот показатель друзьям. Изменить — в «Приватности».';
+
+  @override
   String get socialMyCode => 'Мой код друга';
 
   @override

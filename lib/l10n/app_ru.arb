@@ -403,6 +403,7 @@
   "socialYou": "Вы",
   "socialHidden": "{count, plural, one{{count} человек не показывает} few{{count} человека не показывают} many{{count} человек не показывают} other{{count} человека не показывают}} этот показатель — и это нормально",
   "@socialHidden": {"placeholders": {"count": {"type": "int"}}},
+  "socialMeHidden": "Вы не показываете этот показатель друзьям. Изменить — в «Приватности».",
   "socialMyCode": "Мой код друга",
   "socialShare": "Поделиться",
   "socialShareText": "Давайте поддерживать друг друга в Zero! Мой код друга: {code}",

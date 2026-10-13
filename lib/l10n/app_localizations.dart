@@ -1887,6 +1887,12 @@ abstract class AppLocalizations {
   /// **'{count, plural, one{{count} человек не показывает} few{{count} человека не показывают} many{{count} человек не показывают} other{{count} человека не показывают}} этот показатель — и это нормально'**
   String socialHidden(int count);
 
+  /// No description provided for @socialMeHidden.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вы не показываете этот показатель друзьям. Изменить — в «Приватности».'**
+  String get socialMeHidden;
+
   /// No description provided for @socialMyCode.
   ///
   /// In ru, this message translates to:

@@ -151,9 +151,11 @@ final friendIdsProvider = StreamProvider<List<String>>((ref) {
 });
 
 /// A friend's profile; null when it is gone (account deleted or friendship removed by them).
-final friendProfileProvider = StreamProvider.family<SocialProfile?, String>((ref, uid) {
-  return _userDoc(uid).snapshots().map((d) => d.exists ? SocialProfile.fromDoc(d) : null).handleError((_) {});
-});
+/// Reading is allowed only once their side of the friendship exists, so a denied read is retried for a while.
+final friendProfileProvider = StreamProvider.family<SocialProfile?, String>(
+  (ref, uid) => _userDoc(uid).snapshots().map((d) => d.exists ? SocialProfile.fromDoc(d) : null),
+  retry: (tries, _) => tries < 12 ? Duration(seconds: min(30, 1 << tries)) : null,
+);
 
 /// "K7M4Q2XP" → "K7M4-Q2XP".
 String formatCode(String code) => code.length == 8 ? '${code.substring(0, 4)}-${code.substring(4)}' : code;

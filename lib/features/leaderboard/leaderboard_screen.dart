@@ -11,6 +11,7 @@ import '../../app/widgets/tab_page.dart';
 import '../../app/widgets/toast.dart';
 import '../../data/social.dart';
 import '../../l10n/app_localizations.dart';
+import '../settings/privacy_screen.dart';
 import 'add_friend_sheet.dart';
 import 'social_widgets.dart';
 
@@ -82,7 +83,8 @@ class _RatingState extends ConsumerState<_Rating> {
       for (final f in friends)
         if (f.value(_metric) case final v?) _Entry(uid: f.uid, nick: f.nick, value: v),
     ]..sort((a, b) => b.value != a.value ? b.value.compareTo(a.value) : a.nick.compareTo(b.nick));
-    final hidden = friends.length + 1 - entries.length;
+    final meHidden = !share.contains(_metric);
+    final hidden = friends.length - entries.where((e) => !e.me).length;
 
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, sosClearance),
@@ -110,7 +112,7 @@ class _RatingState extends ConsumerState<_Rating> {
         ),
         const SizedBox(height: 20),
         if (entries.isNotEmpty) _Podium(entries: entries.take(3).toList(), metric: _metric, onLongPress: _remove),
-        if (entries.length > 3 || hidden > 0) ...[
+        if (entries.length > 3 || hidden > 0 || meHidden) ...[
           const SizedBox(height: 16),
           AppCard(
             padding: EdgeInsets.zero,
@@ -118,17 +120,8 @@ class _RatingState extends ConsumerState<_Rating> {
               children: [
                 for (final (i, e) in entries.indexed.skip(3))
                   _Row(place: i + 1, entry: e, metric: _metric, onLongPress: _remove),
-                if (hidden > 0)
-                  Padding(
-                    padding: const EdgeInsets.all(14),
-                    child: Row(
-                      spacing: 10,
-                      children: [
-                        Icon(Icons.lock_outline, size: 18, color: theme.colorScheme.onSurfaceVariant),
-                        Expanded(child: Text(l.socialHidden(hidden), style: theme.textTheme.bodySmall)),
-                      ],
-                    ),
-                  ),
+                if (hidden > 0) _HiddenNote(l.socialHidden(hidden)),
+                if (meHidden) _HiddenNote(l.socialMeHidden, onTap: () => PrivacyScreen.open(context)),
               ],
             ),
           ),
@@ -185,13 +178,16 @@ class _Podium extends StatelessWidget {
     const heights = [100.0, 72.0, 52.0];
     final blocks = [scheme.primaryContainer, scheme.secondaryContainer, scheme.surfaceContainerHighest];
     final order = [1, 0, 2].where((i) => i < entries.length);
+    // Fixed step width (a third of the list), so one or two people do not stretch across the screen.
+    final width = (MediaQuery.sizeOf(context).width - 32 - 20) / 3;
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.end,
       spacing: 10,
       children: [
         for (final i in order)
-          Expanded(
+          SizedBox(
+            width: width,
             child: GestureDetector(
               onLongPress: () => onLongPress(entries[i]),
               child: Column(
@@ -316,6 +312,33 @@ class _CodeCard extends StatelessWidget {
             child: Text(l.socialShare),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// A quiet line under the list: who does not show the chosen stat (never a reproach).
+class _HiddenNote extends StatelessWidget {
+  const _HiddenNote(this.text, {this.onTap});
+
+  final String text;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.all(14),
+        child: Row(
+          spacing: 10,
+          children: [
+            Icon(Icons.lock_outline, size: 18, color: theme.colorScheme.onSurfaceVariant),
+            Expanded(child: Text(text, style: theme.textTheme.bodySmall)),
+            if (onTap != null) Icon(Icons.chevron_right, size: 18, color: theme.colorScheme.onSurfaceVariant),
+          ],
+        ),
       ),
     );
   }
