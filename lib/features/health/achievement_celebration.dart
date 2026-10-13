@@ -61,6 +61,33 @@ class _CelebrationState extends State<_Celebration> with TickerProviderStateMixi
     parent: _pop,
     curve: const Interval(0.45, 0.9, curve: Curves.easeOut),
   );
+  late final _shine = CurvedAnimation(
+    parent: _pop,
+    curve: const Interval(0.45, 0.85, curve: Curves.easeInOut),
+  );
+  late final _xp = CurvedAnimation(
+    parent: _pop,
+    curve: const Interval(0.6, 1, curve: Curves.easeOutBack),
+  );
+
+  /// How bright the shine is: rarer badges sparkle more.
+  static double _shineStrength(String tier) => switch (tier) {
+    'common' => 0.35,
+    'uncommon' => 0.45,
+    'rare' => 0.6,
+    'epic' => 0.75,
+    _ => 0.9,
+  };
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // «Remove animations» on the phone: show the final picture at once.
+    if (MediaQuery.disableAnimationsOf(context)) {
+      _pop.value = 1;
+      _spin.stop();
+    }
+  }
 
   @override
   void dispose() {
@@ -143,7 +170,32 @@ class _CelebrationState extends State<_Celebration> with TickerProviderStateMixi
                       ),
                       ScaleTransition(
                         scale: _badgeScale,
-                        child: BadgeIcon(achievement: a, unlocked: true, size: 112, pulse: true),
+                        child: Stack(
+                          children: [
+                            BadgeIcon(achievement: a, unlocked: true, size: 112, pulse: true),
+                            // A glint sweeps across the medal once it has landed.
+                            Positioned.fill(
+                              child: ClipOval(
+                                child: AnimatedBuilder(
+                                  animation: _shine,
+                                  builder: (context, _) => DecoratedBox(
+                                    decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        begin: Alignment(-1.6 + 3.2 * _shine.value, -1),
+                                        end: Alignment(-0.6 + 3.2 * _shine.value, 1),
+                                        colors: [
+                                          Colors.white.withValues(alpha: 0),
+                                          Colors.white.withValues(alpha: _shineStrength(a.tier)),
+                                          Colors.white.withValues(alpha: 0),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -164,7 +216,14 @@ class _CelebrationState extends State<_Celebration> with TickerProviderStateMixi
                         style: theme.textTheme.bodyLarge,
                       ),
                       const SizedBox(height: 12),
-                      RewardPill('+${a.xp} XP'),
+                      // «+XP» rises into place.
+                      FadeTransition(
+                        opacity: _xp,
+                        child: SlideTransition(
+                          position: Tween(begin: const Offset(0, 0.8), end: Offset.zero).animate(_xp),
+                          child: RewardPill('+${a.xp} XP'),
+                        ),
+                      ),
                       const SizedBox(height: 8),
                       FilledButton(onPressed: () => Navigator.pop(context), child: Text(l.achCelebrateOk)),
                     ],
