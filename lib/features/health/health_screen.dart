@@ -103,7 +103,8 @@ class _SectionPicker extends StatelessWidget {
                           borderRadius: BorderRadius.circular(16),
                           child: InkWell(
                             borderRadius: BorderRadius.circular(16),
-                            onTap: () => controller.animateTo(i),
+                            onTap: () => controller.index =
+                                i, // jump straight there: animateTo would scroll through the tabs in between
                             child: Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                               child: Column(

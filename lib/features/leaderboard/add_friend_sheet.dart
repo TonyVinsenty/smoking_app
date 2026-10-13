@@ -119,7 +119,7 @@ class _AddFriendSheetState extends ConsumerState<_AddFriendSheet> {
               textCapitalization: TextCapitalization.characters,
               autocorrect: false,
               enableSuggestions: false,
-              maxLength: 9,
+              inputFormatters: [_CodeFormatter()],
               onChanged: _onChanged,
               style: theme.textTheme.titleLarge?.copyWith(letterSpacing: 2, fontFeatures: tabular),
               decoration: InputDecoration(
@@ -156,6 +156,19 @@ class _AddFriendSheetState extends ConsumerState<_AddFriendSheet> {
           ],
         ),
       ),
+    );
+  }
+}
+
+/// Keeps the field as "K7M4-Q2XP" while typing: capitals and digits only, the dash appears with the 5th character.
+class _CodeFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    final code = normalizeCode(newValue.text);
+    final text = formatCode(code.length > 8 ? code.substring(0, 8) : code, partial: true);
+    return TextEditingValue(
+      text: text,
+      selection: TextSelection.collapsed(offset: text.length),
     );
   }
 }

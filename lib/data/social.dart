@@ -157,8 +157,9 @@ final friendProfileProvider = StreamProvider.family<SocialProfile?, String>(
   retry: (tries, _) => tries < 12 ? Duration(seconds: min(30, 1 << tries)) : null,
 );
 
-/// "K7M4Q2XP" → "K7M4-Q2XP".
-String formatCode(String code) => code.length == 8 ? '${code.substring(0, 4)}-${code.substring(4)}' : code;
+/// "K7M4Q2XP" → "K7M4-Q2XP"; with [partial], also an unfinished "K7M4Q" → "K7M4-Q".
+String formatCode(String code, {bool partial = false}) =>
+    code.length == 8 || (partial && code.length > 4) ? '${code.substring(0, 4)}-${code.substring(4)}' : code;
 
 /// Whatever the user typed or pasted → "K7M4Q2XP".
 String normalizeCode(String input) => input.toUpperCase().replaceAll(RegExp('[^A-Z0-9]'), '');

@@ -1556,15 +1556,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get socialMyCode => 'Мой код друга';
 
   @override
-  String get socialShare => 'Поделиться';
+  String get socialCopy => 'Скопировать';
 
   @override
-  String socialShareText(String code) {
-    return 'Давайте поддерживать друг друга в Zero! Мой код друга: $code';
-  }
-
-  @override
-  String get socialCodeCopied => 'Код скопирован';
+  String get socialCodeCopied => 'Код скопирован в буфер обмена';
 
   @override
   String get socialAddFriendShort => 'Друг';

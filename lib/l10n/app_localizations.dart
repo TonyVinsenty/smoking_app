@@ -1899,22 +1899,16 @@ abstract class AppLocalizations {
   /// **'Мой код друга'**
   String get socialMyCode;
 
-  /// No description provided for @socialShare.
+  /// No description provided for @socialCopy.
   ///
   /// In ru, this message translates to:
-  /// **'Поделиться'**
-  String get socialShare;
-
-  /// No description provided for @socialShareText.
-  ///
-  /// In ru, this message translates to:
-  /// **'Давайте поддерживать друг друга в Zero! Мой код друга: {code}'**
-  String socialShareText(String code);
+  /// **'Скопировать'**
+  String get socialCopy;
 
   /// No description provided for @socialCodeCopied.
   ///
   /// In ru, this message translates to:
-  /// **'Код скопирован'**
+  /// **'Код скопирован в буфер обмена'**
   String get socialCodeCopied;
 
   /// No description provided for @socialAddFriendShort.

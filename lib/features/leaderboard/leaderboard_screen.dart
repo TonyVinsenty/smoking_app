@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:share_plus/share_plus.dart';
 
 import '../../app/theme.dart';
 import '../../app/widgets/cards.dart';
@@ -279,6 +278,11 @@ class _CodeCard extends StatelessWidget {
     final l = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final pretty = formatCode(code);
+    void copy() {
+      Clipboard.setData(ClipboardData(text: pretty));
+      showToast(context, l.socialCodeCopied, icon: Icons.copy);
+    }
+
     return AppCard(
       padding: const EdgeInsets.fromLTRB(16, 12, 12, 12),
       child: Row(
@@ -287,10 +291,7 @@ class _CodeCard extends StatelessWidget {
           Expanded(
             child: InkWell(
               borderRadius: BorderRadius.circular(8),
-              onTap: () {
-                Clipboard.setData(ClipboardData(text: pretty));
-                showToast(context, l.socialCodeCopied, icon: Icons.copy);
-              },
+              onTap: copy,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -307,10 +308,7 @@ class _CodeCard extends StatelessWidget {
               ),
             ),
           ),
-          FilledButton(
-            onPressed: () => SharePlus.instance.share(ShareParams(text: l.socialShareText(pretty))),
-            child: Text(l.socialShare),
-          ),
+          FilledButton.icon(onPressed: copy, icon: const Icon(Icons.copy, size: 18), label: Text(l.socialCopy)),
         ],
       ),
     );
