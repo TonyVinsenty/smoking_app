@@ -90,18 +90,16 @@ class HomeScreen extends ConsumerWidget {
         // Room below the last card so it can scroll clear of the SOS button.
         padding: EdgeInsets.fromLTRB(16, MediaQuery.paddingOf(context).top + kToolbarHeight + 8, 16, sosClearance),
         children: [
-          if (current != null) ...[
-            _TimerCard(attempt: current, now: now, milestones: content.milestones),
-            const SizedBox(height: 12),
-            _SavingsCard(products: productsOf(products, current.id), attempt: current, now: now),
-          ] else
-            const _NoAttemptCard(),
-          const SizedBox(height: 12),
-          _CravingCard(stats: CravingStats(cravings)),
-          const SizedBox(height: 12),
-          _LevelCard(content: content, xp: xp),
-          const SizedBox(height: 12),
-          _QuoteCard(quotes: content.quotes, startIndex: quoteOfDay),
+          for (final (i, card) in [
+            if (current != null) ...[
+              _TimerCard(attempt: current, now: now, milestones: content.milestones),
+              _SavingsCard(products: productsOf(products, current.id), attempt: current, now: now),
+            ] else
+              const _NoAttemptCard(),
+            _CravingCard(stats: CravingStats(cravings)),
+            _LevelCard(content: content, xp: xp),
+            _QuoteCard(quotes: content.quotes, startIndex: quoteOfDay),
+          ].indexed) ...[if (i > 0) const SizedBox(height: 12), StaggerIn(screen: 'home', index: i, child: card)],
         ],
       ),
     );

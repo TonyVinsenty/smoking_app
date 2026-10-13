@@ -93,8 +93,20 @@ class _KnowledgeScreenState extends ConsumerState<KnowledgeScreen> {
                 open: expanded.contains(c),
                 onTap: () => ref.read(expandedSectionsProvider('knowledge').notifier).toggle(c),
               ),
-              for (final a in articles)
-                if (a.category == c && expanded.contains(c)) _ArticleCard(article: a, isRead: read.contains(a.id)),
+              // The topic opens and closes smoothly instead of jumping.
+              AnimatedSize(
+                duration: motion(context, const Duration(milliseconds: 260)),
+                curve: Curves.easeOutCubic,
+                alignment: Alignment.topCenter,
+                child: expanded.contains(c)
+                    ? Column(
+                        children: [
+                          for (final a in articles)
+                            if (a.category == c) _ArticleCard(article: a, isRead: read.contains(a.id)),
+                        ],
+                      )
+                    : const SizedBox(width: double.infinity),
+              ),
             ]
           else
             for (final a in shown) _ArticleCard(article: a, isRead: read.contains(a.id)),

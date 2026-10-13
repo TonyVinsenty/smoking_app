@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../app/widgets/motion.dart';
 import '../../app/widgets/cards.dart';
 import '../../app/widgets/metric_text.dart';
 import '../../content/content.dart';
@@ -18,7 +19,14 @@ class FactsTab extends ConsumerWidget {
     return ListView(
       padding: healthTabPadding,
       children: [
-        for (final f in facts) ...[_FactCard(fact: f), const SizedBox(height: 12)],
+        for (final (i, f) in facts.indexed) ...[
+          StaggerIn(
+            screen: 'facts',
+            index: i,
+            child: _FactCard(fact: f),
+          ),
+          const SizedBox(height: 12),
+        ],
         const SizedBox(height: 12),
         const HealthDisclaimer(),
       ],

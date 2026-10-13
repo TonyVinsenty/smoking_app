@@ -161,10 +161,20 @@ class _AchievementsList extends ConsumerWidget {
                       mainAxisExtent: tileHeight,
                     ),
                     itemCount: items.length,
-                    itemBuilder: (context, i) => _BadgeTile(
-                      achievement: items[i],
-                      unlocked: firstUnlock[items[i].id],
-                      current: progress?[items[i].conditionType],
+                    // Badges of a group that opens arrive in a quick wave, the later ones a bit later.
+                    itemBuilder: (context, i) => TweenAnimationBuilder<double>(
+                      tween: Tween(begin: 0, end: 1),
+                      duration: motion(context, Duration(milliseconds: 220 + 30 * (i < 12 ? i : 12))),
+                      curve: Curves.easeOutCubic,
+                      builder: (context, v, child) => Opacity(
+                        opacity: v,
+                        child: Transform.scale(scale: 0.85 + 0.15 * v, child: child),
+                      ),
+                      child: _BadgeTile(
+                        achievement: items[i],
+                        unlocked: firstUnlock[items[i].id],
+                        current: progress?[items[i].conditionType],
+                      ),
                     ),
                   ),
                 ),

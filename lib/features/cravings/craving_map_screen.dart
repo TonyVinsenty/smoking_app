@@ -235,12 +235,12 @@ class _Columns extends StatelessWidget {
             ],
           );
         }
-        return _bars(theme, height, max);
+        return _bars(context, theme, height, max);
       },
     );
   }
 
-  Widget _bars(ThemeData theme, double height, int max) {
+  Widget _bars(BuildContext context, ThemeData theme, double height, int max) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
@@ -264,9 +264,12 @@ class _Columns extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(2),
                               ),
                             )
-                          : SizedBox(
-                              height: height * count.total / max,
-                              width: double.infinity,
+                          // Columns grow up from the bottom.
+                          : TweenAnimationBuilder<double>(
+                              tween: Tween(begin: 0, end: height * count.total / max),
+                              duration: motion(context, const Duration(milliseconds: 700)),
+                              curve: Curves.easeOutCubic,
+                              builder: (context, h, child) => SizedBox(height: h, width: double.infinity, child: child),
                               child: _SplitBar(count: count, vertical: true),
                             ),
                     ),
@@ -314,9 +317,12 @@ class _Row extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 4),
-          FractionallySizedBox(
-            alignment: Alignment.centerLeft,
-            widthFactor: count.total / max,
+          TweenAnimationBuilder<double>(
+            tween: Tween(begin: 0, end: count.total / max),
+            duration: motion(context, const Duration(milliseconds: 700)),
+            curve: Curves.easeOutCubic,
+            builder: (context, w, child) =>
+                FractionallySizedBox(alignment: Alignment.centerLeft, widthFactor: w, child: child),
             child: SizedBox(height: 12, child: _SplitBar(count: count, vertical: false)),
           ),
         ],

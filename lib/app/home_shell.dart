@@ -124,7 +124,11 @@ class _HomeShellState extends ConsumerState<HomeShell> with SingleTickerProvider
         },
         child: FadeTransition(
           opacity: Tween(begin: 0.35, end: 1.0).animate(CurvedAnimation(parent: _tabFade, curve: Curves.easeOut)),
-          child: IndexedStack(index: _index, children: _screens),
+          // Hidden tabs keep their state but pause their animations (and start them when shown).
+          child: IndexedStack(
+            index: _index,
+            children: [for (final (i, s) in _screens.indexed) TickerMode(enabled: i == _index, child: s)],
+          ),
         ),
       ),
       floatingActionButton: SosFab(

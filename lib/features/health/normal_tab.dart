@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../app/widgets/motion.dart';
 import '../../app/widgets/cards.dart';
 import '../../content/content.dart';
 import '../../data/providers.dart';
@@ -36,7 +37,14 @@ class NormalTab extends ConsumerWidget {
         const SizedBox(height: 16),
         if (active.isNotEmpty) ...[
           heading(l.normalNow),
-          for (final s in active) ...[_SymptomCard(symptom: s, active: true), const SizedBox(height: 12)],
+          for (final (i, s) in active.indexed) ...[
+            StaggerIn(
+              screen: 'normal',
+              index: i,
+              child: _SymptomCard(symptom: s, active: true),
+            ),
+            const SizedBox(height: 12),
+          ],
         ],
         if (past.isNotEmpty) ...[
           heading(l.normalPast),
