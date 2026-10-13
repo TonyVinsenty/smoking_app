@@ -1,0 +1,304 @@
+<title>Boosty: примерка</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=Roboto:wght@400;500&display=swap">
+<style>
+/* Layout: one column review sheet — mock Boosty profile on top, variant pickers, then copy-ready texts */
+:root {
+  --bg: #F3FAF8; --surface: #FFFFFF; --fg: #12302C; --muted: #4F6B66; --line: #D5E9E4;
+  --accent: #1E8A7C; --accent-ink: #FFFFFF; --warm: #F4B77E; --mark: #FCE4C6; --mark-ink: #6B3D10;
+  --display: "Manrope", "Segoe UI", system-ui, sans-serif;
+  --body: "Roboto", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0C1715; --surface: #13231F; --fg: #E3F4EF; --muted: #9DBAB3; --line: #24403A;
+  --accent: #5CCBB8; --accent-ink: #062521; --warm: #F4B77E; --mark: #4A3218; --mark-ink: #FCE4C6; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0C1715; --surface: #13231F; --fg: #E3F4EF; --muted: #9DBAB3; --line: #24403A;
+  --accent: #5CCBB8; --accent-ink: #062521; --warm: #F4B77E; --mark: #4A3218; --mark-ink: #FCE4C6; color-scheme: dark }
+body { background: var(--bg); color: var(--fg); font: 16px/1.55 var(--body); }
+.wrap { max-width: 1040px; margin: 0 auto; padding-inline: 16px; padding-block: 28px 64px; display: grid; gap: 40px; }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; line-height: 1.2; }
+h1 { font-size: 30px; font-weight: 800; }
+h2 { font-size: 22px; font-weight: 800; }
+h3 { font-size: 17px; font-weight: 700; }
+p { margin: 0; }
+.lead { color: var(--muted); max-width: 64ch; margin-top: 8px; }
+.eyebrow { font: 700 12px var(--display); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+section { display: grid; gap: 16px; }
+mark { background: var(--mark); color: var(--mark-ink); border-radius: 4px; padding: 0 3px; }
+
+/* Mock profile */
+.mock { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; }
+.cover svg { display: block; width: 100%; height: auto; }
+.head { display: flex; gap: 18px; align-items: flex-end; padding: 0 24px; margin-top: -48px; flex-wrap: wrap; }
+.ava { width: 112px; height: 112px; border-radius: 50%; overflow: hidden; border: 4px solid var(--surface); flex: none; background: var(--surface); }
+.ava svg { display: block; width: 100%; height: 100%; }
+.who { padding-bottom: 6px; min-width: 0; }
+.who h2 { font-size: 24px; }
+.who p { color: var(--muted); }
+.cols { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 24px; padding: 24px; }
+.panel { border: 1px solid var(--line); border-radius: 14px; padding: 18px; display: grid; gap: 10px; align-content: start; }
+.tiers { display: grid; gap: 12px; align-content: start; }
+.tier { border: 1px solid var(--line); border-radius: 14px; padding: 16px; display: grid; gap: 8px; }
+.tier .price { font: 800 22px var(--display); font-variant-numeric: tabular-nums; }
+.tier .price small { font-size: 14px; font-weight: 500; color: var(--muted); }
+.tier ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; font-size: 15px; }
+.tier .btn { justify-self: start; }
+.btn { font: 700 14px var(--display); background: var(--accent); color: var(--accent-ink); border: 0; border-radius: 10px; padding: 9px 14px; cursor: pointer; }
+.btn.ghost { background: transparent; color: var(--accent); border: 1px solid var(--line); }
+.btn:focus-visible, .chip:focus-visible { outline: 3px solid var(--warm); outline-offset: 2px; }
+.post h3 { font-size: 19px; }
+.post .txt { font-size: 15px; }
+.post-meta { font-size: 13px; color: var(--muted); }
+.note { font-size: 14px; color: var(--muted); }
+@media (max-width: 760px) { .cols { grid-template-columns: minmax(0, 1fr); padding: 16px; } .head { padding: 0 16px; margin-top: -36px; } .ava { width: 88px; height: 88px; } }
+
+/* Variant pickers */
+.pick { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+.chip { all: unset; box-sizing: border-box; cursor: pointer; border: 2px solid var(--line); border-radius: 14px; padding: 10px; display: grid; gap: 8px; background: var(--surface); }
+.chip[aria-pressed="true"] { border-color: var(--accent); }
+.chip svg { display: block; width: 100%; height: auto; border-radius: 8px; }
+.chip b { font-family: var(--display); }
+.chip span { font-size: 14px; color: var(--muted); }
+.ava-pick { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+.ava-pick svg { border-radius: 50%; max-width: 132px; justify-self: center; }
+.sizes { display: flex; gap: 18px; align-items: end; flex-wrap: wrap; }
+.sizes figure { margin: 0; display: grid; gap: 4px; justify-items: center; font-size: 13px; color: var(--muted); }
+.sizes svg { border-radius: 50%; display: block; }
+
+/* Copy-ready texts */
+.block { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px; display: grid; gap: 12px; }
+.block-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.txt { white-space: pre-line; max-width: 68ch; overflow-wrap: anywhere; }
+.count { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.qs { margin: 0; padding-left: 20px; display: grid; gap: 8px; max-width: 70ch; }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Zero · Zuno · страница поддержки</div>
+    <h1>Boosty: примерка</h1>
+    <p class="lead">Так примерно будет выглядеть ваша страница boosty.to/tony_vinsenty. Ниже можно переключить обложку и аватар, а все тексты — скопировать кнопкой. Места, где нужны ваши слова, <mark>выделены</mark>.</p>
+  </header>
+
+  <section aria-label="Макет страницы">
+    <div class="mock">
+      <div class="cover" id="mockCover"></div>
+      <div class="head">
+        <div class="ava" id="mockAva"></div>
+        <div class="who">
+          <h2>Tony Vinsenty</h2>
+          <p id="mockTagline"></p>
+        </div>
+      </div>
+      <div class="cols">
+        <div style="display:grid;gap:20px;align-content:start;min-width:0">
+          <div class="panel">
+            <div class="eyebrow">О себе</div>
+            <div class="txt" data-src="about"></div>
+          </div>
+          <article class="panel post">
+            <div class="post-meta">Открытая запись · видна всем</div>
+            <h3 data-src="postTitle"></h3>
+            <div class="txt" data-src="post"></div>
+          </article>
+        </div>
+        <div class="tiers" id="mockTiers"></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Обложка</h2>
+    <p class="lead" style="margin:0">Размер 1920 × 480. Самое важное — солнце и тропа — стоит в середине: на телефоне Boosty обрезает края.</p>
+    <div class="pick" id="coverPick"></div>
+  </section>
+
+  <section>
+    <h2>Аватар</h2>
+    <p class="lead" style="margin:0">Размер 512 × 512, Boosty показывает его кругом. Справа — как он выглядит совсем маленьким, в комментариях и списках.</p>
+    <div class="pick ava-pick" id="avaPick"></div>
+    <div class="sizes" id="avaSizes"></div>
+  </section>
+
+  <section>
+    <h2>Тексты</h2>
+    <div id="blocks" style="display:grid;gap:14px"></div>
+  </section>
+
+  <section>
+    <h2>Что решить вам</h2>
+    <ol class="qs">
+      <li>Какая обложка и какой аватар нравятся (или что поменять).</li>
+      <li>Суммы уровней: 100 / 300 / 700 ₽ — оставить так?</li>
+      <li>Голосование за функции — только у «Соавтора» (как сейчас) или уже с «Тестировщика»?</li>
+      <li>Пара слов о себе для выделенных мест: имя, почему взялись за Zero. Можно без этого — тексты работают и так.</li>
+      <li>Цель для разовых донатов: «Zero в App Store» (взнос Apple — 99 $ в год) — ставим?</li>
+    </ol>
+    <p class="note">После выбора сохраню картинки в PNG нужного размера, чтобы их можно было загрузить на Boosty.</p>
+  </section>
+</div>
+
+<script>
+// ---------- Texts (single source for the mock and the copy blocks) ----------
+const T = {
+  tagline: 'Бесплатные приложения Zero и Zuno. Без премиума — навсегда.',
+  about:
+`Делаю простые и добрые приложения для телефона. Они бесплатные, работают без регистрации, а ваши данные остаются на вашем телефоне.
+
+Zero помогает бросить курить: сигареты, стики, вейп. Показывает, сколько вы уже не курите и сколько денег сэкономили, как восстанавливается организм, и помогает пережить момент, когда очень хочется закурить. Без упрёков.
+
+Zuno — простой учёт доходов и расходов, без аккаунтов и лишних экранов.
+
+Платных функций не будет никогда: всё, что есть в приложениях, доступно каждому. Если они вам помогают и хочется сказать спасибо — здесь можно поддержать работу над ними.`,
+  tiers: [
+    { name: 'Спасибо', price: 100, desc: 'Простая поддержка, без обязательств.', perks: [
+      'Ваше имя или ник в разделе «Спасибо» в Zero и Zuno',
+      'Закулисные заметки: как идёт работа, что получилось и что нет'] },
+    { name: 'Тестировщик', price: 300, desc: 'Для тех, кому интересно смотреть новое первым.', perks: [
+      'Всё из уровня «Спасибо»',
+      'Новые сборки для Android раньше всех, до магазинов',
+      'К каждой сборке — пост: что поменялось и что проверить',
+      'Ваши отзывы о сборках читаю в первую очередь'] },
+    { name: 'Соавтор', price: 700, desc: 'Для тех, кто хочет влиять на то, что появится дальше.', perks: [
+      'Всё из уровня «Тестировщик»',
+      'Голосование: какую функцию делать следующей',
+      'Имя в «Спасибо» в отдельном блоке «Соавторы»',
+      'Раз в месяц — открытый план: что сделано и что дальше'] },
+  ],
+  tierNote: 'Подписка ничего не открывает в приложениях — там всё бесплатно для всех. Это способ сказать спасибо.',
+  postTitle: 'Привет! Что здесь будет',
+  post:
+`Я делаю два приложения: Zero и Zuno. [Пара слов о себе: как вас зовут и почему взялись за Zero.]
+
+Zero помогает бросить курить — сигареты, стики для нагревания, вейп. На главном экране видно, сколько вы уже не курите, сколько сэкономили и сколько сигарет не выкурили. Есть этапы восстановления здоровья (с источниками), уровни и значки за прогресс и кнопка «Хочу курить» — она помогает пережить тягу здесь и сейчас. Если случился срыв, приложение не ругает: это часть пути, а не конец.
+
+Zuno — простой учёт денег: доходы, расходы, понятная картина за месяц. Без аккаунтов.
+
+Почему бесплатно
+Бросить курить или навести порядок в деньгах должен иметь возможность каждый, а не только тот, кто готов платить. Поэтому в приложениях нет и не будет премиума и платных функций. Ваши данные хранятся только на вашем телефоне.
+
+Зачем тогда Boosty
+Работа над приложениями занимает много времени, а выпуск в магазинах стоит денег: Google Play берёт разовый взнос 25 $, Apple — 99 $ каждый год. Подписка помогает выпускать новые версии быстрее.
+
+Что получают подписчики
+«Спасибо» (100 ₽) — имя в разделе «Спасибо» в приложениях и закулисные заметки.
+«Тестировщик» (300 ₽) — плюс новые сборки для Android раньше всех.
+«Соавтор» (700 ₽) — плюс голосование за следующие функции.
+
+Что дальше
+[Ближайшие планы: например, выпуск Zero в Google Play и что появится в следующей версии.]
+
+Спасибо, что заглянули. Даже если вы просто пользуетесь приложениями и рассказываете о них друзьям — это уже очень много.`,
+  goal:
+`Zero в App Store
+Чтобы выпустить Zero для iPhone в App Store, Apple берёт взнос 99 $ каждый год. Если наберётся эта сумма — Zero появится в App Store, и его можно будет поставить без сложной установки.`,
+};
+
+// ---------- Drawing in the style of the Zero launcher icon 9a ----------
+const PAL = {
+  day:   { sky: ['#EEFCF8', '#CBF2E8'], glow: '#FCE4C6', glowOp: 1,   hills: ['#93DACD', '#36A897', '#17695F'], path: '#FFF5E6', sun: '#F4B77E', ink: '#11524B' },
+  night: { sky: ['#0A1413', '#12342F'], glow: '#F4B77E', glowOp: .35, hills: ['#1D5A52', '#15463F', '#0E3430'], path: '#A9E9DB', sun: '#F4B77E', ink: '#E3F4EF' },
+};
+let uid = 0;
+function hill(w, h, base, amp, waves, phase) {
+  let d = `M0 ${h}`;
+  for (let x = 0; x <= w; x += w / 96) d += ` L${x.toFixed(1)} ${(base + amp * Math.sin(phase + x / w * Math.PI * 2 * waves)).toFixed(1)}`;
+  return d + ` L${w} ${h} Z`;
+}
+// winding path: narrow on the second hill, wide at the bottom edge
+function trail(cx, top, bottom, halfBottom, bend) {
+  const L = [], R = [];
+  for (let i = 0; i <= 40; i++) {
+    const t = i / 40, y = top + t * (bottom - top);
+    const half = 3 + Math.pow(t, 1.5) * halfBottom;
+    const c = cx + bend * Math.sin(t * Math.PI * 1.15) * (0.25 + t);
+    L.push(`${(c - half).toFixed(1)} ${y.toFixed(1)}`); R.unshift(`${(c + half).toFixed(1)} ${y.toFixed(1)}`);
+  }
+  return 'M' + L.concat(R).join(' L') + ' Z';
+}
+function scene(o) {
+  const p = PAL[o.mode], id = 's' + (++uid), { w, h } = o;
+  return `<defs><linearGradient id="${id}k" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${p.sky[0]}"/><stop offset="1" stop-color="${p.sky[1]}"/></linearGradient>
+    <radialGradient id="${id}g"><stop offset="0" stop-color="${p.glow}" stop-opacity="${p.glowOp}"/><stop offset=".45" stop-color="${p.glow}" stop-opacity="${p.glowOp * .55}"/><stop offset="1" stop-color="${p.glow}" stop-opacity="0"/></radialGradient></defs>
+    <rect width="${w}" height="${h}" fill="url(#${id}k)"/>
+    <circle cx="${o.sx}" cy="${o.sy}" r="${o.sr * 3.1}" fill="url(#${id}g)"/>
+    <circle cx="${o.sx}" cy="${o.sy}" r="${o.sr}" fill="${p.sun}"/>
+    <path d="${hill(w, h, o.h1, o.a, o.waves, .6)}" fill="${p.hills[0]}"/>
+    <path d="${hill(w, h, o.h2, o.a * .9, o.waves * .8, 2.3)}" fill="${p.hills[1]}"/>
+    <path d="${hill(w, h, o.h3, o.a * .8, o.waves * 1.2, 4.1)}" fill="${p.hills[2]}"/>
+    <path d="${trail(o.sx, o.h2 - 4, h + 2, o.trailW, o.bend)}" fill="${p.path}"${o.mode === 'night' ? ' opacity=".6"' : ''}/>`;
+}
+const svg = (w, h, inner, label) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" role="img" aria-label="${label}">${inner}</svg>`;
+
+const COVERS = [
+  { key: 'day', name: 'Тропа к солнцу', note: 'Светлая, как значок Zero', draw: () =>
+    svg(1920, 480, scene({ mode: 'day', w: 1920, h: 480, sx: 960, sy: 228, sr: 66, h1: 318, h2: 372, h3: 440, a: 16, waves: 2.2, trailW: 230, bend: -40 }), 'Обложка: тропа к солнцу') },
+  { key: 'night', name: 'Вечер', note: 'Тёмная, как ночной значок', draw: () =>
+    svg(1920, 480, scene({ mode: 'night', w: 1920, h: 480, sx: 960, sy: 236, sr: 62, h1: 318, h2: 372, h3: 440, a: 16, waves: 2.2, trailW: 230, bend: -40 }), 'Обложка: вечер') },
+  { key: 'text', name: 'С подписью', note: 'Светлая, слева от солнца — слова', draw: () =>
+    svg(1920, 480, scene({ mode: 'day', w: 1920, h: 480, sx: 1180, sy: 228, sr: 66, h1: 318, h2: 372, h3: 440, a: 16, waves: 2.2, trailW: 230, bend: -40 }) +
+      `<text x="1060" y="196" text-anchor="end" font-family="Manrope, sans-serif" font-weight="800" font-size="64" fill="${PAL.day.ink}">Zero · Zuno</text>
+       <text x="1060" y="248" text-anchor="end" font-family="Manrope, sans-serif" font-weight="600" font-size="30" fill="${PAL.day.ink}">Бесплатные приложения для людей</text>`, 'Обложка с подписью') },
+];
+const AVAS = [
+  { key: 'day', name: 'Тропа', note: 'Как значок Zero', draw: () =>
+    svg(512, 512, scene({ mode: 'day', w: 512, h: 512, sx: 256, sy: 200, sr: 82, h1: 300, h2: 350, h3: 430, a: 14, waves: .9, trailW: 120, bend: -18 }), 'Аватар: тропа') },
+  { key: 'night', name: 'Вечер', note: 'Тёмный вариант', draw: () =>
+    svg(512, 512, scene({ mode: 'night', w: 512, h: 512, sx: 256, sy: 206, sr: 78, h1: 300, h2: 350, h3: 430, a: 14, waves: .9, trailW: 120, bend: -18 }), 'Аватар: вечер') },
+  { key: 'badge', name: 'Значок', note: 'Круглое окно на мятном фоне', draw: () => {
+    const id = 'b' + (++uid);
+    return svg(512, 512, `<defs><linearGradient id="${id}k" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#CFF3EA"/><stop offset="1" stop-color="#9FE2D3"/></linearGradient><clipPath id="${id}c"><circle cx="256" cy="256" r="176"/></clipPath></defs>
+      <rect width="512" height="512" fill="url(#${id}k)"/><circle cx="256" cy="256" r="176" fill="#F7FDFB"/>
+      <g clip-path="url(#${id}c)"><circle cx="256" cy="236" r="78" fill="#F4B77E"/><path d="${hill(512, 512, 318, 10, 1, 1.2)}" fill="#17695F"/>
+      <path d="${trail(256, 320, 440, 70, -14)}" fill="#FFF4E2"/></g>`, 'Аватар: значок');
+  } },
+];
+
+// ---------- Render ----------
+const $ = (s) => document.querySelector(s);
+let coverKey = 'day', avaKey = 'day';
+try { coverKey = localStorage.getItem('boosty.cover') || coverKey; avaKey = localStorage.getItem('boosty.ava') || avaKey; } catch (e) {}
+
+function renderPickers() {
+  $('#coverPick').innerHTML = COVERS.map(c => `<button class="chip" id="cv-${c.key}" aria-pressed="${c.key === coverKey}" data-cover="${c.key}">${c.draw()}<b>${c.name}</b><span>${c.note}</span></button>`).join('');
+  $('#avaPick').innerHTML = AVAS.map(a => `<button class="chip" id="av-${a.key}" aria-pressed="${a.key === avaKey}" data-ava="${a.key}">${a.draw()}<b>${a.name}</b><span>${a.note}</span></button>`).join('');
+  const a = AVAS.find(x => x.key === avaKey) || AVAS[0];
+  $('#avaSizes').innerHTML = [96, 48, 28].map(s => `<figure><div style="width:${s}px;height:${s}px">${a.draw().replace('<svg ', `<svg width="${s}" height="${s}" `)}</div>${s} px</figure>`).join('');
+  $('#mockCover').innerHTML = (COVERS.find(x => x.key === coverKey) || COVERS[0]).draw();
+  $('#mockAva').innerHTML = a.draw();
+}
+document.addEventListener('click', (e) => {
+  const c = e.target.closest('[data-cover]'), a = e.target.closest('[data-ava]');
+  if (c) { coverKey = c.dataset.cover; try { localStorage.setItem('boosty.cover', coverKey); } catch (_) {} renderPickers(); }
+  if (a) { avaKey = a.dataset.ava; try { localStorage.setItem('boosty.ava', avaKey); } catch (_) {} renderPickers(); }
+});
+
+function fmt(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/\[([^\]]+)\]/g, '<mark>[$1]</mark>'); }
+$('#mockTagline').textContent = T.tagline;
+document.querySelectorAll('[data-src]').forEach(el => { el.innerHTML = fmt(T[el.dataset.src]); });
+const tierText = (t) => `${t.name} — ${t.price} ₽ в месяц\n${t.desc}\n${t.perks.map(p => '• ' + p).join('\n')}`;
+$('#mockTiers').innerHTML = T.tiers.map(t => `<div class="tier"><h3>${t.name}</h3><div class="price">${t.price} ₽ <small>в месяц</small></div>
+  <p class="note">${t.desc}</p><ul>${t.perks.map(p => `<li>${p}</li>`).join('')}</ul><button class="btn" type="button" tabindex="-1">Подписаться</button></div>`).join('') +
+  `<p class="note">${T.tierNote}</p>`;
+
+const BLOCKS = [
+  ['Короткая подпись под именем', T.tagline],
+  ['Описание «О себе»', T.about],
+  ...T.tiers.map(t => [`Уровень «${t.name}»`, tierText(t)]),
+  ['Пояснение под уровнями', T.tierNote],
+  ['Первый пост (открыт для всех)', T.postTitle + '\n\n' + T.post],
+  ['Цель для разовых донатов (по желанию)', T.goal],
+];
+$('#blocks').innerHTML = BLOCKS.map(([name, text], i) => `<div class="block"><div class="block-top"><h3>${name}</h3>
+  <div style="display:flex;gap:10px;align-items:center"><span class="count">${text.length} знаков</span><button class="btn ghost" type="button" id="copy-${i}" data-copy="${i}">Копировать</button></div></div>
+  <div class="txt" id="txt-${i}">${fmt(text)}</div></div>`).join('');
+document.addEventListener('click', async (e) => {
+  const b = e.target.closest('[data-copy]'); if (!b) return;
+  const text = BLOCKS[+b.dataset.copy][1];
+  try { await navigator.clipboard.writeText(text); b.textContent = 'Скопировано'; }
+  catch (_) { const r = document.createRange(); r.selectNodeContents($('#txt-' + b.dataset.copy)); getSelection().removeAllRanges(); getSelection().addRange(r); b.textContent = 'Выделено — нажмите Ctrl+C'; }
+  setTimeout(() => { b.textContent = 'Копировать'; }, 2000);
+});
+renderPickers();
+</script>
