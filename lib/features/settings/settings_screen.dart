@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../app/widgets/cards.dart';
@@ -139,6 +140,7 @@ class SettingsScreen extends ConsumerWidget {
               ),
             ],
           ),
+          const _Version(),
         ],
       ),
     );
@@ -270,6 +272,27 @@ class _Group extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+/// «Версия 0.1.0 (сборка 6)» at the very bottom of the settings.
+class _Version extends StatelessWidget {
+  const _Version();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return FutureBuilder<PackageInfo>(
+      future: PackageInfo.fromPlatform(),
+      builder: (context, info) => Padding(
+        padding: const EdgeInsets.only(top: 24),
+        child: Text(
+          info.hasData ? AppLocalizations.of(context).settingsVersion(info.data!.version, info.data!.buildNumber) : '',
+          textAlign: TextAlign.center,
+          style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+        ),
+      ),
     );
   }
 }

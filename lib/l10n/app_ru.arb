@@ -311,6 +311,8 @@
   "settingsAbout": "О приложении",
   "settingsDeveloper": "Информация о разработчике",
   "settingsDeveloperHint": "boosty.to/tony_vinsenty",
+  "settingsVersion": "Версия {version} (сборка {build})",
+  "@settingsVersion": {"placeholders": {"version": {"type": "String"}, "build": {"type": "String"}}},
   "settingsData": "Мои данные",
   "settingsHabits": "Мои привычки",
   "settingsHabitsHint": "Что и сколько вы курили, цены. По ним считается экономия текущей попытки",

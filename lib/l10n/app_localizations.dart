@@ -1456,6 +1456,12 @@ abstract class AppLocalizations {
   /// **'boosty.to/tony_vinsenty'**
   String get settingsDeveloperHint;
 
+  /// No description provided for @settingsVersion.
+  ///
+  /// In ru, this message translates to:
+  /// **'Версия {version} (сборка {build})'**
+  String settingsVersion(String version, String build);
+
   /// No description provided for @settingsData.
   ///
   /// In ru, this message translates to:

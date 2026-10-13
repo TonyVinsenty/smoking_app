@@ -1220,6 +1220,11 @@ class AppLocalizationsRu extends AppLocalizations {
   String get settingsDeveloperHint => 'boosty.to/tony_vinsenty';
 
   @override
+  String settingsVersion(String version, String build) {
+    return 'Версия $version (сборка $build)';
+  }
+
+  @override
   String get settingsData => 'Мои данные';
 
   @override
