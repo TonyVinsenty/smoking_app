@@ -1211,6 +1211,15 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
+  String get settingsAbout => 'О приложении';
+
+  @override
+  String get settingsDeveloper => 'Информация о разработчике';
+
+  @override
+  String get settingsDeveloperHint => 'boosty.to/tony_vinsenty';
+
+  @override
   String get settingsData => 'Мои данные';
 
   @override

@@ -1438,6 +1438,24 @@ abstract class AppLocalizations {
   /// **'{count, plural, one{{count} награда} few{{count} награды} many{{count} наград} other{{count} награды}}'**
   String historyBadges(int count);
 
+  /// No description provided for @settingsAbout.
+  ///
+  /// In ru, this message translates to:
+  /// **'О приложении'**
+  String get settingsAbout;
+
+  /// No description provided for @settingsDeveloper.
+  ///
+  /// In ru, this message translates to:
+  /// **'Информация о разработчике'**
+  String get settingsDeveloper;
+
+  /// No description provided for @settingsDeveloperHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'boosty.to/tony_vinsenty'**
+  String get settingsDeveloperHint;
+
   /// No description provided for @settingsData.
   ///
   /// In ru, this message translates to:

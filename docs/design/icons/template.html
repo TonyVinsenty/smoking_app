@@ -1,0 +1,255 @@
+<title>Иконка Zero</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=Golos+Text:wght@400;500;600&display=swap');
+:root {
+  --bg: #F2F6F5; --surface: #FFFFFF; --surface-2: #E8F1EF; --text: #15211F; --muted: #566864; --line: #D7E3E0;
+  --accent: #1B7D70; --accent-soft: #DCF2EC; --chip-text: #0F5249; --shadow: rgba(16, 40, 36, .08);
+  /* fixed demo colours (wallpapers and neighbour icons look the same in both page themes) */
+  --wl-a: #F3F5F8; --wl-b: #D8E1EA; --wl-c: #EDE7DC; --wl-label: #1E2933;
+  --wd-a: #26314A; --wd-b: #10141F; --wd-c: #1D2B33; --wd-label: #F1F4F8;
+  --wt-a: #E8EEF0; --wt-b: #CCDADF; --th-bg: #D2E3EA; --th-fg: #21485A;
+  --ios-dark-tile: #1E2228; --icon-shadow: rgba(0, 0, 0, .14);
+  --ph-1: #4F86E8; --ph-2: #F0B93E; --ph-3: #3FB37F; --ph-4: #8A96A6; --ph-5: #E46F7E; --ph-6: #2E4A7D; --ph-7: #F08A4B;
+  --ph-glyph: #FFFFFF;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0E1513; --surface: #16201E; --surface-2: #1C2926; --text: #E5EEEB; --muted: #9AAEA9; --line: #273532;
+    --accent: #7DDBC9; --accent-soft: #1D3833; --chip-text: #BDF5EA; --shadow: rgba(0, 0, 0, .3);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0E1513; --surface: #16201E; --surface-2: #1C2926; --text: #E5EEEB; --muted: #9AAEA9; --line: #273532;
+  --accent: #7DDBC9; --accent-soft: #1D3833; --chip-text: #BDF5EA; --shadow: rgba(0, 0, 0, .3);
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--text);
+  font: 16px/1.55 'Golos Text', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3, .code { font-family: Manrope, 'Golos Text', system-ui, sans-serif; letter-spacing: -.01em; }
+.wrap { max-width: 1080px; margin: 0 auto; padding: 40px 16px 64px; }
+h1 { font-size: clamp(28px, 5vw, 40px); line-height: 1.15; margin: 0 0 12px; font-weight: 800; }
+.lead { color: var(--muted); max-width: 720px; margin: 0 0 28px; font-size: 17px; }
+h2 { font-size: 26px; margin: 0; font-weight: 800; line-height: 1.2; }
+h3 { font-size: 15px; margin: 28px 0 12px; font-weight: 700; color: var(--muted); }
+p { margin: 0 0 12px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 24px; padding: 24px; margin: 0 0 24px; box-shadow: 0 1px 2px var(--shadow); }
+.changes { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); gap: 16px; margin: 0; padding: 0; list-style: none; }
+.changes li { background: var(--surface-2); border-radius: 16px; padding: 14px 16px; }
+.changes b { display: block; margin-bottom: 2px; }
+.nav { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 28px; }
+.chip { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px 6px 6px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); color: var(--text); text-decoration: none; font-weight: 500; }
+.chip .ico { --s: 28px; }
+.vhead { display: flex; align-items: center; gap: 14px; margin-bottom: 12px; flex-wrap: wrap; }
+.code { display: inline-grid; place-items: center; min-width: 52px; height: 40px; padding: 0 10px; border-radius: 12px; background: var(--accent-soft); color: var(--chip-text); font-weight: 800; font-size: 20px; }
+.vsub { color: var(--muted); font-size: 15px; }
+.desc { max-width: 720px; }
+.was-note { color: var(--muted); font-size: 15px; max-width: 720px; }
+.hero { display: flex; flex-wrap: wrap; gap: 28px; align-items: center; margin-top: 20px; }
+.hero .big { --s: 240px; }
+.side { display: flex; flex-direction: column; gap: 22px; }
+.row { display: flex; flex-wrap: wrap; gap: 18px; align-items: flex-end; }
+.cap { display: flex; flex-direction: column; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); text-align: center; margin: 0; }
+.old { display: flex; gap: 14px; align-items: center; padding: 12px 14px; border-radius: 16px; background: var(--surface-2); }
+.old .ico { --s: 56px; opacity: .9; }
+.old span { font-size: 14px; color: var(--muted); }
+.arrow { color: var(--muted); }
+
+/* icon shapes */
+.ico { width: var(--s); height: var(--s); flex: none; overflow: hidden; display: block; }
+.ico svg { display: block; width: 100%; height: 100%; }
+.ios { border-radius: 22.4%; }
+.m-circle { border-radius: 50%; }
+.m-round { border-radius: 24%; }
+.m-drop { border-radius: 50% 50% 15% 50%; }
+.masks { display: flex; flex-wrap: wrap; gap: 22px; }
+.masks .ico { --s: 88px; }
+.masks .cap { width: 104px; }
+
+/* home-screen mocks */
+.mocks { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); gap: 18px; }
+.mock { margin: 0; }
+.screen { border-radius: 26px; padding: 22px 14px 18px; display: grid; grid-template-columns: repeat(4, 1fr); row-gap: 16px; }
+.w-light { background: radial-gradient(120% 90% at 15% 0%, var(--wl-a), transparent 60%), linear-gradient(160deg, var(--wl-b), var(--wl-c)); color: var(--wl-label); }
+.w-dark { background: radial-gradient(120% 90% at 85% 0%, var(--wd-a), transparent 65%), linear-gradient(200deg, var(--wd-c), var(--wd-b)); color: var(--wd-label); }
+.w-themed { background: linear-gradient(170deg, var(--wt-a), var(--wt-b)); color: var(--wl-label); }
+.app { display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 0; }
+.app .ico { --s: 54px; box-shadow: 0 1px 3px var(--icon-shadow); }
+.app span { font-size: 11.5px; line-height: 1.2; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.app.ours span { font-weight: 600; }
+.mock figcaption { font-size: 14px; color: var(--muted); margin-top: 8px; }
+.ph { display: grid; place-items: center; }
+.ph svg { width: 56%; height: 56%; }
+.themed-ico { background: var(--th-bg); color: var(--th-fg); }
+
+/* comparison */
+.compare { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 18px; }
+.compare .screen { grid-template-columns: repeat(4, 1fr); }
+.compare .app .ico { --s: 48px; }
+.compare .app span { font-size: 13px; font-weight: 600; font-family: Manrope, system-ui, sans-serif; }
+
+.choose .codes { display: flex; flex-wrap: wrap; gap: 10px; margin: 16px 0; }
+.choose .codes .chip { padding: 6px 16px 6px 6px; font-family: Manrope, system-ui, sans-serif; font-weight: 800; font-size: 18px; }
+.choose .codes .chip .ico { --s: 36px; }
+.hint { color: var(--muted); }
+a { color: var(--accent); }
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+  .chip { transition: border-color .2s; }
+  .chip:hover { border-color: var(--accent); }
+}
+@media (max-width: 480px) {
+  .card { padding: 18px 16px; border-radius: 20px; }
+  .screen { padding: 18px 8px 14px; }
+  .app .ico { --s: 50px; }
+}
+</style>
+
+<div class="wrap">
+  <h1>Иконка Zero: четыре доработанных варианта</h1>
+  <p class="lead">Вы выбрали два образа — «Чистый вдох» и «Тропу к солнцу». Для каждого здесь по два варианта: один бережно повторяет черновик, второй — смелее и проще. Ниже каждый вариант показан крупно, в маленьких размерах, в разных формах значков на Android и среди других приложений на экране.</p>
+
+  <section class="card">
+    <h2 style="font-size:20px;margin-bottom:14px">Что изменилось по сравнению с черновиками</h2>
+    <ul class="changes">
+      <li><b>Ровно по центру</b>Рисунок стоит точно посередине и с запасом от краёв — на Android его не обрежет ни одна форма значка.</li>
+      <li><b>Видно даже в мелком размере</b>Линии одной толщины, простые формы, никаких тонких деталей, которые пропадают на маленьком значке.</li>
+      <li><b>Настоящая тропинка</b>Широкая у вас под ногами, сужается вдаль и уходит за холм — к солнцу. Раньше она была похожа на кляксу.</li>
+      <li><b>Тёмный режим и одноцветная версия</b>У каждого варианта есть вид для тёмного режима iPhone и одноцветный вид для Android, когда в настройках включены «тематические значки».</li>
+    </ul>
+  </section>
+
+  <nav class="nav" id="nav" aria-label="Варианты"></nav>
+  <div id="variants"></div>
+
+  <section class="card" id="compare">
+    <h2 style="font-size:22px">Все четыре рядом</h2>
+    <p class="hint" style="margin-top:6px">Так значки выглядят в обычном размере на экране телефона — на светлых и на тёмных обоях.</p>
+    <div class="compare" id="compare-grid"></div>
+  </section>
+
+  <section class="card choose">
+    <h2 style="font-size:22px">Что выбрать</h2>
+    <p style="margin-top:8px">Напишите в ответ код одного варианта:</p>
+    <div class="codes" id="codes"></div>
+    <p class="hint">Если хочется что-то поправить — тоже напишите, например: «9Б, но солнце чуть меньше» или «7А, только линии потолще». Иконка в приложении пока не поменялась: сначала вы выбираете, потом я ставлю её в новую сборку.</p>
+  </section>
+</div>
+
+<script>
+/*ICON_DATA*/
+const OLD = {
+  wind: '<defs><linearGradient id="wind-bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2AA191"/><stop offset="1" stop-color="#0F5E56"/></linearGradient></defs><rect width="1024" height="1024" fill="url(#wind-bg)"/><g fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M262 420 H590 C 664 420 700 364 672 318 C 648 280 588 288 584 334" stroke="#F4FFFC" stroke-width="58"/><path d="M222 530 H730 C 806 530 842 600 806 650 C 776 692 712 682 704 632" stroke="#BDF5EA" stroke-width="58"/><path d="M322 640 H560" stroke="#8FE3D3" stroke-width="58"/></g>',
+  path: '<defs><linearGradient id="path-bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E9FAF5"/><stop offset=".6" stop-color="#C8F0E6"/></linearGradient></defs><rect width="1024" height="1024" fill="url(#path-bg)"/><circle cx="512" cy="430" r="118" fill="#F4B77E"/><path d="M0 560 C 180 480 330 500 512 560 C 690 618 850 520 1024 520 V1024 H0 Z" fill="#2E9E8F"/><path d="M0 700 C 210 620 380 650 560 700 C 740 750 880 680 1024 660 V1024 H0 Z" fill="#17695F"/><path d="M512 560 C 560 600 580 640 520 690 C 450 750 420 800 470 880 L 600 880 C 560 810 580 760 640 700 C 700 640 640 590 540 560 Z" fill="#F6EFDF"/>',
+};
+const VARIANTS = [
+  { id: '7a', code: '7А', name: 'Чистый вдох', sub: 'аккуратная версия', old: 'wind',
+    desc: 'Те же три струйки воздуха, что на кнопке SOS, только аккуратнее: линии одной толщины, завитки — ровные круги, рисунок стоит точно по центру. Смысл прежний: «дышится легче».',
+    was: 'В черновике линии были разной длины без общего ритма, завитки — разного размера, а весь рисунок был сдвинут вправо.' },
+  { id: '7b', code: '7Б', name: 'Чистый вдох', sub: 'смелая версия', old: 'wind',
+    desc: 'Одна крупная струйка воздуха закручивается в мягкий круг — он же «ноль» из названия Zero. Под ней короткая вторая струйка. Деталей меньше, линии толще — значок узнаётся даже самым маленьким.',
+    was: 'Вместо трёх тонких линий — две крупные. Самый простой и заметный из четырёх вариантов.' },
+  { id: '9a', code: '9А', name: 'Тропа к солнцу', sub: 'пейзаж', old: 'path',
+    desc: 'Настоящий пейзаж: три ряда холмов, тропинка начинается широкой у вас под ногами, сужается и уходит за холм — туда, где встаёт солнце. Вокруг солнца мягкое тёплое свечение.',
+    was: 'В черновике дорожка была похожа на кляксу и обрывалась, а солнце и холмы терялись на маленьком значке.' },
+  { id: '9b', code: '9Б', name: 'Тропа к солнцу', sub: 'значок-окошко', old: 'path',
+    desc: 'Тот же сюжет, собранный в круглое «окошко»: большое солнце встаёт над холмом, по холму вьётся тропинка. Крупные простые формы — картинка хорошо читается и на маленьком значке.',
+    was: 'Вместо пейзажа во весь значок — аккуратная эмблема в круге. Проще и строже, чем 9А.' },
+];
+const NAMES = ['Почта', 'Фото', 'Карты', 'Погода', 'Музыка', 'Заметки', 'Календарь'];
+const GLYPHS = [
+  '<rect x="18" y="28" width="64" height="46" rx="8" fill="none" stroke="currentColor" stroke-width="9"/><path d="M22 34 L50 54 L78 34" fill="none" stroke="currentColor" stroke-width="9" stroke-linejoin="round"/>',
+  '<circle cx="50" cy="50" r="30" fill="none" stroke="currentColor" stroke-width="9"/><circle cx="50" cy="50" r="11" fill="currentColor"/>',
+  '<path d="M50 14 C 30 14 22 30 22 42 C 22 62 50 86 50 86 C 50 86 78 62 78 42 C 78 30 70 14 50 14 Z" fill="currentColor"/>',
+  '<circle cx="40" cy="42" r="18" fill="currentColor"/><rect x="26" y="52" width="56" height="26" rx="13" fill="currentColor"/>',
+  '<path d="M38 70 V26 L76 18 V62" fill="none" stroke="currentColor" stroke-width="9" stroke-linejoin="round"/><circle cx="30" cy="70" r="12" fill="currentColor"/><circle cx="68" cy="62" r="12" fill="currentColor"/>',
+  '<rect x="24" y="16" width="52" height="68" rx="8" fill="none" stroke="currentColor" stroke-width="9"/><path d="M36 38 H64 M36 54 H58" stroke="currentColor" stroke-width="8" stroke-linecap="round"/>',
+  '<rect x="18" y="24" width="64" height="58" rx="10" fill="none" stroke="currentColor" stroke-width="9"/><path d="M18 42 H82" stroke="currentColor" stroke-width="9"/><circle cx="38" cy="60" r="6" fill="currentColor"/><circle cx="62" cy="60" r="6" fill="currentColor"/>',
+];
+
+let uid = 0;
+function svg(inner, label) {
+  const k = ++uid;
+  inner = inner.replace(/id="([^"]+)"/g, `id="$1-${k}"`).replace(/url\(#([^)]+)\)/g, `url(#$1-${k})`);
+  const aria = label ? `role="img" aria-label="${label}"` : 'aria-hidden="true"';
+  return `<svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" ${aria}>${inner}</svg>`;
+}
+const icon = (inner, cls, size, label) => `<div class="ico ${cls}"${size ? ` style="--s:${size}px"` : ''}>${svg(inner, label)}</div>`;
+const iosIcon = (v, size, dark) => icon(dark ? ICONS[v.id].dark : ICONS[v.id].light, 'ios', size, `Вариант ${v.code}`);
+const monoInner = (v) => ICONS[v.id].mono.replace(/#000/g, 'currentColor');
+
+function squircleStyle(size, n = 4.6) {
+  const pts = [];
+  for (let i = 0; i < 96; i++) {
+    const t = (i / 96) * 2 * Math.PI, c = Math.cos(t), s = Math.sin(t);
+    const x = Math.sign(c) * Math.pow(Math.abs(c), 2 / n), y = Math.sign(s) * Math.pow(Math.abs(s), 2 / n);
+    pts.push(`${((x + 1) * size / 2).toFixed(1)} ${((y + 1) * size / 2).toFixed(1)}`);
+  }
+  return `clip-path:path('M${pts.join(' L')}Z');-webkit-clip-path:path('M${pts.join(' L')}Z')`;
+}
+
+function placeholder(i, mode) {
+  const colour = `var(--ph-${i + 1})`;
+  const g = `<svg viewBox="0 0 100 100" aria-hidden="true">${GLYPHS[i]}</svg>`;
+  if (mode === 'themed') return `<div class="ico m-circle ph themed-ico">${g}</div>`;
+  if (mode === 'dark') return `<div class="ico ios ph" style="background:var(--ios-dark-tile);color:${colour}">${g}</div>`;
+  return `<div class="ico ios ph" style="background:${colour};color:var(--ph-glyph)">${g}</div>`;
+}
+
+function ours(v, mode) {
+  if (mode === 'themed') return `<div class="ico m-circle themed-ico">${svg(monoInner(v), 'Zero, одноцветный значок')}</div>`;
+  return iosIcon(v, 0, mode === 'dark');
+}
+
+function homeScreen(v, wall, mode) {
+  const apps = [];
+  let p = 0;
+  for (let slot = 0; slot < 8; slot++) {
+    if (slot === 5) apps.push(`<div class="app ours">${ours(v, mode)}<span>Zero</span></div>`);
+    else { apps.push(`<div class="app">${placeholder(p, mode)}<span>${NAMES[p]}</span></div>`); p++; }
+  }
+  return `<div class="screen ${wall}">${apps.join('')}</div>`;
+}
+
+function variantCard(v) {
+  const sizes = [64, 48, 32].map((s) => `<figure class="cap">${iosIcon(v, s)}<span>${s} пикс.</span></figure>`).join('');
+  const masks = [
+    ['m-circle', 'Круг', ''],
+    ['', 'Мягкий квадрат', squircleStyle(88)],
+    ['m-round', 'Скруглённый квадрат', ''],
+    ['m-drop', 'Капля', ''],
+  ].map(([cls, label, style]) => `<figure class="cap"><div class="ico ${cls}" style="--s:88px;${style}">${svg(ICONS[v.id].light, label)}</div><span>${label}</span></figure>`).join('');
+  const mocks = [
+    ['w-light', 'normal', 'Светлые обои'],
+    ['w-dark', 'normal', 'Тёмные обои'],
+    ['w-themed', 'themed', 'Android: одноцветные значки (если включены в настройках, цвет берётся из обоев)'],
+    ['w-dark', 'dark', 'iPhone: тёмный режим'],
+  ].map(([wall, mode, cap]) => `<figure class="mock">${homeScreen(v, wall, mode)}<figcaption>${cap}</figcaption></figure>`).join('');
+  return `<section class="card" id="v-${v.id}">
+    <div class="vhead"><span class="code">${v.code}</span><div><h2>${v.name}</h2><div class="vsub">${v.sub}</div></div></div>
+    <p class="desc">${v.desc}</p>
+    <div class="hero">
+      <div class="big">${iosIcon(v, 0)}</div>
+      <div class="side">
+        <div><div class="row">${sizes}</div></div>
+        <div class="old">${icon(OLD[v.old], 'ios', 0, 'Черновик')}<span class="arrow" aria-hidden="true">→</span>${iosIcon(v, 56)}<span>Слева — черновик,<br>справа — новый вариант</span></div>
+      </div>
+    </div>
+    <p class="was-note" style="margin-top:16px">${v.was}</p>
+    <h3>Разные формы значков на Android</h3>
+    <div class="masks">${masks}</div>
+    <h3>На экране телефона</h3>
+    <div class="mocks">${mocks}</div>
+  </section>`;
+}
+
+document.getElementById('nav').innerHTML = VARIANTS.map((v) => `<a class="chip" href="#v-${v.id}">${iosIcon(v, 28)}${v.code} · ${v.name}, ${v.sub}</a>`).join('');
+document.getElementById('variants').innerHTML = VARIANTS.map(variantCard).join('');
+document.getElementById('compare-grid').innerHTML = [['w-light', 'normal', 'Светлые обои'], ['w-dark', 'normal', 'Тёмные обои']]
+  .map(([wall, mode, cap]) => `<figure class="mock"><div class="screen ${wall}">${VARIANTS.map((v) => `<div class="app ours">${iosIcon(v, 48)}<span>${v.code}</span></div>`).join('')}</div><figcaption>${cap}</figcaption></figure>`).join('');
+document.getElementById('codes').innerHTML = VARIANTS.map((v) => `<span class="chip">${iosIcon(v, 36)}${v.code}</span>`).join('');
+</script>

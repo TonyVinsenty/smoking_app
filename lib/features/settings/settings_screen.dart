@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../app/widgets/cards.dart';
 import '../../app/widgets/sos_fab.dart';
@@ -17,6 +18,9 @@ import '../onboarding/onboarding_screen.dart';
 import '../relapse/history_screen.dart';
 import '../relapse/relapse_screen.dart';
 import '../sos/sos_screen.dart';
+
+/// The developer's page (owner's decision 2026-10-13).
+final _developerPage = Uri.parse('https://boosty.to/tony_vinsenty');
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -109,6 +113,18 @@ class SettingsScreen extends ConsumerWidget {
                     ),
                   ],
                 ),
+              ),
+            ],
+          ),
+          _Group(
+            title: l.settingsAbout,
+            children: [
+              ListTile(
+                leading: const Icon(Icons.person_outline),
+                title: Text(l.settingsDeveloper),
+                subtitle: Text(l.settingsDeveloperHint),
+                trailing: const Icon(Icons.open_in_new),
+                onTap: () => launchUrl(_developerPage, mode: LaunchMode.externalApplication),
               ),
             ],
           ),
