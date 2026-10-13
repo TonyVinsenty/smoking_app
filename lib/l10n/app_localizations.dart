@@ -130,23 +130,11 @@ abstract class AppLocalizations {
   /// **'Настройки'**
   String get tabSettings;
 
-  /// No description provided for @leaderboardTitle.
-  ///
-  /// In ru, this message translates to:
-  /// **'Здесь будет рейтинг с друзьями'**
-  String get leaderboardTitle;
-
   /// No description provided for @leaderboardText.
   ///
   /// In ru, this message translates to:
   /// **'Добавляйте друзей по коду и поддерживайте друг друга. Всё анонимно и только по желанию.'**
   String get leaderboardText;
-
-  /// No description provided for @leaderboardSoon.
-  ///
-  /// In ru, this message translates to:
-  /// **'Появится в одном из следующих обновлений'**
-  String get leaderboardSoon;
 
   /// No description provided for @next.
   ///
@@ -1802,6 +1790,366 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Карта строится по нажатиям SOS и записям «Я закурил(а)». Все данные хранятся только на вашем телефоне.'**
   String get cravingSource;
+
+  /// No description provided for @socialJoinTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Как вас будут видеть друзья?'**
+  String get socialJoinTitle;
+
+  /// No description provided for @socialJoinText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выберите ник — настоящее имя не нужно. Сменить его можно в любой момент.'**
+  String get socialJoinText;
+
+  /// No description provided for @socialJoinMore.
+  ///
+  /// In ru, this message translates to:
+  /// **'Другие варианты'**
+  String get socialJoinMore;
+
+  /// No description provided for @socialJoinButton.
+  ///
+  /// In ru, this message translates to:
+  /// **'Продолжить как «{nick}»'**
+  String socialJoinButton(String nick);
+
+  /// No description provided for @socialNickChangeTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Новый ник'**
+  String get socialNickChangeTitle;
+
+  /// No description provided for @socialOffline.
+  ///
+  /// In ru, this message translates to:
+  /// **'Нет связи с сервером. Проверьте интернет и попробуйте ещё раз.'**
+  String get socialOffline;
+
+  /// No description provided for @socialRetry.
+  ///
+  /// In ru, this message translates to:
+  /// **'Повторить'**
+  String get socialRetry;
+
+  /// No description provided for @metricXp.
+  ///
+  /// In ru, this message translates to:
+  /// **'Опыт'**
+  String get metricXp;
+
+  /// No description provided for @metricBadges.
+  ///
+  /// In ru, this message translates to:
+  /// **'Значки'**
+  String get metricBadges;
+
+  /// No description provided for @metricDays.
+  ///
+  /// In ru, this message translates to:
+  /// **'Дни'**
+  String get metricDays;
+
+  /// No description provided for @metricMoney.
+  ///
+  /// In ru, this message translates to:
+  /// **'Деньги'**
+  String get metricMoney;
+
+  /// No description provided for @valueXp.
+  ///
+  /// In ru, this message translates to:
+  /// **'{xp} XP'**
+  String valueXp(String xp);
+
+  /// No description provided for @valueBadges.
+  ///
+  /// In ru, this message translates to:
+  /// **'{count} зн.'**
+  String valueBadges(int count);
+
+  /// No description provided for @valueDays.
+  ///
+  /// In ru, this message translates to:
+  /// **'{count} дн.'**
+  String valueDays(int count);
+
+  /// No description provided for @socialYou.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вы'**
+  String get socialYou;
+
+  /// No description provided for @socialHidden.
+  ///
+  /// In ru, this message translates to:
+  /// **'{count, plural, one{{count} человек не показывает} few{{count} человека не показывают} many{{count} человек не показывают} other{{count} человека не показывают}} этот показатель — и это нормально'**
+  String socialHidden(int count);
+
+  /// No description provided for @socialMyCode.
+  ///
+  /// In ru, this message translates to:
+  /// **'Мой код друга'**
+  String get socialMyCode;
+
+  /// No description provided for @socialShare.
+  ///
+  /// In ru, this message translates to:
+  /// **'Поделиться'**
+  String get socialShare;
+
+  /// No description provided for @socialShareText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Давайте поддерживать друг друга в Zero! Мой код друга: {code}'**
+  String socialShareText(String code);
+
+  /// No description provided for @socialCodeCopied.
+  ///
+  /// In ru, this message translates to:
+  /// **'Код скопирован'**
+  String get socialCodeCopied;
+
+  /// No description provided for @socialAddFriendShort.
+  ///
+  /// In ru, this message translates to:
+  /// **'Друг'**
+  String get socialAddFriendShort;
+
+  /// No description provided for @socialAddFriendTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Добавить друга'**
+  String get socialAddFriendTitle;
+
+  /// No description provided for @socialAddFriendText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Попросите у друга его код из вкладки «Рейтинг» и введите его здесь.'**
+  String get socialAddFriendText;
+
+  /// No description provided for @socialCodeLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Код друга'**
+  String get socialCodeLabel;
+
+  /// No description provided for @socialPaste.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вставить'**
+  String get socialPaste;
+
+  /// No description provided for @socialAddButton.
+  ///
+  /// In ru, this message translates to:
+  /// **'Добавить'**
+  String get socialAddButton;
+
+  /// No description provided for @socialAddMutual.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вы появитесь и в списке друга. Убрать друга можно долгим нажатием на него в списке.'**
+  String get socialAddMutual;
+
+  /// No description provided for @socialCodeNotFound.
+  ///
+  /// In ru, this message translates to:
+  /// **'Такого кода нет — проверьте буквы и цифры'**
+  String get socialCodeNotFound;
+
+  /// No description provided for @socialCodeSelf.
+  ///
+  /// In ru, this message translates to:
+  /// **'Это ваш собственный код'**
+  String get socialCodeSelf;
+
+  /// No description provided for @socialFriendAdded.
+  ///
+  /// In ru, this message translates to:
+  /// **'{nick} теперь в ваших друзьях'**
+  String socialFriendAdded(String nick);
+
+  /// No description provided for @socialNoFriends.
+  ///
+  /// In ru, this message translates to:
+  /// **'Пока здесь только вы. Поделитесь своим кодом или добавьте друга по его коду.'**
+  String get socialNoFriends;
+
+  /// No description provided for @socialRemoveTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Убрать «{nick}» из друзей?'**
+  String socialRemoveTitle(String nick);
+
+  /// No description provided for @socialRemoveText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вы исчезнете из списков друг друга. Снова добавиться можно по коду.'**
+  String get socialRemoveText;
+
+  /// No description provided for @socialRemove.
+  ///
+  /// In ru, this message translates to:
+  /// **'Убрать'**
+  String get socialRemove;
+
+  /// No description provided for @privacyTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Приватность'**
+  String get privacyTitle;
+
+  /// No description provided for @privacyPreview.
+  ///
+  /// In ru, this message translates to:
+  /// **'Так вас видят друзья'**
+  String get privacyPreview;
+
+  /// No description provided for @privacyOnlyNick.
+  ///
+  /// In ru, this message translates to:
+  /// **'Только ник'**
+  String get privacyOnlyNick;
+
+  /// No description provided for @shareXp.
+  ///
+  /// In ru, this message translates to:
+  /// **'Уровень и опыт (XP)'**
+  String get shareXp;
+
+  /// No description provided for @shareXpHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Опыт никогда не сгорает'**
+  String get shareXpHint;
+
+  /// No description provided for @shareBadges.
+  ///
+  /// In ru, this message translates to:
+  /// **'Значки'**
+  String get shareBadges;
+
+  /// No description provided for @shareBadgesHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сколько достижений получено'**
+  String get shareBadgesHint;
+
+  /// No description provided for @shareDays.
+  ///
+  /// In ru, this message translates to:
+  /// **'Дни без курения'**
+  String get shareDays;
+
+  /// No description provided for @shareDaysHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Текущая попытка'**
+  String get shareDaysHint;
+
+  /// No description provided for @shareMoney.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сэкономленные деньги'**
+  String get shareMoney;
+
+  /// No description provided for @shareMoneyHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'За текущую попытку'**
+  String get shareMoneyHint;
+
+  /// No description provided for @privacyServerNote.
+  ///
+  /// In ru, this message translates to:
+  /// **'На сервере хранятся только ник, код друга, список друзей и отмеченные показатели. Ничего о здоровье и тяге туда не уходит.'**
+  String get privacyServerNote;
+
+  /// No description provided for @privacyNotJoined.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вы ещё не в рейтинге. Эти настройки применятся, когда вы выберете ник на вкладке «Рейтинг».'**
+  String get privacyNotJoined;
+
+  /// No description provided for @privacyNick.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ник'**
+  String get privacyNick;
+
+  /// No description provided for @privacyChangeNick.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сменить'**
+  String get privacyChangeNick;
+
+  /// No description provided for @privacyDeleteTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Удалить аккаунт рейтинга'**
+  String get privacyDeleteTitle;
+
+  /// No description provided for @privacyDeleteText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ник, код и друзья будут стёрты с сервера навсегда. Прогресс в приложении останется, вернуться в рейтинг можно позже.'**
+  String get privacyDeleteText;
+
+  /// No description provided for @privacyDeleteButton.
+  ///
+  /// In ru, this message translates to:
+  /// **'Удалить аккаунт'**
+  String get privacyDeleteButton;
+
+  /// No description provided for @privacyDeleteConfirm.
+  ///
+  /// In ru, this message translates to:
+  /// **'Удалить аккаунт рейтинга?'**
+  String get privacyDeleteConfirm;
+
+  /// No description provided for @privacyDeleted.
+  ///
+  /// In ru, this message translates to:
+  /// **'Аккаунт рейтинга удалён'**
+  String get privacyDeleted;
+
+  /// No description provided for @chipLevel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ур. {level} · {xp} XP'**
+  String chipLevel(int level, String xp);
+
+  /// No description provided for @chipBadges.
+  ///
+  /// In ru, this message translates to:
+  /// **'{count, plural, one{{count} значок} few{{count} значка} other{{count} значков}}'**
+  String chipBadges(int count);
+
+  /// No description provided for @chipDays.
+  ///
+  /// In ru, this message translates to:
+  /// **'{count} дн. без курения'**
+  String chipDays(int count);
+
+  /// No description provided for @chipMoney.
+  ///
+  /// In ru, this message translates to:
+  /// **'{money} сэкономлено'**
+  String chipMoney(String money);
+
+  /// No description provided for @settingsRating.
+  ///
+  /// In ru, this message translates to:
+  /// **'Рейтинг'**
+  String get settingsRating;
+
+  /// No description provided for @settingsPrivacyHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ник, что видят друзья, удаление аккаунта'**
+  String get settingsPrivacyHint;
 }
 
 class _AppLocalizationsDelegate

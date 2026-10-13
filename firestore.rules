@@ -1,0 +1,66 @@
+rules_version = '2';
+
+// Zero: friends leaderboard. Paste into Firebase console → Firestore → Rules → Publish.
+// Who sees what:
+// - a profile (users/{uid}) is visible to its owner and to people in the owner's friends list;
+// - a friends list is visible only to its owner;
+// - codes/{code} can be read only by someone who already knows the code (no listing);
+// - everyone writes only their own data; the one exception is adding yourself to someone's friends list,
+//   allowed only together with that person's friend code.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isNick(v) {
+      return v is string && v.size() > 0 && v.size() <= 40;
+    }
+
+    function optInt(d, key) {
+      return !(key in d) || (d[key] is int && d[key] >= 0 && d[key] < 100000000);
+    }
+
+    function validProfile(d) {
+      return d.keys().hasOnly(['nick', 'code', 'xp', 'badges', 'days', 'money', 'updatedAt'])
+        && isNick(d.nick)
+        && d.code is string && d.code.size() == 8
+        && optInt(d, 'xp') && optInt(d, 'badges') && optInt(d, 'days') && optInt(d, 'money');
+    }
+
+    match /users/{uid} {
+      allow read: if signedIn()
+        && (request.auth.uid == uid
+            || exists(/databases/$(database)/documents/users/$(uid)/friends/$(request.auth.uid)));
+      allow create, update: if signedIn() && request.auth.uid == uid && validProfile(request.resource.data);
+      allow delete: if signedIn() && request.auth.uid == uid;
+
+      match /friends/{fid} {
+        allow read: if signedIn() && request.auth.uid == uid;
+        allow create, update: if signedIn() && fid != uid
+          && request.resource.data.keys().hasOnly(['code', 'at'])
+          && request.resource.data.code is string
+          && (request.auth.uid == uid
+              || (request.auth.uid == fid
+                  && get(/databases/$(database)/documents/codes/$(request.resource.data.code)).data.uid == uid));
+        allow delete: if signedIn() && (request.auth.uid == uid || request.auth.uid == fid);
+      }
+    }
+
+    match /codes/{code} {
+      allow get: if signedIn();
+      allow list: if false;
+      allow create: if signedIn()
+        && code.matches('^[A-Z0-9]{8}$')
+        && request.resource.data.keys().hasOnly(['uid', 'nick'])
+        && request.resource.data.uid == request.auth.uid
+        && isNick(request.resource.data.nick);
+      allow update: if signedIn()
+        && resource.data.uid == request.auth.uid
+        && request.resource.data.keys().hasOnly(['uid', 'nick'])
+        && request.resource.data.uid == resource.data.uid
+        && isNick(request.resource.data.nick);
+      allow delete: if signedIn() && resource.data.uid == request.auth.uid;
+    }
+  }
+}

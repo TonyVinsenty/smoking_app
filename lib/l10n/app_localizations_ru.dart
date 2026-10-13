@@ -28,14 +28,8 @@ class AppLocalizationsRu extends AppLocalizations {
   String get tabSettings => 'Настройки';
 
   @override
-  String get leaderboardTitle => 'Здесь будет рейтинг с друзьями';
-
-  @override
   String get leaderboardText =>
       'Добавляйте друзей по коду и поддерживайте друг друга. Всё анонимно и только по желанию.';
-
-  @override
-  String get leaderboardSoon => 'Появится в одном из следующих обновлений';
 
   @override
   String get next => 'Далее';
@@ -1485,4 +1479,232 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get cravingSource =>
       'Карта строится по нажатиям SOS и записям «Я закурил(а)». Все данные хранятся только на вашем телефоне.';
+
+  @override
+  String get socialJoinTitle => 'Как вас будут видеть друзья?';
+
+  @override
+  String get socialJoinText =>
+      'Выберите ник — настоящее имя не нужно. Сменить его можно в любой момент.';
+
+  @override
+  String get socialJoinMore => 'Другие варианты';
+
+  @override
+  String socialJoinButton(String nick) {
+    return 'Продолжить как «$nick»';
+  }
+
+  @override
+  String get socialNickChangeTitle => 'Новый ник';
+
+  @override
+  String get socialOffline =>
+      'Нет связи с сервером. Проверьте интернет и попробуйте ещё раз.';
+
+  @override
+  String get socialRetry => 'Повторить';
+
+  @override
+  String get metricXp => 'Опыт';
+
+  @override
+  String get metricBadges => 'Значки';
+
+  @override
+  String get metricDays => 'Дни';
+
+  @override
+  String get metricMoney => 'Деньги';
+
+  @override
+  String valueXp(String xp) {
+    return '$xp XP';
+  }
+
+  @override
+  String valueBadges(int count) {
+    return '$count зн.';
+  }
+
+  @override
+  String valueDays(int count) {
+    return '$count дн.';
+  }
+
+  @override
+  String get socialYou => 'Вы';
+
+  @override
+  String socialHidden(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count человека не показывают',
+      many: '$count человек не показывают',
+      few: '$count человека не показывают',
+      one: '$count человек не показывает',
+    );
+    return '$_temp0 этот показатель — и это нормально';
+  }
+
+  @override
+  String get socialMyCode => 'Мой код друга';
+
+  @override
+  String get socialShare => 'Поделиться';
+
+  @override
+  String socialShareText(String code) {
+    return 'Давайте поддерживать друг друга в Zero! Мой код друга: $code';
+  }
+
+  @override
+  String get socialCodeCopied => 'Код скопирован';
+
+  @override
+  String get socialAddFriendShort => 'Друг';
+
+  @override
+  String get socialAddFriendTitle => 'Добавить друга';
+
+  @override
+  String get socialAddFriendText =>
+      'Попросите у друга его код из вкладки «Рейтинг» и введите его здесь.';
+
+  @override
+  String get socialCodeLabel => 'Код друга';
+
+  @override
+  String get socialPaste => 'Вставить';
+
+  @override
+  String get socialAddButton => 'Добавить';
+
+  @override
+  String get socialAddMutual =>
+      'Вы появитесь и в списке друга. Убрать друга можно долгим нажатием на него в списке.';
+
+  @override
+  String get socialCodeNotFound => 'Такого кода нет — проверьте буквы и цифры';
+
+  @override
+  String get socialCodeSelf => 'Это ваш собственный код';
+
+  @override
+  String socialFriendAdded(String nick) {
+    return '$nick теперь в ваших друзьях';
+  }
+
+  @override
+  String get socialNoFriends =>
+      'Пока здесь только вы. Поделитесь своим кодом или добавьте друга по его коду.';
+
+  @override
+  String socialRemoveTitle(String nick) {
+    return 'Убрать «$nick» из друзей?';
+  }
+
+  @override
+  String get socialRemoveText =>
+      'Вы исчезнете из списков друг друга. Снова добавиться можно по коду.';
+
+  @override
+  String get socialRemove => 'Убрать';
+
+  @override
+  String get privacyTitle => 'Приватность';
+
+  @override
+  String get privacyPreview => 'Так вас видят друзья';
+
+  @override
+  String get privacyOnlyNick => 'Только ник';
+
+  @override
+  String get shareXp => 'Уровень и опыт (XP)';
+
+  @override
+  String get shareXpHint => 'Опыт никогда не сгорает';
+
+  @override
+  String get shareBadges => 'Значки';
+
+  @override
+  String get shareBadgesHint => 'Сколько достижений получено';
+
+  @override
+  String get shareDays => 'Дни без курения';
+
+  @override
+  String get shareDaysHint => 'Текущая попытка';
+
+  @override
+  String get shareMoney => 'Сэкономленные деньги';
+
+  @override
+  String get shareMoneyHint => 'За текущую попытку';
+
+  @override
+  String get privacyServerNote =>
+      'На сервере хранятся только ник, код друга, список друзей и отмеченные показатели. Ничего о здоровье и тяге туда не уходит.';
+
+  @override
+  String get privacyNotJoined =>
+      'Вы ещё не в рейтинге. Эти настройки применятся, когда вы выберете ник на вкладке «Рейтинг».';
+
+  @override
+  String get privacyNick => 'Ник';
+
+  @override
+  String get privacyChangeNick => 'Сменить';
+
+  @override
+  String get privacyDeleteTitle => 'Удалить аккаунт рейтинга';
+
+  @override
+  String get privacyDeleteText =>
+      'Ник, код и друзья будут стёрты с сервера навсегда. Прогресс в приложении останется, вернуться в рейтинг можно позже.';
+
+  @override
+  String get privacyDeleteButton => 'Удалить аккаунт';
+
+  @override
+  String get privacyDeleteConfirm => 'Удалить аккаунт рейтинга?';
+
+  @override
+  String get privacyDeleted => 'Аккаунт рейтинга удалён';
+
+  @override
+  String chipLevel(int level, String xp) {
+    return 'Ур. $level · $xp XP';
+  }
+
+  @override
+  String chipBadges(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count значков',
+      few: '$count значка',
+      one: '$count значок',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String chipDays(int count) {
+    return '$count дн. без курения';
+  }
+
+  @override
+  String chipMoney(String money) {
+    return '$money сэкономлено';
+  }
+
+  @override
+  String get settingsRating => 'Рейтинг';
+
+  @override
+  String get settingsPrivacyHint => 'Ник, что видят друзья, удаление аккаунта';
 }

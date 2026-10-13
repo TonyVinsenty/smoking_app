@@ -1,38 +1,268 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:share_plus/share_plus.dart';
 
+import '../../app/theme.dart';
+import '../../app/widgets/cards.dart';
+import '../../app/widgets/choice.dart';
+import '../../app/widgets/sos_fab.dart';
 import '../../app/widgets/tab_page.dart';
+import '../../app/widgets/toast.dart';
+import '../../data/social.dart';
 import '../../l10n/app_localizations.dart';
+import 'add_friend_sheet.dart';
+import 'social_widgets.dart';
 
-/// «Рейтинг»: not built yet (needs the server in phase 3). An honest empty state instead of a blank tab.
-class LeaderboardScreen extends StatelessWidget {
+/// «Рейтинг»: friends added by code, ranked by the chosen stat (XP by default: it never burns, so a relapse
+/// never drops anyone down). Before joining, the user picks a nickname.
+class LeaderboardScreen extends ConsumerWidget {
   const LeaderboardScreen({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context);
+    final auth = ref.watch(authUserProvider);
+    final profile = ref.watch(myProfileProvider);
+    if (auth.isLoading || (auth.value != null && profile.isLoading)) {
+      return const TabPage(body: Center(child: CircularProgressIndicator()));
+    }
+    final me = profile.value;
+    if (me == null) {
+      return TabPage(
+        body: NickPicker(
+          header: Padding(
+            padding: const EdgeInsets.only(bottom: 20),
+            child: Text(l.leaderboardText, style: Theme.of(context).textTheme.bodyMedium),
+          ),
+          buttonText: l.socialJoinButton,
+          onSubmit: (nick) => ref.read(socialServiceProvider).join(nick),
+        ),
+      );
+    }
+    return TabPage(body: _Rating(me: me));
+  }
+}
+
+class _Entry {
+  const _Entry({required this.uid, required this.nick, required this.value, this.me = false});
+
+  final String uid;
+  final String nick;
+  final int value;
+  final bool me;
+}
+
+class _Rating extends ConsumerStatefulWidget {
+  const _Rating({required this.me});
+
+  final SocialProfile me;
+
+  @override
+  ConsumerState<_Rating> createState() => _RatingState();
+}
+
+class _RatingState extends ConsumerState<_Rating> {
+  ShareField _metric = ShareField.xp;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    final me = widget.me;
+    final stats = ref.watch(myStatsProvider);
+    final share = ref.watch(shareSettingsProvider);
+    final ids = ref.watch(friendIdsProvider).value ?? const [];
+    final friends = [for (final id in ids) ?ref.watch(friendProfileProvider(id)).value];
+
+    // Everyone, the user included, takes part only with the stats they chose to show.
+    final entries = <_Entry>[
+      if (stats != null && share.contains(_metric))
+        _Entry(uid: me.uid, nick: me.nick, value: stats.value(_metric), me: true),
+      for (final f in friends)
+        if (f.value(_metric) case final v?) _Entry(uid: f.uid, nick: f.nick, value: v),
+    ]..sort((a, b) => b.value != a.value ? b.value.compareTo(a.value) : a.nick.compareTo(b.nick));
+    final hidden = friends.length + 1 - entries.length;
+
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, sosClearance),
+      children: [
+        Row(
+          children: [
+            Expanded(child: Text(l.tabLeaderboard, style: theme.textTheme.headlineSmall)),
+            FilledButton.tonalIcon(
+              onPressed: () => showAddFriendSheet(context),
+              icon: const Icon(Icons.person_add_alt),
+              label: Text(l.socialAddFriendShort),
+            ),
+          ],
+        ),
+        const SizedBox(height: 14),
+        AppSegments<ShareField>(
+          options: [
+            (ShareField.xp, l.metricXp),
+            (ShareField.badges, l.metricBadges),
+            (ShareField.days, l.metricDays),
+            (ShareField.money, l.metricMoney),
+          ],
+          selected: _metric,
+          onChanged: (m) => setState(() => _metric = m),
+        ),
+        const SizedBox(height: 20),
+        if (entries.isNotEmpty) _Podium(entries: entries.take(3).toList(), metric: _metric, onLongPress: _remove),
+        if (entries.length > 3 || hidden > 0) ...[
+          const SizedBox(height: 16),
+          AppCard(
+            padding: EdgeInsets.zero,
+            child: Column(
+              children: [
+                for (final (i, e) in entries.indexed.skip(3))
+                  _Row(place: i + 1, entry: e, metric: _metric, onLongPress: _remove),
+                if (hidden > 0)
+                  Padding(
+                    padding: const EdgeInsets.all(14),
+                    child: Row(
+                      spacing: 10,
+                      children: [
+                        Icon(Icons.lock_outline, size: 18, color: theme.colorScheme.onSurfaceVariant),
+                        Expanded(child: Text(l.socialHidden(hidden), style: theme.textTheme.bodySmall)),
+                      ],
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ],
+        if (friends.isEmpty) ...[
+          const SizedBox(height: 16),
+          AppCard(
+            tone: CardTone.tip,
+            child: Text(l.socialNoFriends, style: theme.textTheme.bodyMedium),
+          ),
+        ],
+        const SizedBox(height: 16),
+        _CodeCard(code: me.code),
+      ],
+    );
+  }
+
+  Future<void> _remove(_Entry e) async {
+    if (e.me) return;
+    final l = AppLocalizations.of(context);
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l.socialRemoveTitle(e.nick)),
+        content: Text(l.socialRemoveText),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context, false), child: Text(l.cancel)),
+          TextButton(onPressed: () => Navigator.pop(context, true), child: Text(l.socialRemove)),
+        ],
+      ),
+    );
+    if (ok != true) return;
+    try {
+      await ref.read(socialServiceProvider).removeFriend(e.uid).timeout(const Duration(seconds: 20));
+    } catch (_) {
+      if (mounted) showToast(context, l.socialOffline, icon: Icons.cloud_off);
+    }
+  }
+}
+
+/// Top three on steps: second, first, third.
+class _Podium extends StatelessWidget {
+  const _Podium({required this.entries, required this.metric, required this.onLongPress});
+
+  final List<_Entry> entries;
+  final ShareField metric;
+  final ValueChanged<_Entry> onLongPress;
 
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
-    return TabPage(
-      body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(32, 24, 32, 96),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const _Podium(),
-              const SizedBox(height: 28),
-              Text(l.leaderboardTitle, textAlign: TextAlign.center, style: theme.textTheme.titleLarge),
-              const SizedBox(height: 10),
-              Text(
-                l.leaderboardText,
-                textAlign: TextAlign.center,
-                style: theme.textTheme.bodyMedium?.copyWith(color: scheme.onSurfaceVariant),
+    const heights = [100.0, 72.0, 52.0];
+    final blocks = [scheme.primaryContainer, scheme.secondaryContainer, scheme.surfaceContainerHighest];
+    final order = [1, 0, 2].where((i) => i < entries.length);
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      spacing: 10,
+      children: [
+        for (final i in order)
+          Expanded(
+            child: GestureDetector(
+              onLongPress: () => onLongPress(entries[i]),
+              child: Column(
+                spacing: 6,
+                children: [
+                  FriendAvatar(nick: entries[i].nick, size: 52, ring: entries[i].me),
+                  Text(
+                    entries[i].me ? l.socialYou : entries[i].nick,
+                    textAlign: TextAlign.center,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: theme.textTheme.labelLarge,
+                  ),
+                  Text(
+                    shareValueText(l, metric, entries[i].value),
+                    textAlign: TextAlign.center,
+                    style: theme.textTheme.titleSmall?.copyWith(color: scheme.primary, fontFeatures: tabular),
+                  ),
+                  Container(
+                    height: heights[i],
+                    width: double.infinity,
+                    alignment: Alignment.topCenter,
+                    padding: const EdgeInsets.only(top: 8),
+                    decoration: BoxDecoration(
+                      color: blocks[i],
+                      borderRadius: const BorderRadius.vertical(top: Radius.circular(14), bottom: Radius.circular(4)),
+                    ),
+                    child: Text(
+                      '${i + 1}',
+                      style: theme.textTheme.headlineSmall?.copyWith(color: scheme.onPrimaryContainer),
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(height: 16),
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+class _Row extends StatelessWidget {
+  const _Row({required this.place, required this.entry, required this.metric, required this.onLongPress});
+
+  final int place;
+  final _Entry entry;
+  final ShareField metric;
+  final ValueChanged<_Entry> onLongPress;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    return Material(
+      color: entry.me ? theme.colorScheme.primaryContainer.withValues(alpha: 0.35) : Colors.transparent,
+      child: InkWell(
+        onLongPress: () => onLongPress(entry),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+          child: Row(
+            spacing: 12,
+            children: [
+              SizedBox(
+                width: 24,
+                child: Text('$place', textAlign: TextAlign.center, style: theme.textTheme.titleSmall),
+              ),
+              FriendAvatar(nick: entry.nick, size: 36),
+              Expanded(child: Text(entry.me ? l.socialYou : entry.nick, style: theme.textTheme.bodyMedium)),
               Text(
-                l.leaderboardSoon,
-                textAlign: TextAlign.center,
-                style: theme.textTheme.labelMedium?.copyWith(color: scheme.primary),
+                shareValueText(l, metric, entry.value),
+                style: theme.textTheme.titleSmall?.copyWith(color: theme.colorScheme.primary, fontFeatures: tabular),
               ),
             ],
           ),
@@ -42,33 +272,51 @@ class LeaderboardScreen extends StatelessWidget {
   }
 }
 
-/// A small podium with a sprout on the top step.
-class _Podium extends StatelessWidget {
-  const _Podium();
+/// "Мой код друга K7M4-Q2XP": tap the code to copy it, or share it with any messenger.
+class _CodeCard extends StatelessWidget {
+  const _CodeCard({required this.code});
+
+  final String code;
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    Widget step(double height, Color color) => Container(
-      width: 56,
-      height: height,
-      margin: const EdgeInsets.symmetric(horizontal: 5),
-      decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(12)),
-    );
-    return Column(
-      children: [
-        Icon(Icons.spa, size: 44, color: scheme.primary),
-        const SizedBox(height: 6),
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            step(56, scheme.secondaryContainer),
-            step(84, scheme.primaryContainer),
-            step(42, scheme.secondaryContainer),
-          ],
-        ),
-      ],
+    final l = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    final pretty = formatCode(code);
+    return AppCard(
+      padding: const EdgeInsets.fromLTRB(16, 12, 12, 12),
+      child: Row(
+        spacing: 8,
+        children: [
+          Expanded(
+            child: InkWell(
+              borderRadius: BorderRadius.circular(8),
+              onTap: () {
+                Clipboard.setData(ClipboardData(text: pretty));
+                showToast(context, l.socialCodeCopied, icon: Icons.copy);
+              },
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(l.socialMyCode, style: theme.textTheme.labelMedium),
+                  Text(
+                    pretty,
+                    style: theme.textTheme.titleLarge?.copyWith(
+                      color: theme.colorScheme.primary,
+                      letterSpacing: 2,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          FilledButton(
+            onPressed: () => SharePlus.instance.share(ShareParams(text: l.socialShareText(pretty))),
+            child: Text(l.socialShare),
+          ),
+        ],
+      ),
     );
   }
 }

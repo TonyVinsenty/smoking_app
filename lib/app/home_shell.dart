@@ -6,6 +6,7 @@ import 'notifications.dart';
 import 'widgets/bottom_bar.dart';
 import 'widgets/sos_fab.dart';
 import 'widgets/toast.dart';
+import '../data/social.dart';
 import '../data/providers.dart';
 import '../domain/achievements.dart';
 import '../features/health/achievement_celebration.dart';
@@ -116,6 +117,7 @@ class _HomeShellState extends ConsumerState<HomeShell> with SingleTickerProvider
     ref.listen(unlockedAchievementsProvider, (_, _) => _checkAchievements());
     ref.listen(contentProvider, (_, _) => _checkAchievements());
     ref.watch(notificationSchedulerProvider);
+    ref.watch(socialSyncProvider);
     final l = AppLocalizations.of(context);
     return Scaffold(
       body: SosScrollWatcher(

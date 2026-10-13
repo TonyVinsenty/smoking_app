@@ -17,6 +17,7 @@ import '../../app/widgets/tab_page.dart';
 import '../../l10n/app_localizations.dart';
 import '../../domain/stats.dart';
 import '../onboarding/onboarding_screen.dart';
+import 'privacy_screen.dart';
 import '../relapse/history_screen.dart';
 import '../relapse/relapse_screen.dart';
 import '../sos/sos_screen.dart';
@@ -73,6 +74,18 @@ class SettingsScreen extends ConsumerWidget {
                 subtitle: Text(l.sosExerciseName(ref.watch(sosExerciseProvider).name)),
                 trailing: const Icon(Icons.chevron_right),
                 onTap: () => showSosExercisePicker(context, ref),
+              ),
+            ],
+          ),
+          _Group(
+            title: l.settingsRating,
+            children: [
+              ListTile(
+                leading: const Icon(Icons.shield_outlined),
+                title: Text(l.privacyTitle),
+                subtitle: Text(l.settingsPrivacyHint),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => PrivacyScreen.open(context),
               ),
             ],
           ),

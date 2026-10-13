@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,11 +8,13 @@ import 'app/home_shell.dart';
 import 'app/theme.dart';
 import 'data/providers.dart';
 import 'data/settings.dart';
+import 'firebase_options.dart';
 import 'features/onboarding/onboarding_screen.dart';
 import 'l10n/app_localizations.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   final prefs = await SharedPreferences.getInstance();
   await prefs.remove('largeText'); // old in-app option; the app now follows the system font size
   runApp(ProviderScope(overrides: [prefsProvider.overrideWithValue(prefs)], child: const SmokingApp()));
