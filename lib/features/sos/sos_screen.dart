@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 import '../../app/theme.dart';
 import '../../app/widgets/motion.dart';
@@ -72,6 +73,19 @@ IconData _exerciseIcon(SosExercise e) => switch (e) {
 class _SosScreenState extends ConsumerState<SosScreen> {
   bool _askTrigger = true;
   Trigger? _trigger;
+
+  // Keep the screen on while SOS is open, so an exercise is not cut off by the phone dimming.
+  @override
+  void initState() {
+    super.initState();
+    WakelockPlus.enable();
+  }
+
+  @override
+  void dispose() {
+    WakelockPlus.disable();
+    super.dispose();
+  }
 
   Future<void> _resisted() async {
     final attempt = ref.read(currentAttemptProvider).value;
