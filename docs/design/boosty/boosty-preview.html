@@ -110,7 +110,7 @@ mark { background: var(--mark); color: var(--mark-ink); border-radius: 4px; padd
 
   <section>
     <h2>Обложка</h2>
-    <p class="lead" style="margin:0">Размер 1920 × 480. Самое важное — солнце и тропа — стоит в середине: на телефоне Boosty обрезает края.</p>
+    <p class="lead" style="margin:0">Пропорция 8 : 1, как у Boosty (3840 × 480). Солнце и тропа — в середине: на телефоне Boosty показывает только её.</p>
     <div class="pick" id="coverPick"></div>
   </section>
 
@@ -233,13 +233,13 @@ const svg = (w, h, inner, label) => `<svg xmlns="http://www.w3.org/2000/svg" vie
 
 const COVERS = [
   { key: 'day', name: 'Тропа к солнцу', note: 'Светлая, как значок Zero', draw: () =>
-    svg(1920, 480, scene({ mode: 'day', w: 1920, h: 480, sx: 960, sy: 228, sr: 66, h1: 318, h2: 372, h3: 440, a: 16, waves: 2.2, trailW: 230, bend: -40 }), 'Обложка: тропа к солнцу') },
+    svg(1920, 240, scene({ mode: 'day', w: 1920, h: 240, sx: 960, sy: 148, sr: 58, h1: 146, h2: 182, h3: 216, a: 8, waves: 2.2, trailW: 130, bend: -24 }), 'Обложка: восход над тропой') },
   { key: 'night', name: 'Вечер', note: 'Тёмная, как ночной значок', draw: () =>
-    svg(1920, 480, scene({ mode: 'night', w: 1920, h: 480, sx: 960, sy: 236, sr: 62, h1: 318, h2: 372, h3: 440, a: 16, waves: 2.2, trailW: 230, bend: -40 }), 'Обложка: вечер') },
+    svg(1920, 240, scene({ mode: 'night', w: 1920, h: 240, sx: 960, sy: 150, sr: 56, h1: 146, h2: 182, h3: 216, a: 8, waves: 2.2, trailW: 130, bend: -24 }), 'Обложка: вечер') },
   { key: 'text', name: 'С подписью', note: 'Светлая, слева от солнца — слова', draw: () =>
-    svg(1920, 480, scene({ mode: 'day', w: 1920, h: 480, sx: 1180, sy: 228, sr: 66, h1: 318, h2: 372, h3: 440, a: 16, waves: 2.2, trailW: 230, bend: -40 }) +
-      `<text x="1060" y="196" text-anchor="end" font-family="Manrope, sans-serif" font-weight="800" font-size="64" fill="${PAL.day.ink}">Zero · Zuno</text>
-       <text x="1060" y="248" text-anchor="end" font-family="Manrope, sans-serif" font-weight="600" font-size="30" fill="${PAL.day.ink}">Бесплатные приложения для людей</text>`, 'Обложка с подписью') },
+    svg(1920, 240, scene({ mode: 'day', w: 1920, h: 240, sx: 1170, sy: 148, sr: 58, h1: 146, h2: 182, h3: 216, a: 8, waves: 2.2, trailW: 130, bend: -24 }) +
+      `<text x="1070" y="92" text-anchor="end" font-family="Manrope, sans-serif" font-weight="800" font-size="44" fill="${PAL.day.ink}">Zero · Zuno</text>
+       <text x="1070" y="126" text-anchor="end" font-family="Manrope, sans-serif" font-weight="600" font-size="21" fill="${PAL.day.ink}">Бесплатные приложения для людей</text>`, 'Обложка с подписью') },
 ];
 const AVAS = [
   { key: 'day', name: 'Тропа', note: 'Как значок Zero', draw: () =>
@@ -306,6 +306,6 @@ const ex = location.hash.match(/^#export-(\w+)$/);
 if (ex) {
   document.body.innerHTML = (COVERS.find(c => c.key === ex[1]) || COVERS[0]).draw();
   document.body.style.margin = '0';
-  document.querySelector('svg').style.cssText = 'display:block;width:1920px;height:480px';
+  document.querySelector('svg').style.cssText = 'display:block;width:1920px;height:240px';
 }
 </script>
