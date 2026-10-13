@@ -1075,6 +1075,26 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
+  String get settingsAppIcon => 'Значок приложения';
+
+  @override
+  String get settingsAppIconHintAndroid =>
+      'Значок на рабочем столе сменится через несколько секунд. На некоторых телефонах приложение при этом закрывается — просто откройте его снова.';
+
+  @override
+  String get settingsAppIconHintIos =>
+      'iPhone покажет короткое сообщение о том, что значок изменён.';
+
+  @override
+  String appIconOption(int n) {
+    return 'Значок $n из 4';
+  }
+
+  @override
+  String get appIconFailed =>
+      'Не получилось сменить значок. Попробуйте ещё раз.';
+
+  @override
   String get settingsSos => 'SOS';
 
   @override

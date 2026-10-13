@@ -1210,6 +1210,36 @@ abstract class AppLocalizations {
   /// **'{mode, select, system{Системный} light{Светлый} dark{Тёмный} other{}}'**
   String themeModeName(String mode);
 
+  /// No description provided for @settingsAppIcon.
+  ///
+  /// In ru, this message translates to:
+  /// **'Значок приложения'**
+  String get settingsAppIcon;
+
+  /// No description provided for @settingsAppIconHintAndroid.
+  ///
+  /// In ru, this message translates to:
+  /// **'Значок на рабочем столе сменится через несколько секунд. На некоторых телефонах приложение при этом закрывается — просто откройте его снова.'**
+  String get settingsAppIconHintAndroid;
+
+  /// No description provided for @settingsAppIconHintIos.
+  ///
+  /// In ru, this message translates to:
+  /// **'iPhone покажет короткое сообщение о том, что значок изменён.'**
+  String get settingsAppIconHintIos;
+
+  /// No description provided for @appIconOption.
+  ///
+  /// In ru, this message translates to:
+  /// **'Значок {n} из 4'**
+  String appIconOption(int n);
+
+  /// No description provided for @appIconFailed.
+  ///
+  /// In ru, this message translates to:
+  /// **'Не получилось сменить значок. Попробуйте ещё раз.'**
+  String get appIconFailed;
+
   /// No description provided for @settingsSos.
   ///
   /// In ru, this message translates to:

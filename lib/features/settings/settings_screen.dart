@@ -8,6 +8,7 @@ import '../../app/widgets/sos_fab.dart';
 import '../../app/widgets/choice.dart';
 import '../../app/widgets/toast.dart';
 import '../../app/widgets/wheel_time_picker.dart';
+import '../../app/app_icon.dart';
 import '../../app/format.dart';
 import '../../data/database.dart';
 import '../../data/providers.dart';
@@ -115,6 +116,7 @@ class SettingsScreen extends ConsumerWidget {
                   ],
                 ),
               ),
+              const _AppIconPicker(),
             ],
           ),
           _Group(
@@ -291,6 +293,114 @@ class _Version extends StatelessWidget {
           info.hasData ? AppLocalizations.of(context).settingsVersion(info.data!.version, info.data!.buildNumber) : '',
           textAlign: TextAlign.center,
           style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+        ),
+      ),
+    );
+  }
+}
+
+/// «Значок приложения»: four launcher icons to choose from, like in Telegram.
+class _AppIconPicker extends ConsumerWidget {
+  const _AppIconPicker();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    final selected = ref.watch(appIconProvider);
+    final ios = theme.platform == TargetPlatform.iOS;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 12,
+        children: [
+          Row(
+            spacing: 16,
+            children: [
+              Icon(Icons.apps_outlined, color: theme.colorScheme.onSurfaceVariant),
+              Expanded(child: Text(l.settingsAppIcon, style: theme.textTheme.bodyLarge)),
+            ],
+          ),
+          Row(
+            children: [
+              for (final (i, v) in AppIconVariant.values.indexed)
+                Expanded(
+                  child: Center(
+                    child: _AppIconTile(
+                      variant: v,
+                      label: l.appIconOption(i + 1),
+                      selected: v == selected,
+                      onTap: () async {
+                        final messenger = ScaffoldMessenger.of(context);
+                        final ok = await ref.read(appIconProvider.notifier).set(v);
+                        if (!ok) showToastWith(messenger, theme, l.appIconFailed, icon: Icons.error_outline);
+                      },
+                    ),
+                  ),
+                ),
+            ],
+          ),
+          Text(
+            ios ? l.settingsAppIconHintIos : l.settingsAppIconHintAndroid,
+            style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _AppIconTile extends StatelessWidget {
+  const _AppIconTile({required this.variant, required this.label, required this.selected, required this.onTap});
+
+  final AppIconVariant variant;
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return Semantics(
+      button: true,
+      selected: selected,
+      label: label,
+      excludeSemantics: true,
+      child: GestureDetector(
+        onTap: onTap,
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              padding: const EdgeInsets.all(3),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(19),
+                border: Border.all(color: selected ? scheme.primary : Colors.transparent, width: 2.5),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(14),
+                child: Image.asset(variant.preview, width: 60, height: 60),
+              ),
+            ),
+            Positioned(
+              right: -4,
+              bottom: -4,
+              child: AnimatedScale(
+                scale: selected ? 1 : 0,
+                duration: const Duration(milliseconds: 200),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: scheme.primary,
+                    shape: BoxShape.circle,
+                    border: Border.all(color: scheme.surfaceContainerLow, width: 2),
+                  ),
+                  child: Icon(Icons.check, size: 16, color: scheme.onPrimary),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

@@ -57,6 +57,11 @@ jobs:
             exit 1
           fi
           echo "Bundle id check passed: $BUNDLE_ID ($DISPLAY_NAME)"
+          if ! /usr/libexec/PlistBuddy -c "Print :CFBundleIcons:CFBundleAlternateIcons:AppIcon-7a" "$PLIST" >/dev/null 2>&1; then
+            echo "::error::Alternate app icons are missing from Info.plist"
+            exit 1
+          fi
+          echo "Alternate app icons: present"
           VERSION=$(/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" "$PLIST")
           BUILD=$(/usr/libexec/PlistBuddy -c "Print :CFBundleVersion" "$PLIST")
           echo "Version $VERSION (build $BUILD)"
