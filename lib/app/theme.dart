@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart' show CupertinoPageTransitionsBuilder;
 import 'package:flutter/material.dart';
 
 /// Calm, "healthy" teal-green palette.
@@ -133,6 +134,13 @@ ThemeData buildTheme(Brightness brightness) {
     listTileTheme: ListTileThemeData(
       titleAlignment: ListTileTitleAlignment.titleHeight,
       subtitleTextStyle: text.bodyMedium?.copyWith(fontSize: 14.5, color: scheme.onSurfaceVariant),
+    ),
+    // Screens open with a soft fade-and-slide instead of the default zoom.
+    pageTransitionsTheme: const PageTransitionsTheme(
+      builders: {
+        TargetPlatform.android: FadeForwardsPageTransitionsBuilder(),
+        TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+      },
     ),
     navigationBarTheme: NavigationBarThemeData(indicatorColor: scheme.primaryContainer),
     // A soft tinted card instead of the default inverse (white in dark mode) block.

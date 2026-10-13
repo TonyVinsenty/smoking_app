@@ -25,8 +25,17 @@ class HomeShell extends ConsumerStatefulWidget {
   ConsumerState<HomeShell> createState() => _HomeShellState();
 }
 
-class _HomeShellState extends ConsumerState<HomeShell> {
+class _HomeShellState extends ConsumerState<HomeShell> with SingleTickerProviderStateMixin {
   int _index = 0;
+
+  /// A short fade when switching tabs, instead of an abrupt jump.
+  late final _tabFade = AnimationController(vsync: this, duration: const Duration(milliseconds: 220), value: 1);
+
+  @override
+  void dispose() {
+    _tabFade.dispose();
+    super.dispose();
+  }
 
   /// SOS shows its label; it shrinks to a round button while the user scrolls down.
   bool _sosExtended = true;
@@ -113,7 +122,10 @@ class _HomeShellState extends ConsumerState<HomeShell> {
         onExtended: (on) {
           if (on != _sosExtended) setState(() => _sosExtended = on);
         },
-        child: IndexedStack(index: _index, children: _screens),
+        child: FadeTransition(
+          opacity: Tween(begin: 0.35, end: 1.0).animate(CurvedAnimation(parent: _tabFade, curve: Curves.easeOut)),
+          child: IndexedStack(index: _index, children: _screens),
+        ),
       ),
       floatingActionButton: SosFab(
         extended: _sosExtended,
@@ -125,6 +137,7 @@ class _HomeShellState extends ConsumerState<HomeShell> {
         child: EvenBottomBar(
           selectedIndex: _index,
           onSelected: (i) => setState(() {
+            if (i != _index && !MediaQuery.disableAnimationsOf(context)) _tabFade.forward(from: 0);
             _index = i;
             _sosExtended = true;
           }),

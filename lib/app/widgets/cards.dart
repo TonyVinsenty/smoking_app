@@ -85,20 +85,21 @@ class AppCard extends StatelessWidget {
         child: InkWell(borderRadius: shape, onTap: onTap, child: body),
       );
     }
-    return Padding(
-      padding: margin,
+    final card = DecoratedBox(
+      decoration: decoration,
+      position: DecorationPosition.background,
       child: DecoratedBox(
-        decoration: decoration,
-        position: DecorationPosition.background,
-        child: DecoratedBox(
-          decoration: BoxDecoration(borderRadius: shape, border: border),
-          position: DecorationPosition.foreground,
-          child: DefaultTextStyle.merge(
-            style: TextStyle(color: onColor(context, tone)),
-            child: body,
-          ),
+        decoration: BoxDecoration(borderRadius: shape, border: border),
+        position: DecorationPosition.foreground,
+        child: DefaultTextStyle.merge(
+          style: TextStyle(color: onColor(context, tone)),
+          child: body,
         ),
       ),
+    );
+    return Padding(
+      padding: margin,
+      child: onTap == null ? card : Pressable(child: card),
     );
   }
 }
@@ -196,4 +197,35 @@ class IconBubble extends StatelessWidget {
       child: Icon(icon, size: size * 0.55, color: scheme.onSecondaryContainer),
     );
   }
+}
+
+/// Sinks a little under the finger, so it is clear the thing can be tapped.
+class Pressable extends StatefulWidget {
+  const Pressable({super.key, required this.child});
+
+  final Widget child;
+
+  @override
+  State<Pressable> createState() => _PressableState();
+}
+
+class _PressableState extends State<Pressable> {
+  bool _down = false;
+
+  void _set(bool down) {
+    if (down != _down) setState(() => _down = down);
+  }
+
+  @override
+  Widget build(BuildContext context) => Listener(
+    onPointerDown: (_) => _set(true),
+    onPointerUp: (_) => _set(false),
+    onPointerCancel: (_) => _set(false),
+    child: AnimatedScale(
+      scale: _down ? 0.97 : 1,
+      duration: MediaQuery.disableAnimationsOf(context) ? Duration.zero : const Duration(milliseconds: 120),
+      curve: Curves.easeOut,
+      child: widget.child,
+    ),
+  );
 }
