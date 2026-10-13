@@ -301,4 +301,11 @@ document.addEventListener('click', async (e) => {
   setTimeout(() => { b.textContent = 'Копировать'; }, 2000);
 });
 renderPickers();
+// Local export: open with #export-<cover key> in a 1920×480 headless window to get a clean PNG
+const ex = location.hash.match(/^#export-(\w+)$/);
+if (ex) {
+  document.body.innerHTML = (COVERS.find(c => c.key === ex[1]) || COVERS[0]).draw();
+  document.body.style.margin = '0';
+  document.querySelector('svg').style.cssText = 'display:block;width:1920px;height:480px';
+}
 </script>
