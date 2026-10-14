@@ -2150,6 +2150,54 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Ник, что видят друзья, удаление аккаунта'**
   String get settingsPrivacyHint;
+
+  /// No description provided for @thanksRow.
+  ///
+  /// In ru, this message translates to:
+  /// **'Спасибо'**
+  String get thanksRow;
+
+  /// No description provided for @thanksRowHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Люди, которые поддерживают Zero'**
+  String get thanksRowHint;
+
+  /// No description provided for @thanksTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Спасибо'**
+  String get thanksTitle;
+
+  /// No description provided for @thanksSubtitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Zero бесплатный и без рекламы благодаря этим людям'**
+  String get thanksSubtitle;
+
+  /// No description provided for @thanksTier.
+  ///
+  /// In ru, this message translates to:
+  /// **'{tier, select, coauthors{Соавторы} testers{Тестировщики} supporters{Поддержали} other{}}'**
+  String thanksTier(String tier);
+
+  /// No description provided for @thanksEmpty.
+  ///
+  /// In ru, this message translates to:
+  /// **'Здесь появятся имена'**
+  String get thanksEmpty;
+
+  /// No description provided for @thanksJoin.
+  ///
+  /// In ru, this message translates to:
+  /// **'Хотите в этот список?'**
+  String get thanksJoin;
+
+  /// No description provided for @thanksBoosty.
+  ///
+  /// In ru, this message translates to:
+  /// **'Загляните на Boosty'**
+  String get thanksBoosty;
 }
 
 class _AppLocalizationsDelegate

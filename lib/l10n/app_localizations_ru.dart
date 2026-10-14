@@ -1706,4 +1706,37 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get settingsPrivacyHint => 'Ник, что видят друзья, удаление аккаунта';
+
+  @override
+  String get thanksRow => 'Спасибо';
+
+  @override
+  String get thanksRowHint => 'Люди, которые поддерживают Zero';
+
+  @override
+  String get thanksTitle => 'Спасибо';
+
+  @override
+  String get thanksSubtitle =>
+      'Zero бесплатный и без рекламы благодаря этим людям';
+
+  @override
+  String thanksTier(String tier) {
+    String _temp0 = intl.Intl.selectLogic(tier, {
+      'coauthors': 'Соавторы',
+      'testers': 'Тестировщики',
+      'supporters': 'Поддержали',
+      'other': '',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String get thanksEmpty => 'Здесь появятся имена';
+
+  @override
+  String get thanksJoin => 'Хотите в этот список?';
+
+  @override
+  String get thanksBoosty => 'Загляните на Boosty';
 }

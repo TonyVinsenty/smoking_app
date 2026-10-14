@@ -18,6 +18,7 @@ import '../../l10n/app_localizations.dart';
 import '../../domain/stats.dart';
 import '../onboarding/onboarding_screen.dart';
 import 'privacy_screen.dart';
+import 'thanks_screen.dart';
 import '../relapse/history_screen.dart';
 import '../relapse/relapse_screen.dart';
 import '../sos/sos_screen.dart';
@@ -135,6 +136,13 @@ class SettingsScreen extends ConsumerWidget {
           _Group(
             title: l.settingsAbout,
             children: [
+              ListTile(
+                leading: const Icon(Icons.favorite_outline),
+                title: Text(l.thanksRow),
+                subtitle: Text(l.thanksRowHint),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => ThanksScreen.open(context, _developerPage),
+              ),
               ListTile(
                 leading: const Icon(Icons.person_outline),
                 title: Text(l.settingsDeveloper),

@@ -452,5 +452,14 @@
   "chipMoney": "{money} сэкономлено",
   "@chipMoney": {"placeholders": {"money": {"type": "String"}}},
   "settingsRating": "Рейтинг",
-  "settingsPrivacyHint": "Ник, что видят друзья, удаление аккаунта"
+  "settingsPrivacyHint": "Ник, что видят друзья, удаление аккаунта",
+  "thanksRow": "Спасибо",
+  "thanksRowHint": "Люди, которые поддерживают Zero",
+  "thanksTitle": "Спасибо",
+  "thanksSubtitle": "Zero бесплатный и без рекламы благодаря этим людям",
+  "thanksTier": "{tier, select, coauthors{Соавторы} testers{Тестировщики} supporters{Поддержали} other{}}",
+  "@thanksTier": {"placeholders": {"tier": {"type": "String"}}},
+  "thanksEmpty": "Здесь появятся имена",
+  "thanksJoin": "Хотите в этот список?",
+  "thanksBoosty": "Загляните на Boosty"
 }
