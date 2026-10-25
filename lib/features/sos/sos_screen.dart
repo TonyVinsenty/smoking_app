@@ -21,8 +21,9 @@ import '../../l10n/app_localizations.dart';
 class SosScreen extends ConsumerStatefulWidget {
   const SosScreen({super.key});
 
-  static Future<void> open(BuildContext context) =>
-      Navigator.of(context).push(MaterialPageRoute(fullscreenDialog: true, builder: (_) => const SosScreen()));
+  static Route<void> route() => MaterialPageRoute(fullscreenDialog: true, builder: (_) => const SosScreen());
+
+  static Future<void> open(BuildContext context) => Navigator.of(context).push(route());
 
   @override
   ConsumerState<SosScreen> createState() => _SosScreenState();

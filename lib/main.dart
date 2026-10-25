@@ -4,6 +4,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'app/app_shortcuts.dart';
 import 'app/home_shell.dart';
 import 'app/theme.dart';
 import 'data/providers.dart';
@@ -49,10 +50,13 @@ class SmokingApp extends ConsumerWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
+      navigatorKey: _navigatorKey,
       home: const _Root(),
     );
   }
 }
+
+final _navigatorKey = GlobalKey<NavigatorState>();
 
 /// Shows onboarding until the first attempt exists.
 class _Root extends ConsumerWidget {
@@ -63,7 +67,9 @@ class _Root extends ConsumerWidget {
     return ref
         .watch(attemptsProvider)
         .when(
-          data: (attempts) => attempts.isEmpty ? const OnboardingScreen() : const HomeShell(),
+          data: (attempts) => attempts.isEmpty
+              ? const OnboardingScreen()
+              : AppShortcuts(navigatorKey: _navigatorKey, child: const HomeShell()),
           loading: () => const Scaffold(),
           error: (e, _) => Scaffold(body: Center(child: Text('$e'))),
         );

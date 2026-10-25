@@ -466,6 +466,12 @@ abstract class AppLocalizations {
   /// **'SOS'**
   String get sosButton;
 
+  /// No description provided for @shortcutSos.
+  ///
+  /// In ru, this message translates to:
+  /// **'Хочу закурить'**
+  String get shortcutSos;
+
   /// No description provided for @sosTriggerTitle.
   ///
   /// In ru, this message translates to:

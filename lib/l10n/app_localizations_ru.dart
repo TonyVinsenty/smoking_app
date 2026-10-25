@@ -314,6 +314,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get sosButton => 'SOS';
 
   @override
+  String get shortcutSos => 'Хочу закурить';
+
+  @override
   String get sosTriggerTitle => 'Что сейчас происходит?';
 
   @override
