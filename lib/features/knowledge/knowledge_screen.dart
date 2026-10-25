@@ -70,12 +70,14 @@ class _KnowledgeScreenState extends ConsumerState<KnowledgeScreen> {
             runSpacing: 4,
             children: [
               ChoiceChip(
+                showCheckmark: false,
                 label: Text(l.knowledgeAll),
                 selected: _category == null,
                 onSelected: (_) => setState(() => _category = null),
               ),
               for (final c in categories)
                 ChoiceChip(
+                  showCheckmark: false,
                   label: Text(l.articleCategory(c)),
                   selected: _category == c,
                   onSelected: (_) => setState(() => _category = _category == c ? null : c),
