@@ -23,6 +23,9 @@ import '../relapse/history_screen.dart';
 import '../relapse/relapse_screen.dart';
 import '../sos/sos_screen.dart';
 
+/// «О приложении» (Спасибо + Boosty) is hidden for now: the owner is rethinking support (2026-10-25).
+const _showAboutSection = false;
+
 /// The developer's page (owner's decision 2026-10-13).
 final _developerPage = Uri.parse('https://boosty.to/tony_vinsenty');
 
@@ -133,25 +136,26 @@ class SettingsScreen extends ConsumerWidget {
               const _AppIconPicker(),
             ],
           ),
-          _Group(
-            title: l.settingsAbout,
-            children: [
-              ListTile(
-                leading: const Icon(Icons.favorite_outline),
-                title: Text(l.thanksRow),
-                subtitle: Text(l.thanksRowHint),
-                trailing: const Icon(Icons.chevron_right),
-                onTap: () => ThanksScreen.open(context, _developerPage),
-              ),
-              ListTile(
-                leading: const Icon(Icons.person_outline),
-                title: Text(l.settingsDeveloper),
-                subtitle: Text(l.settingsDeveloperHint),
-                trailing: const Icon(Icons.open_in_new),
-                onTap: () => launchUrl(_developerPage, mode: LaunchMode.externalApplication),
-              ),
-            ],
-          ),
+          if (_showAboutSection)
+            _Group(
+              title: l.settingsAbout,
+              children: [
+                ListTile(
+                  leading: const Icon(Icons.favorite_outline),
+                  title: Text(l.thanksRow),
+                  subtitle: Text(l.thanksRowHint),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => ThanksScreen.open(context, _developerPage),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.person_outline),
+                  title: Text(l.settingsDeveloper),
+                  subtitle: Text(l.settingsDeveloperHint),
+                  trailing: const Icon(Icons.open_in_new),
+                  onTap: () => launchUrl(_developerPage, mode: LaunchMode.externalApplication),
+                ),
+              ],
+            ),
           _Group(
             title: l.settingsData,
             children: [
