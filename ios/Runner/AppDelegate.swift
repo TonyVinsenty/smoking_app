@@ -60,7 +60,7 @@ final class HomeWidgetBridge: NSObject, FlutterSceneLifeCycleDelegate {
     channel.setMethodCallHandler { [weak self] call, result in
       switch call.method {
       case "update":
-        WidgetStore.defaults?.set(call.arguments as? String, forKey: WidgetStore.payloadKey)
+        WidgetStore.payload = call.arguments as? String
         WidgetCenter.shared.reloadAllTimelines()
         result(nil)
       case "diagnostics":

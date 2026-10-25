@@ -1,24 +1,27 @@
 import Foundation
+import Security
 
-/// Where the app leaves the widgets' data (lib/app/home_widget.dart): a shared App Group. Built into both the app
-/// and the widget extension.
+/// Where the app leaves the widgets' data (lib/app/home_widget.dart). Built into both the app and the widget extension.
+///
+/// With a proper signature this is a shared App Group. Sideloadly with a free Apple ID gives no App Group, but signs
+/// the widget with the app's own App ID, so the keychain under that ID is shared too: the payload goes there as well.
 enum WidgetStore {
-  static let payloadKey = "payload"
   private static let defaultGroup = "group.com.tonyvinsenty.smokingApp"
+  private static let payloadKey = "payload"
 
-  static var defaults: UserDefaults? { UserDefaults(suiteName: groupId) }
+  /// The App Group's defaults, only when the signature really grants the group.
+  private static var groupDefaults: UserDefaults? {
+    FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: groupId) == nil
+      ? nil : UserDefaults(suiteName: groupId)
+  }
 
-  /// Entitlements of the bundle's own provisioning profile (nil when there is none).
-  static let profileEntitlements: [String: Any]? = {
-    guard let url = Bundle.main.url(forResource: "embedded", withExtension: "mobileprovision"),
-      let data = try? Data(contentsOf: url),
-      let start = data.range(of: Data("<?xml".utf8)),
-      let end = data.range(of: Data("</plist>".utf8), in: start.lowerBound..<data.endIndex),
-      let profile = try? PropertyListSerialization.propertyList(
-        from: data.subdata(in: start.lowerBound..<end.upperBound), format: nil) as? [String: Any]
-    else { return nil }
-    return profile["Entitlements"] as? [String: Any]
-  }()
+  static var payload: String? {
+    get { groupDefaults?.string(forKey: payloadKey) ?? Keychain.read() }
+    set {
+      groupDefaults?.set(newValue, forKey: payloadKey)
+      Keychain.write(newValue)
+    }
+  }
 
   /// The entitlement the running process really got from its signature (Security's SecTask, looked up at run time
   /// because iOS does not declare it); nil when it is missing.
@@ -35,25 +38,60 @@ enum WidgetStore {
     return Unmanaged<AnyObject>.fromOpaque(value).takeRetainedValue()
   }
 
-  /// Sideloadly may rename the group when it re-signs, so the name comes from the signature (or the profile).
+  /// Sideloadly may rename the group when it re-signs, so the name comes from the signature.
   static let groupId: String = {
-    let groups = entitlement("com.apple.security.application-groups") as? [String]
-      ?? profileEntitlements?["com.apple.security.application-groups"] as? [String] ?? []
+    let groups = entitlement("com.apple.security.application-groups") as? [String] ?? []
     return groups.first(where: { $0.contains("smokingApp") }) ?? groups.first ?? defaultGroup
   }()
+
+  /// One generic password under the App ID's own access group, which the app and the widget share when they are
+  /// signed with the same App ID.
+  private enum Keychain {
+    private static var query: [String: Any] {
+      var query: [String: Any] = [
+        kSecClass as String: kSecClassGenericPassword,
+        kSecAttrService as String: "zero.widget",
+        kSecAttrAccount as String: WidgetStore.payloadKey,
+      ]
+      if let appId = WidgetStore.entitlement("application-identifier") as? String { query[kSecAttrAccessGroup as String] = appId }
+      return query
+    }
+
+    static func read() -> String? {
+      var item: CFTypeRef?
+      var request = query
+      request[kSecReturnData as String] = true
+      guard SecItemCopyMatching(request as CFDictionary, &item) == errSecSuccess, let data = item as? Data else {
+        return nil
+      }
+      return String(data: data, encoding: .utf8)
+    }
+
+    static func write(_ value: String?) {
+      SecItemDelete(query as CFDictionary)
+      guard let value else { return }
+      var item = query
+      item[kSecValueData as String] = Data(value.utf8)
+      item[kSecAttrAccessible as String] = kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly
+      lastWrite = SecItemAdd(item as CFDictionary, nil)
+    }
+
+    /// Temporary, for diagnostics: the result of the last write (0 = saved).
+    static var lastWrite: OSStatus?
+  }
 
   /// Temporary: what signing allowed, shown by an empty widget (and under the version in the app's settings) so
   /// the owner can send a screenshot.
   static var diagnostics: String {
     let groups = (entitlement("com.apple.security.application-groups") as? [String])?.joined(separator: ", ") ?? "-"
-    let container = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: groupId) != nil
+    let keychain = (entitlement("keychain-access-groups") as? [String])?.joined(separator: ", ") ?? "-"
     return [
       "id: \(entitlement("application-identifier") as? String ?? "-")",
       "groups: \(groups)",
-      "group: \(groupId)",
-      "container: \(container ? "yes" : "no")",
-      "profile: \(profileEntitlements == nil ? "none" : "\(profileEntitlements!.count) keys")",
-      "data: \(defaults?.string(forKey: payloadKey) == nil ? "no" : "yes")",
+      "container: \(groupDefaults == nil ? "no" : "yes")",
+      "keychain: \(keychain)",
+      "write: \(Keychain.lastWrite.map { "\($0)" } ?? "-")",
+      "data: \(Keychain.read() == nil ? "no" : "yes")",
     ].joined(separator: "\n")
   }
 }

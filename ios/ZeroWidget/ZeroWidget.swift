@@ -13,7 +13,7 @@ struct ZeroEntry: TimelineEntry {
 
 struct ZeroProvider: TimelineProvider {
   private func load() -> [String: Any]? {
-    guard let json = WidgetStore.defaults?.string(forKey: WidgetStore.payloadKey) else { return nil }
+    guard let json = WidgetStore.payload else { return nil }
     return (try? JSONSerialization.jsonObject(with: Data(json.utf8))) as? [String: Any]
   }
 
