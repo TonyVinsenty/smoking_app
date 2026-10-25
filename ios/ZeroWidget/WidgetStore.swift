@@ -73,25 +73,7 @@ enum WidgetStore {
       var item = query
       item[kSecValueData as String] = Data(value.utf8)
       item[kSecAttrAccessible as String] = kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly
-      lastWrite = SecItemAdd(item as CFDictionary, nil)
+      SecItemAdd(item as CFDictionary, nil)
     }
-
-    /// Temporary, for diagnostics: the result of the last write (0 = saved).
-    static var lastWrite: OSStatus?
-  }
-
-  /// Temporary: what signing allowed, shown by an empty widget (and under the version in the app's settings) so
-  /// the owner can send a screenshot.
-  static var diagnostics: String {
-    let groups = (entitlement("com.apple.security.application-groups") as? [String])?.joined(separator: ", ") ?? "-"
-    let keychain = (entitlement("keychain-access-groups") as? [String])?.joined(separator: ", ") ?? "-"
-    return [
-      "id: \(entitlement("application-identifier") as? String ?? "-")",
-      "groups: \(groups)",
-      "container: \(groupDefaults == nil ? "no" : "yes")",
-      "keychain: \(keychain)",
-      "write: \(Keychain.lastWrite.map { "\($0)" } ?? "-")",
-      "data: \(Keychain.read() == nil ? "no" : "yes")",
-    ].joined(separator: "\n")
   }
 }

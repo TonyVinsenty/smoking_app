@@ -136,10 +136,14 @@ struct TimeBlock: View {
 struct SosPill: View {
   let s: ZeroStats
   let title: String
+  var icon = false
 
   var body: some View {
-    Text(title)
-      .font(.system(size: 14, weight: .black)).tracking(0.5).lineLimit(1).minimumScaleFactor(0.6)
+    HStack(spacing: 6) {
+      if icon { Image(systemName: "wind").font(.system(size: 15, weight: .bold)) }
+      Text(title).font(.system(size: 15, weight: .black)).tracking(1)
+    }
+      .lineLimit(1).minimumScaleFactor(0.6).padding(.horizontal, 12)
       .foregroundColor(s.color("onPrimary"))
       .frame(maxWidth: .infinity, minHeight: 36)
       .background(Capsule().fill(s.color("primary")))
@@ -168,11 +172,7 @@ struct StatPill: View {
 /// Before onboarding there is nothing to show yet: just the name, a tap opens the app.
 struct EmptyZero: View {
   var body: some View {
-    VStack(spacing: 4) {
-      Text("Zero").font(.system(size: 24, weight: .black))
-      Text(WidgetStore.diagnostics).font(.system(size: 8)).lineLimit(7).minimumScaleFactor(0.5)
-    }
-    .widgetBackground(Color(UIColor.systemBackground))
+    Text("Zero").font(.system(size: 24, weight: .black)).widgetBackground(Color(UIColor.systemBackground))
   }
 }
 
@@ -210,7 +210,7 @@ struct ZeroWidgetView: View {
         HStack(spacing: 14) {
           VStack(spacing: 0) {
             TimeBlock(s: s)
-            Link(destination: sosURL) { SosPill(s: s, title: s.text("sosLong")) }
+            Link(destination: sosURL) { SosPill(s: s, title: s.text("sos"), icon: true) }
           }
           VStack(spacing: 8) {
             StatPill(s: s, label: s.text("saved"), value: s.money, valueColor: "reward", fill: "rewardContainer")

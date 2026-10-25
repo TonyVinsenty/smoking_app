@@ -63,8 +63,6 @@ final class HomeWidgetBridge: NSObject, FlutterSceneLifeCycleDelegate {
         WidgetStore.payload = call.arguments as? String
         WidgetCenter.shared.reloadAllTimelines()
         result(nil)
-      case "diagnostics":
-        result(WidgetStore.diagnostics)
       case "launchAction":
         result(self?.pending)
         self?.pending = nil

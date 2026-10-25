@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -11,7 +10,6 @@ import '../../app/widgets/toast.dart';
 import '../../app/widgets/wheel_time_picker.dart';
 import '../../app/app_icon.dart';
 import '../../app/format.dart';
-import '../../app/home_widget.dart';
 import '../../app/theme.dart';
 import '../../data/database.dart';
 import '../../data/providers.dart';
@@ -320,37 +318,13 @@ class _Version extends StatelessWidget {
       future: PackageInfo.fromPlatform(),
       builder: (context, info) => Padding(
         padding: const EdgeInsets.only(top: 24),
-        child: Column(
-          children: [
-            Text(
-              info.hasData
-                  ? AppLocalizations.of(context).settingsVersion(info.data!.version, info.data!.buildNumber)
-                  : '',
-              textAlign: TextAlign.center,
-              style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant),
-            ),
-            if (theme.platform == TargetPlatform.iOS)
-              FutureBuilder<String?>(
-                future: _widgetDiagnostics(),
-                builder: (context, text) => Text(
-                  text.data ?? '',
-                  textAlign: TextAlign.center,
-                  style: theme.textTheme.labelSmall?.copyWith(color: theme.colorScheme.onSurfaceVariant),
-                ),
-              ),
-          ],
+        child: Text(
+          info.hasData ? AppLocalizations.of(context).settingsVersion(info.data!.version, info.data!.buildNumber) : '',
+          textAlign: TextAlign.center,
+          style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant),
         ),
       ),
     );
-  }
-
-  /// Temporary: the app's side of the iPhone widget signing check (ios/ZeroWidget/WidgetStore.swift).
-  static Future<String?> _widgetDiagnostics() async {
-    try {
-      return await homeWidgetChannel.invokeMethod<String>('diagnostics');
-    } on PlatformException {
-      return null;
-    }
   }
 }
 
