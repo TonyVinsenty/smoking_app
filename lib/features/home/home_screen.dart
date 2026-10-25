@@ -523,7 +523,7 @@ class _CravingCard extends StatelessWidget {
           if (stats.isEmpty)
             Text(l.cravingHomeEmpty, style: theme.textTheme.bodyMedium)
           else ...[
-            Text(l.cravingResistedOf(stats.summary.resisted, stats.summary.total), style: theme.textTheme.titleLarge),
+            Text(l.cravingResistedTimes(stats.summary.resisted), style: theme.textTheme.titleLarge),
             if (often.isNotEmpty) Text(l.cravingOften(often), style: theme.textTheme.bodyMedium),
           ],
         ],

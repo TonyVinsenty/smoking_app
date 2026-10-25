@@ -1372,8 +1372,16 @@ class AppLocalizationsRu extends AppLocalizations {
       'Когда потянет курить — нажмите SOS. Здесь появится, когда и почему вас тянет чаще всего.';
 
   @override
-  String cravingResistedOf(int resisted, int total) {
-    return 'Справились: $resisted из $total';
+  String cravingResistedTimes(int resisted) {
+    String _temp0 = intl.Intl.pluralLogic(
+      resisted,
+      locale: localeName,
+      other: 'раза',
+      many: 'раз',
+      few: 'раза',
+      one: 'раз',
+    );
+    return 'Справились $resisted $_temp0';
   }
 
   @override

@@ -1671,11 +1671,11 @@ abstract class AppLocalizations {
   /// **'Когда потянет курить — нажмите SOS. Здесь появится, когда и почему вас тянет чаще всего.'**
   String get cravingHomeEmpty;
 
-  /// No description provided for @cravingResistedOf.
+  /// No description provided for @cravingResistedTimes.
   ///
   /// In ru, this message translates to:
-  /// **'Справились: {resisted} из {total}'**
-  String cravingResistedOf(int resisted, int total);
+  /// **'Справились {resisted} {resisted, plural, one{раз} few{раза} many{раз} other{раза}}'**
+  String cravingResistedTimes(int resisted);
 
   /// No description provided for @cravingOften.
   ///
