@@ -170,7 +170,7 @@ struct EmptyZero: View {
   var body: some View {
     VStack(spacing: 4) {
       Text("Zero").font(.system(size: 24, weight: .black))
-      Text(WidgetStore.diagnostics).font(.system(size: 8)).lineLimit(6).minimumScaleFactor(0.5)
+      Text(WidgetStore.diagnostics).font(.system(size: 8)).lineLimit(7).minimumScaleFactor(0.5)
     }
     .widgetBackground(Color(UIColor.systemBackground))
   }
