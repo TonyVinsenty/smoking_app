@@ -48,6 +48,7 @@ class _AchievementsList extends ConsumerWidget {
     final allOpen = Achievement.groups.every(expanded.contains);
     final content = ref.watch(contentProvider).value;
     final unlocked = ref.watch(unlockedAchievementsProvider).value;
+    final newIds = ref.watch(newAchievementIdsProvider);
     final main = ref.watch(mainProductProvider);
     if (content == null || unlocked == null) return const Center(child: CircularProgressIndicator());
 
@@ -132,7 +133,11 @@ class _AchievementsList extends ConsumerWidget {
                         title: Row(
                           spacing: 8,
                           children: [
-                            Icon(_groupIcon(group), color: theme.colorScheme.primary),
+                            Badge(
+                              isLabelVisible: items.any((a) => newIds.contains(a.id)),
+                              smallSize: 10,
+                              child: Icon(_groupIcon(group), color: theme.colorScheme.primary),
+                            ),
                             Expanded(child: Text(l.achGroup(group), style: theme.textTheme.titleMedium)),
                             Text(
                               l.achGroupProgress(done, items.length, percentOf(done, items.length)),
@@ -226,16 +231,23 @@ class _BadgeTile extends ConsumerWidget {
     final target = achievement.conditionValue(main?.name);
     return InkWell(
       borderRadius: BorderRadius.circular(16),
-      onTap: () => _showDetails(context, ref.read(mainProductProvider)),
+      onTap: () {
+        ref.read(seenAchievementsProvider.notifier).markSeen(achievement.id);
+        _showDetails(context, ref.read(mainProductProvider));
+      },
       child: Padding(
         padding: const EdgeInsets.all(4),
         child: Column(
           children: [
-            BadgeIcon(
-              achievement: achievement,
-              unlocked: earned,
-              size: 64,
-              progress: current == null || target <= 0 ? null : current! / target,
+            Badge(
+              isLabelVisible: ref.watch(newAchievementIdsProvider).contains(achievement.id),
+              smallSize: 12,
+              child: BadgeIcon(
+                achievement: achievement,
+                unlocked: earned,
+                size: 64,
+                progress: current == null || target <= 0 ? null : current! / target,
+              ),
             ),
             const SizedBox(height: 8),
             Text(

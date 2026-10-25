@@ -34,6 +34,16 @@ final unlockedAchievementsProvider = StreamProvider<List<UnlockedAchievement>>(
   (ref) => ref.watch(databaseProvider).select(ref.watch(databaseProvider).unlockedAchievements).watch(),
 );
 
+/// Badges earned but not opened yet: a red dot leads to them (Home → group → badge).
+final newAchievementIdsProvider = Provider<Set<String>>((ref) {
+  final seen = ref.watch(seenAchievementsProvider);
+  final unlocked = ref.watch(unlockedAchievementsProvider).value ?? const [];
+  return {
+    for (final u in unlocked)
+      if (u.unlockedAt.isAfter(seen.since) && !seen.ids.contains(u.achievementId)) u.achievementId,
+  };
+});
+
 final articlesReadProvider = StreamProvider<List<ArticlesReadData>>(
   (ref) => ref.watch(databaseProvider).select(ref.watch(databaseProvider).articlesRead).watch(),
 );

@@ -149,3 +149,30 @@ class SeenHintsNotifier extends Notifier<Set<String>> {
 }
 
 final seenHintsProvider = NotifierProvider<SeenHintsNotifier, Set<String>>(SeenHintsNotifier.new);
+
+/// Badges the user has opened at least once. Badges earned before this was added (2026-10-25) count as seen.
+class SeenAchievementsNotifier extends Notifier<({DateTime since, Set<String> ids})> {
+  static const _sinceKey = 'achievementsSeenSince';
+  static const _idsKey = 'seenAchievements';
+
+  @override
+  ({DateTime since, Set<String> ids}) build() {
+    final prefs = ref.watch(prefsProvider);
+    var since = prefs.getInt(_sinceKey);
+    if (since == null) {
+      since = DateTime.now().millisecondsSinceEpoch;
+      prefs.setInt(_sinceKey, since);
+    }
+    return (since: DateTime.fromMillisecondsSinceEpoch(since), ids: (prefs.getStringList(_idsKey) ?? const []).toSet());
+  }
+
+  void markSeen(String id) {
+    if (state.ids.contains(id)) return;
+    state = (since: state.since, ids: {...state.ids, id});
+    ref.read(prefsProvider).setStringList(_idsKey, state.ids.toList());
+  }
+}
+
+final seenAchievementsProvider = NotifierProvider<SeenAchievementsNotifier, ({DateTime since, Set<String> ids})>(
+  SeenAchievementsNotifier.new,
+);

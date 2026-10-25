@@ -74,14 +74,18 @@ class HomeScreen extends ConsumerWidget {
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 12),
-            child: FilledButton.tonalIcon(
-              icon: const Icon(Icons.emoji_events_outlined, size: 26),
-              label: Text(l.homeAchievementsCount(badges)),
-              style: FilledButton.styleFrom(
-                padding: const EdgeInsets.fromLTRB(14, 8, 18, 8),
-                textStyle: Theme.of(context).textTheme.titleSmall,
+            child: Badge(
+              isLabelVisible: ref.watch(newAchievementIdsProvider).isNotEmpty,
+              smallSize: 10,
+              child: FilledButton.tonalIcon(
+                icon: const Icon(Icons.emoji_events_outlined, size: 26),
+                label: Text(l.homeAchievementsCount(badges)),
+                style: FilledButton.styleFrom(
+                  padding: const EdgeInsets.fromLTRB(14, 8, 18, 8),
+                  textStyle: Theme.of(context).textTheme.titleSmall,
+                ),
+                onPressed: () => AchievementsScreen.open(context),
               ),
-              onPressed: () => AchievementsScreen.open(context),
             ),
           ),
         ],
