@@ -325,9 +325,6 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get widgetSos => 'SOS · хочу закурить';
-
-  @override
   String get sosTriggerTitle => 'Что сейчас происходит?';
 
   @override

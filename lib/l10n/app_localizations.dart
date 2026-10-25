@@ -484,12 +484,6 @@ abstract class AppLocalizations {
   /// **'{hours} ч {minutes} мин'**
   String widgetClock(String hours, String minutes);
 
-  /// No description provided for @widgetSos.
-  ///
-  /// In ru, this message translates to:
-  /// **'SOS · хочу закурить'**
-  String get widgetSos;
-
   /// No description provided for @sosTriggerTitle.
   ///
   /// In ru, this message translates to:

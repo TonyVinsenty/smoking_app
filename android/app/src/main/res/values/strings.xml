@@ -20,5 +20,4 @@
     <string name="widget_preview_not_smoked">Не выкурено</string>
     <string name="widget_preview_units">360 сиг.</string>
     <string name="widget_preview_sos_hint">Хочу закурить</string>
-    <string name="widget_preview_sos_long">SOS · хочу закурить</string>
 </resources>

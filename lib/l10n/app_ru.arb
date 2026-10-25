@@ -90,7 +90,6 @@
   "widgetSmokeFree": "без курения",
   "widgetClock": "{hours} ч {minutes} мин",
   "@widgetClock": {"placeholders": {"hours": {"type": "String"}, "minutes": {"type": "String"}}},
-  "widgetSos": "SOS · хочу закурить",
   "sosTriggerTitle": "Что сейчас происходит?",
   "sosTriggerHint": "Один тап — и я запомню, когда вас тянет сильнее всего",
   "sosSkip": "Пропустить",

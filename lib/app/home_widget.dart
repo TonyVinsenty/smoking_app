@@ -64,7 +64,6 @@ Map<String, Object?> homeWidgetPayload({
     'notSmoked': l.homeNotSmoked,
     'sos': l.sosButton,
     'sosShort': l.shortcutSos,
-    'sosLong': l.widgetSos,
     'noAttempt': l.homeNoAttemptTitle,
     'light': _colors(Brightness.light, palette),
     'dark': _colors(Brightness.dark, palette),

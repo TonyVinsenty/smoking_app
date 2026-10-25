@@ -113,7 +113,7 @@ object ZeroWidgets {
         views.setTextViewText(R.id.widget_saved_label, data.getString("saved"))
         views.setTextViewText(R.id.widget_units_label, data.getString("notSmoked"))
         views.setTextViewText(R.id.widget_sos_hint, data.getString("sosShort"))
-        views.setTextViewText(R.id.widget_sos_text, data.getString(if (views.layoutId == R.layout.widget_wide) "sosLong" else "sos"))
+        views.setTextViewText(R.id.widget_sos_text, data.getString("sos"))
 
         val start = if (data.isNull("start")) null else data.getLong("start")
         val showTime = if (start == null) View.GONE else View.VISIBLE
