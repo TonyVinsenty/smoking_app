@@ -1198,6 +1198,18 @@ abstract class AppLocalizations {
   /// **'{mode, select, system{Системный} light{Светлый} dark{Тёмный} other{}}'**
   String themeModeName(String mode);
 
+  /// No description provided for @settingsPalette.
+  ///
+  /// In ru, this message translates to:
+  /// **'Цвет'**
+  String get settingsPalette;
+
+  /// No description provided for @paletteName.
+  ///
+  /// In ru, this message translates to:
+  /// **'{name, select, mint{Мята} graphite{Графит} ocean{Океан} pine{Хвоя} sunset{Закат} twilight{Сумерки} other{}}'**
+  String paletteName(String name);
+
   /// No description provided for @settingsAppIcon.
   ///
   /// In ru, this message translates to:

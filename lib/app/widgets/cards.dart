@@ -61,7 +61,7 @@ class AppCard extends StatelessWidget {
       CardTone.plain => BoxDecoration(
         color: light ? scheme.surfaceContainerLowest : scheme.surfaceContainer,
         borderRadius: shape,
-        boxShadow: light ? softShadow : null,
+        boxShadow: light ? softShadow(context) : null,
       ),
       // A slight diagonal shade keeps the big mint block from looking flat.
       CardTone.hero => BoxDecoration(

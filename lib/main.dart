@@ -25,11 +25,12 @@ class SmokingApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final palette = ref.watch(appPaletteProvider);
     return MaterialApp(
       onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
       debugShowCheckedModeBanner: false,
-      theme: buildTheme(Brightness.light),
-      darkTheme: buildTheme(Brightness.dark),
+      theme: buildTheme(Brightness.light, palette),
+      darkTheme: buildTheme(Brightness.dark, palette),
       themeMode: ref.watch(themeModeProvider),
       // Icons grow a little with a large system font (half as fast as text, up to 34 dp).
       builder: (context, child) {

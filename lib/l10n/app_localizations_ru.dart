@@ -1069,6 +1069,23 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
+  String get settingsPalette => 'Цвет';
+
+  @override
+  String paletteName(String name) {
+    String _temp0 = intl.Intl.selectLogic(name, {
+      'mint': 'Мята',
+      'graphite': 'Графит',
+      'ocean': 'Океан',
+      'pine': 'Хвоя',
+      'sunset': 'Закат',
+      'twilight': 'Сумерки',
+      'other': '',
+    });
+    return '$_temp0';
+  }
+
+  @override
   String get settingsAppIcon => 'Значок приложения';
 
   @override

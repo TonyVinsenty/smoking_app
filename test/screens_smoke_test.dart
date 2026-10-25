@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart' show Value;
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -24,6 +25,14 @@ import 'package:smoking_app/l10n/app_localizations.dart';
 /// Builds every screen and health tab with realistic data, in both themes and with a normal and a very
 /// large system font, and fails on any layout error (overflow, unbounded size, intrinsic problems).
 void main() {
+  // SOS keeps the screen on (wakelock_plus); there is no platform side in tests, so answer "done".
+  setUpAll(() {
+    TestWidgetsFlutterBinding.ensureInitialized().defaultBinaryMessenger.setMockMessageHandler(
+      'dev.flutter.pigeon.wakelock_plus_platform_interface.WakelockPlusApi.toggle',
+      (_) async => const StandardMessageCodec().encodeMessage(<Object?>[null]),
+    );
+  });
+
   Future<AppDatabase> seed() async {
     final db = AppDatabase(NativeDatabase.memory());
     final now = DateTime.now();

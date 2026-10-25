@@ -1,8 +1,73 @@
 import 'package:flutter/cupertino.dart' show CupertinoPageTransitionsBuilder;
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// Calm, "healthy" teal-green palette.
-const _seed = Color(0xFF2E9E8F);
+import '../data/settings.dart';
+
+/// Colour themes the user picks in Settings → Appearance. Mint (calm, "healthy" teal-green) is the default.
+/// Each one has its own reward colour that stands apart from the main hue.
+enum AppPalette {
+  mint(Color(0xFF2E9E8F), DynamicSchemeVariant.tonalSpot, AppColors.light, AppColors.dark),
+  graphite(
+    Color(0xFF5B6770),
+    DynamicSchemeVariant.neutral,
+    AppColors(reward: Color(0xFF9A5B1E), rewardContainer: Color(0xFFF6E9DA), onRewardContainer: Color(0xFF3F2208)),
+    AppColors(reward: Color(0xFFE6B27E), rewardContainer: Color(0xFF35291C), onRewardContainer: Color(0xFFF6DFC6)),
+  ),
+  ocean(
+    Color(0xFF3F6FA6),
+    DynamicSchemeVariant.tonalSpot,
+    AppColors(reward: Color(0xFFA8641A), rewardContainer: Color(0xFFFAEBD9), onRewardContainer: Color(0xFF432406)),
+    AppColors(reward: Color(0xFFEBB57C), rewardContainer: Color(0xFF382A1A), onRewardContainer: Color(0xFFFADCC0)),
+  ),
+  // Plum rewards: amber would look muddy next to green.
+  pine(
+    Color(0xFF4F7F5E),
+    DynamicSchemeVariant.tonalSpot,
+    AppColors(reward: Color(0xFF8E4F7A), rewardContainer: Color(0xFFF6E6F0), onRewardContainer: Color(0xFF3A1530)),
+    AppColors(reward: Color(0xFFE2A6CC), rewardContainer: Color(0xFF392030), onRewardContainer: Color(0xFFF6D9EA)),
+  ),
+  // Green rewards: the theme itself is already warm.
+  sunset(
+    Color(0xFFB8704F),
+    DynamicSchemeVariant.tonalSpot,
+    AppColors(reward: Color(0xFF3F7A5A), rewardContainer: Color(0xFFE0F0E6), onRewardContainer: Color(0xFF0D3322)),
+    AppColors(reward: Color(0xFF8FD1AA), rewardContainer: Color(0xFF1C3326), onRewardContainer: Color(0xFFC9EEDA)),
+  ),
+  twilight(
+    Color(0xFF6A66B0),
+    DynamicSchemeVariant.tonalSpot,
+    AppColors(reward: Color(0xFFA5651E), rewardContainer: Color(0xFFF9EAD6), onRewardContainer: Color(0xFF432406)),
+    AppColors(reward: Color(0xFFEBB270), rewardContainer: Color(0xFF382918), onRewardContainer: Color(0xFFFADCBC)),
+  );
+
+  const AppPalette(this.seed, this.variant, this.lightColors, this.darkColors);
+
+  final Color seed;
+  final DynamicSchemeVariant variant;
+  final AppColors lightColors;
+  final AppColors darkColors;
+
+  /// Very dark shade of the main hue that tints card shadows.
+  Color get shadowTint => HSLColor.fromColor(seed).withLightness(0.08).toColor();
+}
+
+class AppPaletteNotifier extends Notifier<AppPalette> {
+  static const _key = 'palette';
+
+  @override
+  AppPalette build() {
+    final saved = ref.watch(prefsProvider).getString(_key);
+    return AppPalette.values.where((p) => p.name == saved).firstOrNull ?? AppPalette.mint;
+  }
+
+  void set(AppPalette palette) {
+    ref.read(prefsProvider).setString(_key, palette.name);
+    state = palette;
+  }
+}
+
+final appPaletteProvider = NotifierProvider<AppPaletteNotifier, AppPalette>(AppPaletteNotifier.new);
 
 /// Numbers and headings; ordinary text stays in the platform font (Roboto).
 const displayFont = 'Manrope';
@@ -48,21 +113,33 @@ TextTheme _textTheme(TextTheme base) {
   );
 }
 
-/// Faint two-layer shadow of ordinary cards in the light theme.
-const softShadow = [
-  BoxShadow(color: Color(0x0F002822), blurRadius: 2, offset: Offset(0, 1)),
-  BoxShadow(color: Color(0x12002822), blurRadius: 14, offset: Offset(0, 4)),
-];
+/// Faint two-layer shadow of ordinary cards in the light theme, tinted with the theme's hue.
+List<BoxShadow> softShadow(BuildContext context) {
+  final tint = AppColors.of(context).shadowTint;
+  return [
+    BoxShadow(color: tint.withAlpha(0x0F), blurRadius: 2, offset: const Offset(0, 1)),
+    BoxShadow(color: tint.withAlpha(0x12), blurRadius: 14, offset: const Offset(0, 4)),
+  ];
+}
 
-/// Colours outside the Material scheme. Warm apricot is only for rewards and celebrations.
+/// Colours outside the Material scheme. The reward colour (warm apricot in most themes) is only for rewards
+/// and celebrations.
 @immutable
 class AppColors extends ThemeExtension<AppColors> {
-  const AppColors({required this.reward, required this.rewardContainer, required this.onRewardContainer});
+  const AppColors({
+    required this.reward,
+    required this.rewardContainer,
+    required this.onRewardContainer,
+    this.shadowTint = const Color(0xFF002822),
+  });
 
-  /// Strong warm colour: «+10 XP», reward icons.
+  /// Strong reward colour: «+10 XP», reward icons.
   final Color reward;
   final Color rewardContainer;
   final Color onRewardContainer;
+
+  /// Base colour of card shadows (used with low alpha).
+  final Color shadowTint;
 
   static const light = AppColors(
     reward: Color(0xFFB0611F),
@@ -78,10 +155,11 @@ class AppColors extends ThemeExtension<AppColors> {
   static AppColors of(BuildContext context) => Theme.of(context).extension<AppColors>()!;
 
   @override
-  AppColors copyWith({Color? reward, Color? rewardContainer, Color? onRewardContainer}) => AppColors(
+  AppColors copyWith({Color? reward, Color? rewardContainer, Color? onRewardContainer, Color? shadowTint}) => AppColors(
     reward: reward ?? this.reward,
     rewardContainer: rewardContainer ?? this.rewardContainer,
     onRewardContainer: onRewardContainer ?? this.onRewardContainer,
+    shadowTint: shadowTint ?? this.shadowTint,
   );
 
   @override
@@ -91,22 +169,30 @@ class AppColors extends ThemeExtension<AppColors> {
           reward: Color.lerp(reward, other.reward, t)!,
           rewardContainer: Color.lerp(rewardContainer, other.rewardContainer, t)!,
           onRewardContainer: Color.lerp(onRewardContainer, other.onRewardContainer, t)!,
+          shadowTint: Color.lerp(shadowTint, other.shadowTint, t)!,
         );
 }
 
-ThemeData buildTheme(Brightness brightness) {
-  final scheme = ColorScheme.fromSeed(seedColor: _seed, brightness: brightness);
+ThemeData buildTheme(Brightness brightness, [AppPalette palette = AppPalette.mint]) {
+  final scheme = ColorScheme.fromSeed(
+    seedColor: palette.seed,
+    brightness: brightness,
+    dynamicSchemeVariant: palette.variant,
+  );
+  final colors = (brightness == Brightness.light ? palette.lightColors : palette.darkColors).copyWith(
+    shadowTint: palette.shadowTint,
+  );
   final base = ThemeData(colorScheme: scheme, useMaterial3: true);
   // Geometry from M3, colors and font from the base theme, then our own scale.
   final text = _textTheme(Typography.englishLike2021.merge(base.textTheme));
   return base.copyWith(
     textTheme: text,
-    extensions: [brightness == Brightness.light ? AppColors.light : AppColors.dark],
+    extensions: [colors],
     // Same look as AppCard(tone: plain) for any plain Card left.
     cardTheme: CardThemeData(
       color: brightness == Brightness.light ? scheme.surfaceContainerLowest : scheme.surfaceContainer,
       elevation: brightness == Brightness.light ? 1 : 0,
-      shadowColor: const Color(0x66002822),
+      shadowColor: palette.shadowTint.withAlpha(0x66),
       surfaceTintColor: Colors.transparent,
       margin: EdgeInsets.zero,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),

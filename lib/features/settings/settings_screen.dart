@@ -10,6 +10,7 @@ import '../../app/widgets/toast.dart';
 import '../../app/widgets/wheel_time_picker.dart';
 import '../../app/app_icon.dart';
 import '../../app/format.dart';
+import '../../app/theme.dart';
 import '../../data/database.dart';
 import '../../data/providers.dart';
 import '../../data/settings.dart';
@@ -130,6 +131,9 @@ class SettingsScreen extends ConsumerWidget {
                       selected: ref.watch(themeModeProvider),
                       onChanged: (m) => ref.read(themeModeProvider.notifier).set(m),
                     ),
+                    const SizedBox(height: 6),
+                    Text(l.settingsPalette, style: theme.textTheme.labelMedium),
+                    const _PalettePicker(),
                   ],
                 ),
               ),
@@ -426,6 +430,115 @@ class _AppIconTile extends StatelessWidget {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Six colour themes: 6 swatches in a row, or 3 × 2 when the row gets tight (narrow screen, large font).
+class _PalettePicker extends ConsumerWidget {
+  const _PalettePicker();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context);
+    final brightness = Theme.of(context).brightness;
+    final selected = ref.watch(appPaletteProvider);
+    final textScale = MediaQuery.textScalerOf(context).scale(1);
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final count = AppPalette.values.length;
+        final perRow = constraints.maxWidth / count >= 58 * textScale ? count : count ~/ 2;
+        final width = constraints.maxWidth / perRow;
+        return Wrap(
+          runSpacing: 12,
+          children: [
+            for (final p in AppPalette.values)
+              SizedBox(
+                width: width,
+                child: _PaletteSwatch(
+                  scheme: ColorScheme.fromSeed(
+                    seedColor: p.seed,
+                    brightness: brightness,
+                    dynamicSchemeVariant: p.variant,
+                  ),
+                  label: l.paletteName(p.name),
+                  selected: p == selected,
+                  onTap: () => ref.read(appPaletteProvider.notifier).set(p),
+                ),
+              ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class _PaletteSwatch extends StatelessWidget {
+  const _PaletteSwatch({required this.scheme, required this.label, required this.selected, required this.onTap});
+
+  /// The scheme this swatch would switch to (not the current one).
+  final ColorScheme scheme;
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Semantics(
+      button: true,
+      selected: selected,
+      label: label,
+      excludeSemantics: true,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(12),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4),
+          child: Column(
+            spacing: 6,
+            children: [
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                padding: const EdgeInsets.all(3),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: selected ? scheme.primary : Colors.transparent, width: 2.5),
+                ),
+                // Light container with the main colour in the middle: how cards and buttons will look.
+                child: Container(
+                  width: 40,
+                  height: 40,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(color: scheme.primaryContainer, shape: BoxShape.circle),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    width: 24,
+                    height: 24,
+                    decoration: BoxDecoration(color: scheme.primary, shape: BoxShape.circle),
+                    child: AnimatedOpacity(
+                      opacity: selected ? 1 : 0,
+                      duration: const Duration(milliseconds: 200),
+                      child: Icon(Icons.check, size: 16, color: scheme.onPrimary),
+                    ),
+                  ),
+                ),
+              ),
+              Text(
+                label,
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                softWrap: false,
+                overflow: TextOverflow.visible,
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: selected ? theme.colorScheme.onSurface : theme.colorScheme.onSurfaceVariant,
+                  fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
