@@ -1,0 +1,2 @@
+// The app's version numbers, so the extension always matches the app it ships in.
+#include "../Flutter/Generated.xcconfig"

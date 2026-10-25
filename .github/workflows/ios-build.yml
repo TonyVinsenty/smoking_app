@@ -49,10 +49,35 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
 
+      # The home-screen widget is a separate extension target; it is added to the
+      # Xcode project here because there is no Xcode on the developer's machine.
+      - name: Add home-screen widget
+        run: |
+          set -euo pipefail
+          ruby -e "require 'xcodeproj'" 2>/dev/null || gem install --user-install --no-document xcodeproj
+          ruby ios/scripts/add_widget_target.rb
+
       # No signing here: Sideloadly signs the .ipa later on the user's computer
       # with a free Apple ID, so no certificates are stored in CI.
       - name: Build iOS (unsigned)
         run: flutter build ios --release --no-codesign
+
+      # An ad hoc signature carries the App Group entitlement (shared by the app
+      # and the widget) into the .ipa, so Sideloadly knows to request it.
+      - name: Embed entitlements (ad hoc)
+        run: |
+          set -euo pipefail
+          APP="build/ios/iphoneos/Runner.app"
+          if [ ! -d "$APP/PlugIns/ZeroWidget.appex" ]; then
+            echo "::error::The widget extension is missing from Runner.app/PlugIns"
+            exit 1
+          fi
+          for f in "$APP"/Frameworks/*; do codesign -f -s - "$f"; done
+          codesign -f -s - --entitlements ios/ZeroWidget/ZeroWidget.entitlements "$APP/PlugIns/ZeroWidget.appex"
+          codesign -f -s - --entitlements ios/Runner/Runner.entitlements "$APP"
+          codesign -d --entitlements - "$APP"
+          codesign -d --entitlements - "$APP/PlugIns/ZeroWidget.appex"
+          /usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" "$APP/PlugIns/ZeroWidget.appex/Info.plist"
 
       - name: Check bundle id and read version
         run: |

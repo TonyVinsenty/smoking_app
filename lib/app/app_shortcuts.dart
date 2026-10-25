@@ -6,6 +6,7 @@ import 'package:quick_actions/quick_actions.dart';
 
 import '../features/sos/sos_screen.dart';
 import '../l10n/app_localizations.dart';
+import 'home_widget.dart';
 
 /// The long-press menu of the app icon: «Хочу закурить» opens SOS straight away.
 const sosShortcut = 'sos';
@@ -38,6 +39,24 @@ class _AppShortcutsState extends ConsumerState<AppShortcuts> {
   void initState() {
     super.initState();
     unawaited(_quiet(ref.read(quickActionsProvider).initialize(_picked)));
+    // The iPhone widgets' SOS (zero://sos): a tap that started the app waits on the native side until asked for.
+    // On Android the widgets go through the quick_actions launch path instead.
+    homeWidgetChannel.setMethodCallHandler((call) async {
+      if (call.method == 'open') _picked(call.arguments as String);
+    });
+    unawaited(
+      _quiet(
+        homeWidgetChannel.invokeMethod<String>('launchAction').then((action) {
+          if (action != null) _picked(action);
+        }),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    homeWidgetChannel.setMethodCallHandler(null);
+    super.dispose();
   }
 
   /// No menu is no reason to stop the app (tests have no system side).

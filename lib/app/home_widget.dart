@@ -14,6 +14,7 @@ import 'theme.dart';
 
 /// The home-screen widgets draw themselves natively (they tick every minute without the app), so they get
 /// rates and ready-made texts rather than numbers: days, money and units grow linearly from [start].
+/// It also brings back SOS taps on iPhone widgets (see AppShortcuts).
 const homeWidgetChannel = MethodChannel('zero/home_widget');
 
 /// Word forms for each plural category, so the native side can pick one for any count.
@@ -100,7 +101,7 @@ class _HomeWidgetSyncState extends ConsumerState<HomeWidgetSync> {
       );
       if (payload != _sent) {
         _sent = payload;
-        // No widgets is no reason to stop the app (tests and iOS have no native side yet).
+        // No widgets is no reason to stop the app (tests have no native side).
         unawaited(homeWidgetChannel.invokeMethod<void>('update', payload).catchError((Object _) {}));
       }
     }

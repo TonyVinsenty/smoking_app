@@ -7,6 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:quick_actions/quick_actions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smoking_app/app/app_shortcuts.dart';
+import 'package:smoking_app/app/home_widget.dart';
 import 'package:smoking_app/data/database.dart';
 import 'package:smoking_app/data/providers.dart';
 import 'package:smoking_app/data/settings.dart';
@@ -33,14 +34,15 @@ void main() {
     );
   });
 
-  testWidgets('the icon menu offers SOS once and opens it over the other screens', (tester) async {
+  Future<void> pumpShortcuts(
+    WidgetTester tester,
+    _FakeQuickActions actions,
+    GlobalKey<NavigatorState> navigatorKey,
+  ) async {
     final db = AppDatabase(NativeDatabase.memory());
     addTearDown(db.close);
     SharedPreferences.setMockInitialValues({});
     final prefs = await SharedPreferences.getInstance();
-    final actions = _FakeQuickActions();
-    final navigatorKey = GlobalKey<NavigatorState>();
-
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
@@ -62,6 +64,12 @@ void main() {
         ),
       ),
     );
+  }
+
+  testWidgets('the icon menu offers SOS once and opens it over the other screens', (tester) async {
+    final actions = _FakeQuickActions();
+    final navigatorKey = GlobalKey<NavigatorState>();
+    await pumpShortcuts(tester, actions, navigatorKey);
 
     expect(actions.sets, hasLength(1));
     expect(
@@ -81,6 +89,20 @@ void main() {
     // Rebuilds do not send the same menu again.
     await tester.pump(const Duration(seconds: 1));
     expect(actions.sets, hasLength(1));
+
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  testWidgets('an iPhone widget tap that started the app opens SOS', (tester) async {
+    tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+      homeWidgetChannel,
+      (call) async => call.method == 'launchAction' ? sosShortcut : null,
+    );
+    addTearDown(() => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(homeWidgetChannel, null));
+    await pumpShortcuts(tester, _FakeQuickActions(), GlobalKey<NavigatorState>());
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
+    expect(find.byType(SosScreen), findsOneWidget);
 
     await tester.pumpWidget(const SizedBox());
   });
