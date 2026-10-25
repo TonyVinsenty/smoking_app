@@ -317,13 +317,11 @@ class _BadgeTile extends ConsumerWidget {
               const SizedBox(height: 8),
               Wrap(
                 alignment: WrapAlignment.center,
+                crossAxisAlignment: WrapCrossAlignment.center,
                 spacing: 8,
+                runSpacing: 8,
                 children: [
-                  Chip(
-                    avatar: Icon(Icons.diamond, color: rarity, size: 18),
-                    label: Text(l.tierName(a.tier)),
-                    side: BorderSide(color: rarity),
-                  ),
+                  _RarityPill(l.tierName(a.tier), color: rarity),
                   RewardPill('+${a.xp} XP'),
                 ],
               ),
@@ -364,6 +362,35 @@ class _BadgeTile extends ConsumerWidget {
       'comebackAfterRelapse' => l.achCondComeback(v),
       _ => '',
     };
+  }
+}
+
+/// «Легендарное» next to «+1200 XP»: the same pill (size, padding, text), outlined in the rarity colour.
+class _RarityPill extends StatelessWidget {
+  const _RarityPill(this.text, {required this.color});
+
+  final String text;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        border: Border.all(color: color),
+        borderRadius: BorderRadius.circular(999),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          spacing: 6,
+          children: [
+            Icon(Icons.diamond, size: 18, color: color),
+            Text(text, style: Theme.of(context).textTheme.titleSmall),
+          ],
+        ),
+      ),
+    );
   }
 }
 
