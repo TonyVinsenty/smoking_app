@@ -168,7 +168,11 @@ struct StatPill: View {
 /// Before onboarding there is nothing to show yet: just the name, a tap opens the app.
 struct EmptyZero: View {
   var body: some View {
-    Text("Zero").font(.system(size: 24, weight: .black)).widgetBackground(Color(UIColor.systemBackground))
+    VStack(spacing: 4) {
+      Text("Zero").font(.system(size: 24, weight: .black))
+      Text(WidgetStore.diagnostics).font(.system(size: 8)).lineLimit(6).minimumScaleFactor(0.5)
+    }
+    .widgetBackground(Color(UIColor.systemBackground))
   }
 }
 
