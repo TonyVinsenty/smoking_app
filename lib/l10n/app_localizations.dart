@@ -472,6 +472,24 @@ abstract class AppLocalizations {
   /// **'Хочу закурить'**
   String get shortcutSos;
 
+  /// No description provided for @widgetSmokeFree.
+  ///
+  /// In ru, this message translates to:
+  /// **'без курения'**
+  String get widgetSmokeFree;
+
+  /// No description provided for @widgetClock.
+  ///
+  /// In ru, this message translates to:
+  /// **'{hours} ч {minutes} мин'**
+  String widgetClock(String hours, String minutes);
+
+  /// No description provided for @widgetSos.
+  ///
+  /// In ru, this message translates to:
+  /// **'SOS · хочу закурить'**
+  String get widgetSos;
+
   /// No description provided for @sosTriggerTitle.
   ///
   /// In ru, this message translates to:

@@ -74,6 +74,52 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+        <!-- Home-screen widgets (ZeroWidgets.kt); the ticker redraws them every minute. -->
+        <receiver
+            android:name=".SosWidget"
+            android:exported="false"
+            android:label="@string/widget_sos_name">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_info_sos" />
+        </receiver>
+        <receiver
+            android:name=".TimeSosWidget"
+            android:exported="false"
+            android:label="@string/widget_time_sos_name">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_info_time_sos" />
+        </receiver>
+        <receiver
+            android:name=".TimeWidget"
+            android:exported="false"
+            android:label="@string/widget_time_name">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_info_time" />
+        </receiver>
+        <receiver
+            android:name=".WideWidget"
+            android:exported="false"
+            android:label="@string/widget_wide_name">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_info_wide" />
+        </receiver>
+        <receiver android:name=".WidgetTicker" android:exported="false" />
         <receiver android:exported="false" android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver" />
         <receiver android:exported="false" android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver">
             <intent-filter>

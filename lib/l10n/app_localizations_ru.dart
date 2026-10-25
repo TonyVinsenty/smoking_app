@@ -317,6 +317,17 @@ class AppLocalizationsRu extends AppLocalizations {
   String get shortcutSos => 'Хочу закурить';
 
   @override
+  String get widgetSmokeFree => 'без курения';
+
+  @override
+  String widgetClock(String hours, String minutes) {
+    return '$hours ч $minutes мин';
+  }
+
+  @override
+  String get widgetSos => 'SOS · хочу закурить';
+
+  @override
   String get sosTriggerTitle => 'Что сейчас происходит?';
 
   @override

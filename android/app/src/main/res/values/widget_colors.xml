@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Mint, light: only for the picker preview; placed widgets take the colours of the chosen theme. -->
+<resources>
+    <color name="widget_card">#FFF6FAF9</color>
+    <color name="widget_muted">#FF5C6B66</color>
+    <color name="widget_primary">#FF006B5F</color>
+    <color name="widget_on_primary">#FFFFFFFF</color>
+    <color name="widget_primary_container">#FFD6EFE9</color>
+    <color name="widget_on_primary_container">#FF00201C</color>
+    <color name="widget_reward">#FFB0611F</color>
+    <color name="widget_reward_container">#FFFBEBDC</color>
+</resources>

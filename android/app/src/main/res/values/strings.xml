@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Native-only texts: the widget picker shows them before Zero has run. Everything inside the widgets
+     comes from the ARB strings (lib/app/home_widget.dart). -->
+<resources>
+    <string name="widget_sos_name">SOS</string>
+    <string name="widget_sos_description">Одно нажатие — и открывается SOS</string>
+    <string name="widget_time_sos_name">Время и SOS</string>
+    <string name="widget_time_sos_description">Время без курения и кнопка SOS</string>
+    <string name="widget_time_name">Время</string>
+    <string name="widget_time_description">Время без курения</string>
+    <string name="widget_wide_name">Время, деньги и SOS</string>
+    <string name="widget_wide_description">Время без курения, сэкономленные деньги и кнопка SOS</string>
+    <!-- Sample numbers for the picker preview. -->
+    <string name="widget_preview_label">без курения</string>
+    <string name="widget_preview_days">18</string>
+    <string name="widget_preview_days_word">дней</string>
+    <string name="widget_preview_clock">23 ч 43 мин</string>
+    <string name="widget_preview_saved">Сэкономлено</string>
+    <string name="widget_preview_money">12 600 ₽</string>
+    <string name="widget_preview_not_smoked">Не выкурено</string>
+    <string name="widget_preview_units">360 сиг.</string>
+    <string name="widget_preview_sos_hint">Хочу закурить</string>
+    <string name="widget_preview_sos_long">SOS · хочу закурить</string>
+</resources>
