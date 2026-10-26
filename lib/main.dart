@@ -8,6 +8,7 @@ import 'app/app_shortcuts.dart';
 import 'app/home_shell.dart';
 import 'app/home_widget.dart';
 import 'app/theme.dart';
+import 'app/widgets/sunrise_splash.dart';
 import 'data/providers.dart';
 import 'data/settings.dart';
 import 'firebase_options.dart';
@@ -40,7 +41,7 @@ class SmokingApp extends ConsumerWidget {
         final size = (24 * (1 + (scale - 1) / 2)).clamp(24.0, 34.0);
         return IconTheme.merge(
           data: IconThemeData(size: size),
-          child: child!,
+          child: Stack(fit: StackFit.expand, children: [child!, const SunriseSplash()]),
         );
       },
       locale: const Locale('ru'),

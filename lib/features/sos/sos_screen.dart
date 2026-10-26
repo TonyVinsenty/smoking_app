@@ -9,6 +9,7 @@ import 'package:wakelock_plus/wakelock_plus.dart';
 import '../../app/theme.dart';
 import '../../app/widgets/motion.dart';
 import '../../app/widgets/cards.dart';
+import '../../app/widgets/sunrise_splash.dart';
 import '../../app/widgets/toast.dart';
 import '../../content/content.dart';
 import '../../data/database.dart';
@@ -80,6 +81,7 @@ class _SosScreenState extends ConsumerState<SosScreen> {
   void initState() {
     super.initState();
     WakelockPlus.enable();
+    SunriseSplash.dismiss(); // opened straight into SOS (widget, icon menu): no sunrise in the way
   }
 
   @override
