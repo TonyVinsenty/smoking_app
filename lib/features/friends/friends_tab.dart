@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../app/widgets/cards.dart';
 import '../../app/widgets/sos_fab.dart';
 import '../../app/widgets/toast.dart';
+import '../../content/content.dart';
 import '../../data/social.dart';
 import '../../l10n/app_localizations.dart';
 import 'add_friend_sheet.dart';
@@ -21,13 +22,40 @@ class FriendsTab extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context);
+    final theme = Theme.of(context);
     final ids = ref.watch(friendIdsProvider).value ?? const [];
+    // Highest level first (those who hide it — after), then by name.
     final friends = [for (final id in ids) ?ref.watch(friendProfileProvider(id)).value]
-      ..sort((a, b) => a.nick.toLowerCase().compareTo(b.nick.toLowerCase()));
+      ..sort(
+        (a, b) => (b.xp ?? -1) != (a.xp ?? -1)
+            ? (b.xp ?? -1).compareTo(a.xp ?? -1)
+            : a.nick.toLowerCase().compareTo(b.nick.toLowerCase()),
+      );
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, sosClearance),
       children: [
-        for (final f in friends) ...[_FriendCard(friend: f), const SizedBox(height: 10)],
+        // "Друзья 16", as in Steam.
+        Padding(
+          padding: const EdgeInsets.fromLTRB(4, 0, 4, 10),
+          child: Text.rich(
+            TextSpan(
+              children: [
+                TextSpan(text: '${l.tabFriends}  ', style: theme.textTheme.titleLarge),
+                TextSpan(
+                  text: '${ids.length}',
+                  style: theme.textTheme.headlineSmall?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+                ),
+              ],
+            ),
+          ),
+        ),
+        if (friends.isNotEmpty) ...[
+          AppCard(
+            padding: const EdgeInsets.symmetric(vertical: 6),
+            child: Column(children: [for (final f in friends) _FriendRow(friend: f)]),
+          ),
+          const SizedBox(height: 16),
+        ],
         if (ids.isEmpty) ...[
           AppCard(
             tone: CardTone.tip,
@@ -48,33 +76,44 @@ class FriendsTab extends ConsumerWidget {
   }
 }
 
-class _FriendCard extends StatelessWidget {
-  const _FriendCard({required this.friend});
+/// One friend, Steam-style: photo, name, "Не курит 9 дней" under it, level in a ring on the right.
+class _FriendRow extends ConsumerWidget {
+  const _FriendRow({required this.friend});
 
   final SocialProfile friend;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context);
     final theme = Theme.of(context);
-    return AppCard(
-      padding: const EdgeInsets.fromLTRB(14, 12, 8, 12),
+    final content = ref.watch(contentProvider).value;
+    final xp = friend.xp;
+    final days = friend.days;
+    return InkWell(
       onTap: () => FriendPage.open(context, friend.uid),
-      child: Row(
-        spacing: 14,
-        children: [
-          FriendAvatar(nick: friend.nick, uid: friend.uid, size: 52),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              spacing: 6,
-              children: [
-                Text(friend.nick, style: theme.textTheme.titleMedium),
-                StatPills(values: friend.shared),
-              ],
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        child: Row(
+          spacing: 14,
+          children: [
+            FriendAvatar(nick: friend.nick, uid: friend.uid, size: 48),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 2,
+                children: [
+                  Text(friend.nick, maxLines: 1, overflow: TextOverflow.ellipsis, style: theme.textTheme.titleMedium),
+                  if (days != null)
+                    Text(
+                      l.friendDaysLine(days),
+                      style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.primary),
+                    ),
+                ],
+              ),
             ),
-          ),
-          Icon(Icons.chevron_right, color: theme.colorScheme.onSurfaceVariant),
-        ],
+            if (xp != null && content != null) LevelBadge(level: content.levelFor(xp).$1.level),
+          ],
+        ),
       ),
     );
   }

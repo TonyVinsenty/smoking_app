@@ -154,6 +154,12 @@ abstract class AppLocalizations {
   /// **'Добавить друга'**
   String get friendsAdd;
 
+  /// No description provided for @friendDaysLine.
+  ///
+  /// In ru, this message translates to:
+  /// **'Не курит {count, plural, one{{count} день} few{{count} дня} other{{count} дней}}'**
+  String friendDaysLine(int count);
+
   /// No description provided for @friendShowsNothing.
   ///
   /// In ru, this message translates to:
@@ -1938,7 +1944,7 @@ abstract class AppLocalizations {
   /// No description provided for @socialJoinText.
   ///
   /// In ru, this message translates to:
-  /// **'Напишите любое имя или выберите готовое. Сменить его можно в любой момент.'**
+  /// **'Напишите имя, по которому вас узнают друзья. Сменить его можно в любой момент.'**
   String get socialJoinText;
 
   /// No description provided for @socialNameLabel.
@@ -1947,17 +1953,11 @@ abstract class AppLocalizations {
   /// **'Имя'**
   String get socialNameLabel;
 
-  /// No description provided for @socialNameIdeas.
+  /// No description provided for @socialNameEmpty.
   ///
   /// In ru, this message translates to:
-  /// **'Идеи'**
-  String get socialNameIdeas;
-
-  /// No description provided for @socialJoinMore.
-  ///
-  /// In ru, this message translates to:
-  /// **'Другие варианты'**
-  String get socialJoinMore;
+  /// **'Напишите имя'**
+  String get socialNameEmpty;
 
   /// No description provided for @socialJoinButton.
   ///

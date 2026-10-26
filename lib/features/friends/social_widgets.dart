@@ -167,8 +167,8 @@ class MyPreviewCard extends ConsumerWidget {
   }
 }
 
-/// Any name the user types, with ready-made ideas below: six at a time, "Другие варианты" shows the next six.
-class NameEditor extends ConsumerStatefulWidget {
+/// The name friends see: whatever the user types (a real name is fine — it is a circle of friends).
+class NameEditor extends StatefulWidget {
   const NameEditor({super.key, required this.buttonText, required this.onSubmit, this.initial, this.header});
 
   final String Function(String nick) buttonText;
@@ -177,13 +177,11 @@ class NameEditor extends ConsumerStatefulWidget {
   final Widget? header;
 
   @override
-  ConsumerState<NameEditor> createState() => _NameEditorState();
+  State<NameEditor> createState() => _NameEditorState();
 }
 
-class _NameEditorState extends ConsumerState<NameEditor> {
+class _NameEditorState extends State<NameEditor> {
   final _controller = TextEditingController();
-  List<String>? _all;
-  int _page = 0;
   bool _busy = false;
 
   @override
@@ -198,20 +196,10 @@ class _NameEditorState extends ConsumerState<NameEditor> {
     super.dispose();
   }
 
-  void _pick(String nick) => setState(() => _controller.text = nick);
-
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final theme = Theme.of(context);
-    final loaded = ref.watch(nicknamesProvider).value;
-    if (loaded == null) return const Center(child: CircularProgressIndicator());
-    if (_all == null) {
-      _all = [...loaded]..shuffle();
-      if (_controller.text.isEmpty) _controller.text = _all!.first;
-    }
-    final all = _all!;
-    final options = [for (var i = 0; i < 6; i++) all[(_page * 6 + i) % all.length]];
     final nick = cleanNick(_controller.text);
     return ListView(
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 120),
@@ -228,27 +216,6 @@ class _NameEditorState extends ConsumerState<NameEditor> {
           onChanged: (_) => setState(() {}),
           decoration: InputDecoration(labelText: l.socialNameLabel, border: const OutlineInputBorder()),
         ),
-        const SizedBox(height: 4),
-        Text(
-          l.socialNameIdeas,
-          style: theme.textTheme.labelMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant),
-        ),
-        const SizedBox(height: 8),
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: [
-            for (final o in options) ChoiceChip(label: Text(o), selected: o == nick, onSelected: (_) => _pick(o)),
-          ],
-        ),
-        Align(
-          alignment: Alignment.centerLeft,
-          child: TextButton.icon(
-            onPressed: () => setState(() => _page++),
-            icon: const Icon(Icons.refresh),
-            label: Text(l.socialJoinMore),
-          ),
-        ),
         const SizedBox(height: 12),
         Text(l.privacyPreview, style: theme.textTheme.labelMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
         const SizedBox(height: 8),
@@ -258,7 +225,7 @@ class _NameEditorState extends ConsumerState<NameEditor> {
           onPressed: _busy || nick.isEmpty ? null : () => _submit(nick),
           child: _busy
               ? const SizedBox.square(dimension: 22, child: CircularProgressIndicator(strokeWidth: 2.5))
-              : Text(widget.buttonText(nick), textAlign: TextAlign.center),
+              : Text(nick.isEmpty ? l.socialNameEmpty : widget.buttonText(nick), textAlign: TextAlign.center),
         ),
       ],
     );
@@ -274,5 +241,46 @@ class _NameEditorState extends ConsumerState<NameEditor> {
     } finally {
       if (mounted) setState(() => _busy = false);
     }
+  }
+}
+
+/// The level in a coloured ring, as on Steam; the ring changes colour every 10 levels.
+class LevelBadge extends StatelessWidget {
+  const LevelBadge({super.key, required this.level, this.size = 40});
+
+  final int level;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final tiers = [
+      theme.colorScheme.outline,
+      theme.colorScheme.primary,
+      const Color(0xFF5B8DEF),
+      const Color(0xFF9A6BDB),
+      const Color(0xFFE08A3C),
+      const Color(0xFFE2B33C),
+    ];
+    final color = tiers[(level ~/ 10).clamp(0, tiers.length - 1)];
+    return Container(
+      width: size,
+      height: size,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(color: color, width: 2.5),
+      ),
+      child: Text(
+        '$level',
+        textScaler: TextScaler.noScaling,
+        style: TextStyle(
+          fontFamily: displayFont,
+          fontWeight: FontWeight.w700,
+          fontSize: size * 0.4,
+          color: theme.colorScheme.onSurface,
+        ),
+      ),
+    );
   }
 }

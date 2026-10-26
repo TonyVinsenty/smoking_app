@@ -41,6 +41,18 @@ class AppLocalizationsRu extends AppLocalizations {
   String get friendsAdd => 'Добавить друга';
 
   @override
+  String friendDaysLine(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count дней',
+      few: '$count дня',
+      one: '$count день',
+    );
+    return 'Не курит $_temp0';
+  }
+
+  @override
   String friendShowsNothing(String nick) {
     return '$nick пока ничего не показывает — и это нормально';
   }
@@ -1602,16 +1614,13 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get socialJoinText =>
-      'Напишите любое имя или выберите готовое. Сменить его можно в любой момент.';
+      'Напишите имя, по которому вас узнают друзья. Сменить его можно в любой момент.';
 
   @override
   String get socialNameLabel => 'Имя';
 
   @override
-  String get socialNameIdeas => 'Идеи';
-
-  @override
-  String get socialJoinMore => 'Другие варианты';
+  String get socialNameEmpty => 'Напишите имя';
 
   @override
   String socialJoinButton(String nick) {

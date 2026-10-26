@@ -137,12 +137,6 @@ String cleanNick(String input) {
   return runes.length > maxNickLength ? String.fromCharCodes(runes.take(maxNickLength)).trimRight() : nick;
 }
 
-/// Ready-made name ideas for those who do not want to make one up.
-final nicknamesProvider = FutureProvider<List<String>>((ref) async {
-  final raw = await rootBundle.loadString('assets/content/$contentLocale/nicknames.json');
-  return (jsonDecode(raw) as List).cast<String>();
-});
-
 final _db = FirebaseFirestore.instance;
 final _auth = FirebaseAuth.instance;
 
@@ -241,12 +235,15 @@ class SocialService {
     final uid = _uid;
     if (uid == null || jpeg.length > maxAvatarBytes) return;
     await _avatarDoc(uid).set({'img': base64Encode(jpeg), 'at': FieldValue.serverTimestamp()});
+    // The listener may have given up earlier (e.g. no connection); start it again to show the new photo.
+    ref.invalidate(avatarProvider(uid));
   }
 
   Future<void> removeAvatar() async {
     final uid = _uid;
     if (uid == null) return;
     await _avatarDoc(uid).delete();
+    ref.invalidate(avatarProvider(uid));
   }
 
   Future<FriendLookup?> lookup(String code) async {
