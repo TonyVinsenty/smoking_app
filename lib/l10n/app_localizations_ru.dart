@@ -176,6 +176,16 @@ class AppLocalizationsRu extends AppLocalizations {
   String get chatEventUntitledMe => 'Вы убрали название группы';
 
   @override
+  String get chatAccountDeleted => 'Аккаунт удалён';
+
+  @override
+  String get chatDelete => 'Удалить чат';
+
+  @override
+  String get chatDeleteTitle =>
+      'Удалить переписку? Восстановить её будет нельзя.';
+
+  @override
   String get chatYouName => 'Вы';
 
   @override

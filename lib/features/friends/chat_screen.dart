@@ -83,6 +83,27 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     if (_scroll.hasClients) _scroll.jumpTo(0);
   }
 
+  Future<void> _delete(Chat chat) async {
+    final l = AppLocalizations.of(context);
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l.chatDeleteTitle),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context, false), child: Text(l.cancel)),
+          TextButton(onPressed: () => Navigator.pop(context, true), child: Text(l.chatDelete)),
+        ],
+      ),
+    );
+    if (ok != true || !mounted) return;
+    try {
+      await ref.read(chatServiceProvider).leave(chat).timeout(const Duration(seconds: 20));
+      if (mounted) Navigator.pop(context);
+    } catch (_) {
+      if (mounted) showOfflineToast(context);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
@@ -163,10 +184,23 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
               top: false,
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(24, 12, 24, 16),
-                child: Text(
-                  l.chatNotFriends(title),
-                  textAlign: TextAlign.center,
-                  style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+                child: Column(
+                  spacing: 8,
+                  children: [
+                    Text(
+                      l.chatNotFriends(title),
+                      textAlign: TextAlign.center,
+                      style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+                    ),
+                    // The friend deleted their account: only the user is left, the chat can go.
+                    if (chat != null && chat.members.length == 1)
+                      TextButton.icon(
+                        style: TextButton.styleFrom(foregroundColor: theme.colorScheme.error),
+                        onPressed: () => _delete(chat),
+                        icon: const Icon(Icons.delete_outline),
+                        label: Text(l.chatDelete),
+                      ),
+                  ],
                 ),
               ),
             ),

@@ -153,13 +153,19 @@ class ChatReadNotifier extends Notifier<Map<String, DateTime>> {
 
 final chatReadProvider = NotifierProvider<ChatReadNotifier, Map<String, DateTime>>(ChatReadNotifier.new);
 
-/// Messages from others the user has not seen yet in a chat (up to 99).
+/// Messages from others the user has not seen yet in a chat (up to 99). A friend leaving a one-to-one chat
+/// (deleting their account) leaves no message, so it is not counted.
 final unreadCountProvider = StreamProvider.family<int, String>((ref, chatId) {
   final me = ref.watch(authUserProvider).value?.uid;
   final chat = ref.watch(chatsProvider.select((c) => c.value?.where((c) => c.id == chatId).firstOrNull));
   final seen = ref.watch(chatReadProvider.select((r) => r[chatId]));
   final last = chat?.last;
-  if (me == null || last == null || last.from == me || last.at == null || (seen != null && !last.at!.isAfter(seen))) {
+  if (me == null ||
+      last == null ||
+      last.from == me ||
+      (!(chat?.group ?? true) && last.event == ChatEvent.left) ||
+      last.at == null ||
+      (seen != null && !last.at!.isAfter(seen))) {
     return Stream.value(0);
   }
   Query<Map<String, dynamic>> query = _messagesOf(chatId);

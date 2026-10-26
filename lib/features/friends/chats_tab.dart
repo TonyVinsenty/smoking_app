@@ -208,8 +208,10 @@ String chatTitle(WidgetRef ref, AppLocalizations l, Chat chat, String me) {
   return [for (final u in chat.members) memberName(ref, l, chat, u)].join(', ');
 }
 
-/// "Вы: текст", "Аня: текст" (groups), just "текст" (from the friend), or an event line.
+/// "Вы: текст", "Аня: текст" (groups), just "текст" (from the friend), or an event line
+/// (a one-to-one chat is left only when the friend deletes their account).
 String lastLine(WidgetRef ref, AppLocalizations l, Chat chat, ChatMessage last, String me) {
+  if (!chat.group && last.event == ChatEvent.left) return l.chatAccountDeleted;
   if (last.event != null) return eventText(l, last, memberName(ref, l, chat, last.from), mine: last.from == me);
   if (last.from == me) return l.chatYou(last.text);
   return chat.group ? l.chatFrom(memberName(ref, l, chat, last.from), last.text) : last.text;
@@ -304,7 +306,9 @@ class _FriendPickerState extends ConsumerState<_FriendPicker> {
     ]..sort((a, b) => a.nick.toLowerCase().compareTo(b.nick.toLowerCase()));
     final multi = widget.max > 1;
     return Padding(
-      padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
+      padding: EdgeInsets.only(
+        bottom: MediaQuery.viewInsetsOf(context).bottom + MediaQuery.viewPaddingOf(context).bottom,
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,

@@ -316,6 +316,24 @@ abstract class AppLocalizations {
   /// **'Вы убрали название группы'**
   String get chatEventUntitledMe;
 
+  /// No description provided for @chatAccountDeleted.
+  ///
+  /// In ru, this message translates to:
+  /// **'Аккаунт удалён'**
+  String get chatAccountDeleted;
+
+  /// No description provided for @chatDelete.
+  ///
+  /// In ru, this message translates to:
+  /// **'Удалить чат'**
+  String get chatDelete;
+
+  /// No description provided for @chatDeleteTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Удалить переписку? Восстановить её будет нельзя.'**
+  String get chatDeleteTitle;
+
   /// No description provided for @chatYouName.
   ///
   /// In ru, this message translates to:
