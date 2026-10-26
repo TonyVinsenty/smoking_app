@@ -1317,6 +1317,12 @@ class AppLocalizationsRu extends AppLocalizations {
       'Уровень, опыт, деньги, тяги и награды начнутся с нуля. Останутся рекорд, история попыток, прочитанные статьи и награды за путь и статьи.';
 
   @override
+  String get newAttemptWhen => 'Когда вы снова перестали курить?';
+
+  @override
+  String get newAttemptNow => 'Сейчас';
+
+  @override
   String get newAttemptTitle => 'Настройки курения';
 
   @override

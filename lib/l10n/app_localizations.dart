@@ -1600,6 +1600,18 @@ abstract class AppLocalizations {
   /// **'Уровень, опыт, деньги, тяги и награды начнутся с нуля. Останутся рекорд, история попыток, прочитанные статьи и награды за путь и статьи.'**
   String get freshStartResetText;
 
+  /// No description provided for @newAttemptWhen.
+  ///
+  /// In ru, this message translates to:
+  /// **'Когда вы снова перестали курить?'**
+  String get newAttemptWhen;
+
+  /// No description provided for @newAttemptNow.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сейчас'**
+  String get newAttemptNow;
+
   /// No description provided for @newAttemptTitle.
   ///
   /// In ru, this message translates to:

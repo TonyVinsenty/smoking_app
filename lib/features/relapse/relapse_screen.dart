@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../app/format.dart';
-import '../../app/widgets/wheel_time_picker.dart';
 import '../../data/database.dart';
 import '../../data/providers.dart';
 import '../../domain/stats.dart';
@@ -57,21 +56,8 @@ class _RelapseScreenState extends ConsumerState<RelapseScreen> {
   }
 
   Future<void> _pickTime() async {
-    final now = DateTime.now();
-    final start = widget.attempt.startedAt;
-    final date = await showDatePicker(
-      context: context,
-      initialDate: _at ?? now,
-      firstDate: start.isAfter(now) ? now : start,
-      lastDate: now,
-    );
-    if (date == null || !mounted) return;
-    final time = await showWheelTimePicker(context, initialTime: TimeOfDay.fromDateTime(_at ?? now));
-    if (time == null) return;
-    var at = DateTime(date.year, date.month, date.day, time.hour, time.minute);
-    if (at.isAfter(now)) at = now;
-    if (at.isBefore(start)) at = start;
-    setState(() => _at = at);
+    final at = await pickPastMoment(context, first: widget.attempt.startedAt, initial: _at);
+    if (at != null && mounted) setState(() => _at = at);
   }
 
   Future<void> _save() async {

@@ -56,11 +56,13 @@ final allUnlockedAchievementsProvider = StreamProvider<List<UnlockedAchievement>
   (ref) => ref.watch(databaseProvider).select(ref.watch(databaseProvider).unlockedAchievements).watch(),
 );
 
-/// Badges that count now: earned since the latest fresh start, plus the ones a fresh start keeps.
+/// Badges that count now: earned in attempts since the latest fresh start, plus the ones a fresh start keeps.
+/// By attempt, not by time: a fresh start may be dated back over days of the attempt it follows.
 final unlockedAchievementsProvider = Provider<AsyncValue<List<UnlockedAchievement>>>((ref) {
-  final since = ref.watch(freshStartProvider);
+  final attempts = ref.watch(attemptsProvider);
   final content = ref.watch(contentProvider);
-  if (!since.hasValue || !content.hasValue) return const AsyncLoading();
+  if (!attempts.hasValue || !content.hasValue) return const AsyncLoading();
+  final counted = {for (final a in sinceFreshStart(attempts.value!)) a.id};
   final kept = {
     for (final a in content.value!.achievements)
       if (a.keptOnFreshStart) a.id,
@@ -70,7 +72,7 @@ final unlockedAchievementsProvider = Provider<AsyncValue<List<UnlockedAchievemen
       .whenData(
         (list) => [
           for (final u in list)
-            if (since.value == null || !u.unlockedAt.isBefore(since.value!) || kept.contains(u.achievementId)) u,
+            if (counted.contains(u.attemptId) || kept.contains(u.achievementId)) u,
         ],
       );
 });
