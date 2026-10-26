@@ -37,6 +37,19 @@ class _KnowledgeScreenState extends ConsumerState<KnowledgeScreen> {
         if (_category == null || a.category == _category) a,
     ];
     final readCount = articles.where((a) => read.contains(a.id)).length;
+    final types = ref.watch(productTypesProvider) ?? const <String>{};
+    final forYou = [
+      for (final a in articles)
+        if (a.products.any(types.contains)) a,
+    ];
+    // The most specific articles (about fewer products) first, otherwise in index order.
+    forYou.sort(
+      (a, b) => a.products.length != b.products.length
+          ? a.products.length.compareTo(b.products.length)
+          : articles.indexOf(a).compareTo(articles.indexOf(b)),
+    );
+    // Unlike the topics, «Для вас» starts open: the stored id marks it closed.
+    final forYouOpen = !expanded.contains(_forYouClosed);
 
     return TabPage(
       body: ListView(
@@ -85,6 +98,26 @@ class _KnowledgeScreenState extends ConsumerState<KnowledgeScreen> {
             ],
           ),
           const SizedBox(height: 8),
+          if (_category == null && forYou.isNotEmpty) ...[
+            // «Для вас»: articles about the user's own products; they also stay in their topics.
+            _GroupHeader(
+              category: 'forYou',
+              read: forYou.where((a) => read.contains(a.id)).length,
+              total: forYou.length,
+              open: forYouOpen,
+              onTap: () => ref.read(expandedSectionsProvider('knowledge').notifier).toggle(_forYouClosed),
+            ),
+            AnimatedSize(
+              duration: motion(context, const Duration(milliseconds: 260)),
+              curve: Curves.easeOutCubic,
+              alignment: Alignment.topCenter,
+              child: forYouOpen
+                  ? Column(
+                      children: [for (final a in forYou) _ArticleCard(article: a, isRead: read.contains(a.id))],
+                    )
+                  : const SizedBox(width: double.infinity),
+            ),
+          ],
           if (_category == null)
             // «Все»: one section per topic, in the order topics first appear.
             for (final c in categories) ...[
@@ -118,7 +151,10 @@ class _KnowledgeScreenState extends ConsumerState<KnowledgeScreen> {
   }
 }
 
+const _forYouClosed = 'forYouClosed';
+
 IconData _categoryIcon(String category) => switch (category) {
+  'forYou' => Icons.recommend_outlined,
   'addiction' => Icons.psychology_outlined,
   'health' => Icons.favorite_outline,
   'practice' => Icons.directions_walk,

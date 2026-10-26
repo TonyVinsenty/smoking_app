@@ -30,7 +30,8 @@ class _CravingMapScreenState extends ConsumerState<CravingMapScreen> {
     final l = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final cravings = ref.watch(cravingsProvider).value ?? const [];
-    final tips = ref.watch(contentProvider).value?.triggerTips ?? const {};
+    final content = ref.watch(contentProvider).value;
+    final types = ref.watch(productTypesProvider) ?? const <String>{};
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     final from = switch (_period) {
@@ -40,7 +41,7 @@ class _CravingMapScreenState extends ConsumerState<CravingMapScreen> {
     };
     final s = CravingStats(cravings, from: from);
     final top = s.topTrigger;
-    final tip = top == null ? null : tips[top.name];
+    final tip = top == null ? null : content?.triggerTipFor(top.name, types);
 
     return Scaffold(
       appBar: AppBar(title: Text(l.cravingTitle)),

@@ -345,7 +345,7 @@
   "knowledgeAll": "Все",
   "knowledgeGroupRead": "{read} из {total}",
   "@knowledgeGroupRead": {"placeholders": {"read": {"type": "int"}, "total": {"type": "int"}}},
-  "articleCategory": "{category, select, addiction{Зависимость} health{Здоровье} practice{Практика} myths{Мифы} vape{Вейпы и IQOS} money{Деньги} therapy{Помощь и лечение} other{Другое}}",
+  "articleCategory": "{category, select, forYou{Для вас} addiction{Зависимость} health{Здоровье} practice{Практика} myths{Мифы} vape{Вейпы и IQOS} money{Деньги} therapy{Помощь и лечение} other{Другое}}",
   "@articleCategory": {"placeholders": {"category": {"type": "String"}}},
   "articleMinutes": "{minutes} мин",
   "@articleMinutes": {"placeholders": {"minutes": {"type": "int"}}},

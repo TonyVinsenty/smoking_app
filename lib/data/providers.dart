@@ -62,6 +62,14 @@ final mainProductProvider = Provider<ProductType?>((ref) {
   return mainProduct(latestProducts(products, attempts));
 });
 
+/// Names of the product types of the current or latest attempt (null while loading): picks tips and articles.
+final productTypesProvider = Provider<Set<String>?>((ref) {
+  final products = ref.watch(productsProvider).value;
+  final attempts = ref.watch(attemptsProvider).value;
+  if (products == null || attempts == null) return null;
+  return {for (final p in latestProducts(products, attempts)) p.type.name};
+});
+
 /// «Дневник самочувствия», oldest first.
 final wellbeingProvider = StreamProvider<List<WellbeingEntry>>((ref) {
   final db = ref.watch(databaseProvider);

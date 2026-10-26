@@ -36,6 +36,7 @@
     "title": "Вейпы и IQOS: правда без мифов",
     "summary": "Чем электронные сигареты и системы нагревания табака отличаются от обычных — и почему это тоже никотиновая зависимость.",
     "category": "vape",
+    "products": ["cigarettes", "sticks", "disposable", "liquid"],
     "readMinutes": 5,
     "file": "articles/vape_iqos_truth.md"
   },
@@ -116,6 +117,7 @@
     "title": "Одноразки, многоразки и IQOS: в чём разница",
     "summary": "Чем отличаются разные форматы электронных сигарет и как это влияет на отказ.",
     "category": "vape",
+    "products": ["sticks", "disposable", "liquid"],
     "readMinutes": 4,
     "file": "articles/vape_types_explained.md"
   },
@@ -196,6 +198,7 @@
     "title": "Помогает ли вейп бросить курить",
     "summary": "Честный разбор перехода на вейп как способа бросить курить — без осуждения, но с фактами.",
     "category": "myths",
+    "products": ["cigarettes", "sticks", "disposable", "liquid"],
     "readMinutes": 4,
     "file": "articles/vaping_to_quit_myth.md"
   },
@@ -204,6 +207,7 @@
     "title": "«Всего одна»: почему одна сигарета редко остаётся одной",
     "summary": "Чем оплошность отличается от срыва и что делать, если «одна» уже случилась.",
     "category": "addiction",
+    "products": ["cigarettes", "sticks"],
     "readMinutes": 4,
     "file": "articles/one_cigarette_trap.md"
   },
@@ -236,14 +240,25 @@
     "title": "Как бросить вейп: особенности и шаги",
     "summary": "Почему отказ от вейпа имеет свои трудности и как с ними справиться.",
     "category": "vape",
+    "products": ["disposable", "liquid"],
     "readMinutes": 4,
     "file": "articles/quitting_vape.md"
+  },
+  {
+    "id": "quitting_iqos",
+    "title": "Как бросить IQOS и другие стики для нагревания",
+    "summary": "Почему нагреваемый табак бросать так же важно, как сигареты, и что поможет на практике.",
+    "category": "vape",
+    "products": ["sticks"],
+    "readMinutes": 3,
+    "file": "articles/quitting_iqos.md"
   },
   {
     "id": "nicotine_salts",
     "title": "Солевой никотин в одноразках",
     "summary": "Почему такой пар мягче на вкус, но сильнее затягивает.",
     "category": "vape",
+    "products": ["disposable", "liquid"],
     "readMinutes": 4,
     "file": "articles/nicotine_salts.md"
   },

@@ -1626,7 +1626,7 @@ abstract class AppLocalizations {
   /// No description provided for @articleCategory.
   ///
   /// In ru, this message translates to:
-  /// **'{category, select, addiction{Зависимость} health{Здоровье} practice{Практика} myths{Мифы} vape{Вейпы и IQOS} money{Деньги} therapy{Помощь и лечение} other{Другое}}'**
+  /// **'{category, select, forYou{Для вас} addiction{Зависимость} health{Здоровье} practice{Практика} myths{Мифы} vape{Вейпы и IQOS} money{Деньги} therapy{Помощь и лечение} other{Другое}}'**
   String articleCategory(String category);
 
   /// No description provided for @articleMinutes.

@@ -150,12 +150,29 @@ class Quote {
   final String? author;
 }
 
+/// Product type names a piece of content is meant for; empty = everyone.
+Set<String> _products(Map<String, dynamic> j) => {...?(j['products'] as List?)?.cast<String>()};
+
+/// A tip for everyone, or only for users of some product types (ProductType names).
+class Tip {
+  Tip.fromJson(Map<String, dynamic> j) : text = j['text'], products = _products(j);
+
+  final String text;
+  final Set<String> products;
+
+  bool get general => products.isEmpty;
+
+  /// Shown to a user of [types]: a general tip, or one about any of their products.
+  bool fits(Set<String> types) => general || products.any(types.contains);
+}
+
 class Article {
   Article.fromJson(Map<String, dynamic> j)
     : id = j['id'],
       title = j['title'],
       summary = j['summary'],
       category = j['category'],
+      products = _products(j),
       readMinutes = j['readMinutes'],
       file = j['file'];
 
@@ -165,6 +182,9 @@ class Article {
 
   /// addiction | health | practice | myths | vape | money
   final String category;
+
+  /// Product types (ProductType names) the article is especially about: listed in «Для вас» for their users.
+  final Set<String> products;
   final int readMinutes;
 
   /// Markdown file relative to the locale folder; null while the article is not written yet (hidden).
@@ -192,10 +212,17 @@ class AppContent {
   final List<WithdrawalSymptom> withdrawal;
   final List<NotInhaledFact> notInhaledFacts;
   final List<Quote> quotes;
-  final List<String> sosTips;
+  final List<Tip> sosTips;
 
-  /// Advice for the most frequent craving trigger, keyed by `Trigger.name`.
-  final Map<String, String> triggerTips;
+  /// Advice for the most frequent craving trigger, keyed by `Trigger.name`; see [triggerTipFor].
+  final Map<String, List<Tip>> triggerTips;
+
+  /// Advice for [trigger]: the one about the user's own products ([types]) if there is one, else the general one.
+  String? triggerTipFor(String trigger, Set<String> types) {
+    final tips = triggerTips[trigger] ?? const <Tip>[];
+    return (tips.where((t) => !t.general && t.fits(types)).firstOrNull ?? tips.where((t) => t.general).firstOrNull)
+        ?.text;
+  }
 
   /// Published articles (those with a file), in index order.
   final List<Article> articles;
@@ -227,12 +254,18 @@ final contentProvider = FutureProvider<AppContent>((ref) async {
     milestones: results[2].map(HealthMilestone.fromJson).toList()
       ..sort((a, b) => a.afterMinutes.compareTo(b.afterMinutes)),
     quotes: results[3].map(Quote.fromJson).toList(),
-    sosTips: [for (final t in results[4]) t['text'] as String],
+    sosTips: results[4].map(Tip.fromJson).toList(),
     articles: [
       for (final a in results[5].map(Article.fromJson))
         if (a.file != null) a,
     ],
-    triggerTips: {for (final t in results[6]) t['trigger'] as String: t['text'] as String},
+    triggerTips: {
+      for (final t in results[6])
+        t['trigger'] as String: [
+          for (final u in results[6])
+            if (u['trigger'] == t['trigger']) Tip.fromJson(u),
+        ],
+    },
     healthFacts: results[7].map(HealthFact.fromJson).toList(),
     withdrawal: results[8].map(WithdrawalSymptom.fromJson).toList(),
     notInhaledFacts: results[9].map(NotInhaledFact.fromJson).toList(),

@@ -1345,6 +1345,7 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String articleCategory(String category) {
     String _temp0 = intl.Intl.selectLogic(category, {
+      'forYou': 'Для вас',
       'addiction': 'Зависимость',
       'health': 'Здоровье',
       'practice': 'Практика',

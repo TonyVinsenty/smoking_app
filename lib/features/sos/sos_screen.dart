@@ -167,8 +167,21 @@ class _ExerciseStepState extends ConsumerState<_ExerciseStep> {
     final l = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final exercise = ref.watch(sosExerciseProvider);
-    final tips = ref.watch(contentProvider).value?.sosTips ?? const [];
-    if (_tipIndex < 0 && tips.isNotEmpty) _tipIndex = _random.nextInt(tips.length);
+    final types = ref.watch(productTypesProvider);
+    final tips = [
+      for (final t in ref.watch(contentProvider).value?.sosTips ?? const <Tip>[])
+        if (types != null && t.fits(types)) t,
+    ];
+    if (_tipIndex < 0 && tips.isNotEmpty) {
+      // Every other time the first tip is about the user's own product.
+      final own = [
+        for (final (i, t) in tips.indexed)
+          if (!t.general) i,
+      ];
+      _tipIndex = own.isNotEmpty && _random.nextBool()
+          ? own[_random.nextInt(own.length)]
+          : _random.nextInt(tips.length);
+    }
 
     // Exercise name on the left, «Сменить» on the right: nothing shifts when the exercise changes.
     final header = Row(
@@ -214,7 +227,7 @@ class _ExerciseStepState extends ConsumerState<_ExerciseStep> {
                     constraints: BoxConstraints(minHeight: tipMinHeight, minWidth: double.infinity),
                     child: Padding(
                       padding: const EdgeInsets.only(right: 12),
-                      child: Text(tips[_tipIndex], style: tipStyle),
+                      child: Text(tips[_tipIndex].text, style: tipStyle),
                     ),
                   ),
                 ),
