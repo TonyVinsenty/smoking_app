@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/widgets/tab_page.dart';
+import '../../data/chat.dart';
 import '../../data/social.dart';
 import '../../l10n/app_localizations.dart';
+import 'chats_tab.dart';
 import 'friends_tab.dart';
 import 'rating_tab.dart';
 import 'social_widgets.dart';
 
 /// «Друзья»: a small circle of friends added by code. Before joining, the user picks a name;
-/// after that — «Мои друзья» (people and their pages) and «Рейтинг» (the podium).
+/// after that — «Мои друзья» (people and their pages), «Чаты» and «Рейтинг» (the podium).
 class FriendsScreen extends ConsumerWidget {
   const FriendsScreen({super.key});
 
@@ -36,12 +38,13 @@ class FriendsScreen extends ConsumerWidget {
     }
     return TabPage(
       body: DefaultTabController(
-        length: 2,
+        length: 3,
         child: Column(
           children: [
             TabBar(
               tabs: [
                 Tab(text: l.friendsTabMine),
+                Tab(child: _ChatsTabLabel(text: l.friendsTabChats)),
                 Tab(text: l.friendsTabRating),
               ],
             ),
@@ -49,6 +52,7 @@ class FriendsScreen extends ConsumerWidget {
               child: TabBarView(
                 children: [
                   const FriendsTab(),
+                  const ChatsTab(),
                   RatingTab(me: me),
                 ],
               ),
@@ -56,6 +60,26 @@ class FriendsScreen extends ConsumerWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+/// «Чаты» with the number of unread messages next to it.
+class _ChatsTabLabel extends ConsumerWidget {
+  const _ChatsTabLabel({required this.text});
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final unread = ref.watch(totalUnreadProvider);
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      spacing: 6,
+      children: [
+        Flexible(child: Text(text, overflow: TextOverflow.ellipsis)),
+        if (unread > 0) Badge.count(count: unread, backgroundColor: Theme.of(context).colorScheme.primary),
+      ],
     );
   }
 }

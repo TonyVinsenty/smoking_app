@@ -196,6 +196,270 @@ abstract class AppLocalizations {
   /// **'сэкономлено'**
   String get friendStatMoney;
 
+  /// No description provided for @friendWrite.
+  ///
+  /// In ru, this message translates to:
+  /// **'Написать'**
+  String get friendWrite;
+
+  /// No description provided for @friendsTabChats.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чаты'**
+  String get friendsTabChats;
+
+  /// No description provided for @chatsEmpty.
+  ///
+  /// In ru, this message translates to:
+  /// **'Здесь будут ваши переписки. Напишите другу или соберите группу — до 5 человек.'**
+  String get chatsEmpty;
+
+  /// No description provided for @chatsNoFriends.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чтобы переписываться, сначала добавьте друга во вкладке «Мои друзья».'**
+  String get chatsNoFriends;
+
+  /// No description provided for @chatsNoPush.
+  ///
+  /// In ru, this message translates to:
+  /// **'Уведомлений о сообщениях пока нет: новые видны по счётчику на вкладке «Друзья».'**
+  String get chatsNoPush;
+
+  /// No description provided for @chatWriteFriend.
+  ///
+  /// In ru, this message translates to:
+  /// **'Написать другу'**
+  String get chatWriteFriend;
+
+  /// No description provided for @chatNewGroup.
+  ///
+  /// In ru, this message translates to:
+  /// **'Новая группа'**
+  String get chatNewGroup;
+
+  /// No description provided for @chatPickFriend.
+  ///
+  /// In ru, this message translates to:
+  /// **'Кому написать?'**
+  String get chatPickFriend;
+
+  /// No description provided for @chatYou.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вы: {text}'**
+  String chatYou(String text);
+
+  /// No description provided for @chatFrom.
+  ///
+  /// In ru, this message translates to:
+  /// **'{nick}: {text}'**
+  String chatFrom(String nick, String text);
+
+  /// No description provided for @chatEventCreated.
+  ///
+  /// In ru, this message translates to:
+  /// **'{nick} создаёт группу'**
+  String chatEventCreated(String nick);
+
+  /// No description provided for @chatEventAdded.
+  ///
+  /// In ru, this message translates to:
+  /// **'{nick} добавляет: {names}'**
+  String chatEventAdded(String nick, String names);
+
+  /// No description provided for @chatEventLeft.
+  ///
+  /// In ru, this message translates to:
+  /// **'{nick} выходит из группы'**
+  String chatEventLeft(String nick);
+
+  /// No description provided for @chatEventRenamed.
+  ///
+  /// In ru, this message translates to:
+  /// **'{nick} меняет название: «{title}»'**
+  String chatEventRenamed(String nick, String title);
+
+  /// No description provided for @chatEventUntitled.
+  ///
+  /// In ru, this message translates to:
+  /// **'{nick} убирает название группы'**
+  String chatEventUntitled(String nick);
+
+  /// No description provided for @chatEventCreatedMe.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вы создали группу'**
+  String get chatEventCreatedMe;
+
+  /// No description provided for @chatEventAddedMe.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вы добавили: {names}'**
+  String chatEventAddedMe(String names);
+
+  /// No description provided for @chatEventLeftMe.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вы вышли из группы'**
+  String get chatEventLeftMe;
+
+  /// No description provided for @chatEventRenamedMe.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вы изменили название: «{title}»'**
+  String chatEventRenamedMe(String title);
+
+  /// No description provided for @chatEventUntitledMe.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вы убрали название группы'**
+  String get chatEventUntitledMe;
+
+  /// No description provided for @chatYouName.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вы'**
+  String get chatYouName;
+
+  /// No description provided for @chatInputHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сообщение'**
+  String get chatInputHint;
+
+  /// No description provided for @chatSend.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отправить'**
+  String get chatSend;
+
+  /// No description provided for @chatFirstMessage.
+  ///
+  /// In ru, this message translates to:
+  /// **'Напишите первое сообщение — {nick} увидит его, когда откроет приложение.'**
+  String chatFirstMessage(String nick);
+
+  /// No description provided for @chatNotFriends.
+  ///
+  /// In ru, this message translates to:
+  /// **'{nick} больше не в ваших друзьях — писать сюда нельзя.'**
+  String chatNotFriends(String nick);
+
+  /// No description provided for @chatToday.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сегодня'**
+  String get chatToday;
+
+  /// No description provided for @chatYesterday.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вчера'**
+  String get chatYesterday;
+
+  /// No description provided for @chatCopy.
+  ///
+  /// In ru, this message translates to:
+  /// **'Скопировать'**
+  String get chatCopy;
+
+  /// No description provided for @chatCopied.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сообщение скопировано'**
+  String get chatCopied;
+
+  /// No description provided for @groupPickTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Кого позвать в группу?'**
+  String get groupPickTitle;
+
+  /// No description provided for @groupPickHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Можно выбрать до {count, plural, one{{count} человека} few{{count} человек} other{{count} человек}}'**
+  String groupPickHint(int count);
+
+  /// No description provided for @groupNameLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Название (необязательно)'**
+  String get groupNameLabel;
+
+  /// No description provided for @groupCreate.
+  ///
+  /// In ru, this message translates to:
+  /// **'Создать группу'**
+  String get groupCreate;
+
+  /// No description provided for @groupMembers.
+  ///
+  /// In ru, this message translates to:
+  /// **'{count, plural, one{{count} участник} few{{count} участника} other{{count} участников}}'**
+  String groupMembers(int count);
+
+  /// No description provided for @groupAddMembers.
+  ///
+  /// In ru, this message translates to:
+  /// **'Добавить участников'**
+  String get groupAddMembers;
+
+  /// No description provided for @groupAddButton.
+  ///
+  /// In ru, this message translates to:
+  /// **'Добавить'**
+  String get groupAddButton;
+
+  /// No description provided for @groupRename.
+  ///
+  /// In ru, this message translates to:
+  /// **'Изменить название'**
+  String get groupRename;
+
+  /// No description provided for @groupLeave.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выйти из группы'**
+  String get groupLeave;
+
+  /// No description provided for @groupLeaveTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выйти из группы?'**
+  String get groupLeaveTitle;
+
+  /// No description provided for @groupLeaveText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ваши сообщения останутся. Вернуться можно, если кто-то из участников снова вас добавит.'**
+  String get groupLeaveText;
+
+  /// No description provided for @groupLeaveConfirm.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выйти'**
+  String get groupLeaveConfirm;
+
+  /// No description provided for @groupFull.
+  ///
+  /// In ru, this message translates to:
+  /// **'В группе уже 5 человек — это максимум'**
+  String get groupFull;
+
+  /// No description provided for @groupNoMoreFriends.
+  ///
+  /// In ru, this message translates to:
+  /// **'Все ваши друзья уже здесь'**
+  String get groupNoMoreFriends;
+
+  /// No description provided for @groupNotFriendHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Не в ваших друзьях'**
+  String get groupNotFriendHint;
+
   /// No description provided for @friendRemoveMenu.
   ///
   /// In ru, this message translates to:

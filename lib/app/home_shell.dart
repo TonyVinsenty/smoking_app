@@ -6,6 +6,7 @@ import 'notifications.dart';
 import 'widgets/bottom_bar.dart';
 import 'widgets/sos_fab.dart';
 import 'widgets/toast.dart';
+import '../data/chat.dart';
 import '../data/social.dart';
 import '../data/providers.dart';
 import '../domain/achievements.dart';
@@ -156,7 +157,12 @@ class _HomeShellState extends ConsumerState<HomeShell> with SingleTickerProvider
               dot: ref.watch(diaryDueProvider),
             ),
             BarItem(icon: Icons.menu_book_outlined, selectedIcon: Icons.menu_book, label: l.tabKnowledge),
-            BarItem(icon: Icons.people_outline, selectedIcon: Icons.people, label: l.tabFriends),
+            BarItem(
+              icon: Icons.people_outline,
+              selectedIcon: Icons.people,
+              label: l.tabFriends,
+              count: ref.watch(totalUnreadProvider),
+            ),
             BarItem(icon: Icons.settings_outlined, selectedIcon: Icons.settings, label: l.tabSettings),
           ],
         ),

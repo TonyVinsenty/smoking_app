@@ -9,6 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../content/content.dart';
 import '../domain/stats.dart';
+import 'chat.dart';
 import 'providers.dart';
 import 'settings.dart';
 
@@ -281,10 +282,12 @@ class SocialService {
     await batch.commit();
   }
 
-  /// Erases everything on the server: friendships on both sides, the code, the photo, the profile, the sign-in.
+  /// Erases everything on the server: own chat messages and chat memberships, friendships on both sides,
+  /// the code, the photo, the profile, the sign-in.
   Future<void> deleteAccount() async {
     final uid = _uid;
     if (uid == null) return;
+    await ref.read(chatServiceProvider).leaveAll();
     final me = ref.read(myProfileProvider).value;
     final friends = await _friendsOf(uid).get();
     final batch = _db.batch();

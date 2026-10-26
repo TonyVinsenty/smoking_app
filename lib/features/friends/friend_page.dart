@@ -7,9 +7,10 @@ import '../../app/widgets/toast.dart';
 import '../../content/content.dart';
 import '../../data/social.dart';
 import '../../l10n/app_localizations.dart';
+import 'chat_screen.dart';
 import 'social_widgets.dart';
 
-/// A friend's page: photo, name and only the stats they chose to show. The menu removes the friend.
+/// A friend's page: photo, name, «Написать» and only the stats they chose to show. The menu removes the friend.
 class FriendPage extends ConsumerWidget {
   const FriendPage({super.key, required this.uid});
 
@@ -51,6 +52,14 @@ class FriendPage extends ConsumerWidget {
             ),
             const SizedBox(height: 14),
             Text(f.nick, textAlign: TextAlign.center, style: theme.textTheme.headlineSmall),
+            const SizedBox(height: 14),
+            Center(
+              child: FilledButton.tonalIcon(
+                onPressed: () => ChatScreen.openDirect(context, ref, f.uid),
+                icon: const Icon(Icons.chat_bubble_outline),
+                label: Text(l.friendWrite),
+              ),
+            ),
             const SizedBox(height: 24),
             if (f.shared.isEmpty)
               AppCard(

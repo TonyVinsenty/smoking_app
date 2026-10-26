@@ -95,6 +95,182 @@ class AppLocalizationsRu extends AppLocalizations {
   String get friendStatMoney => 'сэкономлено';
 
   @override
+  String get friendWrite => 'Написать';
+
+  @override
+  String get friendsTabChats => 'Чаты';
+
+  @override
+  String get chatsEmpty =>
+      'Здесь будут ваши переписки. Напишите другу или соберите группу — до 5 человек.';
+
+  @override
+  String get chatsNoFriends =>
+      'Чтобы переписываться, сначала добавьте друга во вкладке «Мои друзья».';
+
+  @override
+  String get chatsNoPush =>
+      'Уведомлений о сообщениях пока нет: новые видны по счётчику на вкладке «Друзья».';
+
+  @override
+  String get chatWriteFriend => 'Написать другу';
+
+  @override
+  String get chatNewGroup => 'Новая группа';
+
+  @override
+  String get chatPickFriend => 'Кому написать?';
+
+  @override
+  String chatYou(String text) {
+    return 'Вы: $text';
+  }
+
+  @override
+  String chatFrom(String nick, String text) {
+    return '$nick: $text';
+  }
+
+  @override
+  String chatEventCreated(String nick) {
+    return '$nick создаёт группу';
+  }
+
+  @override
+  String chatEventAdded(String nick, String names) {
+    return '$nick добавляет: $names';
+  }
+
+  @override
+  String chatEventLeft(String nick) {
+    return '$nick выходит из группы';
+  }
+
+  @override
+  String chatEventRenamed(String nick, String title) {
+    return '$nick меняет название: «$title»';
+  }
+
+  @override
+  String chatEventUntitled(String nick) {
+    return '$nick убирает название группы';
+  }
+
+  @override
+  String get chatEventCreatedMe => 'Вы создали группу';
+
+  @override
+  String chatEventAddedMe(String names) {
+    return 'Вы добавили: $names';
+  }
+
+  @override
+  String get chatEventLeftMe => 'Вы вышли из группы';
+
+  @override
+  String chatEventRenamedMe(String title) {
+    return 'Вы изменили название: «$title»';
+  }
+
+  @override
+  String get chatEventUntitledMe => 'Вы убрали название группы';
+
+  @override
+  String get chatYouName => 'Вы';
+
+  @override
+  String get chatInputHint => 'Сообщение';
+
+  @override
+  String get chatSend => 'Отправить';
+
+  @override
+  String chatFirstMessage(String nick) {
+    return 'Напишите первое сообщение — $nick увидит его, когда откроет приложение.';
+  }
+
+  @override
+  String chatNotFriends(String nick) {
+    return '$nick больше не в ваших друзьях — писать сюда нельзя.';
+  }
+
+  @override
+  String get chatToday => 'Сегодня';
+
+  @override
+  String get chatYesterday => 'Вчера';
+
+  @override
+  String get chatCopy => 'Скопировать';
+
+  @override
+  String get chatCopied => 'Сообщение скопировано';
+
+  @override
+  String get groupPickTitle => 'Кого позвать в группу?';
+
+  @override
+  String groupPickHint(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count человек',
+      few: '$count человек',
+      one: '$count человека',
+    );
+    return 'Можно выбрать до $_temp0';
+  }
+
+  @override
+  String get groupNameLabel => 'Название (необязательно)';
+
+  @override
+  String get groupCreate => 'Создать группу';
+
+  @override
+  String groupMembers(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count участников',
+      few: '$count участника',
+      one: '$count участник',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get groupAddMembers => 'Добавить участников';
+
+  @override
+  String get groupAddButton => 'Добавить';
+
+  @override
+  String get groupRename => 'Изменить название';
+
+  @override
+  String get groupLeave => 'Выйти из группы';
+
+  @override
+  String get groupLeaveTitle => 'Выйти из группы?';
+
+  @override
+  String get groupLeaveText =>
+      'Ваши сообщения останутся. Вернуться можно, если кто-то из участников снова вас добавит.';
+
+  @override
+  String get groupLeaveConfirm => 'Выйти';
+
+  @override
+  String get groupFull => 'В группе уже 5 человек — это максимум';
+
+  @override
+  String get groupNoMoreFriends => 'Все ваши друзья уже здесь';
+
+  @override
+  String get groupNotFriendHint => 'Не в ваших друзьях';
+
+  @override
   String get friendRemoveMenu => 'Убрать из друзей';
 
   @override
