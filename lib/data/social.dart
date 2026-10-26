@@ -15,7 +15,9 @@ import 'settings.dart';
 /// Friends leaderboard on Firebase. Server layout (see firestore.rules):
 /// - `users/{uid}`: nick, friend code and only the stats the user chose to share;
 /// - `users/{uid}/friends/{friendUid}`: one doc per friend, on both sides (friendship is mutual);
-/// - `codes/{code}`: code → uid + nick, readable only by someone who already knows the code.
+/// - `codes/{code}`: code → uid + nick, readable only by someone who already knows the code;
+/// - `avatars/{uid}`: the profile photo (a small JPEG as base64), visible like the profile. Kept apart from it,
+///   so the 5-minute stats sync does not resend the photo to every friend.
 
 /// What a user may show to friends.
 enum ShareField { xp, badges, days, money }
@@ -83,6 +85,9 @@ class SocialProfile {
     ShareField.days => days,
     ShareField.money => money,
   };
+
+  /// Only the stats this person shows, in the usual order.
+  Map<ShareField, int> get shared => {for (final f in ShareField.values) f: ?value(f)};
 }
 
 /// The user's own numbers, computed the same way as on the home screen.
@@ -122,7 +127,17 @@ final myStatsProvider = Provider<MyStats?>((ref) {
   );
 });
 
-/// Ready-made nicknames (no free text, so nothing to moderate).
+/// The longest name; the server allows up to 40, so there is room for spaces trimmed differently.
+const maxNickLength = 30;
+
+/// Whatever the user typed → the name to save: no extra spaces, at most [maxNickLength] characters.
+String cleanNick(String input) {
+  final nick = input.trim().replaceAll(RegExp(r'\s+'), ' ');
+  final runes = nick.runes;
+  return runes.length > maxNickLength ? String.fromCharCodes(runes.take(maxNickLength)).trimRight() : nick;
+}
+
+/// Ready-made name ideas for those who do not want to make one up.
 final nicknamesProvider = FutureProvider<List<String>>((ref) async {
   final raw = await rootBundle.loadString('assets/content/$contentLocale/nicknames.json');
   return (jsonDecode(raw) as List).cast<String>();
@@ -134,6 +149,10 @@ final _auth = FirebaseAuth.instance;
 DocumentReference<Map<String, dynamic>> _userDoc(String uid) => _db.collection('users').doc(uid);
 CollectionReference<Map<String, dynamic>> _friendsOf(String uid) => _userDoc(uid).collection('friends');
 DocumentReference<Map<String, dynamic>> _codeDoc(String code) => _db.collection('codes').doc(code);
+DocumentReference<Map<String, dynamic>> _avatarDoc(String uid) => _db.collection('avatars').doc(uid);
+
+/// The photo is a JPEG of at most this many bytes (the server checks the base64 text, a third longer).
+const maxAvatarBytes = 120000;
 
 final authUserProvider = StreamProvider<User?>((ref) => _auth.authStateChanges());
 
@@ -154,6 +173,15 @@ final friendIdsProvider = StreamProvider<List<String>>((ref) {
 /// Reading is allowed only once their side of the friendship exists, so a denied read is retried for a while.
 final friendProfileProvider = StreamProvider.family<SocialProfile?, String>(
   (ref, uid) => _userDoc(uid).snapshots().map((d) => d.exists ? SocialProfile.fromDoc(d) : null),
+  retry: (tries, _) => tries < 12 ? Duration(seconds: min(30, 1 << tries)) : null,
+);
+
+/// Someone's photo (own or a friend's); null when there is none or it cannot be read.
+final avatarProvider = StreamProvider.family<Uint8List?, String>(
+  (ref, uid) => _avatarDoc(uid).snapshots().map((d) {
+    final img = d.data()?['img'];
+    return img is String ? base64Decode(img) : null;
+  }),
   retry: (tries, _) => tries < 12 ? Duration(seconds: min(30, 1 << tries)) : null,
 );
 
@@ -209,6 +237,18 @@ class SocialService {
     await sync(force: true, nick: nick);
   }
 
+  Future<void> setAvatar(Uint8List jpeg) async {
+    final uid = _uid;
+    if (uid == null || jpeg.length > maxAvatarBytes) return;
+    await _avatarDoc(uid).set({'img': base64Encode(jpeg), 'at': FieldValue.serverTimestamp()});
+  }
+
+  Future<void> removeAvatar() async {
+    final uid = _uid;
+    if (uid == null) return;
+    await _avatarDoc(uid).delete();
+  }
+
   Future<FriendLookup?> lookup(String code) async {
     final doc = await _codeDoc(code).get();
     final d = doc.data();
@@ -244,7 +284,7 @@ class SocialService {
     await batch.commit();
   }
 
-  /// Erases everything on the server: friendships on both sides, the code, the profile, the sign-in.
+  /// Erases everything on the server: friendships on both sides, the code, the photo, the profile, the sign-in.
   Future<void> deleteAccount() async {
     final uid = _uid;
     if (uid == null) return;
@@ -257,7 +297,9 @@ class SocialService {
         ..delete(_friendsOf(f.id).doc(uid));
     }
     if (me != null) batch.delete(_codeDoc(me.code));
-    batch.delete(_userDoc(uid));
+    batch
+      ..delete(_avatarDoc(uid))
+      ..delete(_userDoc(uid));
     await batch.commit();
     _lastSent = null;
     await _auth.currentUser?.delete();

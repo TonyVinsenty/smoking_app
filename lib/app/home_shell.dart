@@ -13,7 +13,7 @@ import '../features/health/achievement_celebration.dart';
 import '../features/health/health_screen.dart';
 import '../features/home/home_screen.dart';
 import '../features/knowledge/knowledge_screen.dart';
-import '../features/leaderboard/leaderboard_screen.dart';
+import '../features/friends/friends_screen.dart';
 import '../features/settings/settings_screen.dart';
 import '../features/sos/sos_screen.dart';
 import '../l10n/app_localizations.dart';
@@ -45,7 +45,7 @@ class _HomeShellState extends ConsumerState<HomeShell> with SingleTickerProvider
   /// "achievementId@attemptId" already written, so a badge is not reported twice before the DB stream catches up.
   final _reported = <String>{};
 
-  static const _screens = [HomeScreen(), HealthScreen(), KnowledgeScreen(), LeaderboardScreen(), SettingsScreen()];
+  static const _screens = [HomeScreen(), HealthScreen(), KnowledgeScreen(), FriendsScreen(), SettingsScreen()];
 
   Future<void> _checkAchievements() async {
     if (_unlocking) return;
@@ -156,7 +156,7 @@ class _HomeShellState extends ConsumerState<HomeShell> with SingleTickerProvider
               dot: ref.watch(diaryDueProvider),
             ),
             BarItem(icon: Icons.menu_book_outlined, selectedIcon: Icons.menu_book, label: l.tabKnowledge),
-            BarItem(icon: Icons.leaderboard_outlined, selectedIcon: Icons.leaderboard, label: l.tabLeaderboard),
+            BarItem(icon: Icons.people_outline, selectedIcon: Icons.people, label: l.tabFriends),
             BarItem(icon: Icons.settings_outlined, selectedIcon: Icons.settings, label: l.tabSettings),
           ],
         ),

@@ -5,6 +5,7 @@ rules_version = '2';
 // - a profile (users/{uid}) is visible to its owner and to people in the owner's friends list;
 // - a friends list is visible only to its owner;
 // - codes/{code} can be read only by someone who already knows the code (no listing);
+// - a photo (avatars/{uid}) is visible like the profile: to its owner and to the owner's friends;
 // - everyone writes only their own data; the one exception is adding yourself to someone's friends list,
 //   allowed only together with that person's friend code.
 service cloud.firestore {
@@ -45,6 +46,18 @@ service cloud.firestore {
                   && get(/databases/$(database)/documents/codes/$(request.resource.data.code)).data.uid == uid));
         allow delete: if signedIn() && (request.auth.uid == uid || request.auth.uid == fid);
       }
+    }
+
+    // A small JPEG as base64: at most 160 000 characters (≈120 KB).
+    match /avatars/{uid} {
+      allow read: if signedIn()
+        && (request.auth.uid == uid
+            || exists(/databases/$(database)/documents/users/$(uid)/friends/$(request.auth.uid)));
+      allow create, update: if signedIn() && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['img', 'at'])
+        && request.resource.data.img is string
+        && request.resource.data.img.size() <= 160000;
+      allow delete: if signedIn() && request.auth.uid == uid;
     }
 
     match /codes/{code} {

@@ -22,14 +22,71 @@ class AppLocalizationsRu extends AppLocalizations {
   String get tabKnowledge => 'Знания';
 
   @override
-  String get tabLeaderboard => 'Рейтинг';
+  String get tabFriends => 'Друзья';
 
   @override
   String get tabSettings => 'Настройки';
 
   @override
-  String get leaderboardText =>
-      'Добавляйте друзей по коду и поддерживайте друг друга. Всё анонимно и только по желанию.';
+  String get friendsIntro =>
+      'Добавляйте друзей по коду и поддерживайте друг друга. Вы сами решаете, что о вас видно.';
+
+  @override
+  String get friendsTabMine => 'Мои друзья';
+
+  @override
+  String get friendsTabRating => 'Рейтинг';
+
+  @override
+  String get friendsAdd => 'Добавить друга';
+
+  @override
+  String friendShowsNothing(String nick) {
+    return '$nick пока ничего не показывает — и это нормально';
+  }
+
+  @override
+  String friendStatLevel(int level) {
+    return 'Уровень $level';
+  }
+
+  @override
+  String friendStatXp(String xp) {
+    return '$xp XP опыта';
+  }
+
+  @override
+  String friendStatBadges(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'значков',
+      few: 'значка',
+      one: 'значок',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String friendStatDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'дней без курения',
+      few: 'дня без курения',
+      one: 'день без курения',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get friendStatMoney => 'сэкономлено';
+
+  @override
+  String get friendRemoveMenu => 'Убрать из друзей';
+
+  @override
+  String get friendGone => 'Этого человека больше нет в ваших друзьях.';
 
   @override
   String get next => 'Далее';
@@ -1545,7 +1602,13 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get socialJoinText =>
-      'Выберите ник — настоящее имя не нужно. Сменить его можно в любой момент.';
+      'Напишите любое имя или выберите готовое. Сменить его можно в любой момент.';
+
+  @override
+  String get socialNameLabel => 'Имя';
+
+  @override
+  String get socialNameIdeas => 'Идеи';
 
   @override
   String get socialJoinMore => 'Другие варианты';
@@ -1556,7 +1619,7 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get socialNickChangeTitle => 'Новый ник';
+  String get socialNickChangeTitle => 'Новое имя';
 
   @override
   String get socialOffline =>
@@ -1610,7 +1673,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get socialMeHidden =>
-      'Вы не показываете этот показатель друзьям. Изменить — в «Приватности».';
+      'Вы не показываете этот показатель друзьям. Изменить — в «Обо мне».';
 
   @override
   String get socialMyCode => 'Мой код друга';
@@ -1622,14 +1685,11 @@ class AppLocalizationsRu extends AppLocalizations {
   String get socialCodeCopied => 'Код скопирован в буфер обмена';
 
   @override
-  String get socialAddFriendShort => 'Друг';
-
-  @override
   String get socialAddFriendTitle => 'Добавить друга';
 
   @override
   String get socialAddFriendText =>
-      'Попросите у друга его код из вкладки «Рейтинг» и введите его здесь.';
+      'Попросите у друга его код из вкладки «Друзья» и введите его здесь.';
 
   @override
   String get socialCodeLabel => 'Код друга';
@@ -1642,7 +1702,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get socialAddMutual =>
-      'Вы появитесь и в списке друга. Убрать друга можно долгим нажатием на него в списке.';
+      'Вы появитесь и в списке друга. Убрать друга можно на его странице.';
 
   @override
   String get socialCodeNotFound => 'Такого кода нет — проверьте буквы и цифры';
@@ -1672,13 +1732,35 @@ class AppLocalizationsRu extends AppLocalizations {
   String get socialRemove => 'Убрать';
 
   @override
-  String get privacyTitle => 'Приватность';
+  String get aboutMeTitle => 'Обо мне';
+
+  @override
+  String get aboutMeShareTitle => 'Что видят друзья';
+
+  @override
+  String get aboutMePhoto => 'Фото';
+
+  @override
+  String get aboutMePhotoPick => 'Выбрать фото';
+
+  @override
+  String get aboutMePhotoRemove => 'Убрать фото';
+
+  @override
+  String get aboutMePhotoCrop => 'Фото профиля';
+
+  @override
+  String get aboutMePhotoDone => 'Готово';
+
+  @override
+  String get aboutMePhotoFailed =>
+      'Не получилось загрузить фото. Попробуйте ещё раз.';
 
   @override
   String get privacyPreview => 'Так вас видят друзья';
 
   @override
-  String get privacyOnlyNick => 'Только ник';
+  String get privacyOnlyNick => 'Только имя';
 
   @override
   String get shareXp => 'Уровень и опыт (XP)';
@@ -1706,33 +1788,30 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get privacyServerNote =>
-      'На сервере хранятся только ник, код друга, список друзей и отмеченные показатели. Ничего о здоровье и тяге туда не уходит.';
+      'На сервере хранятся только имя, фото, код друга, список друзей и отмеченные показатели. Ничего о здоровье и тяге туда не уходит.';
 
   @override
   String get privacyNotJoined =>
-      'Вы ещё не в рейтинге. Эти настройки применятся, когда вы выберете ник на вкладке «Рейтинг».';
+      'Вы ещё не с друзьями. Эти настройки применятся, когда вы выберете имя на вкладке «Друзья»; там же появятся имя и фото.';
 
   @override
-  String get privacyNick => 'Ник';
+  String get privacyChangeNick => 'Сменить имя';
 
   @override
-  String get privacyChangeNick => 'Сменить';
-
-  @override
-  String get privacyDeleteTitle => 'Удалить аккаунт рейтинга';
+  String get privacyDeleteTitle => 'Удалить аккаунт друзей';
 
   @override
   String get privacyDeleteText =>
-      'Ник, код и друзья будут стёрты с сервера навсегда. Прогресс в приложении останется, вернуться в рейтинг можно позже.';
+      'Имя, фото, код и друзья будут стёрты с сервера навсегда. Прогресс в приложении останется, вернуться к друзьям можно позже.';
 
   @override
   String get privacyDeleteButton => 'Удалить аккаунт';
 
   @override
-  String get privacyDeleteConfirm => 'Удалить аккаунт рейтинга?';
+  String get privacyDeleteConfirm => 'Удалить аккаунт друзей?';
 
   @override
-  String get privacyDeleted => 'Аккаунт рейтинга удалён';
+  String get privacyDeleted => 'Аккаунт друзей удалён';
 
   @override
   String chipLevel(int level, String xp) {
@@ -1762,10 +1841,11 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get settingsRating => 'Рейтинг';
+  String get settingsFriends => 'Друзья';
 
   @override
-  String get settingsPrivacyHint => 'Ник, что видят друзья, удаление аккаунта';
+  String get settingsAboutMeHint =>
+      'Имя, фото, что видят друзья, удаление аккаунта';
 
   @override
   String get thanksRow => 'Спасибо';

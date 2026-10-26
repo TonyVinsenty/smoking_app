@@ -16,7 +16,7 @@ import 'package:smoking_app/features/cravings/craving_map_screen.dart';
 import 'package:smoking_app/features/health/health_screen.dart';
 import 'package:smoking_app/features/home/home_screen.dart';
 import 'package:smoking_app/features/knowledge/knowledge_screen.dart';
-import 'package:smoking_app/features/leaderboard/leaderboard_screen.dart';
+import 'package:smoking_app/features/friends/friends_screen.dart';
 import 'package:smoking_app/features/relapse/history_screen.dart';
 import 'package:smoking_app/features/settings/settings_screen.dart';
 import 'package:smoking_app/features/sos/sos_screen.dart';
@@ -128,7 +128,7 @@ void main() {
         for (final screen in const [
           HomeScreen(),
           KnowledgeScreen(),
-          LeaderboardScreen(),
+          FriendsScreen(),
           SettingsScreen(),
           AchievementsScreen(),
           CravingMapScreen(),

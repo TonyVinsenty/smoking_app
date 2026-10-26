@@ -1,48 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/theme.dart';
 import '../../app/widgets/cards.dart';
 import '../../app/widgets/choice.dart';
 import '../../app/widgets/sos_fab.dart';
-import '../../app/widgets/tab_page.dart';
-import '../../app/widgets/toast.dart';
 import '../../data/social.dart';
 import '../../l10n/app_localizations.dart';
-import '../settings/privacy_screen.dart';
-import 'add_friend_sheet.dart';
+import '../settings/about_me_screen.dart';
+import 'friend_page.dart';
 import 'social_widgets.dart';
-
-/// «Рейтинг»: friends added by code, ranked by the chosen stat (XP by default: it never burns, so a relapse
-/// never drops anyone down). Before joining, the user picks a nickname.
-class LeaderboardScreen extends ConsumerWidget {
-  const LeaderboardScreen({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final l = AppLocalizations.of(context);
-    final auth = ref.watch(authUserProvider);
-    final profile = ref.watch(myProfileProvider);
-    if (auth.isLoading || (auth.value != null && profile.isLoading)) {
-      return const TabPage(body: Center(child: CircularProgressIndicator()));
-    }
-    final me = profile.value;
-    if (me == null) {
-      return TabPage(
-        body: NickPicker(
-          header: Padding(
-            padding: const EdgeInsets.only(bottom: 20),
-            child: Text(l.leaderboardText, style: Theme.of(context).textTheme.bodyMedium),
-          ),
-          buttonText: l.socialJoinButton,
-          onSubmit: (nick) => ref.read(socialServiceProvider).join(nick),
-        ),
-      );
-    }
-    return TabPage(body: _Rating(me: me));
-  }
-}
 
 class _Entry {
   const _Entry({required this.uid, required this.nick, required this.value, this.me = false});
@@ -53,16 +20,18 @@ class _Entry {
   final bool me;
 }
 
-class _Rating extends ConsumerStatefulWidget {
-  const _Rating({required this.me});
+/// «Друзья» → «Рейтинг»: friends ranked by the chosen stat (XP by default: it never burns, so a relapse
+/// never drops anyone down). Tap someone to open their page (yourself → «Обо мне»).
+class RatingTab extends ConsumerStatefulWidget {
+  const RatingTab({super.key, required this.me});
 
   final SocialProfile me;
 
   @override
-  ConsumerState<_Rating> createState() => _RatingState();
+  ConsumerState<RatingTab> createState() => _RatingTabState();
 }
 
-class _RatingState extends ConsumerState<_Rating> {
+class _RatingTabState extends ConsumerState<RatingTab> {
   ShareField _metric = ShareField.xp;
 
   @override
@@ -86,19 +55,8 @@ class _RatingState extends ConsumerState<_Rating> {
     final hidden = friends.length - entries.where((e) => !e.me).length;
 
     return ListView(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, sosClearance),
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, sosClearance),
       children: [
-        Row(
-          children: [
-            Expanded(child: Text(l.tabLeaderboard, style: theme.textTheme.headlineSmall)),
-            FilledButton.tonalIcon(
-              onPressed: () => showAddFriendSheet(context),
-              icon: const Icon(Icons.person_add_alt),
-              label: Text(l.socialAddFriendShort),
-            ),
-          ],
-        ),
-        const SizedBox(height: 14),
         AppSegments<ShareField>(
           options: [
             (ShareField.xp, l.metricXp),
@@ -110,7 +68,7 @@ class _RatingState extends ConsumerState<_Rating> {
           onChanged: (m) => setState(() => _metric = m),
         ),
         const SizedBox(height: 20),
-        if (entries.isNotEmpty) _Podium(entries: entries.take(3).toList(), metric: _metric, onLongPress: _remove),
+        if (entries.isNotEmpty) _Podium(entries: entries.take(3).toList(), metric: _metric, onTap: _open),
         if (entries.length > 3 || hidden > 0 || meHidden) ...[
           const SizedBox(height: 16),
           AppCard(
@@ -118,9 +76,9 @@ class _RatingState extends ConsumerState<_Rating> {
             child: Column(
               children: [
                 for (final (i, e) in entries.indexed.skip(3))
-                  _Row(place: i + 1, entry: e, metric: _metric, onLongPress: _remove),
+                  _Row(place: i + 1, entry: e, metric: _metric, onTap: _open),
                 if (hidden > 0) _HiddenNote(l.socialHidden(hidden)),
-                if (meHidden) _HiddenNote(l.socialMeHidden, onTap: () => PrivacyScreen.open(context)),
+                if (meHidden) _HiddenNote(l.socialMeHidden, onTap: () => AboutMeScreen.open(context)),
               ],
             ),
           ),
@@ -132,42 +90,20 @@ class _RatingState extends ConsumerState<_Rating> {
             child: Text(l.socialNoFriends, style: theme.textTheme.bodyMedium),
           ),
         ],
-        const SizedBox(height: 16),
-        _CodeCard(code: me.code),
       ],
     );
   }
 
-  Future<void> _remove(_Entry e) async {
-    if (e.me) return;
-    final l = AppLocalizations.of(context);
-    final ok = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(l.socialRemoveTitle(e.nick)),
-        content: Text(l.socialRemoveText),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: Text(l.cancel)),
-          TextButton(onPressed: () => Navigator.pop(context, true), child: Text(l.socialRemove)),
-        ],
-      ),
-    );
-    if (ok != true) return;
-    try {
-      await ref.read(socialServiceProvider).removeFriend(e.uid).timeout(const Duration(seconds: 20));
-    } catch (_) {
-      if (mounted) showToast(context, l.socialOffline, icon: Icons.cloud_off);
-    }
-  }
+  void _open(_Entry e) => e.me ? AboutMeScreen.open(context) : FriendPage.open(context, e.uid);
 }
 
 /// Top three on steps: second, first, third.
 class _Podium extends StatelessWidget {
-  const _Podium({required this.entries, required this.metric, required this.onLongPress});
+  const _Podium({required this.entries, required this.metric, required this.onTap});
 
   final List<_Entry> entries;
   final ShareField metric;
-  final ValueChanged<_Entry> onLongPress;
+  final ValueChanged<_Entry> onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -188,11 +124,12 @@ class _Podium extends StatelessWidget {
           SizedBox(
             width: width,
             child: GestureDetector(
-              onLongPress: () => onLongPress(entries[i]),
+              behavior: HitTestBehavior.opaque,
+              onTap: () => onTap(entries[i]),
               child: Column(
                 spacing: 6,
                 children: [
-                  FriendAvatar(nick: entries[i].nick, size: 52, ring: entries[i].me),
+                  FriendAvatar(nick: entries[i].nick, uid: entries[i].uid, size: 52, ring: entries[i].me),
                   Text(
                     entries[i].me ? l.socialYou : entries[i].nick,
                     textAlign: TextAlign.center,
@@ -229,12 +166,12 @@ class _Podium extends StatelessWidget {
 }
 
 class _Row extends StatelessWidget {
-  const _Row({required this.place, required this.entry, required this.metric, required this.onLongPress});
+  const _Row({required this.place, required this.entry, required this.metric, required this.onTap});
 
   final int place;
   final _Entry entry;
   final ShareField metric;
-  final ValueChanged<_Entry> onLongPress;
+  final ValueChanged<_Entry> onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -243,7 +180,7 @@ class _Row extends StatelessWidget {
     return Material(
       color: entry.me ? theme.colorScheme.primaryContainer.withValues(alpha: 0.35) : Colors.transparent,
       child: InkWell(
-        onLongPress: () => onLongPress(entry),
+        onTap: () => onTap(entry),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
           child: Row(
@@ -253,7 +190,7 @@ class _Row extends StatelessWidget {
                 width: 24,
                 child: Text('$place', textAlign: TextAlign.center, style: theme.textTheme.titleSmall),
               ),
-              FriendAvatar(nick: entry.nick, size: 36),
+              FriendAvatar(nick: entry.nick, uid: entry.uid, size: 36),
               Expanded(child: Text(entry.me ? l.socialYou : entry.nick, style: theme.textTheme.bodyMedium)),
               Text(
                 shareValueText(l, metric, entry.value),
@@ -262,54 +199,6 @@ class _Row extends StatelessWidget {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-/// "Мой код друга K7M4-Q2XP": tap the code to copy it, or share it with any messenger.
-class _CodeCard extends StatelessWidget {
-  const _CodeCard({required this.code});
-
-  final String code;
-
-  @override
-  Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context);
-    final theme = Theme.of(context);
-    final pretty = formatCode(code);
-    void copy() {
-      Clipboard.setData(ClipboardData(text: pretty));
-      showToast(context, l.socialCodeCopied, icon: Icons.copy);
-    }
-
-    return AppCard(
-      padding: const EdgeInsets.fromLTRB(16, 12, 12, 12),
-      child: Row(
-        spacing: 8,
-        children: [
-          Expanded(
-            child: InkWell(
-              borderRadius: BorderRadius.circular(8),
-              onTap: copy,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(l.socialMyCode, style: theme.textTheme.labelMedium),
-                  Text(
-                    pretty,
-                    style: theme.textTheme.titleLarge?.copyWith(
-                      color: theme.colorScheme.primary,
-                      letterSpacing: 2,
-                      fontWeight: FontWeight.w800,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          FilledButton.icon(onPressed: copy, icon: const Icon(Icons.copy, size: 18), label: Text(l.socialCopy)),
-        ],
       ),
     );
   }

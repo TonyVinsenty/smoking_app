@@ -13,12 +13,14 @@ import '../../app/format.dart';
 import '../../app/theme.dart';
 import '../../data/database.dart';
 import '../../data/providers.dart';
+import '../../data/social.dart';
 import '../../data/settings.dart';
 import '../../app/widgets/tab_page.dart';
 import '../../l10n/app_localizations.dart';
 import '../../domain/stats.dart';
 import '../onboarding/onboarding_screen.dart';
-import 'privacy_screen.dart';
+import '../friends/social_widgets.dart';
+import 'about_me_screen.dart';
 import 'thanks_screen.dart';
 import '../relapse/history_screen.dart';
 import '../relapse/relapse_screen.dart';
@@ -83,14 +85,17 @@ class SettingsScreen extends ConsumerWidget {
             ],
           ),
           _Group(
-            title: l.settingsRating,
+            title: l.settingsFriends,
             children: [
               ListTile(
-                leading: const Icon(Icons.shield_outlined),
-                title: Text(l.privacyTitle),
-                subtitle: Text(l.settingsPrivacyHint),
+                leading: switch (ref.watch(myProfileProvider).value) {
+                  final me? => FriendAvatar(nick: me.nick, uid: me.uid, size: 36),
+                  null => const Icon(Icons.account_circle_outlined),
+                },
+                title: Text(l.aboutMeTitle),
+                subtitle: Text(l.settingsAboutMeHint),
                 trailing: const Icon(Icons.chevron_right),
-                onTap: () => PrivacyScreen.open(context),
+                onTap: () => AboutMeScreen.open(context),
               ),
             ],
           ),

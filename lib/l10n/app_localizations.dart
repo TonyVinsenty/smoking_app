@@ -118,11 +118,11 @@ abstract class AppLocalizations {
   /// **'Знания'**
   String get tabKnowledge;
 
-  /// No description provided for @tabLeaderboard.
+  /// No description provided for @tabFriends.
   ///
   /// In ru, this message translates to:
-  /// **'Рейтинг'**
-  String get tabLeaderboard;
+  /// **'Друзья'**
+  String get tabFriends;
 
   /// No description provided for @tabSettings.
   ///
@@ -130,11 +130,77 @@ abstract class AppLocalizations {
   /// **'Настройки'**
   String get tabSettings;
 
-  /// No description provided for @leaderboardText.
+  /// No description provided for @friendsIntro.
   ///
   /// In ru, this message translates to:
-  /// **'Добавляйте друзей по коду и поддерживайте друг друга. Всё анонимно и только по желанию.'**
-  String get leaderboardText;
+  /// **'Добавляйте друзей по коду и поддерживайте друг друга. Вы сами решаете, что о вас видно.'**
+  String get friendsIntro;
+
+  /// No description provided for @friendsTabMine.
+  ///
+  /// In ru, this message translates to:
+  /// **'Мои друзья'**
+  String get friendsTabMine;
+
+  /// No description provided for @friendsTabRating.
+  ///
+  /// In ru, this message translates to:
+  /// **'Рейтинг'**
+  String get friendsTabRating;
+
+  /// No description provided for @friendsAdd.
+  ///
+  /// In ru, this message translates to:
+  /// **'Добавить друга'**
+  String get friendsAdd;
+
+  /// No description provided for @friendShowsNothing.
+  ///
+  /// In ru, this message translates to:
+  /// **'{nick} пока ничего не показывает — и это нормально'**
+  String friendShowsNothing(String nick);
+
+  /// No description provided for @friendStatLevel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Уровень {level}'**
+  String friendStatLevel(int level);
+
+  /// No description provided for @friendStatXp.
+  ///
+  /// In ru, this message translates to:
+  /// **'{xp} XP опыта'**
+  String friendStatXp(String xp);
+
+  /// No description provided for @friendStatBadges.
+  ///
+  /// In ru, this message translates to:
+  /// **'{count, plural, one{значок} few{значка} other{значков}}'**
+  String friendStatBadges(int count);
+
+  /// No description provided for @friendStatDays.
+  ///
+  /// In ru, this message translates to:
+  /// **'{count, plural, one{день без курения} few{дня без курения} other{дней без курения}}'**
+  String friendStatDays(int count);
+
+  /// No description provided for @friendStatMoney.
+  ///
+  /// In ru, this message translates to:
+  /// **'сэкономлено'**
+  String get friendStatMoney;
+
+  /// No description provided for @friendRemoveMenu.
+  ///
+  /// In ru, this message translates to:
+  /// **'Убрать из друзей'**
+  String get friendRemoveMenu;
+
+  /// No description provided for @friendGone.
+  ///
+  /// In ru, this message translates to:
+  /// **'Этого человека больше нет в ваших друзьях.'**
+  String get friendGone;
 
   /// No description provided for @next.
   ///
@@ -1872,8 +1938,20 @@ abstract class AppLocalizations {
   /// No description provided for @socialJoinText.
   ///
   /// In ru, this message translates to:
-  /// **'Выберите ник — настоящее имя не нужно. Сменить его можно в любой момент.'**
+  /// **'Напишите любое имя или выберите готовое. Сменить его можно в любой момент.'**
   String get socialJoinText;
+
+  /// No description provided for @socialNameLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Имя'**
+  String get socialNameLabel;
+
+  /// No description provided for @socialNameIdeas.
+  ///
+  /// In ru, this message translates to:
+  /// **'Идеи'**
+  String get socialNameIdeas;
 
   /// No description provided for @socialJoinMore.
   ///
@@ -1890,7 +1968,7 @@ abstract class AppLocalizations {
   /// No description provided for @socialNickChangeTitle.
   ///
   /// In ru, this message translates to:
-  /// **'Новый ник'**
+  /// **'Новое имя'**
   String get socialNickChangeTitle;
 
   /// No description provided for @socialOffline.
@@ -1962,7 +2040,7 @@ abstract class AppLocalizations {
   /// No description provided for @socialMeHidden.
   ///
   /// In ru, this message translates to:
-  /// **'Вы не показываете этот показатель друзьям. Изменить — в «Приватности».'**
+  /// **'Вы не показываете этот показатель друзьям. Изменить — в «Обо мне».'**
   String get socialMeHidden;
 
   /// No description provided for @socialMyCode.
@@ -1983,12 +2061,6 @@ abstract class AppLocalizations {
   /// **'Код скопирован в буфер обмена'**
   String get socialCodeCopied;
 
-  /// No description provided for @socialAddFriendShort.
-  ///
-  /// In ru, this message translates to:
-  /// **'Друг'**
-  String get socialAddFriendShort;
-
   /// No description provided for @socialAddFriendTitle.
   ///
   /// In ru, this message translates to:
@@ -1998,7 +2070,7 @@ abstract class AppLocalizations {
   /// No description provided for @socialAddFriendText.
   ///
   /// In ru, this message translates to:
-  /// **'Попросите у друга его код из вкладки «Рейтинг» и введите его здесь.'**
+  /// **'Попросите у друга его код из вкладки «Друзья» и введите его здесь.'**
   String get socialAddFriendText;
 
   /// No description provided for @socialCodeLabel.
@@ -2022,7 +2094,7 @@ abstract class AppLocalizations {
   /// No description provided for @socialAddMutual.
   ///
   /// In ru, this message translates to:
-  /// **'Вы появитесь и в списке друга. Убрать друга можно долгим нажатием на него в списке.'**
+  /// **'Вы появитесь и в списке друга. Убрать друга можно на его странице.'**
   String get socialAddMutual;
 
   /// No description provided for @socialCodeNotFound.
@@ -2067,11 +2139,53 @@ abstract class AppLocalizations {
   /// **'Убрать'**
   String get socialRemove;
 
-  /// No description provided for @privacyTitle.
+  /// No description provided for @aboutMeTitle.
   ///
   /// In ru, this message translates to:
-  /// **'Приватность'**
-  String get privacyTitle;
+  /// **'Обо мне'**
+  String get aboutMeTitle;
+
+  /// No description provided for @aboutMeShareTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Что видят друзья'**
+  String get aboutMeShareTitle;
+
+  /// No description provided for @aboutMePhoto.
+  ///
+  /// In ru, this message translates to:
+  /// **'Фото'**
+  String get aboutMePhoto;
+
+  /// No description provided for @aboutMePhotoPick.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выбрать фото'**
+  String get aboutMePhotoPick;
+
+  /// No description provided for @aboutMePhotoRemove.
+  ///
+  /// In ru, this message translates to:
+  /// **'Убрать фото'**
+  String get aboutMePhotoRemove;
+
+  /// No description provided for @aboutMePhotoCrop.
+  ///
+  /// In ru, this message translates to:
+  /// **'Фото профиля'**
+  String get aboutMePhotoCrop;
+
+  /// No description provided for @aboutMePhotoDone.
+  ///
+  /// In ru, this message translates to:
+  /// **'Готово'**
+  String get aboutMePhotoDone;
+
+  /// No description provided for @aboutMePhotoFailed.
+  ///
+  /// In ru, this message translates to:
+  /// **'Не получилось загрузить фото. Попробуйте ещё раз.'**
+  String get aboutMePhotoFailed;
 
   /// No description provided for @privacyPreview.
   ///
@@ -2082,7 +2196,7 @@ abstract class AppLocalizations {
   /// No description provided for @privacyOnlyNick.
   ///
   /// In ru, this message translates to:
-  /// **'Только ник'**
+  /// **'Только имя'**
   String get privacyOnlyNick;
 
   /// No description provided for @shareXp.
@@ -2136,37 +2250,31 @@ abstract class AppLocalizations {
   /// No description provided for @privacyServerNote.
   ///
   /// In ru, this message translates to:
-  /// **'На сервере хранятся только ник, код друга, список друзей и отмеченные показатели. Ничего о здоровье и тяге туда не уходит.'**
+  /// **'На сервере хранятся только имя, фото, код друга, список друзей и отмеченные показатели. Ничего о здоровье и тяге туда не уходит.'**
   String get privacyServerNote;
 
   /// No description provided for @privacyNotJoined.
   ///
   /// In ru, this message translates to:
-  /// **'Вы ещё не в рейтинге. Эти настройки применятся, когда вы выберете ник на вкладке «Рейтинг».'**
+  /// **'Вы ещё не с друзьями. Эти настройки применятся, когда вы выберете имя на вкладке «Друзья»; там же появятся имя и фото.'**
   String get privacyNotJoined;
-
-  /// No description provided for @privacyNick.
-  ///
-  /// In ru, this message translates to:
-  /// **'Ник'**
-  String get privacyNick;
 
   /// No description provided for @privacyChangeNick.
   ///
   /// In ru, this message translates to:
-  /// **'Сменить'**
+  /// **'Сменить имя'**
   String get privacyChangeNick;
 
   /// No description provided for @privacyDeleteTitle.
   ///
   /// In ru, this message translates to:
-  /// **'Удалить аккаунт рейтинга'**
+  /// **'Удалить аккаунт друзей'**
   String get privacyDeleteTitle;
 
   /// No description provided for @privacyDeleteText.
   ///
   /// In ru, this message translates to:
-  /// **'Ник, код и друзья будут стёрты с сервера навсегда. Прогресс в приложении останется, вернуться в рейтинг можно позже.'**
+  /// **'Имя, фото, код и друзья будут стёрты с сервера навсегда. Прогресс в приложении останется, вернуться к друзьям можно позже.'**
   String get privacyDeleteText;
 
   /// No description provided for @privacyDeleteButton.
@@ -2178,13 +2286,13 @@ abstract class AppLocalizations {
   /// No description provided for @privacyDeleteConfirm.
   ///
   /// In ru, this message translates to:
-  /// **'Удалить аккаунт рейтинга?'**
+  /// **'Удалить аккаунт друзей?'**
   String get privacyDeleteConfirm;
 
   /// No description provided for @privacyDeleted.
   ///
   /// In ru, this message translates to:
-  /// **'Аккаунт рейтинга удалён'**
+  /// **'Аккаунт друзей удалён'**
   String get privacyDeleted;
 
   /// No description provided for @chipLevel.
@@ -2211,17 +2319,17 @@ abstract class AppLocalizations {
   /// **'{money} сэкономлено'**
   String chipMoney(String money);
 
-  /// No description provided for @settingsRating.
+  /// No description provided for @settingsFriends.
   ///
   /// In ru, this message translates to:
-  /// **'Рейтинг'**
-  String get settingsRating;
+  /// **'Друзья'**
+  String get settingsFriends;
 
-  /// No description provided for @settingsPrivacyHint.
+  /// No description provided for @settingsAboutMeHint.
   ///
   /// In ru, this message translates to:
-  /// **'Ник, что видят друзья, удаление аккаунта'**
-  String get settingsPrivacyHint;
+  /// **'Имя, фото, что видят друзья, удаление аккаунта'**
+  String get settingsAboutMeHint;
 
   /// No description provided for @thanksRow.
   ///

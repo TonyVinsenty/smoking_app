@@ -11,20 +11,28 @@ import '../../l10n/app_localizations.dart';
 
 final _fmt = NumberFormat('#,##0', 'ru');
 
-/// "Тихий Кедр" → "ТК".
-String initials(String nick) => nick.split(' ').where((w) => w.isNotEmpty).take(2).map((w) => w[0]).join();
+/// "Тихий Кедр" → "ТК", "Костя" → "К" (whole characters, so an emoji is not cut in half).
+String initials(String nick) => nick
+    .split(' ')
+    .where((w) => w.isNotEmpty)
+    .take(2)
+    .map((w) => String.fromCharCode(w.runes.first).toUpperCase())
+    .join();
 
-/// A round avatar with the nick's initials; the colour comes from the nick, so it is the same on every phone.
-class FriendAvatar extends StatelessWidget {
-  const FriendAvatar({super.key, required this.nick, this.size = 40, this.ring = false});
+/// A round avatar: the person's photo when there is one ([uid] given), otherwise the initials on a colour
+/// that comes from the name, so it is the same on every phone.
+class FriendAvatar extends ConsumerWidget {
+  const FriendAvatar({super.key, required this.nick, this.uid, this.size = 40, this.ring = false});
 
   final String nick;
+  final String? uid;
   final double size;
   final bool ring;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final scheme = Theme.of(context).colorScheme;
+    final photo = uid == null ? null : ref.watch(avatarProvider(uid!)).value;
     final colors = [
       (scheme.primaryContainer, scheme.onPrimaryContainer),
       (AppColors.of(context).rewardContainer, AppColors.of(context).onRewardContainer),
@@ -36,16 +44,19 @@ class FriendAvatar extends StatelessWidget {
       width: size,
       height: size,
       alignment: Alignment.center,
+      clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         color: bg,
         shape: BoxShape.circle,
         border: ring ? Border.all(color: scheme.primary, width: 3) : null,
       ),
-      child: Text(
-        initials(nick),
-        textScaler: TextScaler.noScaling,
-        style: TextStyle(fontFamily: displayFont, fontWeight: FontWeight.w700, color: fg, fontSize: size * 0.34),
-      ),
+      child: photo != null
+          ? Image.memory(photo, width: size, height: size, fit: BoxFit.cover, gaplessPlayback: true)
+          : Text(
+              initials(nick),
+              textScaler: TextScaler.noScaling,
+              style: TextStyle(fontFamily: displayFont, fontWeight: FontWeight.w700, color: fg, fontSize: size * 0.34),
+            ),
     );
   }
 }
@@ -65,6 +76,9 @@ String shareValueText(AppLocalizations l, ShareField f, int v) => switch (f) {
   ShareField.days => l.valueDays(v),
   ShareField.money => l.money(_fmt.format(v)),
 };
+
+/// "1 240" — a number with thin groups, as everywhere in the app.
+String formatNumber(int v) => _fmt.format(v);
 
 class StatPill extends StatelessWidget {
   const StatPill(this.text, {super.key, this.reward = false});
@@ -92,6 +106,28 @@ class StatPill extends StatelessWidget {
   }
 }
 
+/// The shared stats as pills, or "Только имя" when nothing is shared.
+class StatPills extends ConsumerWidget {
+  const StatPills({super.key, required this.values});
+
+  final Map<ShareField, int> values;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context);
+    final content = ref.watch(contentProvider).value;
+    if (content == null || values.isEmpty) return Text(l.privacyOnlyNick, style: Theme.of(context).textTheme.bodySmall);
+    return Wrap(
+      spacing: 6,
+      runSpacing: 6,
+      children: [
+        for (final f in ShareField.values)
+          if (values[f] case final v?) StatPill(shareChipText(l, content, f, v), reward: f == ShareField.money),
+      ],
+    );
+  }
+}
+
 /// "Так вас видят друзья": the user's own card with only the stats they share.
 class MyPreviewCard extends ConsumerWidget {
   const MyPreviewCard({super.key, required this.nick});
@@ -100,38 +136,28 @@ class MyPreviewCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l = AppLocalizations.of(context);
-    final theme = Theme.of(context);
-    final content = ref.watch(contentProvider).value;
     final stats = ref.watch(myStatsProvider);
     final share = ref.watch(shareSettingsProvider);
-    final shown = [
-      for (final f in ShareField.values)
-        if (share.contains(f)) f,
-    ];
+    final uid = ref.watch(myProfileProvider).value?.uid;
     return AppCard(
       padding: const EdgeInsets.all(16),
       child: Row(
         spacing: 14,
         children: [
-          FriendAvatar(nick: nick, size: 48),
+          FriendAvatar(nick: nick, uid: uid, size: 48),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               spacing: 6,
               children: [
-                Text(nick, style: theme.textTheme.titleMedium),
-                if (content == null || stats == null || shown.isEmpty)
-                  Text(l.privacyOnlyNick, style: theme.textTheme.bodySmall)
-                else
-                  Wrap(
-                    spacing: 6,
-                    runSpacing: 6,
-                    children: [
-                      for (final f in shown)
-                        StatPill(shareChipText(l, content, f, stats.value(f)), reward: f == ShareField.money),
-                    ],
-                  ),
+                Text(nick, style: Theme.of(context).textTheme.titleMedium),
+                StatPills(
+                  values: {
+                    if (stats != null)
+                      for (final f in ShareField.values)
+                        if (share.contains(f)) f: stats.value(f),
+                  },
+                ),
               ],
             ),
           ),
@@ -141,9 +167,9 @@ class MyPreviewCard extends ConsumerWidget {
   }
 }
 
-/// Ready-made nicknames to pick from: six at a time, "Другие варианты" shows the next six.
-class NickPicker extends ConsumerStatefulWidget {
-  const NickPicker({super.key, required this.buttonText, required this.onSubmit, this.initial, this.header});
+/// Any name the user types, with ready-made ideas below: six at a time, "Другие варианты" shows the next six.
+class NameEditor extends ConsumerStatefulWidget {
+  const NameEditor({super.key, required this.buttonText, required this.onSubmit, this.initial, this.header});
 
   final String Function(String nick) buttonText;
   final Future<void> Function(String nick) onSubmit;
@@ -151,14 +177,28 @@ class NickPicker extends ConsumerStatefulWidget {
   final Widget? header;
 
   @override
-  ConsumerState<NickPicker> createState() => _NickPickerState();
+  ConsumerState<NameEditor> createState() => _NameEditorState();
 }
 
-class _NickPickerState extends ConsumerState<NickPicker> {
+class _NameEditorState extends ConsumerState<NameEditor> {
+  final _controller = TextEditingController();
   List<String>? _all;
   int _page = 0;
-  String? _nick;
   bool _busy = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.text = widget.initial ?? '';
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _pick(String nick) => setState(() => _controller.text = nick);
 
   @override
   Widget build(BuildContext context) {
@@ -166,35 +206,45 @@ class _NickPickerState extends ConsumerState<NickPicker> {
     final theme = Theme.of(context);
     final loaded = ref.watch(nicknamesProvider).value;
     if (loaded == null) return const Center(child: CircularProgressIndicator());
-    _all ??= ([...loaded]..shuffle());
+    if (_all == null) {
+      _all = [...loaded]..shuffle();
+      if (_controller.text.isEmpty) _controller.text = _all!.first;
+    }
     final all = _all!;
     final options = [for (var i = 0; i < 6; i++) all[(_page * 6 + i) % all.length]];
-    final nick = _nick ?? widget.initial ?? options.first;
+    final nick = cleanNick(_controller.text);
     return ListView(
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 120),
       children: [
         ?widget.header,
-        FriendAvatar(nick: nick, size: 64),
-        const SizedBox(height: 16),
         Text(l.socialJoinTitle, style: theme.textTheme.headlineSmall),
         const SizedBox(height: 8),
         Text(l.socialJoinText, style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
         const SizedBox(height: 16),
+        TextField(
+          controller: _controller,
+          maxLength: maxNickLength,
+          textCapitalization: TextCapitalization.sentences,
+          onChanged: (_) => setState(() {}),
+          decoration: InputDecoration(labelText: l.socialNameLabel, border: const OutlineInputBorder()),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          l.socialNameIdeas,
+          style: theme.textTheme.labelMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+        ),
+        const SizedBox(height: 8),
         Wrap(
           spacing: 8,
           runSpacing: 8,
           children: [
-            for (final o in options)
-              ChoiceChip(label: Text(o), selected: o == nick, onSelected: (_) => setState(() => _nick = o)),
+            for (final o in options) ChoiceChip(label: Text(o), selected: o == nick, onSelected: (_) => _pick(o)),
           ],
         ),
         Align(
           alignment: Alignment.centerLeft,
           child: TextButton.icon(
-            onPressed: () => setState(() {
-              _page++;
-              _nick = all[(_page * 6) % all.length];
-            }),
+            onPressed: () => setState(() => _page++),
             icon: const Icon(Icons.refresh),
             label: Text(l.socialJoinMore),
           ),
@@ -202,10 +252,10 @@ class _NickPickerState extends ConsumerState<NickPicker> {
         const SizedBox(height: 12),
         Text(l.privacyPreview, style: theme.textTheme.labelMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
         const SizedBox(height: 8),
-        MyPreviewCard(nick: nick),
+        MyPreviewCard(nick: nick.isEmpty ? '—' : nick),
         const SizedBox(height: 24),
         FilledButton(
-          onPressed: _busy ? null : () => _submit(nick),
+          onPressed: _busy || nick.isEmpty ? null : () => _submit(nick),
           child: _busy
               ? const SizedBox.square(dimension: 22, child: CircularProgressIndicator(strokeWidth: 2.5))
               : Text(widget.buttonText(nick), textAlign: TextAlign.center),
@@ -215,6 +265,7 @@ class _NickPickerState extends ConsumerState<NickPicker> {
   }
 
   Future<void> _submit(String nick) async {
+    FocusScope.of(context).unfocus();
     setState(() => _busy = true);
     try {
       await widget.onSubmit(nick).timeout(const Duration(seconds: 20));

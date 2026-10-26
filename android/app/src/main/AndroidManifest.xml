@@ -23,6 +23,11 @@
               android:resource="@style/NormalTheme"
               />
         </activity>
+        <!-- Round crop for the profile photo (image_cropper). -->
+        <activity
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <!-- Launcher entries, one per app icon (Settings → «Значок приложения»).
              MainActivity sets exactly one enabled; 9a is the default. -->
         <activity-alias
