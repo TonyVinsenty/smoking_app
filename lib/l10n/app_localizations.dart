@@ -2061,6 +2061,12 @@ abstract class AppLocalizations {
   /// **'Код скопирован в буфер обмена'**
   String get socialCodeCopied;
 
+  /// No description provided for @socialMyCodeHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Друг вводит его в «Добавить друга» — и вы сразу появитесь друг у друга в друзьях.'**
+  String get socialMyCodeHint;
+
   /// No description provided for @socialAddFriendTitle.
   ///
   /// In ru, this message translates to:
@@ -2070,7 +2076,7 @@ abstract class AppLocalizations {
   /// No description provided for @socialAddFriendText.
   ///
   /// In ru, this message translates to:
-  /// **'Попросите у друга его код из вкладки «Друзья» и введите его здесь.'**
+  /// **'Попросите у друга его код (Настройки → Друзья → «Мой код друга») и введите его здесь.'**
   String get socialAddFriendText;
 
   /// No description provided for @socialCodeLabel.
@@ -2118,7 +2124,7 @@ abstract class AppLocalizations {
   /// No description provided for @socialNoFriends.
   ///
   /// In ru, this message translates to:
-  /// **'Пока здесь только вы. Поделитесь своим кодом или добавьте друга по его коду.'**
+  /// **'Пока здесь только вы. Добавьте друга по его коду или отправьте ему свой — он в Настройках → Друзья.'**
   String get socialNoFriends;
 
   /// No description provided for @socialRemoveTitle.

@@ -1694,11 +1694,15 @@ class AppLocalizationsRu extends AppLocalizations {
   String get socialCodeCopied => 'Код скопирован в буфер обмена';
 
   @override
+  String get socialMyCodeHint =>
+      'Друг вводит его в «Добавить друга» — и вы сразу появитесь друг у друга в друзьях.';
+
+  @override
   String get socialAddFriendTitle => 'Добавить друга';
 
   @override
   String get socialAddFriendText =>
-      'Попросите у друга его код из вкладки «Друзья» и введите его здесь.';
+      'Попросите у друга его код (Настройки → Друзья → «Мой код друга») и введите его здесь.';
 
   @override
   String get socialCodeLabel => 'Код друга';
@@ -1726,7 +1730,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get socialNoFriends =>
-      'Пока здесь только вы. Поделитесь своим кодом или добавьте друга по его коду.';
+      'Пока здесь только вы. Добавьте друга по его коду или отправьте ему свой — он в Настройках → Друзья.';
 
   @override
   String socialRemoveTitle(String nick) {

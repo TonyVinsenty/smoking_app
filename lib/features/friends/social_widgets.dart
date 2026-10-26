@@ -244,7 +244,32 @@ class _NameEditorState extends State<NameEditor> {
   }
 }
 
-/// The level in a coloured ring, as on Steam; the ring changes colour every 10 levels.
+/// Ring colours of [LevelBadge], as on Steam: a new colour every 5 levels (1–4 grey, 5–9 red … 45–49 gold).
+const levelRingColors = [
+  Color(0xFF9AA0A6),
+  Color(0xFFD64545),
+  Color(0xFFE8833A),
+  Color(0xFFE2B634),
+  Color(0xFF4CAF50),
+  Color(0xFF26A69A),
+  Color(0xFF3D8BE8),
+  Color(0xFF8E5BD9),
+  Color(0xFFD9579A),
+  Color(0xFFD4A62A),
+];
+
+/// The top level (50) gets a rainbow ring.
+const _legendColors = [
+  Color(0xFFD64545),
+  Color(0xFFE2B634),
+  Color(0xFF4CAF50),
+  Color(0xFF3D8BE8),
+  Color(0xFF8E5BD9),
+  Color(0xFFD64545),
+];
+
+/// The level in a coloured ring, as on Steam: the colour changes every 5 levels, higher rings are
+/// thicker and from level 35 softly glow.
 class LevelBadge extends StatelessWidget {
   const LevelBadge({super.key, required this.level, this.size = 40});
 
@@ -254,33 +279,56 @@ class LevelBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final tiers = [
-      theme.colorScheme.outline,
-      theme.colorScheme.primary,
-      const Color(0xFF5B8DEF),
-      const Color(0xFF9A6BDB),
-      const Color(0xFFE08A3C),
-      const Color(0xFFE2B33C),
-    ];
-    final color = tiers[(level ~/ 10).clamp(0, tiers.length - 1)];
+    final tier = level ~/ 5;
+    final legend = tier >= levelRingColors.length;
+    final color = levelRingColors[tier.clamp(0, levelRingColors.length - 1)];
+    final width = size * (tier < 4 ? 0.065 : 0.085);
     return Container(
       width: size,
       height: size,
       alignment: Alignment.center,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        border: Border.all(color: color, width: 2.5),
+        color: tier == 0 ? null : color.withAlpha(0x22),
+        boxShadow: tier >= 7 ? [BoxShadow(color: color.withAlpha(0x66), blurRadius: size * 0.25)] : null,
       ),
-      child: Text(
-        '$level',
-        textScaler: TextScaler.noScaling,
-        style: TextStyle(
-          fontFamily: displayFont,
-          fontWeight: FontWeight.w700,
-          fontSize: size * 0.4,
-          color: theme.colorScheme.onSurface,
+      child: CustomPaint(
+        size: Size.square(size),
+        painter: _RingPainter(colors: legend ? _legendColors : [color, color], width: width),
+        child: Center(
+          child: Text(
+            '$level',
+            textScaler: TextScaler.noScaling,
+            style: TextStyle(
+              fontFamily: displayFont,
+              fontWeight: FontWeight.w700,
+              fontSize: size * 0.4,
+              color: theme.colorScheme.onSurface,
+            ),
+          ),
         ),
       ),
     );
   }
+}
+
+class _RingPainter extends CustomPainter {
+  _RingPainter({required this.colors, required this.width});
+
+  final List<Color> colors;
+  final double width;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final rect = Offset.zero & size;
+    final paint = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = width
+      ..shader = SweepGradient(colors: colors).createShader(rect);
+    canvas.drawCircle(rect.center, (size.shortestSide - width) / 2, paint);
+  }
+
+  @override
+  bool shouldRepaint(_RingPainter old) =>
+      old.width != width || old.colors.length != colors.length || old.colors[0] != colors[0];
 }

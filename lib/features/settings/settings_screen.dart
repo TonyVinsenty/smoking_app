@@ -20,6 +20,7 @@ import '../../l10n/app_localizations.dart';
 import '../../domain/stats.dart';
 import '../onboarding/onboarding_screen.dart';
 import '../friends/social_widgets.dart';
+import '../friends/my_code_sheet.dart';
 import 'about_me_screen.dart';
 import 'thanks_screen.dart';
 import '../relapse/history_screen.dart';
@@ -97,6 +98,14 @@ class SettingsScreen extends ConsumerWidget {
                 trailing: const Icon(Icons.chevron_right),
                 onTap: () => AboutMeScreen.open(context),
               ),
+              if (ref.watch(myProfileProvider).value case final me?)
+                ListTile(
+                  leading: const Icon(Icons.vpn_key_outlined),
+                  title: Text(l.socialMyCode),
+                  subtitle: Text(formatCode(me.code)),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => showMyCodeSheet(context, me.code),
+                ),
             ],
           ),
           _Group(

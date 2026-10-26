@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/widgets/cards.dart';
 import '../../app/widgets/sos_fab.dart';
-import '../../app/widgets/toast.dart';
 import '../../content/content.dart';
 import '../../data/social.dart';
 import '../../l10n/app_localizations.dart';
@@ -12,12 +10,10 @@ import 'add_friend_sheet.dart';
 import 'friend_page.dart';
 import 'social_widgets.dart';
 
-/// «Друзья» → «Мои друзья»: everyone with what they share; tap opens their page. Below — adding a friend
-/// and the user's own code.
+/// «Друзья» → «Мои друзья»: everyone with what they share; tap opens their page. Below —
+/// adding a friend (the user's own code is in Settings → Друзья).
 class FriendsTab extends ConsumerWidget {
-  const FriendsTab({super.key, required this.me});
-
-  final SocialProfile me;
+  const FriendsTab({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -69,8 +65,6 @@ class FriendsTab extends ConsumerWidget {
           icon: const Icon(Icons.person_add_alt),
           label: Text(l.friendsAdd),
         ),
-        const SizedBox(height: 16),
-        _CodeCard(code: me.code),
       ],
     );
   }
@@ -114,54 +108,6 @@ class _FriendRow extends ConsumerWidget {
             if (xp != null && content != null) LevelBadge(level: content.levelFor(xp).$1.level),
           ],
         ),
-      ),
-    );
-  }
-}
-
-/// "Мой код друга K7M4-Q2XP": tap the code to copy it.
-class _CodeCard extends StatelessWidget {
-  const _CodeCard({required this.code});
-
-  final String code;
-
-  @override
-  Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context);
-    final theme = Theme.of(context);
-    final pretty = formatCode(code);
-    void copy() {
-      Clipboard.setData(ClipboardData(text: pretty));
-      showToast(context, l.socialCodeCopied, icon: Icons.copy);
-    }
-
-    return AppCard(
-      padding: const EdgeInsets.fromLTRB(16, 12, 12, 12),
-      child: Row(
-        spacing: 8,
-        children: [
-          Expanded(
-            child: InkWell(
-              borderRadius: BorderRadius.circular(8),
-              onTap: copy,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(l.socialMyCode, style: theme.textTheme.labelMedium),
-                  Text(
-                    pretty,
-                    style: theme.textTheme.titleLarge?.copyWith(
-                      color: theme.colorScheme.primary,
-                      letterSpacing: 2,
-                      fontWeight: FontWeight.w800,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          FilledButton.icon(onPressed: copy, icon: const Icon(Icons.copy, size: 18), label: Text(l.socialCopy)),
-        ],
       ),
     );
   }

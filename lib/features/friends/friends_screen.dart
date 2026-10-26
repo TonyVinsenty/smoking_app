@@ -48,7 +48,7 @@ class FriendsScreen extends ConsumerWidget {
             Expanded(
               child: TabBarView(
                 children: [
-                  FriendsTab(me: me),
+                  const FriendsTab(),
                   RatingTab(me: me),
                 ],
               ),
