@@ -100,7 +100,8 @@ class SettingsScreen extends ConsumerWidget {
               ),
               if (ref.watch(myProfileProvider).value case final me?)
                 ListTile(
-                  leading: const Icon(Icons.vpn_key_outlined),
+                  // As wide as the avatar above, so both titles start at the same place.
+                  leading: const SizedBox(width: 36, child: Icon(Icons.vpn_key_outlined)),
                   title: Text(l.socialMyCode),
                   subtitle: Text(formatCode(me.code)),
                   trailing: const Icon(Icons.chevron_right),
