@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../content/content.dart';
 import '../domain/stats.dart';
 import 'database.dart';
 import 'settings.dart';
@@ -26,13 +27,53 @@ final currentAttemptProvider = Provider<AsyncValue<Attempt?>>(
   (ref) => ref.watch(attemptsProvider).whenData((list) => list.where((a) => a.endedAt == null).firstOrNull),
 );
 
-final cravingsProvider = StreamProvider<List<Craving>>(
+/// Start of the latest «С чистого листа» attempt (null = never): money, units, cravings, XP and most badges
+/// count only from then on. The record, the attempt history and read articles stay.
+final freshStartProvider = Provider<AsyncValue<DateTime?>>(
+  (ref) => ref.watch(attemptsProvider).whenData((list) => list.where((a) => a.freshStart).firstOrNull?.startedAt),
+);
+
+final _allCravingsProvider = StreamProvider<List<Craving>>(
   (ref) => ref.watch(databaseProvider).select(ref.watch(databaseProvider).cravings).watch(),
 );
 
-final unlockedAchievementsProvider = StreamProvider<List<UnlockedAchievement>>(
+/// Cravings since the latest fresh start.
+final cravingsProvider = Provider<AsyncValue<List<Craving>>>((ref) {
+  final since = ref.watch(freshStartProvider);
+  if (!since.hasValue) return const AsyncLoading();
+  return ref
+      .watch(_allCravingsProvider)
+      .whenData(
+        (list) => [
+          for (final c in list)
+            if (since.value == null || !c.at.isBefore(since.value!)) c,
+        ],
+      );
+});
+
+/// Every badge ever earned, also before a fresh start (the attempt history shows them).
+final allUnlockedAchievementsProvider = StreamProvider<List<UnlockedAchievement>>(
   (ref) => ref.watch(databaseProvider).select(ref.watch(databaseProvider).unlockedAchievements).watch(),
 );
+
+/// Badges that count now: earned since the latest fresh start, plus the ones a fresh start keeps.
+final unlockedAchievementsProvider = Provider<AsyncValue<List<UnlockedAchievement>>>((ref) {
+  final since = ref.watch(freshStartProvider);
+  final content = ref.watch(contentProvider);
+  if (!since.hasValue || !content.hasValue) return const AsyncLoading();
+  final kept = {
+    for (final a in content.value!.achievements)
+      if (a.keptOnFreshStart) a.id,
+  };
+  return ref
+      .watch(allUnlockedAchievementsProvider)
+      .whenData(
+        (list) => [
+          for (final u in list)
+            if (since.value == null || !u.unlockedAt.isBefore(since.value!) || kept.contains(u.achievementId)) u,
+        ],
+      );
+});
 
 /// Badges earned but not opened yet: a red dot leads to them (Home → group → badge).
 final newAchievementIdsProvider = Provider<Set<String>>((ref) {

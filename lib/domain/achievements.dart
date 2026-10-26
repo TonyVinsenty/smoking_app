@@ -3,7 +3,8 @@ import '../data/database.dart';
 import 'stats.dart';
 
 /// Current value of every achievement condition type at [now], or null without a current attempt.
-/// unitsAvoided counts units of the main product (largest spend) of the current attempt, over all attempts.
+/// unitsAvoided counts units of the main product (largest spend) of the current attempt, over all attempts
+/// since the latest fresh start (as money does); [cravings] are expected to be filtered the same way.
 /// Only events up to [now] count, so the same data can be evaluated "a few minutes ago".
 Map<String, num>? conditionProgress({
   required List<Attempt> attempts,
@@ -16,13 +17,14 @@ Map<String, num>? conditionProgress({
   final current = attempts.where((a) => a.endedAt == null).firstOrNull;
   if (current == null) return null;
   final main = mainProduct(productsOf(products, current.id));
+  final counted = sinceFreshStart(attempts);
   return {
     'smokeFreeMinutes': attemptDuration(current, now).inMinutes,
-    'moneySavedRub': attempts.fold<double>(
+    'moneySavedRub': counted.fold<double>(
       0,
       (sum, a) => sum + moneySaved(productsOf(products, a.id), attemptDuration(a, now)),
     ),
-    'unitsAvoided': attempts.fold<double>(
+    'unitsAvoided': counted.fold<double>(
       0,
       (sum, a) => sum + (unitsAvoided(productsOf(products, a.id), attemptDuration(a, now))[main] ?? 0),
     ),

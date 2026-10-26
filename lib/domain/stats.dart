@@ -30,17 +30,28 @@ Duration attemptDuration(Attempt a, DateTime now) {
 Duration totalSmokeFree(List<Attempt> attempts, DateTime now) =>
     attempts.fold(Duration.zero, (sum, a) => sum + attemptDuration(a, now));
 
+/// Attempts from the latest «С чистого листа» one on (all attempts if there was none):
+/// money, units and XP count only these.
+List<Attempt> sinceFreshStart(List<Attempt> attempts) {
+  final from = attempts
+      .where((a) => a.freshStart)
+      .map((a) => a.startedAt)
+      .fold<DateTime?>(null, (latest, t) => latest == null || t.isAfter(latest) ? t : latest);
+  return from == null ? attempts : attempts.where((a) => !a.startedAt.isBefore(from)).toList();
+}
+
 const xpPerHour = 1;
 const xpPerResistedCraving = 10;
 
-/// XP = smoke-free hours + resisted cravings + achievements (each achievement counted once).
+/// XP = smoke-free hours since the latest fresh start + resisted cravings + achievements (each counted once).
+/// [cravings] and achievements are expected to be filtered by the fresh start already.
 int totalXp({
   required List<Attempt> attempts,
   required List<Craving> cravings,
   required Iterable<int> achievementXp,
   required DateTime now,
 }) =>
-    totalSmokeFree(attempts, now).inHours * xpPerHour +
+    totalSmokeFree(sinceFreshStart(attempts), now).inHours * xpPerHour +
     cravings.where((c) => c.resisted).length * xpPerResistedCraving +
     achievementXp.fold(0, (a, b) => a + b);
 

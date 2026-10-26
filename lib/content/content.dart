@@ -70,6 +70,9 @@ class Achievement {
     'articlesRead' => 'articles',
     _ => 'path',
   };
+
+  /// «С чистого листа» keeps the badges for read articles (they stay read) and for the path itself.
+  bool get keptOnFreshStart => group == 'articles' || group == 'path';
 }
 
 class HealthMilestone {

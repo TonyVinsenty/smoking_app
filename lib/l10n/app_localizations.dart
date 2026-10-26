@@ -1333,19 +1333,19 @@ abstract class AppLocalizations {
   /// No description provided for @relapseConfirmTitle.
   ///
   /// In ru, this message translates to:
-  /// **'Отметить срыв?'**
+  /// **'Вы закурили?'**
   String get relapseConfirmTitle;
 
   /// No description provided for @relapseConfirmText.
   ///
   /// In ru, this message translates to:
-  /// **'Текущий отсчёт остановится. Опыт, уровень и награды останутся с вами.'**
+  /// **'Текущий отсчёт остановится. Дальше можно записать, что произошло, и начать новую попытку.'**
   String get relapseConfirmText;
 
   /// No description provided for @relapseConfirm.
   ///
   /// In ru, this message translates to:
-  /// **'Да, отметить'**
+  /// **'Подтверждаю'**
   String get relapseConfirm;
 
   /// No description provided for @relapseTitle.
@@ -1423,7 +1423,7 @@ abstract class AppLocalizations {
   /// No description provided for @relapseDoneText.
   ///
   /// In ru, this message translates to:
-  /// **'Без курения вы продержались {duration}. Ваш рекорд — {best}. Опыт, уровень и награды остаются с вами, а следующая попытка начнётся уже с этим знанием.'**
+  /// **'Без курения вы продержались {duration}. Ваш рекорд — {best}. Следующая попытка начнётся уже с этим знанием, а сохранить награды или начать с чистого листа — решать вам.'**
   String relapseDoneText(String duration, String best);
 
   /// No description provided for @relapseStartNow.
@@ -1569,6 +1569,36 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Что вы курите'**
   String get productsEditTitle;
+
+  /// No description provided for @freshStartTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Как начать новую попытку?'**
+  String get freshStartTitle;
+
+  /// No description provided for @freshStartKeep.
+  ///
+  /// In ru, this message translates to:
+  /// **'Продолжить'**
+  String get freshStartKeep;
+
+  /// No description provided for @freshStartKeepText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Уровень, опыт, награды, сэкономленные деньги и тяги остаются с вами.'**
+  String get freshStartKeepText;
+
+  /// No description provided for @freshStartReset.
+  ///
+  /// In ru, this message translates to:
+  /// **'С чистого листа'**
+  String get freshStartReset;
+
+  /// No description provided for @freshStartResetText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Уровень, опыт, деньги, тяги и награды начнутся с нуля. Останутся рекорд, история попыток, прочитанные статьи и награды за путь и статьи.'**
+  String get freshStartResetText;
 
   /// No description provided for @newAttemptTitle.
   ///

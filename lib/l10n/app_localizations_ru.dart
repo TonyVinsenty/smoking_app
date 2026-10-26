@@ -1157,14 +1157,14 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get relapseConfirmTitle => 'Отметить срыв?';
+  String get relapseConfirmTitle => 'Вы закурили?';
 
   @override
   String get relapseConfirmText =>
-      'Текущий отсчёт остановится. Опыт, уровень и награды останутся с вами.';
+      'Текущий отсчёт остановится. Дальше можно записать, что произошло, и начать новую попытку.';
 
   @override
-  String get relapseConfirm => 'Да, отметить';
+  String get relapseConfirm => 'Подтверждаю';
 
   @override
   String get relapseTitle => 'Дневник без упрёков';
@@ -1205,7 +1205,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String relapseDoneText(String duration, String best) {
-    return 'Без курения вы продержались $duration. Ваш рекорд — $best. Опыт, уровень и награды остаются с вами, а следующая попытка начнётся уже с этим знанием.';
+    return 'Без курения вы продержались $duration. Ваш рекорд — $best. Следующая попытка начнётся уже с этим знанием, а сохранить награды или начать с чистого листа — решать вам.';
   }
 
   @override
@@ -1298,6 +1298,23 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get productsEditTitle => 'Что вы курите';
+
+  @override
+  String get freshStartTitle => 'Как начать новую попытку?';
+
+  @override
+  String get freshStartKeep => 'Продолжить';
+
+  @override
+  String get freshStartKeepText =>
+      'Уровень, опыт, награды, сэкономленные деньги и тяги остаются с вами.';
+
+  @override
+  String get freshStartReset => 'С чистого листа';
+
+  @override
+  String get freshStartResetText =>
+      'Уровень, опыт, деньги, тяги и награды начнутся с нуля. Останутся рекорд, история попыток, прочитанные статьи и награды за путь и статьи.';
 
   @override
   String get newAttemptTitle => 'Настройки курения';

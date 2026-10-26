@@ -31,8 +31,8 @@ void main() {
   test('xp keeps smoke-free hours from ended attempts', () {
     final start = DateTime(2026, 1, 1);
     final attempts = [
-      Attempt(id: 1, startedAt: start, endedAt: start.add(const Duration(hours: 10))),
-      Attempt(id: 2, startedAt: start.add(const Duration(hours: 20))),
+      Attempt(id: 1, freshStart: false, startedAt: start, endedAt: start.add(const Duration(hours: 10))),
+      Attempt(id: 2, freshStart: false, startedAt: start.add(const Duration(hours: 20))),
     ];
     final xp = totalXp(
       attempts: attempts,
@@ -41,6 +41,24 @@ void main() {
       now: start.add(const Duration(hours: 25)),
     );
     expect(xp, 10 + 5 + xpPerResistedCraving + 25);
+  });
+
+  test('a fresh start drops smoke-free hours of earlier attempts from xp', () {
+    final start = DateTime(2026, 1, 1);
+    final attempts = [
+      Attempt(id: 1, freshStart: false, startedAt: start, endedAt: start.add(const Duration(hours: 10))),
+      Attempt(id: 2, freshStart: true, startedAt: start.add(const Duration(hours: 20))),
+    ];
+    expect(sinceFreshStart(attempts).map((a) => a.id), [2]);
+    expect(
+      totalXp(
+        attempts: attempts,
+        cravings: const [],
+        achievementXp: const [],
+        now: start.add(const Duration(hours: 25)),
+      ),
+      5,
+    );
   });
 
   test('units badges count the main product with its own threshold', () {
@@ -81,7 +99,7 @@ void main() {
     });
     List<Achievement> dueAfter(int hours) => dueAchievements(
       achievements: [badge],
-      attempts: [Attempt(id: 1, startedAt: start)],
+      attempts: [Attempt(id: 1, freshStart: false, startedAt: start)],
       products: products,
       cravings: const [],
       articlesReadAt: const [],

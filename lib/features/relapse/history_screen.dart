@@ -23,7 +23,7 @@ class HistoryScreen extends ConsumerWidget {
     final l = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final attempts = ref.watch(attemptsProvider).value ?? const <Attempt>[];
-    final unlocked = ref.watch(unlockedAchievementsProvider).value ?? const [];
+    final unlocked = ref.watch(allUnlockedAchievementsProvider).value ?? const [];
     final now = ref.watch(nowProvider).value ?? DateTime.now();
     final best = bestAttempt(attempts, now);
     final bestId = attempts.where((a) => attemptDuration(a, now) == best).firstOrNull?.id;

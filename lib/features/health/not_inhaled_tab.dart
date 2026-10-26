@@ -60,9 +60,9 @@ class NotInhaledTab extends ConsumerWidget {
     }
     final mine = productsOf(products, current.id);
     final units = unitsAvoided(mine, attemptDuration(current, now));
-    // Smoke-free units summed over every attempt, each with its own habits.
+    // Smoke-free units summed over every attempt since the latest fresh start, each with its own habits.
     final allTime = <ProductType, double>{};
-    for (final a in attempts) {
+    for (final a in sinceFreshStart(attempts)) {
       for (final e in unitsAvoided(productsOf(products, a.id), attemptDuration(a, now)).entries) {
         allTime[e.key] = (allTime[e.key] ?? 0) + e.value;
       }

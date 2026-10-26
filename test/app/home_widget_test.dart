@@ -12,7 +12,7 @@ void main() {
     final start = DateTime(2026, 10, 1, 8);
     final payload = homeWidgetPayload(
       l: l,
-      attempt: Attempt(id: 1, startedAt: start),
+      attempt: Attempt(id: 1, freshStart: false, startedAt: start),
       products: const [
         SmokingProduct(
           id: 1,

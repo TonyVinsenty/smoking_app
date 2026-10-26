@@ -72,8 +72,28 @@ class $AttemptsTable extends Attempts with TableInfo<$AttemptsTable, Attempt> {
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _freshStartMeta = const VerificationMeta('freshStart');
   @override
-  List<GeneratedColumn> get $columns => [id, startedAt, endedAt, trigger, whatHappened, whatWouldHelp, nextTime];
+  late final GeneratedColumn<bool> freshStart = GeneratedColumn<bool>(
+    'fresh_start',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways('CHECK ("fresh_start" IN (0, 1))'),
+    defaultValue: const Constant(false),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    startedAt,
+    endedAt,
+    trigger,
+    whatHappened,
+    whatWouldHelp,
+    nextTime,
+    freshStart,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -106,6 +126,9 @@ class $AttemptsTable extends Attempts with TableInfo<$AttemptsTable, Attempt> {
     if (data.containsKey('next_time')) {
       context.handle(_nextTimeMeta, nextTime.isAcceptableOrUnknown(data['next_time']!, _nextTimeMeta));
     }
+    if (data.containsKey('fresh_start')) {
+      context.handle(_freshStartMeta, freshStart.isAcceptableOrUnknown(data['fresh_start']!, _freshStartMeta));
+    }
     return context;
   }
 
@@ -124,6 +147,7 @@ class $AttemptsTable extends Attempts with TableInfo<$AttemptsTable, Attempt> {
       whatHappened: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}what_happened']),
       whatWouldHelp: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}what_would_help']),
       nextTime: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}next_time']),
+      freshStart: attachedDatabase.typeMapping.read(DriftSqlType.bool, data['${effectivePrefix}fresh_start'])!,
     );
   }
 
@@ -148,6 +172,10 @@ class Attempt extends DataClass implements Insertable<Attempt> {
   final String? whatHappened;
   final String? whatWouldHelp;
   final String? nextTime;
+
+  /// «С чистого листа»: money, units, cravings, XP and most badges count only from this attempt on
+  /// (see `freshStartProvider`); the record, the attempt history, read articles and «Путь» badges stay.
+  final bool freshStart;
   const Attempt({
     required this.id,
     required this.startedAt,
@@ -156,6 +184,7 @@ class Attempt extends DataClass implements Insertable<Attempt> {
     this.whatHappened,
     this.whatWouldHelp,
     this.nextTime,
+    required this.freshStart,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -177,6 +206,7 @@ class Attempt extends DataClass implements Insertable<Attempt> {
     if (!nullToAbsent || nextTime != null) {
       map['next_time'] = Variable<String>(nextTime);
     }
+    map['fresh_start'] = Variable<bool>(freshStart);
     return map;
   }
 
@@ -189,6 +219,7 @@ class Attempt extends DataClass implements Insertable<Attempt> {
       whatHappened: whatHappened == null && nullToAbsent ? const Value.absent() : Value(whatHappened),
       whatWouldHelp: whatWouldHelp == null && nullToAbsent ? const Value.absent() : Value(whatWouldHelp),
       nextTime: nextTime == null && nullToAbsent ? const Value.absent() : Value(nextTime),
+      freshStart: Value(freshStart),
     );
   }
 
@@ -202,6 +233,7 @@ class Attempt extends DataClass implements Insertable<Attempt> {
       whatHappened: serializer.fromJson<String?>(json['whatHappened']),
       whatWouldHelp: serializer.fromJson<String?>(json['whatWouldHelp']),
       nextTime: serializer.fromJson<String?>(json['nextTime']),
+      freshStart: serializer.fromJson<bool>(json['freshStart']),
     );
   }
   @override
@@ -215,6 +247,7 @@ class Attempt extends DataClass implements Insertable<Attempt> {
       'whatHappened': serializer.toJson<String?>(whatHappened),
       'whatWouldHelp': serializer.toJson<String?>(whatWouldHelp),
       'nextTime': serializer.toJson<String?>(nextTime),
+      'freshStart': serializer.toJson<bool>(freshStart),
     };
   }
 
@@ -226,6 +259,7 @@ class Attempt extends DataClass implements Insertable<Attempt> {
     Value<String?> whatHappened = const Value.absent(),
     Value<String?> whatWouldHelp = const Value.absent(),
     Value<String?> nextTime = const Value.absent(),
+    bool? freshStart,
   }) => Attempt(
     id: id ?? this.id,
     startedAt: startedAt ?? this.startedAt,
@@ -234,6 +268,7 @@ class Attempt extends DataClass implements Insertable<Attempt> {
     whatHappened: whatHappened.present ? whatHappened.value : this.whatHappened,
     whatWouldHelp: whatWouldHelp.present ? whatWouldHelp.value : this.whatWouldHelp,
     nextTime: nextTime.present ? nextTime.value : this.nextTime,
+    freshStart: freshStart ?? this.freshStart,
   );
   Attempt copyWithCompanion(AttemptsCompanion data) {
     return Attempt(
@@ -244,6 +279,7 @@ class Attempt extends DataClass implements Insertable<Attempt> {
       whatHappened: data.whatHappened.present ? data.whatHappened.value : this.whatHappened,
       whatWouldHelp: data.whatWouldHelp.present ? data.whatWouldHelp.value : this.whatWouldHelp,
       nextTime: data.nextTime.present ? data.nextTime.value : this.nextTime,
+      freshStart: data.freshStart.present ? data.freshStart.value : this.freshStart,
     );
   }
 
@@ -256,13 +292,14 @@ class Attempt extends DataClass implements Insertable<Attempt> {
           ..write('trigger: $trigger, ')
           ..write('whatHappened: $whatHappened, ')
           ..write('whatWouldHelp: $whatWouldHelp, ')
-          ..write('nextTime: $nextTime')
+          ..write('nextTime: $nextTime, ')
+          ..write('freshStart: $freshStart')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, startedAt, endedAt, trigger, whatHappened, whatWouldHelp, nextTime);
+  int get hashCode => Object.hash(id, startedAt, endedAt, trigger, whatHappened, whatWouldHelp, nextTime, freshStart);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -273,7 +310,8 @@ class Attempt extends DataClass implements Insertable<Attempt> {
           other.trigger == this.trigger &&
           other.whatHappened == this.whatHappened &&
           other.whatWouldHelp == this.whatWouldHelp &&
-          other.nextTime == this.nextTime);
+          other.nextTime == this.nextTime &&
+          other.freshStart == this.freshStart);
 }
 
 class AttemptsCompanion extends UpdateCompanion<Attempt> {
@@ -284,6 +322,7 @@ class AttemptsCompanion extends UpdateCompanion<Attempt> {
   final Value<String?> whatHappened;
   final Value<String?> whatWouldHelp;
   final Value<String?> nextTime;
+  final Value<bool> freshStart;
   const AttemptsCompanion({
     this.id = const Value.absent(),
     this.startedAt = const Value.absent(),
@@ -292,6 +331,7 @@ class AttemptsCompanion extends UpdateCompanion<Attempt> {
     this.whatHappened = const Value.absent(),
     this.whatWouldHelp = const Value.absent(),
     this.nextTime = const Value.absent(),
+    this.freshStart = const Value.absent(),
   });
   AttemptsCompanion.insert({
     this.id = const Value.absent(),
@@ -301,6 +341,7 @@ class AttemptsCompanion extends UpdateCompanion<Attempt> {
     this.whatHappened = const Value.absent(),
     this.whatWouldHelp = const Value.absent(),
     this.nextTime = const Value.absent(),
+    this.freshStart = const Value.absent(),
   }) : startedAt = Value(startedAt);
   static Insertable<Attempt> custom({
     Expression<int>? id,
@@ -310,6 +351,7 @@ class AttemptsCompanion extends UpdateCompanion<Attempt> {
     Expression<String>? whatHappened,
     Expression<String>? whatWouldHelp,
     Expression<String>? nextTime,
+    Expression<bool>? freshStart,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -319,6 +361,7 @@ class AttemptsCompanion extends UpdateCompanion<Attempt> {
       if (whatHappened != null) 'what_happened': whatHappened,
       if (whatWouldHelp != null) 'what_would_help': whatWouldHelp,
       if (nextTime != null) 'next_time': nextTime,
+      if (freshStart != null) 'fresh_start': freshStart,
     });
   }
 
@@ -330,6 +373,7 @@ class AttemptsCompanion extends UpdateCompanion<Attempt> {
     Value<String?>? whatHappened,
     Value<String?>? whatWouldHelp,
     Value<String?>? nextTime,
+    Value<bool>? freshStart,
   }) {
     return AttemptsCompanion(
       id: id ?? this.id,
@@ -339,6 +383,7 @@ class AttemptsCompanion extends UpdateCompanion<Attempt> {
       whatHappened: whatHappened ?? this.whatHappened,
       whatWouldHelp: whatWouldHelp ?? this.whatWouldHelp,
       nextTime: nextTime ?? this.nextTime,
+      freshStart: freshStart ?? this.freshStart,
     );
   }
 
@@ -366,6 +411,9 @@ class AttemptsCompanion extends UpdateCompanion<Attempt> {
     if (nextTime.present) {
       map['next_time'] = Variable<String>(nextTime.value);
     }
+    if (freshStart.present) {
+      map['fresh_start'] = Variable<bool>(freshStart.value);
+    }
     return map;
   }
 
@@ -378,7 +426,8 @@ class AttemptsCompanion extends UpdateCompanion<Attempt> {
           ..write('trigger: $trigger, ')
           ..write('whatHappened: $whatHappened, ')
           ..write('whatWouldHelp: $whatWouldHelp, ')
-          ..write('nextTime: $nextTime')
+          ..write('nextTime: $nextTime, ')
+          ..write('freshStart: $freshStart')
           ..write(')'))
         .toString();
   }
@@ -1853,6 +1902,7 @@ typedef $$AttemptsTableCreateCompanionBuilder = AttemptsCompanion Function({
   Value<String?> whatHappened,
   Value<String?> whatWouldHelp,
   Value<String?> nextTime,
+  Value<bool> freshStart,
 });
 typedef $$AttemptsTableUpdateCompanionBuilder = AttemptsCompanion Function({
   Value<int> id,
@@ -1862,6 +1912,7 @@ typedef $$AttemptsTableUpdateCompanionBuilder = AttemptsCompanion Function({
   Value<String?> whatHappened,
   Value<String?> whatWouldHelp,
   Value<String?> nextTime,
+  Value<bool> freshStart,
 });
 
 final class $$AttemptsTableReferences extends BaseReferences<_$AppDatabase, $AttemptsTable, Attempt> {
@@ -1938,6 +1989,9 @@ class $$AttemptsTableFilterComposer extends Composer<_$AppDatabase, $AttemptsTab
 
   ColumnFilters<String> get nextTime =>
       $composableBuilder(column: $table.nextTime, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<bool> get freshStart =>
+      $composableBuilder(column: $table.freshStart, builder: (column) => ColumnFilters(column));
 
   Expression<bool> smokingProductsRefs(Expression<bool> Function($$SmokingProductsTableFilterComposer f) f) {
     final $$SmokingProductsTableFilterComposer composer = $composerBuilder(
@@ -2021,6 +2075,9 @@ class $$AttemptsTableOrderingComposer extends Composer<_$AppDatabase, $AttemptsT
 
   ColumnOrderings<String> get nextTime =>
       $composableBuilder(column: $table.nextTime, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get freshStart =>
+      $composableBuilder(column: $table.freshStart, builder: (column) => ColumnOrderings(column));
 }
 
 class $$AttemptsTableAnnotationComposer extends Composer<_$AppDatabase, $AttemptsTable> {
@@ -2047,6 +2104,8 @@ class $$AttemptsTableAnnotationComposer extends Composer<_$AppDatabase, $Attempt
       $composableBuilder(column: $table.whatWouldHelp, builder: (column) => column);
 
   GeneratedColumn<String> get nextTime => $composableBuilder(column: $table.nextTime, builder: (column) => column);
+
+  GeneratedColumn<bool> get freshStart => $composableBuilder(column: $table.freshStart, builder: (column) => column);
 
   Expression<T> smokingProductsRefs<T extends Object>(
     Expression<T> Function($$SmokingProductsTableAnnotationComposer a) f,
@@ -2139,6 +2198,7 @@ class $$AttemptsTableTableManager
                 Value<String?> whatHappened = const Value.absent(),
                 Value<String?> whatWouldHelp = const Value.absent(),
                 Value<String?> nextTime = const Value.absent(),
+                Value<bool> freshStart = const Value.absent(),
               }) => AttemptsCompanion(
                 id: id,
                 startedAt: startedAt,
@@ -2147,6 +2207,7 @@ class $$AttemptsTableTableManager
                 whatHappened: whatHappened,
                 whatWouldHelp: whatWouldHelp,
                 nextTime: nextTime,
+                freshStart: freshStart,
               ),
           createCompanionCallback:
               ({
@@ -2157,6 +2218,7 @@ class $$AttemptsTableTableManager
                 Value<String?> whatHappened = const Value.absent(),
                 Value<String?> whatWouldHelp = const Value.absent(),
                 Value<String?> nextTime = const Value.absent(),
+                Value<bool> freshStart = const Value.absent(),
               }) => AttemptsCompanion.insert(
                 id: id,
                 startedAt: startedAt,
@@ -2165,6 +2227,7 @@ class $$AttemptsTableTableManager
                 whatHappened: whatHappened,
                 whatWouldHelp: whatWouldHelp,
                 nextTime: nextTime,
+                freshStart: freshStart,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable<$AttemptsTable, Attempt>(table), $$AttemptsTableReferences(db, table, e)))

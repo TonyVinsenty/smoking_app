@@ -48,6 +48,10 @@ class Attempts extends Table {
   TextColumn get whatHappened => text().nullable()();
   TextColumn get whatWouldHelp => text().nullable()();
   TextColumn get nextTime => text().nullable()();
+
+  /// «С чистого листа»: money, units, cravings, XP and most badges count only from this attempt on
+  /// (see `freshStartProvider`); the record, the attempt history, read articles and «Путь» badges stay.
+  BoolColumn get freshStart => boolean().withDefault(const Constant(false))();
 }
 
 class Cravings extends Table {
@@ -90,7 +94,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? driftDatabase(name: 'smoking_app'));
 
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -106,6 +110,7 @@ class AppDatabase extends _$AppDatabase {
         await customStatement('DELETE FROM smoking_products WHERE attempt_id IS NULL');
       }
       if (from < 3) await m.createTable(wellbeingEntries);
+      if (from < 4) await m.addColumn(attempts, attempts.freshStart);
     },
   );
 
@@ -116,15 +121,17 @@ class AppDatabase extends _$AppDatabase {
   });
 
   /// Starts a new attempt with its own smoking habits (a copy of the previous ones, or edited).
-  Future<int> startAttempt(DateTime startedAt, List<SmokingProductsCompanion> products) => transaction(() async {
-    final id = await into(attempts).insert(AttemptsCompanion.insert(startedAt: startedAt));
-    await batch(
-      (b) => b.insertAll(smokingProducts, [
-        for (final p in products) p.copyWith(id: const Value.absent(), attemptId: Value(id)),
-      ]),
-    );
-    return id;
-  });
+  Future<int> startAttempt(DateTime startedAt, List<SmokingProductsCompanion> products, {bool freshStart = false}) =>
+      transaction(() async {
+        final id = await into(attempts)
+            .insert(AttemptsCompanion.insert(startedAt: startedAt, freshStart: Value(freshStart)));
+        await batch(
+          (b) => b.insertAll(smokingProducts, [
+            for (final p in products) p.copyWith(id: const Value.absent(), attemptId: Value(id)),
+          ]),
+        );
+        return id;
+      });
 
   /// Replaces the smoking habits of attempt [attemptId] (e.g. «Мои данные»).
   Future<void> replaceProducts(int attemptId, List<SmokingProductsCompanion> products) => transaction(() async {
