@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -14,6 +15,7 @@ import 'social.dart';
 const maxChatMembers = 5;
 const maxMessageLength = 1000;
 const maxGroupTitleLength = 40;
+const maxChatImageBytes = 220000;
 
 /// Events in a group, shown as a grey line instead of a bubble.
 enum ChatEvent { created, added, left, renamed }
@@ -34,7 +36,16 @@ ChatEvent? _event(Object? v) => ChatEvent.values.where((e) => e.name == v).first
 String directChatId(String a, String b) => a.compareTo(b) < 0 ? '${a}_$b' : '${b}_$a';
 
 class ChatMessage {
-  const ChatMessage({required this.id, required this.from, required this.text, this.at, this.event});
+  const ChatMessage({
+    required this.id,
+    required this.from,
+    required this.text,
+    this.at,
+    this.event,
+    this.image,
+    this.pending = false,
+    this.failed = false,
+  });
 
   factory ChatMessage.fromDoc(DocumentSnapshot<Map<String, dynamic>> d) {
     final m = _data(d);
@@ -44,6 +55,8 @@ class ChatMessage {
       text: m['text'] as String? ?? '',
       at: _time(m['at']),
       event: _event(m['sys']),
+      image: m['image'] as String?,
+      pending: d.metadata.hasPendingWrites,
     );
   }
 
@@ -54,6 +67,19 @@ class ChatMessage {
   final String text;
   final DateTime? at;
   final ChatEvent? event;
+  final String? image;
+  final bool pending;
+  final bool failed;
+
+  Uint8List? get imageBytes {
+    final value = image;
+    if (value == null) return null;
+    try {
+      return base64Decode(value);
+    } catch (_) {
+      return null;
+    }
+  }
 }
 
 class Chat {
@@ -129,6 +155,15 @@ final messagesProvider = StreamProvider.family<List<ChatMessage>, ({String chatI
           .map((s) => [for (final d in s.docs) ChatMessage.fromDoc(d)]),
 );
 
+/// Per-member server read markers. A sender can see the marker only for people in this chat.
+final chatReadsProvider = StreamProvider.family<Map<String, DateTime>, String>((ref, chatId) {
+  final me = ref.watch(authUserProvider).value?.uid;
+  if (me == null) return Stream.value(const {});
+  return _chats.doc(chatId).collection('reads').snapshots().map((s) {
+    return {for (final d in s.docs) if (_time(d.data()['at']) case final at?) d.id: at};
+  });
+});
+
 /// When the user last saw each chat (time of the last message they saw), kept on the phone.
 class ChatReadNotifier extends Notifier<Map<String, DateTime>> {
   static const _key = 'chat_read';
@@ -200,33 +235,48 @@ class ChatService {
     'sys': ?event?.name,
   };
 
-  Map<String, Object> _message(String text, [ChatEvent? event]) => {
+  Map<String, Object> _message(String text, [ChatEvent? event, String? image]) => {
     'from': _me,
     'text': text,
     'at': FieldValue.serverTimestamp(),
     'sys': ?event?.name,
+    if (image != null) 'image': image,
   };
 
   /// Sends a message; the first message to a friend also creates the one-to-one chat ([friend] and their name).
-  Future<void> send(String chatId, String text, {Chat? chat, (String uid, String nick)? friend}) async {
-    final batch = _db.batch()..set(_messagesOf(chatId).doc(), _message(text));
+  Future<String> send(
+    String chatId,
+    String text, {
+    Chat? chat,
+    (String uid, String nick)? friend,
+    String? image,
+  }) async {
+    final messageRef = _messagesOf(chatId).doc();
+    final preview = image == null ? text : (text.isEmpty ? '📷 Фото' : text);
+    final batch = _db.batch()..set(messageRef, _message(text, null, image));
     if (chat == null && friend != null) {
       final (uid, nick) = friend;
       batch.set(_chats.doc(chatId), {
         'members': [_me, uid]..sort(),
         'group': false,
         'names': {_me: _myNick, uid: nick},
-        'last': _last(text),
+        'last': _last(preview),
         'updatedAt': FieldValue.serverTimestamp(),
       });
     } else {
       batch.update(_chats.doc(chatId), {
-        'last': _last(text),
+        'last': _last(preview),
         'names.$_me': _myNick,
         'updatedAt': FieldValue.serverTimestamp(),
       });
     }
     await batch.commit();
+    return messageRef.id;
+  }
+
+  Future<void> markRead(String chatId) async {
+    final uid = _me;
+    await _chats.doc(chatId).collection('reads').doc(uid).set({'at': FieldValue.serverTimestamp()});
   }
 
   /// A new group with the given friends; returns its id.
@@ -273,13 +323,19 @@ class ChatService {
 
   /// Leaves a chat; the user's messages stay. The last one to leave a group removes it completely.
   Future<void> leave(Chat chat) async {
+    final myReadRef = _chats.doc(chat.id).collection('reads').doc(_me);
     if (chat.members.length <= 1) {
       final messages = await _messagesOf(chat.id).get();
-      await _deleteAll([for (final d in messages.docs) d.reference]);
+      final reads = await _chats.doc(chat.id).collection('reads').get();
+      await _deleteAll([
+        for (final d in messages.docs) d.reference,
+        for (final d in reads.docs) d.reference,
+      ]);
       await _chats.doc(chat.id).delete();
       return;
     }
     final batch = _db.batch()
+      ..delete(myReadRef)
       ..update(_chats.doc(chat.id), {
         'members': FieldValue.arrayRemove([_me]),
         'last': _last('', ChatEvent.left),

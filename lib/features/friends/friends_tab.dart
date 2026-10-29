@@ -80,6 +80,7 @@ class _FriendRow extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context);
     final theme = Theme.of(context);
+    final displayName = friendDisplayName(ref, friend);
     final content = ref.watch(contentProvider).value;
     final xp = friend.xp;
     final days = friend.days;
@@ -90,13 +91,13 @@ class _FriendRow extends ConsumerWidget {
         child: Row(
           spacing: 14,
           children: [
-            FriendAvatar(nick: friend.nick, uid: friend.uid, size: 48),
+            FriendAvatar(nick: displayName, uid: friend.uid, size: 48),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 spacing: 2,
                 children: [
-                  Text(friend.nick, maxLines: 1, overflow: TextOverflow.ellipsis, style: theme.textTheme.titleMedium),
+                  Text(displayName, maxLines: 1, overflow: TextOverflow.ellipsis, style: theme.textTheme.titleMedium),
                   if (days != null)
                     Text(
                       l.friendDaysLine(days),

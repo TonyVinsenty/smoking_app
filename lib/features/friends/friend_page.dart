@@ -25,6 +25,7 @@ class FriendPage extends ConsumerWidget {
     final theme = Theme.of(context);
     final profile = ref.watch(friendProfileProvider(uid));
     final friend = profile.value;
+    final alias = ref.watch(friendAliasesProvider)[uid];
     return Scaffold(
       appBar: AppBar(
         actions: [
@@ -47,11 +48,19 @@ class FriendPage extends ConsumerWidget {
         final f => ListView(
           padding: const EdgeInsets.fromLTRB(16, 0, 16, 32),
           children: [
-            Center(
-              child: FriendAvatar(nick: f.nick, uid: f.uid, size: 112),
-            ),
+            Center(child: FriendAvatar(nick: friendDisplayName(ref, f), uid: f.uid, size: 112)),
             const SizedBox(height: 14),
-            Text(f.nick, textAlign: TextAlign.center, style: theme.textTheme.headlineSmall),
+            Text(
+              alias == null ? f.nick : '$alias * (${f.nick})',
+              textAlign: TextAlign.center,
+              style: theme.textTheme.headlineSmall,
+            ),
+            const SizedBox(height: 8),
+            TextButton.icon(
+              onPressed: () => _editAlias(context, ref, f),
+              icon: const Icon(Icons.edit_outlined),
+              label: Text(ref.watch(friendAliasesProvider)[f.uid] == null ? l.friendAliasAdd : l.friendAliasEdit),
+            ),
             const SizedBox(height: 14),
             Center(
               child: FilledButton.tonalIcon(
@@ -72,6 +81,31 @@ class FriendPage extends ConsumerWidget {
         ),
       },
     );
+  }
+
+  Future<void> _editAlias(BuildContext context, WidgetRef ref, SocialProfile friend) async {
+    final l = AppLocalizations.of(context);
+    final controller = TextEditingController(text: ref.read(friendAliasesProvider)[friend.uid]);
+    final alias = await showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l.friendAliasTitle),
+        content: TextField(
+          controller: controller,
+          autofocus: true,
+          maxLength: maxNickLength,
+          textCapitalization: TextCapitalization.words,
+          decoration: InputDecoration(hintText: friend.nick),
+          onSubmitted: (value) => Navigator.pop(context, value),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context), child: Text(l.cancel)),
+          FilledButton(onPressed: () => Navigator.pop(context, controller.text), child: Text(l.save)),
+        ],
+      ),
+    );
+    controller.dispose();
+    if (alias != null) ref.read(friendAliasesProvider.notifier).set(friend.uid, alias);
   }
 
   Future<void> _remove(BuildContext context, WidgetRef ref, SocialProfile friend) async {

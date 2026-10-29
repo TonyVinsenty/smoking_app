@@ -1,9 +1,12 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../app/widgets/toast.dart';
 import '../../data/chat.dart';
@@ -40,14 +43,21 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   final _input = TextEditingController();
   final _scroll = ScrollController();
   int _limit = _page;
+  String? _pendingImage;
+  final List<ChatMessage> _failedMessages = [];
 
   @override
   void initState() {
     super.initState();
     _scroll.addListener(_loadMore);
     ref.listenManual(chatProvider(widget.chatId), (_, next) {
-      final at = next.value?.last?.at;
-      if (at != null) ref.read(chatReadProvider.notifier).markRead(widget.chatId, at);
+      final last = next.value?.last;
+      final at = last?.at;
+      final seen = ref.read(chatReadProvider)[widget.chatId];
+      if (at != null) {
+        if (seen == null || at.isAfter(seen)) ref.read(chatReadProvider.notifier).markRead(widget.chatId, at);
+        unawaited(ref.read(chatServiceProvider).markRead(widget.chatId).catchError((_) {}));
+      }
     }, fireImmediately: true);
   }
 
@@ -65,22 +75,83 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     if (loaded >= _limit) setState(() => _limit += _page);
   }
 
-  void _send(Chat? chat, String me) {
+  void _send(Chat? chat, String me, {String? image}) {
     final text = _input.text.trim();
-    if (text.isEmpty) return;
+    if (text.isEmpty && image == null) return;
     final other = directOther(widget.chatId, me);
     final friend = other == null ? null : ref.read(friendProfileProvider(other)).value;
     _input.clear();
+    setState(() => _pendingImage = null);
     // Offline, the message waits in the phone and goes out with the connection; only a refusal is reported.
     unawaited(
       ref
           .read(chatServiceProvider)
-          .send(widget.chatId, text, chat: chat, friend: friend == null ? null : (friend.uid, friend.nick))
+          .send(
+            widget.chatId,
+            text,
+            chat: chat,
+            friend: friend == null ? null : (friend.uid, friend.nick),
+            image: image,
+          )
           .catchError((_) {
+            if (mounted) {
+              setState(() {
+                _failedMessages.insert(
+                  0,
+                  ChatMessage(
+                    id: DateTime.now().microsecondsSinceEpoch.toString(),
+                    from: me,
+                    text: text,
+                    image: image,
+                    at: DateTime.now(),
+                    failed: true,
+                  ),
+                );
+              });
+            }
             if (mounted) showOfflineToast(context);
+            return '';
           }),
     );
     if (_scroll.hasClients) _scroll.jumpTo(0);
+  }
+
+  Future<void> _attachImage() async {
+    final l = AppLocalizations.of(context);
+    final attach = await showModalBottomSheet<bool>(
+      context: context,
+      builder: (context) => SafeArea(
+        child: ListTile(
+          leading: const Icon(Icons.image_outlined),
+          title: Text(l.chatAttachImage),
+          onTap: () => Navigator.pop(context, true),
+        ),
+      ),
+    );
+    if (attach != true || !mounted) return;
+    final picked = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+      maxWidth: 1440,
+      maxHeight: 1440,
+      imageQuality: 65,
+    );
+    if (picked == null) return;
+    final bytes = await picked.readAsBytes();
+    if (bytes.length > maxChatImageBytes) {
+      if (mounted) showToast(context, l.chatImageTooLarge, icon: Icons.image_not_supported_outlined);
+      return;
+    }
+    if (mounted) setState(() => _pendingImage = base64Encode(bytes));
+  }
+
+  void _retry(ChatMessage message) {
+    setState(() => _failedMessages.removeWhere((m) => m.id == message.id));
+    _input.text = message.text;
+    _send(
+      ref.read(chatProvider(widget.chatId)).value,
+      ref.read(authUserProvider).value?.uid ?? '',
+      image: message.image,
+    );
   }
 
   Future<void> _delete(Chat chat) async {
@@ -161,24 +232,37 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
             child: switch (messages) {
               null when chatValue.hasError => _Note(l.socialOffline),
               null => const Center(child: CircularProgressIndicator()),
-              [] => _Note(canWrite ? l.chatFirstMessage(title) : ''),
+              [] when _failedMessages.isEmpty => _Note(canWrite ? l.chatFirstMessage(title) : ''),
               final list => ListView.builder(
                 controller: _scroll,
                 reverse: true,
                 padding: const EdgeInsets.fromLTRB(12, 12, 12, 8),
-                itemCount: list.length,
-                itemBuilder: (context, i) => _MessageItem(
-                  chat: shown,
-                  me: me,
-                  message: list[i],
-                  older: i + 1 < list.length ? list[i + 1] : null,
-                  newer: i > 0 ? list[i - 1] : null,
-                ),
+                itemCount: list.length + _failedMessages.length,
+                itemBuilder: (context, i) {
+                  if (i < _failedMessages.length) {
+                    final message = _failedMessages[i];
+                    return _MessageItem(chat: shown, me: me, message: message, onRetry: () => _retry(message));
+                  }
+                  final j = i - _failedMessages.length;
+                  return _MessageItem(
+                    chat: shown,
+                    me: me,
+                    message: list[j],
+                    older: j + 1 < list.length ? list[j + 1] : null,
+                    newer: j > 0 ? list[j - 1] : null,
+                  );
+                },
               ),
             },
           ),
           if (canWrite)
-            _InputBar(controller: _input, onSend: () => _send(chat, me))
+            _InputBar(
+              controller: _input,
+              image: _pendingImage == null ? null : base64Decode(_pendingImage!),
+              onAttach: _attachImage,
+              onClearImage: () => setState(() => _pendingImage = null),
+              onSend: () => _send(chat, me, image: _pendingImage),
+            )
           else if (chat != null || other != null)
             SafeArea(
               top: false,
@@ -243,13 +327,21 @@ bool _sameDay(DateTime a, DateTime b) => a.year == b.year && a.month == b.month 
 /// A message with what goes above it: the day chip when the day changes, the sender's name in a group
 /// at the start of their run.
 class _MessageItem extends ConsumerWidget {
-  const _MessageItem({required this.chat, required this.me, required this.message, this.older, this.newer});
+  const _MessageItem({
+    required this.chat,
+    required this.me,
+    required this.message,
+    this.older,
+    this.newer,
+    this.onRetry,
+  });
 
   final Chat chat;
   final String me;
   final ChatMessage message;
   final ChatMessage? older;
   final ChatMessage? newer;
+  final VoidCallback? onRetry;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -275,7 +367,19 @@ class _MessageItem extends ConsumerWidget {
         ),
       );
     } else {
-      final bubble = _Bubble(message: message, mine: mine, sender: showSender && runStart ? name : null);
+      final readMap = mine ? ref.watch(chatReadsProvider(chat.id)).value ?? const {} : const <String, DateTime>{};
+      final otherMembers = chat.members.where((uid) => uid != me);
+      final read = message.at != null && otherMembers.any((uid) {
+        final at = readMap[uid];
+        return at != null && !at.isBefore(message.at!);
+      });
+      final bubble = _Bubble(
+        message: message,
+        mine: mine,
+        sender: showSender && runStart ? name : null,
+        read: read,
+        onRetry: onRetry,
+      );
       body = Padding(
         padding: EdgeInsets.only(top: runStart ? 8 : 2),
         child: Row(
@@ -308,11 +412,13 @@ class _MessageItem extends ConsumerWidget {
 }
 
 class _Bubble extends StatelessWidget {
-  const _Bubble({required this.message, required this.mine, this.sender});
+  const _Bubble({required this.message, required this.mine, required this.read, this.sender, this.onRetry});
 
   final ChatMessage message;
   final bool mine;
   final String? sender;
+  final bool read;
+  final VoidCallback? onRetry;
 
   @override
   Widget build(BuildContext context) {
@@ -344,17 +450,45 @@ class _Bubble extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 if (sender != null) Text(sender!, style: theme.textTheme.labelMedium?.copyWith(color: scheme.primary)),
-                Text(message.text, style: theme.textTheme.bodyLarge?.copyWith(color: fg)),
+                if (message.imageBytes case final bytes?)
+                  Padding(
+                    padding: EdgeInsets.only(bottom: message.text.isEmpty ? 0 : 6),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Image.memory(bytes, width: 240, height: 240, fit: BoxFit.contain),
+                    ),
+                  ),
+                if (message.text.isNotEmpty) Text(message.text, style: theme.textTheme.bodyLarge?.copyWith(color: fg)),
                 Align(
                   alignment: Alignment.centerRight,
                   widthFactor: 1,
                   // Not yet on the server: a clock instead of the time.
-                  child: at == null
-                      ? Icon(Icons.schedule, size: 12, color: fg.withValues(alpha: 0.6))
-                      : Text(
-                          DateFormat('HH:mm', 'ru').format(at),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (at == null && message.pending)
+                        Icon(Icons.schedule, size: 12, color: fg.withValues(alpha: 0.6))
+                      else
+                        Text(
+                          DateFormat('HH:mm', 'ru').format(at ?? DateTime.now()),
                           style: theme.textTheme.labelSmall?.copyWith(color: fg.withValues(alpha: 0.6)),
                         ),
+                      if (mine) ...[
+                        const SizedBox(width: 4),
+                        if (message.failed)
+                          InkWell(
+                            onTap: onRetry,
+                            child: Icon(Icons.priority_high, size: 15, color: scheme.error),
+                          )
+                        else if (!message.pending && at != null)
+                          Icon(
+                            read ? Icons.done_all : Icons.done,
+                            size: 15,
+                            color: read ? scheme.primary : fg.withValues(alpha: 0.6),
+                          ),
+                      ],
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -366,9 +500,18 @@ class _Bubble extends StatelessWidget {
 }
 
 class _InputBar extends StatelessWidget {
-  const _InputBar({required this.controller, required this.onSend});
+  const _InputBar({
+    required this.controller,
+    required this.image,
+    required this.onAttach,
+    required this.onClearImage,
+    required this.onSend,
+  });
 
   final TextEditingController controller;
+  final Uint8List? image;
+  final VoidCallback onAttach;
+  final VoidCallback onClearImage;
   final VoidCallback onSend;
 
   @override
@@ -385,28 +528,50 @@ class _InputBar extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             spacing: 8,
             children: [
+              IconButton(onPressed: onAttach, tooltip: l.chatAttach, icon: const Icon(Icons.attach_file)),
               Expanded(
-                child: TextField(
-                  controller: controller,
-                  minLines: 1,
-                  maxLines: 5,
-                  textCapitalization: TextCapitalization.sentences,
-                  inputFormatters: [LengthLimitingTextInputFormatter(maxMessageLength)],
-                  decoration: InputDecoration(
-                    hintText: l.chatInputHint,
-                    filled: true,
-                    fillColor: scheme.surfaceContainerHighest,
-                    isDense: true,
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(24), borderSide: BorderSide.none),
-                  ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (image != null)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 6),
+                        child: Row(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: Image.memory(image!, width: 54, height: 54, fit: BoxFit.cover),
+                            ),
+                            IconButton(onPressed: onClearImage, icon: const Icon(Icons.close)),
+                          ],
+                        ),
+                      ),
+                    TextField(
+                      controller: controller,
+                      minLines: 1,
+                      maxLines: 5,
+                      textCapitalization: TextCapitalization.sentences,
+                      inputFormatters: [LengthLimitingTextInputFormatter(maxMessageLength)],
+                      decoration: InputDecoration(
+                        hintText: l.chatInputHint,
+                        filled: true,
+                        fillColor: scheme.surfaceContainerHighest,
+                        isDense: true,
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(24),
+                          borderSide: BorderSide.none,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
               ValueListenableBuilder(
                 valueListenable: controller,
                 builder: (context, value, _) => IconButton.filled(
                   tooltip: l.chatSend,
-                  onPressed: value.text.trim().isEmpty ? null : onSend,
+                  onPressed: value.text.trim().isEmpty && image == null ? null : onSend,
                   icon: const Icon(Icons.send),
                 ),
               ),

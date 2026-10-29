@@ -35,9 +35,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get friendsTabMine => 'Мои друзья';
 
   @override
-  String get friendsTabRating => 'Рейтинг';
-
-  @override
   String get friendsAdd => 'Добавить друга';
 
   @override
@@ -96,6 +93,15 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get friendWrite => 'Написать';
+
+  @override
+  String get friendAliasAdd => 'Добавить ник';
+
+  @override
+  String get friendAliasEdit => 'Изменить ник';
+
+  @override
+  String get friendAliasTitle => 'Как вы будете называть этого друга?';
 
   @override
   String get friendsTabChats => 'Чаты';
@@ -193,6 +199,15 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get chatSend => 'Отправить';
+
+  @override
+  String get chatAttach => 'Прикрепить';
+
+  @override
+  String get chatAttachImage => 'Изображение';
+
+  @override
+  String get chatImageTooLarge => 'Это изображение слишком большое. Выберите другое.';
 
   @override
   String chatFirstMessage(String nick) {
@@ -1987,7 +2002,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get privacyServerNote =>
-      'На сервере хранятся только имя, фото, код друга, список друзей и отмеченные показатели. Ничего о здоровье и тяге туда не уходит.';
+      'В этой версии все 4 показателя включены по умолчанию; каждый можно отключить здесь. На сервере также хранятся имя, фото, код друга, список друзей и сообщения с изображениями из чатов.';
 
   @override
   String get privacyNotJoined =>

@@ -6,7 +6,8 @@ rules_version = '2';
 // - a friends list is visible only to its owner;
 // - codes/{code} can be read only by someone who already knows the code (no listing);
 // - a photo (avatars/{uid}) is visible like the profile: to its owner and to the owner's friends;
-// - a chat and its messages are visible only to its members; only friends start chats and add people;
+// - a chat, its messages and read markers are visible only to its members; chat images are size-limited;
+//   only friends start chats and add people;
 // - everyone writes only their own data; the one exception is adding yourself to someone's friends list,
 //   allowed only together with that person's friend code.
 service cloud.firestore {
@@ -126,13 +127,16 @@ service cloud.firestore {
         allow read: if signedIn() && request.auth.uid in chatBefore().members;
         // Written together with the chat itself: the chat may be created or left in the same batch.
         allow create: if signedIn()
-          && request.resource.data.keys().hasOnly(['from', 'text', 'at', 'sys'])
+          && request.resource.data.keys().hasOnly(['from', 'text', 'at', 'sys', 'image'])
           && request.resource.data.from == request.auth.uid
           && request.resource.data.at == request.time
           && request.resource.data.text is string && request.resource.data.text.size() <= 1000
+          && (!('image' in request.resource.data)
+              || (request.resource.data.image is string && request.resource.data.image.size() <= 300000))
+          && (request.resource.data.text.size() > 0 || 'image' in request.resource.data)
           && (('sys' in request.resource.data)
-              ? request.resource.data.sys in ['created', 'added', 'left', 'renamed']
-              : request.resource.data.text.size() > 0)
+              ? request.resource.data.sys in ['created', 'added', 'left', 'renamed'] && !('image' in request.resource.data)
+              : (request.resource.data.text.size() > 0 || 'image' in request.resource.data))
           && (request.auth.uid in chatBefore().members || request.auth.uid in chatAfter().members)
           // events only in groups; in a one-to-one chat only while still friends
           && (chatAfter().group
@@ -140,6 +144,16 @@ service cloud.firestore {
                   && isFriend(chatAfter().members.removeAll([request.auth.uid])[0])));
         allow delete: if signedIn()
           && (resource.data.from == request.auth.uid || chatBefore().members == [request.auth.uid]);
+      }
+
+      match /reads/{uid} {
+        allow read: if signedIn() && request.auth.uid in get(/databases/$(database)/documents/chats/$(chatId)).data.members;
+        allow create, update: if signedIn()
+          && request.auth.uid == uid
+          && request.auth.uid in get(/databases/$(database)/documents/chats/$(chatId)).data.members
+          && request.resource.data.keys().hasOnly(['at'])
+          && request.resource.data.at == request.time;
+        allow delete: if signedIn() && request.auth.uid == uid;
       }
     }
 

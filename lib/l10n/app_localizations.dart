@@ -142,12 +142,6 @@ abstract class AppLocalizations {
   /// **'Мои друзья'**
   String get friendsTabMine;
 
-  /// No description provided for @friendsTabRating.
-  ///
-  /// In ru, this message translates to:
-  /// **'Рейтинг'**
-  String get friendsTabRating;
-
   /// No description provided for @friendsAdd.
   ///
   /// In ru, this message translates to:
@@ -201,6 +195,12 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Написать'**
   String get friendWrite;
+
+  String get friendAliasAdd;
+
+  String get friendAliasEdit;
+
+  String get friendAliasTitle;
 
   /// No description provided for @friendsTabChats.
   ///
@@ -351,6 +351,12 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Отправить'**
   String get chatSend;
+
+  String get chatAttach;
+
+  String get chatAttachImage;
+
+  String get chatImageTooLarge;
 
   /// No description provided for @chatFirstMessage.
   ///

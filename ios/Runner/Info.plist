@@ -6,8 +6,6 @@
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Чтобы выбрать фото профиля для друзей.</string>
 	<key>CFBundleDisplayName</key>
 	<string>Zero</string>
 	<key>CFBundleExecutable</key>

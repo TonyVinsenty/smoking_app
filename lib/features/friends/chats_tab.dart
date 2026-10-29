@@ -194,8 +194,8 @@ String memberName(WidgetRef ref, AppLocalizations l, Chat chat, String uid) {
   final me = ref.watch(myProfileProvider).value;
   if (me != null && uid == ref.watch(authUserProvider).value?.uid) return me.nick;
   if (isFriend(ref, uid)) {
-    final nick = ref.watch(friendProfileProvider(uid)).value?.nick;
-    if (nick != null) return nick;
+    final profile = ref.watch(friendProfileProvider(uid)).value;
+    if (profile != null) return friendDisplayName(ref, profile);
   }
   return chat.names[uid] ?? '…';
 }

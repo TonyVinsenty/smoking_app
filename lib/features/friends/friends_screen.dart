@@ -7,11 +7,9 @@ import '../../data/social.dart';
 import '../../l10n/app_localizations.dart';
 import 'chats_tab.dart';
 import 'friends_tab.dart';
-import 'rating_tab.dart';
 import 'social_widgets.dart';
 
-/// «Друзья»: a small circle of friends added by code. Before joining, the user picks a name;
-/// after that — «Мои друзья» (people and their pages), «Чаты» and «Рейтинг» (the podium).
+/// «Друзья»: a small circle of friends added by code, plus one-to-one and group chats.
 class FriendsScreen extends ConsumerWidget {
   const FriendsScreen({super.key});
 
@@ -38,14 +36,13 @@ class FriendsScreen extends ConsumerWidget {
     }
     return TabPage(
       body: DefaultTabController(
-        length: 3,
+        length: 2,
         child: Column(
           children: [
             TabBar(
               tabs: [
                 Tab(text: l.friendsTabMine),
                 Tab(child: _ChatsTabLabel(text: l.friendsTabChats)),
-                Tab(text: l.friendsTabRating),
               ],
             ),
             Expanded(
@@ -53,7 +50,6 @@ class FriendsScreen extends ConsumerWidget {
                 children: [
                   const FriendsTab(),
                   const ChatsTab(),
-                  RatingTab(me: me),
                 ],
               ),
             ),

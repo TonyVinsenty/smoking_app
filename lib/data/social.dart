@@ -23,11 +23,12 @@ import 'settings.dart';
 /// What a user may show to friends.
 enum ShareField { xp, badges, days, money }
 
-/// Shown by default: level/XP and badges; days and money stay private until switched on.
-const defaultShare = {ShareField.xp, ShareField.badges};
+/// All profile stats are shared by default. A versioned key applies this once to existing installs too.
+const defaultShare = {ShareField.xp, ShareField.badges, ShareField.days, ShareField.money};
 
 class ShareSettingsNotifier extends Notifier<Set<ShareField>> {
-  static const _key = 'social.share';
+  // Bump the key to intentionally reset existing installs to the new default once.
+  static const _key = 'social.share.v2';
 
   @override
   Set<ShareField> build() {
@@ -46,6 +47,55 @@ class ShareSettingsNotifier extends Notifier<Set<ShareField>> {
 }
 
 final shareSettingsProvider = NotifierProvider<ShareSettingsNotifier, Set<ShareField>>(ShareSettingsNotifier.new);
+
+/// Local names for friends. These aliases never leave this device.
+class FriendAliasesNotifier extends Notifier<Map<String, String>> {
+  static const _key = 'social.friend_aliases';
+
+  @override
+  Map<String, String> build() {
+    final raw = ref.watch(prefsProvider).getString(_key);
+    if (raw == null) return const {};
+    try {
+      final decoded = jsonDecode(raw) as Map<String, dynamic>;
+      return {for (final e in decoded.entries) e.key: e.value as String};
+    } catch (_) {
+      return const {};
+    }
+  }
+
+  void set(String uid, String alias) {
+    final clean = cleanNick(alias);
+    if (clean.isEmpty) {
+      remove(uid);
+      return;
+    }
+    state = {...state, uid: clean};
+    _save();
+  }
+
+  void remove(String uid) {
+    if (!state.containsKey(uid)) return;
+    state = {...state}..remove(uid);
+    _save();
+  }
+
+  void clear() {
+    state = const {};
+    _save();
+  }
+
+  void _save() => ref.read(prefsProvider).setString(_key, jsonEncode(state));
+}
+
+final friendAliasesProvider = NotifierProvider<FriendAliasesNotifier, Map<String, String>>(
+  FriendAliasesNotifier.new,
+);
+
+String friendDisplayName(WidgetRef ref, SocialProfile friend) {
+  final alias = ref.watch(friendAliasesProvider)[friend.uid];
+  return alias == null ? friend.nick : '$alias *';
+}
 
 /// A profile as stored on the server; hidden stats are null.
 class SocialProfile {
@@ -280,6 +330,7 @@ class SocialService {
       ..delete(_friendsOf(uid).doc(friendUid))
       ..delete(_friendsOf(friendUid).doc(uid));
     await batch.commit();
+    ref.read(friendAliasesProvider.notifier).remove(friendUid);
   }
 
   /// Erases everything on the server: own chat messages and chat memberships, friendships on both sides,
@@ -301,6 +352,7 @@ class SocialService {
       ..delete(_avatarDoc(uid))
       ..delete(_userDoc(uid));
     await batch.commit();
+    ref.read(friendAliasesProvider.notifier).clear();
     _lastSent = null;
     await _auth.currentUser?.delete();
   }
@@ -310,7 +362,7 @@ class SocialService {
   Future<void> sync({bool force = false, String? nick}) async {
     final me = ref.read(myProfileProvider).value;
     final uid = _uid;
-    if (me == null || uid == null) return;
+    if (me == null || uid == null || ref.read(myStatsProvider) == null) return;
     final payload = _payload(nick ?? me.nick, me.code);
     final now = DateTime.now();
     final same = _lastSent != null && _mapEquals(_lastSent!, payload);

@@ -20,9 +20,9 @@
 <body>
 <main>
 <h1>Политика конфиденциальности приложения Zero</h1>
-<p class="muted">Действует с 13 октября 2026 года</p>
+<p class="muted">Действует с 30 октября 2026 года</p>
 
-<p>Zero — бесплатное приложение, которое помогает бросить курить. Его делает частный разработчик Tony Vinsenty. Коротко: <b>приложение не собирает и не отправляет никаких ваших данных</b>. Всё, что вы вводите, хранится только на вашем телефоне.</p>
+<p>Zero — бесплатное приложение, которое помогает бросить курить. Его делает частный разработчик Tony Vinsenty. Данные о попытках отказа, привычках, тяге и самочувствии хранятся на телефоне. Если вы пользуетесь вкладкой «Друзья» и чатами, необходимые для этих функций данные передаются в Firebase (Google) и хранятся в Firestore.</p>
 
 <h2>Какие данные хранит приложение</h2>
 <p>Чтобы считать время без курения, сэкономленные деньги и прогресс, приложение сохраняет на устройстве то, что вы вводите сами:</p>
@@ -32,10 +32,16 @@
   <li>полученные уровни и достижения, прочитанные статьи;</li>
   <li>настройки приложения (тема, уведомления, значок и т. п.).</li>
 </ul>
-<p>Эти данные не покидают телефон: у приложения нет серверов, учётных записей и регистрации, нет рекламы и систем аналитики. Приложению даже не выдаётся разрешение на доступ в интернет.</p>
+<p>Личные записи о курении, попытках отказа, тяге, самочувствии и привычках остаются на телефоне. Они не отправляются друзьям или в Firebase. В Zero нет рекламы и систем аналитики.</p>
+
+<h2>Друзья и чаты</h2>
+<p>Функции «Друзья» и «Чаты» работают через Firebase Authentication и Cloud Firestore. При подключении создаётся анонимная учётная запись. На сервер передаются имя профиля, код друга, список друзей, фото профиля, состав и названия групп, текст отправленных сообщений, прикреплённые к сообщениям изображения, а также технические отметки времени отправки и прочтения.</p>
+<p>Друзьям показываются показатели, отмеченные в Настройках: уровень и опыт, число значков, дни без курения и сэкономленные деньги. При переходе на версию 0.1.0+23 все четыре показателя включаются по умолчанию; каждый можно отключить в разделе Настройки → Друзья → «Обо мне». Имя друга, которое вы задаёте только для себя, хранится на вашем телефоне.</p>
+<p>Фото выбираются через системное окно выбора. Приложение получает выбранное изображение, а не доступ ко всей фототеке. Фото профиля и изображения, отправленные в чат, сохраняются в Firestore и доступны участникам соответствующего круга или чата. Изображения уменьшены приложением перед отправкой.</p>
+<p>Доступ к профилям, фото и переписке ограничен правилами Firebase: участники видят только чаты, в которых состоят; показатели видны друзьям согласно настройкам владельца. Данные обрабатываются Google как поставщиком Firebase. Zero не продаёт эти данные.</p>
 
 <h2>Передача данных третьим лицам</h2>
-<p>Мы никому не передаём и не продаём ваши данные — у нас их просто нет. Если вы нажмёте «Информация о разработчике», страница откроется в вашем браузере; дальше действуют правила этого сайта.</p>
+<p>Кроме описанных функций Firebase, Zero не передаёт данные другим получателям и не продаёт их. Если вы нажмёте «Информация о разработчике», страница откроется в вашем браузере; дальше действуют правила этого сайта.</p>
 
 <h2>Уведомления</h2>
 <p>Напоминания и сообщения об этапах восстановления создаются прямо на телефоне. Их можно выключить в настройках приложения или телефона.</p>
@@ -44,7 +50,7 @@
 <p>Если на телефоне включено системное резервное копирование (Google или iCloud), данные приложения могут попасть в вашу личную резервную копию. Это управляется настройками телефона, разработчик к таким копиям доступа не имеет.</p>
 
 <h2>Как удалить данные</h2>
-<p>Настройки → «Полный сброс» удаляет все данные приложения. Удаление приложения с телефона тоже стирает всё.</p>
+<p>Настройки → Друзья → «Обо мне» → «Удалить аккаунт» удаляет серверный профиль, код и фото, разрывает связи дружбы, удаляет отправленные вами сообщения и выводит вас из чатов. Сообщения других участников в оставшихся чатах сохраняются у них. «Полный сброс» и удаление приложения стирают локальные данные, но сами по себе не удаляют серверный аккаунт друзей.</p>
 
 <h2>Дети</h2>
 <p>Приложение предназначено для взрослых и не рассчитано на детей.</p>
@@ -53,7 +59,7 @@
 <p>Материалы приложения носят справочный характер и не заменяют консультацию врача.</p>
 
 <h2>Изменения</h2>
-<p>Если политика изменится (например, появится рейтинг с друзьями, которому нужен интернет), новая версия будет опубликована на этой странице до выхода такого обновления.</p>
+<p>Если политика изменится, новая версия будет опубликована на этой странице.</p>
 
 <h2>Контакты</h2>
 <p>Вопросы о конфиденциальности: <a href="mailto:{{CONTACT_EMAIL}}">{{CONTACT_EMAIL}}</a></p>
@@ -61,8 +67,8 @@
 <hr>
 
 <h1>Zero — Privacy Policy</h1>
-<p class="muted">Effective October 13, 2026</p>
-<p>Zero is a free app that helps people quit smoking, made by an independent developer, Tony Vinsenty. <b>The app does not collect or transmit any personal data.</b> Everything you enter (what and how much you smoked, prices, quit date, craving and wellbeing logs, achievements, settings) is stored only on your device. The app has no servers, accounts, ads or analytics, and it does not even request internet access. We do not share or sell any data. Notifications are scheduled locally on the device. If system backup (Google or iCloud) is enabled, app data may be included in your personal backup, which the developer cannot access. You can erase all data with Settings → "Full reset" or by uninstalling the app. The app is intended for adults. Its content is for information only and is not medical advice. Any changes to this policy will be published on this page before they take effect. Contact: <a href="mailto:{{CONTACT_EMAIL}}">{{CONTACT_EMAIL}}</a></p>
+<p class="muted">Effective October 30, 2026</p>
+<p>Zero is a free app that helps people quit smoking, made by an independent developer, Tony Vinsenty. Personal smoking, quit-attempt, craving, wellbeing, and habit records stay on the device and are not sent to friends or Firebase. The Friends and Chats features use Firebase Authentication and Cloud Firestore (Google). They process an anonymous account, profile name, friend code and list, profile photo, group membership and names, chat text and attached images, and message delivery/read timestamps. Friends can see the selected profile statistics: level and XP, badges, smoke-free days, and money saved. In version 0.1.0+23, all four are enabled by default and can be disabled in Settings → Friends → About me. A friend nickname set on your device is stored only on that device. Photos are chosen through the system picker; Zero receives the selected image, not access to the full photo library. Profile photos and chat images are stored in Firestore and available to the relevant friends or chat members. Firebase security rules restrict access to profile and chat data. Zero has no ads or analytics and does not sell this data. Account deletion in Settings removes the server profile, code, profile photo, friendship links, messages sent by you, and your chat memberships; messages sent by others remain in their chats. Full reset and uninstall erase local data but do not by themselves remove the server Friends account. Notifications are scheduled locally. If system backup is enabled, local app data may be included in your personal backup. The app is intended for adults. Its content is for information only and is not medical advice. Contact: <a href="mailto:{{CONTACT_EMAIL}}">{{CONTACT_EMAIL}}</a></p>
 </main>
 </body>
 </html>
