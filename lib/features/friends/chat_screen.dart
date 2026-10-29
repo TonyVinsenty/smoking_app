@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -41,6 +42,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   static const _page = 50;
 
   final _input = TextEditingController();
+  final _inputFocusNode = FocusNode();
   final _scroll = ScrollController();
   int _limit = _page;
   String? _pendingImage;
@@ -64,6 +66,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   @override
   void dispose() {
     _input.dispose();
+    _inputFocusNode.unfocus();
+    _inputFocusNode.dispose();
     _scroll.dispose();
     super.dispose();
   }
@@ -118,6 +122,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
 
   Future<void> _attachImage() async {
     final l = AppLocalizations.of(context);
+    await _hideKeyboard();
+    if (!mounted) return;
     final attach = await showModalBottomSheet<bool>(
       context: context,
       builder: (context) => SafeArea(
@@ -131,17 +137,47 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     if (attach != true || !mounted) return;
     final picked = await ImagePicker().pickImage(
       source: ImageSource.gallery,
-      maxWidth: 1440,
-      maxHeight: 1440,
-      imageQuality: 65,
+      maxWidth: 2048,
+      maxHeight: 2048,
+      imageQuality: 100,
     );
     if (picked == null) return;
-    final bytes = await picked.readAsBytes();
-    if (bytes.length > maxChatImageBytes) {
-      if (mounted) showToast(context, l.chatImageTooLarge, icon: Icons.image_not_supported_outlined);
-      return;
+    try {
+      final source = await picked.readAsBytes();
+      final compressed = await _compressChatImage(source);
+      if (mounted) setState(() => _pendingImage = base64Encode(compressed));
+    } catch (_) {
+      if (mounted) showToast(context, l.chatImageCompressFailed, icon: Icons.image_not_supported_outlined);
     }
-    if (mounted) setState(() => _pendingImage = base64Encode(bytes));
+  }
+
+  Future<void> _hideKeyboard() async {
+    _inputFocusNode.unfocus();
+    try {
+      await SystemChannels.textInput.invokeMethod<void>('TextInput.hide');
+    } catch (_) {
+      // The focus node has already been cleared; hiding the platform keyboard is best-effort.
+    }
+  }
+
+  Future<Uint8List> _compressChatImage(Uint8List source) async {
+    Uint8List? smallest;
+    for (final edge in [1920, 1600, 1280, 1024, 800, 640, 512]) {
+      for (final quality in [85, 70, 55]) {
+        final compressed = await FlutterImageCompress.compressWithList(
+          source,
+          minWidth: edge,
+          minHeight: edge,
+          quality: quality,
+          format: CompressFormat.jpeg,
+          keepExif: false,
+        );
+        smallest = Uint8List.fromList(compressed);
+        if (smallest.lengthInBytes <= maxChatImageBytes) return smallest;
+      }
+    }
+    if (smallest != null && smallest.lengthInBytes <= maxChatImageBytes) return smallest;
+    throw StateError('Could not compress image below the Firestore message limit');
   }
 
   void _retry(ChatMessage message) {
@@ -258,6 +294,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           if (canWrite)
             _InputBar(
               controller: _input,
+              focusNode: _inputFocusNode,
               image: _pendingImage == null ? null : base64Decode(_pendingImage!),
               onAttach: _attachImage,
               onClearImage: () => setState(() => _pendingImage = null),
@@ -369,10 +406,12 @@ class _MessageItem extends ConsumerWidget {
     } else {
       final readMap = mine ? ref.watch(chatReadsProvider(chat.id)).value ?? const {} : const <String, DateTime>{};
       final otherMembers = chat.members.where((uid) => uid != me);
-      final read = message.at != null && otherMembers.any((uid) {
-        final at = readMap[uid];
-        return at != null && !at.isBefore(message.at!);
-      });
+      final read =
+          message.at != null &&
+          otherMembers.any((uid) {
+            final at = readMap[uid];
+            return at != null && !at.isBefore(message.at!);
+          });
       final bubble = _Bubble(
         message: message,
         mine: mine,
@@ -502,6 +541,7 @@ class _Bubble extends StatelessWidget {
 class _InputBar extends StatelessWidget {
   const _InputBar({
     required this.controller,
+    required this.focusNode,
     required this.image,
     required this.onAttach,
     required this.onClearImage,
@@ -509,6 +549,7 @@ class _InputBar extends StatelessWidget {
   });
 
   final TextEditingController controller;
+  final FocusNode focusNode;
   final Uint8List? image;
   final VoidCallback onAttach;
   final VoidCallback onClearImage;
@@ -548,6 +589,7 @@ class _InputBar extends StatelessWidget {
                       ),
                     TextField(
                       controller: controller,
+                      focusNode: focusNode,
                       minLines: 1,
                       maxLines: 5,
                       textCapitalization: TextCapitalization.sentences,

@@ -196,10 +196,22 @@ abstract class AppLocalizations {
   /// **'Написать'**
   String get friendWrite;
 
+  /// No description provided for @friendAliasAdd.
+  ///
+  /// In ru, this message translates to:
+  /// **'Добавить ник'**
   String get friendAliasAdd;
 
+  /// No description provided for @friendAliasEdit.
+  ///
+  /// In ru, this message translates to:
+  /// **'Изменить ник'**
   String get friendAliasEdit;
 
+  /// No description provided for @friendAliasTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Как вы будете называть этого друга?'**
   String get friendAliasTitle;
 
   /// No description provided for @friendsTabChats.
@@ -352,11 +364,23 @@ abstract class AppLocalizations {
   /// **'Отправить'**
   String get chatSend;
 
+  /// No description provided for @chatAttach.
+  ///
+  /// In ru, this message translates to:
+  /// **'Прикрепить'**
   String get chatAttach;
 
+  /// No description provided for @chatAttachImage.
+  ///
+  /// In ru, this message translates to:
+  /// **'Изображение'**
   String get chatAttachImage;
 
-  String get chatImageTooLarge;
+  /// No description provided for @chatImageCompressFailed.
+  ///
+  /// In ru, this message translates to:
+  /// **'Не удалось подготовить изображение. Попробуйте выбрать другое.'**
+  String get chatImageCompressFailed;
 
   /// No description provided for @chatFirstMessage.
   ///
@@ -2544,7 +2568,7 @@ abstract class AppLocalizations {
   /// No description provided for @privacyServerNote.
   ///
   /// In ru, this message translates to:
-  /// **'На сервере хранятся только имя, фото, код друга, список друзей и отмеченные показатели. Ничего о здоровье и тяге туда не уходит.'**
+  /// **'В этой версии все 4 показателя включены по умолчанию; каждый можно отключить здесь. На сервере также хранятся имя, фото, код друга, список друзей и сообщения с изображениями из чатов.'**
   String get privacyServerNote;
 
   /// No description provided for @privacyNotJoined.

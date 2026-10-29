@@ -62,7 +62,7 @@
   "chatSend": "Отправить",
   "chatAttach": "Прикрепить",
   "chatAttachImage": "Изображение",
-  "chatImageTooLarge": "Это изображение слишком большое. Выберите другое.",
+  "chatImageCompressFailed": "Не удалось подготовить изображение. Попробуйте выбрать другое.",
   "chatFirstMessage": "Напишите первое сообщение — {nick} увидит его, когда откроет приложение.",
   "@chatFirstMessage": {"placeholders": {"nick": {"type": "String"}}},
   "chatNotFriends": "{nick} больше не в ваших друзьях — писать сюда нельзя.",

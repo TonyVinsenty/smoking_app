@@ -207,7 +207,8 @@ class AppLocalizationsRu extends AppLocalizations {
   String get chatAttachImage => 'Изображение';
 
   @override
-  String get chatImageTooLarge => 'Это изображение слишком большое. Выберите другое.';
+  String get chatImageCompressFailed =>
+      'Не удалось подготовить изображение. Попробуйте выбрать другое.';
 
   @override
   String chatFirstMessage(String nick) {
