@@ -211,6 +211,18 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     }
   }
 
+  Future<void> _deleteMessage(ChatMessage message) async {
+    final l = AppLocalizations.of(context);
+    try {
+      await ref
+          .read(chatServiceProvider)
+          .deleteMessage(widget.chatId, message.id, l.chatDeletedPreview)
+          .timeout(const Duration(seconds: 20));
+    } catch (_) {
+      if (mounted) showOfflineToast(context);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
@@ -286,6 +298,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                     message: list[j],
                     older: j + 1 < list.length ? list[j + 1] : null,
                     newer: j > 0 ? list[j - 1] : null,
+                    onDelete: () => _deleteMessage(list[j]),
                   );
                 },
               ),
@@ -371,6 +384,7 @@ class _MessageItem extends ConsumerWidget {
     this.older,
     this.newer,
     this.onRetry,
+    this.onDelete,
   });
 
   final Chat chat;
@@ -379,6 +393,7 @@ class _MessageItem extends ConsumerWidget {
   final ChatMessage? older;
   final ChatMessage? newer;
   final VoidCallback? onRetry;
+  final VoidCallback? onDelete;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -418,6 +433,9 @@ class _MessageItem extends ConsumerWidget {
         sender: showSender && runStart ? name : null,
         read: read,
         onRetry: onRetry,
+        onLongPress: message.text.isNotEmpty || (mine && !message.pending && !message.failed)
+            ? () => _showActions(context, l, mine)
+            : null,
       );
       body = Padding(
         padding: EdgeInsets.only(top: runStart ? 8 : 2),
@@ -448,16 +466,72 @@ class _MessageItem extends ConsumerWidget {
       ],
     );
   }
+
+  Future<void> _showActions(BuildContext context, AppLocalizations l, bool mine) async {
+    final action = await showModalBottomSheet<_MessageAction>(
+      context: context,
+      builder: (context) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (message.text.isNotEmpty)
+              ListTile(
+                leading: const Icon(Icons.copy),
+                title: Text(l.chatCopy),
+                onTap: () => Navigator.pop(context, _MessageAction.copy),
+              ),
+            if (mine && !message.pending && !message.failed)
+              ListTile(
+                leading: Icon(Icons.delete_outline, color: Theme.of(context).colorScheme.error),
+                title: Text(l.chatDeleteMessage, style: TextStyle(color: Theme.of(context).colorScheme.error)),
+                onTap: () => Navigator.pop(context, _MessageAction.delete),
+              ),
+          ],
+        ),
+      ),
+    );
+    if (action == _MessageAction.copy) {
+      await Clipboard.setData(ClipboardData(text: message.text));
+      return;
+    }
+    if (action != _MessageAction.delete || !context.mounted) return;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l.chatDeleteMessageTitle),
+        content: Text(l.chatDeleteMessagePrompt),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context, false), child: Text(l.cancel)),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: TextButton.styleFrom(foregroundColor: Theme.of(context).colorScheme.error),
+            child: Text(l.chatDeleteMessage),
+          ),
+        ],
+      ),
+    );
+    if (confirmed == true) onDelete?.call();
+  }
 }
 
+enum _MessageAction { copy, delete }
+
 class _Bubble extends StatelessWidget {
-  const _Bubble({required this.message, required this.mine, required this.read, this.sender, this.onRetry});
+  const _Bubble({
+    required this.message,
+    required this.mine,
+    required this.read,
+    this.sender,
+    this.onRetry,
+    this.onLongPress,
+  });
 
   final ChatMessage message;
   final bool mine;
   final String? sender;
   final bool read;
   final VoidCallback? onRetry;
+  final VoidCallback? onLongPress;
 
   @override
   Widget build(BuildContext context) {
@@ -478,10 +552,7 @@ class _Bubble extends StatelessWidget {
         ),
         child: InkWell(
           borderRadius: BorderRadius.circular(18),
-          onLongPress: () {
-            Clipboard.setData(ClipboardData(text: message.text));
-            showToast(context, l.chatCopied, icon: Icons.copy);
-          },
+          onLongPress: onLongPress,
           child: Padding(
             padding: const EdgeInsets.fromLTRB(14, 8, 12, 6),
             child: Column(

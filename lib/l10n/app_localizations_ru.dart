@@ -230,7 +230,16 @@ class AppLocalizationsRu extends AppLocalizations {
   String get chatCopy => 'Скопировать';
 
   @override
-  String get chatCopied => 'Сообщение скопировано';
+  String get chatDeleteMessage => 'Удалить';
+
+  @override
+  String get chatDeleteMessageTitle => 'Удалить сообщение у всех участников?';
+
+  @override
+  String get chatDeleteMessagePrompt => 'Восстановить сообщение будет нельзя.';
+
+  @override
+  String get chatDeletedPreview => 'Сообщение удалено';
 
   @override
   String get groupPickTitle => 'Кого позвать в группу?';

@@ -160,7 +160,10 @@ final chatReadsProvider = StreamProvider.family<Map<String, DateTime>, String>((
   final me = ref.watch(authUserProvider).value?.uid;
   if (me == null) return Stream.value(const {});
   return _chats.doc(chatId).collection('reads').snapshots().map((s) {
-    return {for (final d in s.docs) if (_time(d.data()['at']) case final at?) d.id: at};
+    return {
+      for (final d in s.docs)
+        if (_time(d.data()['at']) case final at?) d.id: at,
+    };
   });
 });
 
@@ -227,6 +230,34 @@ class ChatService {
 
   String get _me => _auth.currentUser!.uid;
   String get _myNick => ref.read(myProfileProvider).value?.nick ?? '';
+
+  Future<void> deleteMessage(String chatId, String messageId, String deletedPreview) async {
+    final message = _messagesOf(chatId).doc(messageId);
+    final chat = _chats.doc(chatId);
+    await _db.runTransaction((transaction) async {
+      final messageSnapshot = await transaction.get(message);
+      if (!messageSnapshot.exists) return;
+      final chatSnapshot = await transaction.get(chat);
+      final data = chatSnapshot.data();
+      final last = data?['last'];
+      final messageAt = messageSnapshot.data()?['at'];
+      final lastAt = last is Map ? last['at'] : null;
+      final lastIsDeletedMessage =
+          last is Map &&
+          last['from'] == _me &&
+          messageAt is Timestamp &&
+          lastAt is Timestamp &&
+          lastAt.seconds == messageAt.seconds &&
+          lastAt.nanoseconds == messageAt.nanoseconds;
+      transaction.delete(message);
+      if (lastIsDeletedMessage) {
+        transaction.update(chat, {
+          'last': {'from': _me, 'text': deletedPreview, 'at': last['at']},
+          'updatedAt': FieldValue.serverTimestamp(),
+        });
+      }
+    });
+  }
 
   Map<String, Object> _last(String text, [ChatEvent? event]) => {
     'from': _me,
@@ -327,10 +358,7 @@ class ChatService {
     if (chat.members.length <= 1) {
       final messages = await _messagesOf(chat.id).get();
       final reads = await _chats.doc(chat.id).collection('reads').get();
-      await _deleteAll([
-        for (final d in messages.docs) d.reference,
-        for (final d in reads.docs) d.reference,
-      ]);
+      await _deleteAll([for (final d in messages.docs) d.reference, for (final d in reads.docs) d.reference]);
       await _chats.doc(chat.id).delete();
       return;
     }

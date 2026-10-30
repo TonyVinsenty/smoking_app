@@ -412,11 +412,29 @@ abstract class AppLocalizations {
   /// **'Скопировать'**
   String get chatCopy;
 
-  /// No description provided for @chatCopied.
+  /// No description provided for @chatDeleteMessage.
   ///
   /// In ru, this message translates to:
-  /// **'Сообщение скопировано'**
-  String get chatCopied;
+  /// **'Удалить'**
+  String get chatDeleteMessage;
+
+  /// No description provided for @chatDeleteMessageTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Удалить сообщение у всех участников?'**
+  String get chatDeleteMessageTitle;
+
+  /// No description provided for @chatDeleteMessagePrompt.
+  ///
+  /// In ru, this message translates to:
+  /// **'Восстановить сообщение будет нельзя.'**
+  String get chatDeleteMessagePrompt;
+
+  /// No description provided for @chatDeletedPreview.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сообщение удалено'**
+  String get chatDeletedPreview;
 
   /// No description provided for @groupPickTitle.
   ///
