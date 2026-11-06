@@ -38,6 +38,16 @@ service cloud.firestore {
       allow create, update: if signedIn() && request.auth.uid == uid && validProfile(request.resource.data);
       allow delete: if signedIn() && request.auth.uid == uid;
 
+      // Registration tokens are private, including from friends. Only the server sends pushes.
+      match /devices/{deviceId} {
+        allow read, delete: if signedIn() && request.auth.uid == uid;
+        allow create, update: if signedIn() && request.auth.uid == uid
+          && request.resource.data.keys().hasOnly(['token', 'platform', 'updatedAt'])
+          && request.resource.data.token is string && request.resource.data.token.size() <= 2048
+          && request.resource.data.platform == 'android'
+          && request.resource.data.updatedAt == request.time;
+      }
+
       match /friends/{fid} {
         allow read: if signedIn() && request.auth.uid == uid;
         allow create, update: if signedIn() && fid != uid
@@ -124,10 +134,21 @@ service cloud.firestore {
           return getAfter(/databases/$(database)/documents/chats/$(chatId)).data;
         }
 
+        function validReply(d) {
+          return !('reply' in d) || (d.reply is map
+            && d.reply.keys().hasOnly(['id', 'from', 'text'])
+            && d.reply.id is string && d.reply.from is string
+            && d.reply.text is string && d.reply.text.size() <= 1000
+            && exists(/databases/$(database)/documents/chats/$(chatId)/messages/$(d.reply.id))
+            && get(/databases/$(database)/documents/chats/$(chatId)/messages/$(d.reply.id)).data.from == d.reply.from
+            && get(/databases/$(database)/documents/chats/$(chatId)/messages/$(d.reply.id)).data.text == d.reply.text);
+        }
+
         allow read: if signedIn() && request.auth.uid in chatBefore().members;
         // Written together with the chat itself: the chat may be created or left in the same batch.
         allow create: if signedIn()
-          && request.resource.data.keys().hasOnly(['from', 'text', 'at', 'sys', 'image'])
+          && request.resource.data.keys().hasOnly(['from', 'text', 'at', 'sys', 'image', 'reply'])
+          && validReply(request.resource.data)
           && request.resource.data.from == request.auth.uid
           && request.resource.data.at == request.time
           && request.resource.data.text is string && request.resource.data.text.size() <= 1000
@@ -136,12 +157,20 @@ service cloud.firestore {
           && (request.resource.data.text.size() > 0 || 'image' in request.resource.data)
           && (('sys' in request.resource.data)
               ? request.resource.data.sys in ['created', 'added', 'left', 'renamed'] && !('image' in request.resource.data)
+                && !('reply' in request.resource.data)
               : (request.resource.data.text.size() > 0 || 'image' in request.resource.data))
           && (request.auth.uid in chatBefore().members || request.auth.uid in chatAfter().members)
           // events only in groups; in a one-to-one chat only while still friends
           && (chatAfter().group
               || (!('sys' in request.resource.data)
                   && isFriend(chatAfter().members.removeAll([request.auth.uid])[0])));
+        allow update: if signedIn() && request.auth.uid in chatBefore().members
+          && resource.data.from == request.auth.uid && !('sys' in resource.data)
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['text', 'editedAt'])
+          && request.resource.data.text is string && request.resource.data.text.size() <= 1000
+          && (request.resource.data.text.size() > 0 || 'image' in resource.data)
+          && request.resource.data.editedAt == request.time
+          && (chatBefore().group || isFriend(chatBefore().members.removeAll([request.auth.uid])[0]));
         allow delete: if signedIn()
           && (resource.data.from == request.auth.uid || chatBefore().members == [request.auth.uid]);
       }

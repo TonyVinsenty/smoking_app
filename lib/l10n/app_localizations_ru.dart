@@ -230,6 +230,38 @@ class AppLocalizationsRu extends AppLocalizations {
   String get chatCopy => 'Скопировать';
 
   @override
+  String get chatReply => 'Ответить';
+
+  @override
+  String get chatEdit => 'Изменить';
+
+  @override
+  String get chatEditing => 'Редактирование сообщения';
+
+  @override
+  String get chatEdited => 'изменено';
+
+  @override
+  String get chatEditSave => 'Сохранить изменения';
+
+  @override
+  String get chatEditFailed =>
+      'Не удалось сохранить изменения. Проверьте соединение и попробуйте снова.';
+
+  @override
+  String get chatPhoto => 'Изображение';
+
+  @override
+  String get chatPushChannel => 'Сообщения чатов';
+
+  @override
+  String get chatPushRetry => 'Повторить подключение уведомлений';
+
+  @override
+  String get chatPushHint =>
+      'Новые сообщения появляются в уведомлениях Android, если вы разрешили их в настройках телефона.';
+
+  @override
   String get chatDeleteMessage => 'Удалить';
 
   @override

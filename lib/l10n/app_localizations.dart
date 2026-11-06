@@ -412,6 +412,66 @@ abstract class AppLocalizations {
   /// **'Скопировать'**
   String get chatCopy;
 
+  /// No description provided for @chatReply.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ответить'**
+  String get chatReply;
+
+  /// No description provided for @chatEdit.
+  ///
+  /// In ru, this message translates to:
+  /// **'Изменить'**
+  String get chatEdit;
+
+  /// No description provided for @chatEditing.
+  ///
+  /// In ru, this message translates to:
+  /// **'Редактирование сообщения'**
+  String get chatEditing;
+
+  /// No description provided for @chatEdited.
+  ///
+  /// In ru, this message translates to:
+  /// **'изменено'**
+  String get chatEdited;
+
+  /// No description provided for @chatEditSave.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сохранить изменения'**
+  String get chatEditSave;
+
+  /// No description provided for @chatEditFailed.
+  ///
+  /// In ru, this message translates to:
+  /// **'Не удалось сохранить изменения. Проверьте соединение и попробуйте снова.'**
+  String get chatEditFailed;
+
+  /// No description provided for @chatPhoto.
+  ///
+  /// In ru, this message translates to:
+  /// **'Изображение'**
+  String get chatPhoto;
+
+  /// No description provided for @chatPushChannel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сообщения чатов'**
+  String get chatPushChannel;
+
+  /// No description provided for @chatPushRetry.
+  ///
+  /// In ru, this message translates to:
+  /// **'Повторить подключение уведомлений'**
+  String get chatPushRetry;
+
+  /// No description provided for @chatPushHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Новые сообщения появляются в уведомлениях Android, если вы разрешили их в настройках телефона.'**
+  String get chatPushHint;
+
   /// No description provided for @chatDeleteMessage.
   ///
   /// In ru, this message translates to:

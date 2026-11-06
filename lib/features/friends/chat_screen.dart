@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -23,6 +22,13 @@ class ChatScreen extends ConsumerStatefulWidget {
   const ChatScreen({super.key, required this.chatId});
 
   final String chatId;
+  static final _openScreens = <_ChatScreenState>[];
+  static String? get activeChatId {
+    for (final screen in _openScreens.reversed) {
+      if (screen.mounted && ModalRoute.of(screen.context)?.isCurrent == true) return screen.widget.chatId;
+    }
+    return null;
+  }
 
   static Future<void> open(BuildContext context, String chatId) =>
       Navigator.of(context).push(MaterialPageRoute(builder: (_) => ChatScreen(chatId: chatId)));
@@ -46,11 +52,16 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   final _scroll = ScrollController();
   int _limit = _page;
   String? _pendingImage;
+  ChatReply? _reply;
+  ChatMessage? _editing;
+  String _savedDraft = '';
+  bool _savingEdit = false;
   final List<ChatMessage> _failedMessages = [];
 
   @override
   void initState() {
     super.initState();
+    ChatScreen._openScreens.add(this);
     _scroll.addListener(_loadMore);
     ref.listenManual(chatProvider(widget.chatId), (_, next) {
       final last = next.value?.last;
@@ -65,6 +76,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
 
   @override
   void dispose() {
+    ChatScreen._openScreens.remove(this);
     _input.dispose();
     _inputFocusNode.unfocus();
     _inputFocusNode.dispose();
@@ -80,12 +92,20 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   }
 
   void _send(Chat? chat, String me, {String? image}) {
+    if (_editing != null) {
+      unawaited(_saveEdit());
+      return;
+    }
     final text = _input.text.trim();
     if (text.isEmpty && image == null) return;
     final other = directOther(widget.chatId, me);
     final friend = other == null ? null : ref.read(friendProfileProvider(other)).value;
     _input.clear();
-    setState(() => _pendingImage = null);
+    final reply = _reply;
+    setState(() {
+      _pendingImage = null;
+      _reply = null;
+    });
     // Offline, the message waits in the phone and goes out with the connection; only a refusal is reported.
     unawaited(
       ref
@@ -96,6 +116,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
             chat: chat,
             friend: friend == null ? null : (friend.uid, friend.nick),
             image: image,
+            reply: reply,
           )
           .catchError((_) {
             if (mounted) {
@@ -109,6 +130,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                     image: image,
                     at: DateTime.now(),
                     failed: true,
+                    reply: reply,
                   ),
                 );
               });
@@ -151,6 +173,51 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     }
   }
 
+  void _startReply(ChatMessage message) {
+    if (_editing != null) _cancelEdit();
+    setState(() => _reply = ChatReply(id: message.id, from: message.from, text: message.text));
+    _inputFocusNode.requestFocus();
+  }
+
+  void _startEdit(ChatMessage message) {
+    if (_editing == null) _savedDraft = _input.text;
+    setState(() => _editing = message);
+    _input.text = message.text;
+    _input.selection = TextSelection.collapsed(offset: _input.text.length);
+    _inputFocusNode.requestFocus();
+  }
+
+  void _cancelEdit() {
+    if (_savingEdit) return;
+    setState(() => _editing = null);
+    _input.text = _savedDraft;
+  }
+
+  Future<void> _saveEdit() async {
+    final message = _editing;
+    if (message == null || _savingEdit) return;
+    final text = _input.text.trim();
+    if (text.isEmpty && message.image == null) return;
+    setState(() => _savingEdit = true);
+    try {
+      await ref
+          .read(chatServiceProvider)
+          .editMessage(widget.chatId, message, text)
+          .timeout(const Duration(seconds: 20));
+      if (!mounted) return;
+      setState(() {
+        _editing = null;
+        _savingEdit = false;
+      });
+      _input.text = _savedDraft;
+    } catch (_) {
+      if (mounted) {
+        setState(() => _savingEdit = false);
+        showToast(context, AppLocalizations.of(context).chatEditFailed, icon: Icons.error_outline);
+      }
+    }
+  }
+
   Future<void> _hideKeyboard() async {
     _inputFocusNode.unfocus();
     try {
@@ -183,6 +250,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   void _retry(ChatMessage message) {
     setState(() => _failedMessages.removeWhere((m) => m.id == message.id));
     _input.text = message.text;
+    _reply = message.reply;
     _send(
       ref.read(chatProvider(widget.chatId)).value,
       ref.read(authUserProvider).value?.uid ?? '',
@@ -299,17 +367,50 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                     older: j + 1 < list.length ? list[j + 1] : null,
                     newer: j > 0 ? list[j - 1] : null,
                     onDelete: () => _deleteMessage(list[j]),
+                    onReply: canWrite && !_savingEdit ? () => _startReply(list[j]) : null,
+                    onEdit: canWrite && !_savingEdit ? () => _startEdit(list[j]) : null,
                   );
                 },
               ),
             },
           ),
+          if (canWrite && (_editing != null || _reply != null))
+            Material(
+              color: theme.colorScheme.surfaceContainer,
+              child: ListTile(
+                dense: true,
+                leading: Icon(_editing != null ? Icons.edit_outlined : Icons.reply),
+                title: Text(_editing != null ? l.chatEditing : memberName(ref, l, shown, _reply!.from)),
+                subtitle: Text(
+                  (_editing?.text ?? _reply?.text ?? '').isEmpty ? l.chatPhoto : (_editing?.text ?? _reply!.text),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                trailing: IconButton(
+                  onPressed: _savingEdit
+                      ? null
+                      : () {
+                          if (_editing != null) {
+                            _cancelEdit();
+                          } else {
+                            setState(() => _reply = null);
+                          }
+                        },
+                  tooltip: l.cancel,
+                  icon: const Icon(Icons.close),
+                ),
+              ),
+            ),
           if (canWrite)
             _InputBar(
               controller: _input,
               focusNode: _inputFocusNode,
-              image: _pendingImage == null ? null : base64Decode(_pendingImage!),
-              onAttach: _attachImage,
+              image: _editing != null
+                  ? _editing!.imageBytes
+                  : (_pendingImage == null ? null : base64Decode(_pendingImage!)),
+              onAttach: _editing != null ? null : _attachImage,
+              editing: _editing != null,
+              busy: _savingEdit,
               onClearImage: () => setState(() => _pendingImage = null),
               onSend: () => _send(chat, me, image: _pendingImage),
             )
@@ -385,6 +486,8 @@ class _MessageItem extends ConsumerWidget {
     this.newer,
     this.onRetry,
     this.onDelete,
+    this.onReply,
+    this.onEdit,
   });
 
   final Chat chat;
@@ -394,6 +497,8 @@ class _MessageItem extends ConsumerWidget {
   final ChatMessage? newer;
   final VoidCallback? onRetry;
   final VoidCallback? onDelete;
+  final VoidCallback? onReply;
+  final VoidCallback? onEdit;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -433,7 +538,8 @@ class _MessageItem extends ConsumerWidget {
         sender: showSender && runStart ? name : null,
         read: read,
         onRetry: onRetry,
-        onLongPress: message.text.isNotEmpty || (mine && !message.pending && !message.failed)
+        replyName: message.reply == null ? null : memberName(ref, l, chat, message.reply!.from),
+        onLongPress: message.text.isNotEmpty || onReply != null || (mine && !message.pending && !message.failed)
             ? () => _showActions(context, l, mine)
             : null,
       );
@@ -468,12 +574,25 @@ class _MessageItem extends ConsumerWidget {
   }
 
   Future<void> _showActions(BuildContext context, AppLocalizations l, bool mine) async {
+    FocusManager.instance.primaryFocus?.unfocus();
     final action = await showModalBottomSheet<_MessageAction>(
       context: context,
       builder: (context) => SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            if (onReply != null && !message.pending && !message.failed)
+              ListTile(
+                leading: const Icon(Icons.reply),
+                title: Text(l.chatReply),
+                onTap: () => Navigator.pop(context, _MessageAction.reply),
+              ),
+            if (mine && onEdit != null && !message.pending && !message.failed)
+              ListTile(
+                leading: const Icon(Icons.edit_outlined),
+                title: Text(l.chatEdit),
+                onTap: () => Navigator.pop(context, _MessageAction.edit),
+              ),
             if (message.text.isNotEmpty)
               ListTile(
                 leading: const Icon(Icons.copy),
@@ -492,6 +611,14 @@ class _MessageItem extends ConsumerWidget {
     );
     if (action == _MessageAction.copy) {
       await Clipboard.setData(ClipboardData(text: message.text));
+      return;
+    }
+    if (action == _MessageAction.reply) {
+      onReply?.call();
+      return;
+    }
+    if (action == _MessageAction.edit) {
+      onEdit?.call();
       return;
     }
     if (action != _MessageAction.delete || !context.mounted) return;
@@ -514,7 +641,7 @@ class _MessageItem extends ConsumerWidget {
   }
 }
 
-enum _MessageAction { copy, delete }
+enum _MessageAction { reply, edit, copy, delete }
 
 class _Bubble extends StatelessWidget {
   const _Bubble({
@@ -524,6 +651,7 @@ class _Bubble extends StatelessWidget {
     this.sender,
     this.onRetry,
     this.onLongPress,
+    this.replyName,
   });
 
   final ChatMessage message;
@@ -532,6 +660,7 @@ class _Bubble extends StatelessWidget {
   final bool read;
   final VoidCallback? onRetry;
   final VoidCallback? onLongPress;
+  final String? replyName;
 
   @override
   Widget build(BuildContext context) {
@@ -560,6 +689,25 @@ class _Bubble extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 if (sender != null) Text(sender!, style: theme.textTheme.labelMedium?.copyWith(color: scheme.primary)),
+                if (message.reply case final reply?)
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 6),
+                    padding: const EdgeInsets.only(left: 8),
+                    decoration: BoxDecoration(
+                      border: Border(left: BorderSide(color: scheme.primary, width: 3)),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(replyName ?? '', style: theme.textTheme.labelMedium?.copyWith(color: scheme.primary)),
+                        Text(
+                          reply.text.isEmpty ? l.chatPhoto : reply.text,
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+                  ),
                 if (message.imageBytes case final bytes?)
                   Padding(
                     padding: EdgeInsets.only(bottom: message.text.isEmpty ? 0 : 6),
@@ -576,6 +724,11 @@ class _Bubble extends StatelessWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
+                      if (message.editedAt != null)
+                        Text(
+                          '${l.chatEdited} · ',
+                          style: theme.textTheme.labelSmall?.copyWith(color: fg.withValues(alpha: 0.6)),
+                        ),
                       if (at == null && message.pending)
                         Icon(Icons.schedule, size: 12, color: fg.withValues(alpha: 0.6))
                       else
@@ -617,12 +770,16 @@ class _InputBar extends StatelessWidget {
     required this.onAttach,
     required this.onClearImage,
     required this.onSend,
+    this.editing = false,
+    this.busy = false,
   });
 
   final TextEditingController controller;
   final FocusNode focusNode;
   final Uint8List? image;
-  final VoidCallback onAttach;
+  final VoidCallback? onAttach;
+  final bool editing;
+  final bool busy;
   final VoidCallback onClearImage;
   final VoidCallback onSend;
 
@@ -654,11 +811,12 @@ class _InputBar extends StatelessWidget {
                               borderRadius: BorderRadius.circular(8),
                               child: Image.memory(image!, width: 54, height: 54, fit: BoxFit.cover),
                             ),
-                            IconButton(onPressed: onClearImage, icon: const Icon(Icons.close)),
+                            if (!editing) IconButton(onPressed: onClearImage, icon: const Icon(Icons.close)),
                           ],
                         ),
                       ),
                     TextField(
+                      enabled: !busy,
                       controller: controller,
                       focusNode: focusNode,
                       minLines: 1,
@@ -683,9 +841,9 @@ class _InputBar extends StatelessWidget {
               ValueListenableBuilder(
                 valueListenable: controller,
                 builder: (context, value, _) => IconButton.filled(
-                  tooltip: l.chatSend,
-                  onPressed: value.text.trim().isEmpty && image == null ? null : onSend,
-                  icon: const Icon(Icons.send),
+                  tooltip: editing ? l.chatEditSave : l.chatSend,
+                  onPressed: busy || (value.text.trim().isEmpty && image == null) ? null : onSend,
+                  icon: Icon(editing ? Icons.check : Icons.send),
                 ),
               ),
             ],

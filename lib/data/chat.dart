@@ -35,6 +35,14 @@ ChatEvent? _event(Object? v) => ChatEvent.values.where((e) => e.name == v).first
 
 String directChatId(String a, String b) => a.compareTo(b) < 0 ? '${a}_$b' : '${b}_$a';
 
+class ChatReply {
+  const ChatReply({required this.id, required this.from, required this.text});
+  final String id;
+  final String from;
+  final String text;
+  Map<String, String> toMap() => {'id': id, 'from': from, 'text': text};
+}
+
 class ChatMessage {
   const ChatMessage({
     required this.id,
@@ -45,6 +53,8 @@ class ChatMessage {
     this.image,
     this.pending = false,
     this.failed = false,
+    this.reply,
+    this.editedAt,
   });
 
   factory ChatMessage.fromDoc(DocumentSnapshot<Map<String, dynamic>> d) {
@@ -57,6 +67,14 @@ class ChatMessage {
       event: _event(m['sys']),
       image: m['image'] as String?,
       pending: d.metadata.hasPendingWrites,
+      reply: m['reply'] is Map
+          ? ChatReply(
+              id: m['reply']['id'] as String,
+              from: m['reply']['from'] as String,
+              text: m['reply']['text'] as String,
+            )
+          : null,
+      editedAt: _time(m['editedAt']),
     );
   }
 
@@ -70,6 +88,8 @@ class ChatMessage {
   final String? image;
   final bool pending;
   final bool failed;
+  final ChatReply? reply;
+  final DateTime? editedAt;
 
   Uint8List? get imageBytes {
     final value = image;
@@ -266,12 +286,13 @@ class ChatService {
     'sys': ?event?.name,
   };
 
-  Map<String, Object> _message(String text, [ChatEvent? event, String? image]) => {
+  Map<String, Object> _message(String text, [ChatEvent? event, String? image, ChatReply? reply]) => {
     'from': _me,
     'text': text,
     'at': FieldValue.serverTimestamp(),
     'sys': ?event?.name,
     if (image != null) 'image': image,
+    if (reply != null) 'reply': reply.toMap(),
   };
 
   /// Sends a message; the first message to a friend also creates the one-to-one chat ([friend] and their name).
@@ -281,10 +302,11 @@ class ChatService {
     Chat? chat,
     (String uid, String nick)? friend,
     String? image,
+    ChatReply? reply,
   }) async {
     final messageRef = _messagesOf(chatId).doc();
     final preview = image == null ? text : (text.isEmpty ? '📷 Фото' : text);
-    final batch = _db.batch()..set(messageRef, _message(text, null, image));
+    final batch = _db.batch()..set(messageRef, _message(text, null, image, reply));
     if (chat == null && friend != null) {
       final (uid, nick) = friend;
       batch.set(_chats.doc(chatId), {
@@ -308,6 +330,26 @@ class ChatService {
   Future<void> markRead(String chatId) async {
     final uid = _me;
     await _chats.doc(chatId).collection('reads').doc(uid).set({'at': FieldValue.serverTimestamp()});
+  }
+
+  Future<void> editMessage(String chatId, ChatMessage message, String text) async {
+    final chatRef = _chats.doc(chatId);
+    final messageRef = _messagesOf(chatId).doc(message.id);
+    await _db.runTransaction((transaction) async {
+      final original = await transaction.get(messageRef);
+      final chat = await transaction.get(chatRef);
+      if (!original.exists) throw StateError('Message was deleted');
+      final last = chat.data()?['last'];
+      final at = original.data()?['at'];
+      transaction.update(messageRef, {'text': text, 'editedAt': FieldValue.serverTimestamp()});
+      if (last is Map && last['from'] == _me && last['at'] == at) {
+        final preview = text.isEmpty ? '📷' : text;
+        transaction.update(chatRef, {
+          'last': {'from': _me, 'text': preview.length > 200 ? preview.substring(0, 200) : preview, 'at': at},
+          'updatedAt': FieldValue.serverTimestamp(),
+        });
+      }
+    });
   }
 
   /// A new group with the given friends; returns its id.
