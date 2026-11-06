@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app/app_shortcuts.dart';
+import 'app/chat_push.dart';
 import 'app/home_shell.dart';
 import 'app/home_widget.dart';
 import 'app/theme.dart';
@@ -73,7 +74,10 @@ class _Root extends ConsumerWidget {
               ? const OnboardingScreen()
               : AppShortcuts(
                   navigatorKey: _navigatorKey,
-                  child: const HomeWidgetSync(child: HomeShell()),
+                  child: ChatPushSync(
+                    navigatorKey: _navigatorKey,
+                    child: const HomeWidgetSync(child: HomeShell()),
+                  ),
                 ),
           loading: () => const Scaffold(),
           error: (e, _) => Scaffold(body: Center(child: Text('$e'))),

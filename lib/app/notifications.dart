@@ -14,6 +14,45 @@ import '../l10n/app_localizations.dart';
 class Notifications {
   static final _plugin = FlutterLocalNotificationsPlugin();
   static bool _ready = false;
+  static void Function(String)? onChatTap;
+
+  static Future<String?> chatLaunchPayload() async {
+    await _init();
+    final details = await _plugin.getNotificationAppLaunchDetails();
+    return details?.didNotificationLaunchApp == true ? details?.notificationResponse?.payload : null;
+  }
+
+  static Future<void> prepareChatChannel() async {
+    await _init();
+    await _plugin
+        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(
+          AndroidNotificationChannel(
+            'chat_messages',
+            lookupAppLocalizations(const Locale('ru')).chatPushChannel,
+            importance: Importance.high,
+          ),
+        );
+  }
+
+  static Future<void> showChat(String chatId, String title, String body) async {
+    await _init();
+    await _plugin.show(
+      id: 1000000000 + (chatId.hashCode & 0x0fffffff),
+      title: title,
+      body: body,
+      payload: chatId,
+      notificationDetails: NotificationDetails(
+        android: AndroidNotificationDetails(
+          'chat_messages',
+          lookupAppLocalizations(const Locale('ru')).chatPushChannel,
+          importance: Importance.high,
+          priority: Priority.high,
+          icon: '@drawable/ic_notification',
+        ),
+      ),
+    );
+  }
 
   /// Milestone notifications use their minute count (a day or more) as id.
   static const _diaryId = 1;
@@ -35,6 +74,9 @@ class Notifications {
     if (_ready) return;
     tzdata.initializeTimeZones();
     await _plugin.initialize(
+      onDidReceiveNotificationResponse: (response) {
+        if (response.payload case final chatId?) onChatTap?.call(chatId);
+      },
       settings: const InitializationSettings(
         android: AndroidInitializationSettings('@drawable/ic_notification'),
         iOS: DarwinInitializationSettings(

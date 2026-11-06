@@ -1,5 +1,6 @@
 import java.io.FileInputStream
 import java.util.Properties
+import groovy.json.JsonSlurper
 
 plugins {
     id("com.android.application")
@@ -21,7 +22,18 @@ if (keystorePropertiesPath != null) {
     }
 }
 
+// Native Firebase must initialize before Dart when FCM wakes a terminated app.
+val firebaseConfigFile = rootProject.file("../firebase/google-services.json")
+val firebaseConfig = if (firebaseConfigFile.exists()) JsonSlurper().parse(firebaseConfigFile) as Map<*, *> else null
+val firebaseProject = firebaseConfig?.get("project_info") as? Map<*, *>
+val firebaseClient = (firebaseConfig?.get("client") as? List<*>)?.map { it as Map<*, *> }?.firstOrNull {
+    val info = it["client_info"] as? Map<*, *>
+    val androidInfo = info?.get("android_client_info") as? Map<*, *>
+    androidInfo?.get("package_name") == "com.tonyvinsenty.smoking_app"
+}
+
 android {
+    buildFeatures { resValues = true }
     namespace = "com.tonyvinsenty.smoking_app"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
@@ -38,6 +50,16 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        if (firebaseClient != null && firebaseProject != null) {
+            val info = firebaseClient["client_info"] as Map<*, *>
+            val key = (firebaseClient["api_key"] as List<*>).first() as Map<*, *>
+            resValue("string", "google_app_id", info["mobilesdk_app_id"].toString())
+            resValue("string", "google_api_key", key["current_key"].toString())
+            resValue("string", "gcm_defaultSenderId", firebaseProject["project_number"].toString())
+            resValue("string", "project_id", firebaseProject["project_id"].toString())
+        } else {
+            throw GradleException("Firebase Android config missing: firebase/google-services.json")
+        }
     }
 
     signingConfigs {

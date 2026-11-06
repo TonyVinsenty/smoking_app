@@ -88,9 +88,7 @@ class FriendAliasesNotifier extends Notifier<Map<String, String>> {
   void _save() => ref.read(prefsProvider).setString(_key, jsonEncode(state));
 }
 
-final friendAliasesProvider = NotifierProvider<FriendAliasesNotifier, Map<String, String>>(
-  FriendAliasesNotifier.new,
-);
+final friendAliasesProvider = NotifierProvider<FriendAliasesNotifier, Map<String, String>>(FriendAliasesNotifier.new);
 
 String friendDisplayName(WidgetRef ref, SocialProfile friend) {
   final alias = ref.watch(friendAliasesProvider)[friend.uid];
@@ -339,6 +337,10 @@ class SocialService {
     final uid = _uid;
     if (uid == null) return;
     await ref.read(chatServiceProvider).leaveAll();
+    final devices = await _userDoc(uid).collection('devices').get();
+    for (final device in devices.docs) {
+      await device.reference.delete();
+    }
     final me = ref.read(myProfileProvider).value;
     final friends = await _friendsOf(uid).get();
     final batch = _db.batch();

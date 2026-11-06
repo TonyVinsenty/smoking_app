@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -7,6 +8,7 @@ import '../../app/widgets/cards.dart';
 import '../../app/widgets/sos_fab.dart';
 import '../../app/widgets/toast.dart';
 import '../../data/chat.dart';
+import '../../app/chat_push.dart';
 import '../../data/social.dart';
 import '../../l10n/app_localizations.dart';
 import 'chat_screen.dart';
@@ -56,10 +58,14 @@ class ChatsTab extends ConsumerWidget {
           ),
           const SizedBox(height: 16),
           Text(
-            l.chatsNoPush,
+            !kIsWeb && defaultTargetPlatform == TargetPlatform.android ? l.chatPushHint : l.chatsNoPush,
             textAlign: TextAlign.center,
             style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant),
           ),
+          if (!kIsWeb &&
+              defaultTargetPlatform == TargetPlatform.android &&
+              ref.watch(chatPushRegistrationProvider).hasError)
+            TextButton(onPressed: () => ref.invalidate(chatPushRegistrationProvider), child: Text(l.chatPushRetry)),
         ],
       ],
     );

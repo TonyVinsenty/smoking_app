@@ -53,3 +53,5 @@ app.*.map.json
 
 # Ready APKs for the owner (too big for git)
 /releases/
+/functions/node_modules/
+/.firebase/
