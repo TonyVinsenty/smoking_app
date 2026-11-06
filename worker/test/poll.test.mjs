@@ -9,7 +9,7 @@ const root = `projects/${project}/databases/(default)/documents`;
 const now = Date.parse('2026-11-06T10:00:00Z');
 const stamp = '2026-11-06T09:59:40.123456789Z';
 const str = (value) => ({stringValue: value});
-function fixture({withCursor = true, people = ['alice', 'bob'], source = 'alice', system = false, failure} = {}) {
+function fixture({withCursor = true, people = ['alice', 'bob'], source = 'alice', system = false, failure, aliasByUser = {}, group = false, groupTitle = ''} = {}) {
   const sqlite = new DatabaseSync(':memory:');
   sqlite.exec(readFileSync(new URL('../schema.sql', import.meta.url), 'utf8'));
   function statement(sql, values = []) {
@@ -26,10 +26,10 @@ function fixture({withCursor = true, people = ['alice', 'bob'], source = 'alice'
       queries.push(body.structuredQuery);
       return Response.json(body.structuredQuery.startAt?.values[1]?.referenceValue === message.name ? [] : [{document: message}]);
     }
-    if (url.endsWith('/documents/chats/chat')) return Response.json({fields: {members: {arrayValue: {values: people.map(str)}}, names: {mapValue: {fields: {alice: str('Alice')}}}}});
+    if (url.endsWith('/documents/chats/chat')) return Response.json({fields: {group: {booleanValue: group}, title: str(groupTitle), members: {arrayValue: {values: people.map(str)}}, names: {mapValue: {fields: {alice: str('Alice')}}}}});
     if (/\/users\/[^/]+:runQuery$/.test(url)) {
       const uid = url.split('/users/')[1].split(':')[0];
-      return Response.json([{document: {name: `${root}/users/${uid}/devices/phone`, fields: {platform: str('android'), token: str(`token-${uid}`)}}}]);
+      return Response.json([{document: {name: `${root}/users/${uid}/devices/phone`, fields: {platform: str('android'), token: str(`token-${uid}`), aliasesJson: str(aliasByUser[uid] ?? '{}')}}}]);
     }
     if (url.includes('fcm.googleapis.com')) {
       sent.push(body.message);
@@ -95,4 +95,26 @@ test('group events and messages from former members do not notify', async () => 
 });
 test('public HTTP requests cannot trigger polling or send notifications', async () => {
   assert.equal((await worker.fetch(new Request('https://example.com/send'))).status, 404);
+});
+test('each recipient sees their own alias, with public-name fallback', async () => {
+  const f = fixture({people: ['alice', 'bob', 'charlie'], aliasByUser: {bob: JSON.stringify({alice: 'Иван'})}});
+  await poll(f.env, f.options);
+  assert.deepEqual(f.sent.map((m) => m.notification.title), ['Иван', 'Alice']);
+  assert.equal(f.sent[0].notification.body, 'hello');
+  f.sqlite.close();
+});
+test('group title includes the per-recipient alias in parentheses', async () => {
+  const f = fixture({group: true, groupTitle: 'Наш чат', aliasByUser: {bob: JSON.stringify({alice: 'Иван'})}});
+  await poll(f.env, f.options);
+  assert.equal(f.sent[0].notification.title, 'Наш чат (Иван)');
+  assert.equal(f.sent[0].notification.body, 'hello');
+  f.sqlite.close();
+});
+test('empty, malformed and non-string aliases fall back without breaking delivery', async () => {
+  for (const value of ['not json', '{"alice":42}', '{"alice":"  "}', 'null']) {
+    const f = fixture({group: true, aliasByUser: {bob: value}});
+    await poll(f.env, f.options);
+    assert.equal(f.sent[0].notification.title, 'Групповой чат (Alice)');
+    f.sqlite.close();
+  }
 });

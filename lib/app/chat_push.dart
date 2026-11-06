@@ -13,6 +13,7 @@ import 'notifications.dart';
 
 final chatPushRegistrationProvider = FutureProvider<void>((ref) async {
   final uid = ref.watch(myProfileProvider).value?.uid;
+  final aliases = ref.watch(friendAliasesProvider);
   if (kIsWeb || defaultTargetPlatform != TargetPlatform.android || uid == null) return;
   final messaging = FirebaseMessaging.instance;
   var disposed = false;
@@ -24,6 +25,7 @@ final chatPushRegistrationProvider = FutureProvider<void>((ref) async {
     await devices.doc(deviceId(token)).set({
       'token': token,
       'platform': 'android',
+      'aliasesJson': jsonEncode(aliases),
       'updatedAt': FieldValue.serverTimestamp(),
     });
     if (previous != null && previous != token) await devices.doc(deviceId(previous!)).delete();

@@ -48,7 +48,7 @@ class ShareSettingsNotifier extends Notifier<Set<ShareField>> {
 
 final shareSettingsProvider = NotifierProvider<ShareSettingsNotifier, Set<ShareField>>(ShareSettingsNotifier.new);
 
-/// Local names for friends. These aliases never leave this device.
+/// Device-specific names for friends. Android keeps a private server copy for push titles.
 class FriendAliasesNotifier extends Notifier<Map<String, String>> {
   static const _key = 'social.friend_aliases';
 

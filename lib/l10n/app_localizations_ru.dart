@@ -255,6 +255,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get chatPushChannel => 'Сообщения чатов';
 
   @override
+  String get chatPushGroup => 'Групповой чат';
+
+  @override
   String get chatPushRetry => 'Повторить подключение уведомлений';
 
   @override

@@ -4,6 +4,12 @@ class PollLimit extends Error {}
 let cachedToken;
 const text = (v) => v?.stringValue ?? '';
 const members = (chat) => (chat.fields?.members?.arrayValue?.values ?? []).map(text);
+function deviceAlias(device, uid) {
+  try {
+    const value = JSON.parse(text(device.fields?.aliasesJson) || '{}')[uid];
+    return typeof value === 'string' ? value.trim().slice(0, 40) : '';
+  } catch { return ''; }
+}
 const b64 = (data) => btoa(typeof data === 'string' ? data : String.fromCharCode(...new Uint8Array(data))).replaceAll('+', '-').replaceAll('/', '_').replaceAll('=', '');
 
 async function accessToken(credentials, request) {
@@ -107,13 +113,15 @@ async function runPoll(env, options, now) {
         const chatMembers = chat ? members(chat) : [];
         if (chatMembers.includes(from)) {
           const sender = text(chat.fields.names?.mapValue?.fields?.[from]) || strings.appTitle;
-          const title = group && text(chat.fields.title) ? `${sender} · ${text(chat.fields.title)}` : sender;
+          const groupTitle = text(chat.fields.title).trim() || strings.chatPushGroup;
           for (const uid of chatMembers.filter((id) => id !== from)) {
             if (!devices.has(uid)) {
               const list = await api(`/users/${encodeURIComponent(uid)}:runQuery`, {structuredQuery: {from: [{collectionId: 'devices'}], orderBy: [{field: {fieldPath: 'updatedAt'}, direction: 'DESCENDING'}], limit: 10}});
               devices.set(uid, (list ?? []).map((r) => r.document).filter((d) => d && text(d.fields?.platform) === 'android' && text(d.fields?.token)));
             }
             for (const device of devices.get(uid)) {
+              const displayName = deviceAlias(device, from) || sender;
+              const title = group ? `${groupTitle} (${displayName})` : displayName;
               const deviceHash = await hash(device.name);
               const delivered = await store('SELECT at FROM deliveries WHERE message = ? AND device = ?', [message.name, deviceHash], 'first');
               if (delivered) continue;

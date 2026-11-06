@@ -42,7 +42,9 @@ service cloud.firestore {
       match /devices/{deviceId} {
         allow read, delete: if signedIn() && request.auth.uid == uid;
         allow create, update: if signedIn() && request.auth.uid == uid
-          && request.resource.data.keys().hasOnly(['token', 'platform', 'updatedAt'])
+          && request.resource.data.keys().hasOnly(['token', 'platform', 'updatedAt', 'aliasesJson'])
+          && (!('aliasesJson' in request.resource.data)
+              || (request.resource.data.aliasesJson is string && request.resource.data.aliasesJson.size() <= 50000))
           && request.resource.data.token is string && request.resource.data.token.size() <= 2048
           && request.resource.data.platform == 'android'
           && request.resource.data.updatedAt == request.time;

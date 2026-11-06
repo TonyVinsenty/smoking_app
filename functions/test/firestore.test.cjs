@@ -44,3 +44,12 @@ test('tokens are accessible only to their owner, including from friends', async 
   await assertFails(getDoc(doc(dbAs('bob'), device)));
   await assertFails(setDoc(doc(dbAs('bob'), device), {token: 'attacker', platform: 'android', updatedAt: serverTimestamp()}));
 });
+test('notification aliases stay private and have bounded storage', async () => {
+  const device = 'users/alice/devices/phone';
+  const data = {token: 'test-token', platform: 'android', updatedAt: serverTimestamp(), aliasesJson: JSON.stringify({bob: 'Иван'})};
+  await assertSucceeds(setDoc(doc(dbAs('alice'), device), data));
+  await assertFails(getDoc(doc(dbAs('bob'), device)));
+  await assertFails(updateDoc(doc(dbAs('bob'), device), {aliasesJson: '{}', updatedAt: serverTimestamp()}));
+  await assertFails(setDoc(doc(dbAs('alice'), device), {...data, aliasesJson: {bob: 'Иван'}}));
+  await assertFails(setDoc(doc(dbAs('alice'), device), {...data, aliasesJson: 'x'.repeat(50001)}));
+});

@@ -460,6 +460,12 @@ abstract class AppLocalizations {
   /// **'Сообщения чатов'**
   String get chatPushChannel;
 
+  /// No description provided for @chatPushGroup.
+  ///
+  /// In ru, this message translates to:
+  /// **'Групповой чат'**
+  String get chatPushGroup;
+
   /// No description provided for @chatPushRetry.
   ///
   /// In ru, this message translates to:

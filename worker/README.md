@@ -2,6 +2,8 @@
 
 Cron runs every minute and queries new Firestore messages by their original server timestamp. It uses FCM HTTP v1 to notify the current recipients. Existing iOS senders are supported; recipients need Android build 27 or later, Google Play Services and notification permission. Build 27 fixes the native Firebase startup mismatch found in build 26; install it over the existing app to retain local data.
 
+Build 28 adds per-device notification aliases: the Android app updates a private `aliasesJson` string in its own device registration when local aliases change. Only the owner and server can read it. Each device sees its own alias; missing or invalid aliases fall back to the sender's profile name. Personal titles are `Alias`, group titles are `Group name (Alias)` with the message text as the body. Devices on older builds remain compatible and use profile names. Alias data is not persisted in D1 or written to logs.
+
 ## Access and secrets
 
 `GOOGLE_SERVICE_ACCOUNT` is a Cloudflare Worker secret, never an app asset or Git file. The dedicated account `zero-chat-push-worker@zero-91cc8.iam.gserviceaccount.com` has only `roles/datastore.viewer` and `roles/firebasecloudmessaging.admin`. It can read server-side Firestore data and send push, but cannot change chats, profiles or device registrations. Personal quit-attempt data remains local to the app.
