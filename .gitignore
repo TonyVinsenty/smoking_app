@@ -55,3 +55,9 @@ app.*.map.json
 /releases/
 /functions/node_modules/
 /.firebase/
+/worker/node_modules/
+/worker/build/
+/worker/.wrangler/
+/.wrangler/
+/worker/.dev.vars*
+/.push-secrets/

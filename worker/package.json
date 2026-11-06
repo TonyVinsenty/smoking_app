@@ -1,0 +1,1 @@
+{"name":"zero-chat-push-worker","private":true,"type":"module","scripts":{"test":"node --test test/*.test.mjs"},"devDependencies":{"wrangler":"4.158.0"}}

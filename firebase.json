@@ -1,5 +1,4 @@
 {
-  "firestore": {"rules": "firestore.rules"},
-  "emulators": {"firestore": {"port": 8087}, "ui": {"enabled": false}, "singleProjectMode": true},
-  "functions": [{"source": "functions", "codebase": "chat-push", "predeploy": ["node tool/sync_push_strings.cjs"], "ignore": ["node_modules", "*.log", "test"]}]
+  "firestore": {"rules": "firestore.rules", "indexes": "firestore.indexes.json"},
+  "emulators": {"firestore": {"port": 8087}, "ui": {"enabled": false}, "singleProjectMode": true}
 }

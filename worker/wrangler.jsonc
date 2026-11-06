@@ -1,0 +1,11 @@
+{
+  "name": "zero-chat-push",
+  "account_id": "3956f2f64927302016b9fda0ca569973",
+  "main": "src/index.mjs",
+  "compatibility_date": "2026-11-06",
+  "workers_dev": false,
+  "vars": {"FIREBASE_PROJECT_ID": "zero-91cc8", "PUSH_ENABLED": "true"},
+  "triggers": {"crons": ["* * * * *"]},
+  "d1_databases": [{"binding": "DB", "database_name": "zero-push-state", "database_id": "bec2dddb-8885-4930-a988-5f163e96db4c"}],
+  "observability": {"enabled": true, "head_sampling_rate": 1}
+}
