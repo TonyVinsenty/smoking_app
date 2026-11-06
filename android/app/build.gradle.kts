@@ -57,6 +57,14 @@ android {
             resValue("string", "google_api_key", key["current_key"].toString())
             resValue("string", "gcm_defaultSenderId", firebaseProject["project_number"].toString())
             resValue("string", "project_id", firebaseProject["project_id"].toString())
+            // FlutterFire compares these optional values with FirebaseOptions during startup.
+            // Omitting an existing bucket makes the native default app look like a different app.
+            firebaseProject["storage_bucket"]?.let {
+                resValue("string", "google_storage_bucket", it.toString())
+            }
+            firebaseProject["firebase_url"]?.let {
+                resValue("string", "firebase_database_url", it.toString())
+            }
         } else {
             throw GradleException("Firebase Android config missing: firebase/google-services.json")
         }

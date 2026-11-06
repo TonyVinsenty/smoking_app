@@ -1,6 +1,6 @@
 # Zero chat push: Cloudflare Workers Free
 
-Cron runs every minute and queries new Firestore messages by their original server timestamp. It uses FCM HTTP v1 to notify the current recipients. Existing iOS senders are supported; recipients need Android build 26 or later, Google Play Services and notification permission.
+Cron runs every minute and queries new Firestore messages by their original server timestamp. It uses FCM HTTP v1 to notify the current recipients. Existing iOS senders are supported; recipients need Android build 27 or later, Google Play Services and notification permission. Build 27 fixes the native Firebase startup mismatch found in build 26; install it over the existing app to retain local data.
 
 ## Access and secrets
 
