@@ -41,18 +41,11 @@ class FriendsScreen extends ConsumerWidget {
           children: [
             TabBar(
               tabs: [
-                Tab(text: l.friendsTabMine),
                 Tab(child: _ChatsTabLabel(text: l.friendsTabChats)),
+                Tab(text: l.friendsTabMine),
               ],
             ),
-            Expanded(
-              child: TabBarView(
-                children: [
-                  const FriendsTab(),
-                  const ChatsTab(),
-                ],
-              ),
-            ),
+            Expanded(child: TabBarView(children: [const ChatsTab(), const FriendsTab()])),
           ],
         ),
       ),
